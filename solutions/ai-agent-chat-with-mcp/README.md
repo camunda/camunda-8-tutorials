@@ -3,7 +3,7 @@
 This example demonstrates how to deploy and run an AI-driven chat process integrating tools exposed by [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) servers by
 integrating with the [MCP Client](https://docs.camunda.io/docs/components/early-access/alpha/mcp-client/) connectors.
 
-ℹ️ As this example relies on MCP clients being configured as part of the connector runtime, it needs additional configuration only available in self-managed/hybrid setups.
+ℹ️ As this example relies on MCP clients being configured as part of the connector runtime, it needs additional configuration only available in self-managed/[hybrid](https://docs.camunda.io/docs/components/connectors/use-connectors-in-hybrid-mode/) environments.
 
 ⚠️ This example works on **Camunda 8.8** only. For a version compatible with Camunda 8.9 and later, see the [updated version](https://github.com/camunda/connectors/tree/main/connectors/agentic-ai/examples/ai-agent/ad-hoc-sub-process/ai-agent-chat-mcp) of this example managed as part of the connectors codebase.
 
