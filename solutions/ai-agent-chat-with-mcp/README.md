@@ -93,6 +93,10 @@ camunda:
 5. **Start a New Instance**
     - Use the Web Modeler to start an instance by filling out the form to start an instance.
     - Use tasklist to fill out the form to start a new instance.
+    - From Desktop Modeler, you can start the instance by providing an `inputText` variable containing a request. For example:
+      ```json
+      { "inputText": "Compare the NYC and Berlin timezones and write the results to a markdown file" }
+      ```
 
 6. **Interact**
     - The agent will discover tools provided through the MCP servers and use them to fulfill user requests.
