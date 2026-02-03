@@ -1,6 +1,8 @@
-# Camunda Platform 8 Tutorials
+# Camunda 8 Tutorials
 
 Step-by-step tutorials to guide users through Camunda Platform 8 use cases end-to-end. These files serve as the source of truth for the process blueprints on the [Camunda Marketplace]([url](https://marketplace.camunda.com/en-US/home)).
+
+If you are looking for examples on how to implement certain patterns and looking for (mainly) Java examples, check out the [Camunda 8 Example Repository](https://github.com/camunda-community-hub/camunda-8-examples).
 
 Quick Starts:
 
