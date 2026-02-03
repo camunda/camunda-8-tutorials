@@ -12,8 +12,8 @@
     <dependencies>
         <dependency>
             <groupId>io.camunda</groupId>
-            <artifactId>spring-boot-starter-camunda-sdk</artifactId>
-            <version>8.8.0-alpha6-rc2</version>
+            <artifactId>camunda-spring-boot-starter</artifactId>
+            <version>8.8.9</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
