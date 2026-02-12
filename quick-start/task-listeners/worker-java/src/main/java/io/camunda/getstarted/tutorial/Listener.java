@@ -1,9 +1,8 @@
 package io.camunda.getstarted.tutorial;
 
 import io.camunda.client.CamundaClient;
-import io.camunda.client.api.command.CompleteJobResult;
 import io.camunda.client.api.response.ActivatedJob;
-import io.camunda.spring.client.annotation.JobWorker;
+import io.camunda.client.annotation.JobWorker;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -37,7 +36,7 @@ public class Listener {
       client
           .newDeployResourceCommand()
           .addResourceFromClasspath("Quick_Start_Task_Listeners.bpmn")
-          .execute();
+          .send();
       System.out.println("Process deployed successfully.");
     }
     if (SHOULD_CREATE_PROCESS_INSTANCE_ON_STARTUP) {
@@ -46,12 +45,12 @@ public class Listener {
           .bpmnProcessId("task-listener-tutorial")
           .latestVersion()
           .variable("assignee", "john")
-          .execute();
+          .send();
       System.out.println("Process instance created successfully.");
     }
   }
 
-  @JobWorker(type = "assign_new_task", autoComplete = SHOULD_DEPLOY_PROCESS_ON_STARTUP)
+  @JobWorker(type = "assign_new_task", autoComplete = false)
   public void assignNewUserTasks(final ActivatedJob job) {
     final Map<String, Object> variables = job.getVariablesAsMap();
     if (!variables.containsKey("assignee") && !variables.containsKey("manager")) {
@@ -60,7 +59,7 @@ public class Listener {
           .retries(0)
           .errorMessage(
               "No assignee or manager variable provided. Please set either 'assignee' or 'manager' variable.")
-          .execute();
+          .send();
       System.out.println(
           "Job failed: No assignee or manager variable provided. Incident will be raised.");
       return;
@@ -69,8 +68,8 @@ public class Listener {
     final String assignee = (String) variables.getOrDefault("assignee", variables.get("manager"));
     client
         .newCompleteCommand(job)
-        .withResult(new CompleteJobResult().correctAssignee(assignee))
-        .execute();
+        .variables(Map.of("correctAssignee", assignee))
+        .send();
     System.out.println("Job completed successfully. Task assigned to: " + assignee);
   }
 }

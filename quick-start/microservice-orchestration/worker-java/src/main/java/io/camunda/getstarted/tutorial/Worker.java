@@ -3,11 +3,11 @@ package io.camunda.getstarted.tutorial;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.camunda.zeebe.spring.client.annotation.JobWorker;
+import io.camunda.client.annotation.JobWorker;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import io.camunda.zeebe.client.api.response.ActivatedJob;
+import io.camunda.client.api.response.ActivatedJob;
 
 @SpringBootApplication
 public class Worker {
