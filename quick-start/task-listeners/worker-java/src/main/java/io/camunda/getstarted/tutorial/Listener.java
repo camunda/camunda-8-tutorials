@@ -1,6 +1,7 @@
 package io.camunda.getstarted.tutorial;
 
 import io.camunda.client.CamundaClient;
+import io.camunda.client.api.command.CompleteJobResult;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.annotation.JobWorker;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class Listener {
     final String assignee = (String) variables.getOrDefault("assignee", variables.get("manager"));
     client
         .newCompleteCommand(job)
-        .variables(Map.of("correctAssignee", assignee))
+        .withResult(r -> r.forUserTask().correctAssignee(assignee))
         .send();
     System.out.println("Job completed successfully. Task assigned to: " + assignee);
   }
