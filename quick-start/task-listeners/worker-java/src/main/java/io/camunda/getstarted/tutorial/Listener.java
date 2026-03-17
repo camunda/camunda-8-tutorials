@@ -1,6 +1,7 @@
 package io.camunda.getstarted.tutorial;
 
 import io.camunda.client.CamundaClient;
+import io.camunda.client.api.command.CompleteJobResult;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.annotation.JobWorker;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class Listener {
       client
           .newDeployResourceCommand()
           .addResourceFromClasspath("Quick_Start_Task_Listeners.bpmn")
-          .send();
+          .execute();
       System.out.println("Process deployed successfully.");
     }
     if (SHOULD_CREATE_PROCESS_INSTANCE_ON_STARTUP) {
@@ -45,7 +46,7 @@ public class Listener {
           .bpmnProcessId("task-listener-tutorial")
           .latestVersion()
           .variable("assignee", "john")
-          .send();
+          .execute();
       System.out.println("Process instance created successfully.");
     }
   }
@@ -59,7 +60,7 @@ public class Listener {
           .retries(0)
           .errorMessage(
               "No assignee or manager variable provided. Please set either 'assignee' or 'manager' variable.")
-          .send();
+          .execute();
       System.out.println(
           "Job failed: No assignee or manager variable provided. Incident will be raised.");
       return;
@@ -68,8 +69,8 @@ public class Listener {
     final String assignee = (String) variables.getOrDefault("assignee", variables.get("manager"));
     client
         .newCompleteCommand(job)
-        .variables(Map.of("correctAssignee", assignee))
-        .send();
+        .withResult(r -> r.forUserTask().correctAssignee(assignee))
+        .execute();
     System.out.println("Job completed successfully. Task assigned to: " + assignee);
   }
 }
