@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  id="test-list-users-definitions"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  <!--
+    Wrapper process for Type 1 integration test of the ListUsers HTTP connector.
+    No input variables needed.
+    Output variable: userList (array of {id, name, username})
+  -->
+  <bpmn:process id="test-list-users" name="Test: List Users" isExecutable="true">
+    <bpmn:startEvent id="Start">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="ListUsers_wrapper" name="List Users">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="https://jsonplaceholder.typicode.com/users" target="url" />
+          <zeebe:input source="=false" target="storeResponse" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={userList: for user in response.body return {id: user.id, name: user.name, username: user.username}}" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start" targetRef="ListUsers_wrapper" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="ListUsers_wrapper" targetRef="End" />
+  </bpmn:process>
+</bpmn:definitions>

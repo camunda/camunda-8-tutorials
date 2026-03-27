@@ -1,0 +1,26 @@
+# Spring profile: integration
+# Activated by: mvn test -P integration-test
+#
+# Uses CPT's "managed" runtime: embedded Zeebe + full connector runtime in Docker.
+# Real connectors run (HTTP JSON, agenticai) — no mocks needed for connector tests.
+#
+# Run with Bedrock secrets loaded:
+#   env $(cat ../.env | grep -v '^#' | xargs) mvn test -P integration-test
+
+camunda:
+  process-test:
+    runtime-mode: managed
+    connectors-enabled: true
+    # Connector secrets: map env vars to BPMN {{secrets.*}} references
+    # These must match the secret names used in the BPMN: {{secrets.AWS_BEDROCK_ACCESS_KEY}}
+    connectors-secrets:
+      AWS_BEDROCK_ACCESS_KEY: ${AWS_BEDROCK_ACCESS_KEY}
+      AWS_BEDROCK_SECRET_KEY: ${AWS_BEDROCK_SECRET_KEY}
+
+logging:
+  level:
+    root: warn
+    io.camunda.process.test: info
+    io.camunda.tests: info
+    org.testcontainers: warn
+    tc: error

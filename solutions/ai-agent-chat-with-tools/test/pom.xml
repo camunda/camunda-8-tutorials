@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.2</version>
+    </parent>
+
+    <groupId>io.camunda</groupId>
+    <artifactId>ai-agent-chat-tests</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>AI Agent Chat With Tools — Process Tests</name>
+    <description>
+        CPT test harness for the ai-agent-chat-with-tools Node.js process.
+
+        Two test layers:
+          mvn test                          Process tests (embedded Zeebe via Docker).
+                                            AI agent job mocked with realistic output
+                                            captured from integration run.
+
+          mvn test -P integration-test      Integration tests (embedded Zeebe + embedded
+                                            connector runtime including agenticai + HTTP).
+                                            Requires: Docker, AWS Bedrock env vars.
+                                            Run: env $(cat ../.env | grep -v '^#' | xargs) mvn test -P integration-test
+    </description>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!--
+            8.9.0 GA is not yet on Maven Central. Use the SNAPSHOT from Camunda's public
+            artifactory. Update to a GA release (e.g. 8.9.1) once it ships to Maven Central.
+            Check: https://search.maven.org/search?q=camunda-process-test-spring
+        -->
+        <camunda.version>8.9.0-SNAPSHOT</camunda.version>
+    </properties>
+
+    <repositories>
+        <!-- Camunda public artifactory — hosts 8.9.x SNAPSHOT builds -->
+        <repository>
+            <id>camunda-public-artifactory</id>
+            <name>Camunda Public Artifactory</name>
+            <url>https://artifacts.camunda.com/artifactory/public/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.camunda</groupId>
+            <artifactId>camunda-process-test-spring</artifactId>
+            <version>${camunda.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <testResources>
+            <!-- Standard test resources (test cases, config) -->
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <!--
+                BPMN files from the Node.js project above.
+                CPT auto-deploys all BPMN/DMN/form files on the classpath at test startup.
+            -->
+            <testResource>
+                <directory>../</directory>
+                <includes>
+                    <include>*.bpmn</include>
+                    <include>*.dmn</include>
+                    <include>*.form</include>
+                </includes>
+            </testResource>
+        </testResources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <!-- Default: run process tests, exclude integration tests -->
+                <configuration>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!--
+            Integration-test profile: runs *IT.java tests with the connector runtime enabled.
+            Activates the "integration" Spring profile which sets runtime-mode=managed and
+            connectors-enabled=true. Process tests (*Test.java) are excluded.
+
+            Requires: Docker running, AWS_BEDROCK_ACCESS_KEY and AWS_BEDROCK_SECRET_KEY env vars.
+            Run: env $(cat ../.env | grep -v '^#' | xargs) mvn test -P integration-test
+        -->
+        <profile>
+            <id>integration-test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- Flip: run only IT tests, exclude process tests -->
+                            <excludes>
+                                <exclude>**/JsonProcessTest.java</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <systemPropertyVariables>
+                                <spring.profiles.active>integration</spring.profiles.active>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

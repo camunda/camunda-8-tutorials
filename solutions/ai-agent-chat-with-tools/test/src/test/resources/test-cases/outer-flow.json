@@ -1,0 +1,216 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "Happy path — user satisfied on first response",
+      "description": "The AHSP job is completed with a direct response (no tool calls). The user is satisfied and the process ends at the end event. Tests outer-flow gateway routing.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List all available users for me."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 500, "outputTokenCount": 100}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "List all available users for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are all 10 available users."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are all 10 available users."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "StartEvent_1"},
+            {"elementId": "AI_Agent"},
+            {"elementId": "User_Feedback"},
+            {"elementId": "Event_0i39jej"}
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Loop path — user not satisfied, then satisfied on second try",
+      "description": "User answers 'not satisfied' after the first agent response. The process loops back through the gateway and the AHSP runs again. User is satisfied on the second response. Tests the loop and gateway routing.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List all available users for me."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 500, "outputTokenCount": 80}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "List all available users for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are the available users with their usernames."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are the available users with their usernames."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": false,
+            "followUpInput": "Please also show me the email of each user."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 900, "outputTokenCount": 150}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Please also show me the email of each user."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are the users with their email addresses."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are the users with their email addresses."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ]
+}
