@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:zeebe="http://camunda.org/schema/zeebe/1.0"
+                  id="test-ai-agent-chat-with-tools-definitions"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+  <!--
+    Connector isolation test process for ai-agent-chat-with-tools.
+
+    Each HTTP tool in the AHSP has its own isolated segment here:
+      Start_<ToolName> → <ToolName> → End_<ToolName>
+
+    Tests activate a single segment using:
+      client.newCreateInstanceCommand()
+        .bpmnProcessId("test-ai-agent-chat-with-tools")
+        .latestVersion()
+        .startBeforeElement("Start_ListUsers")   // select the segment to test
+        .send().join();
+
+    Connector configuration is identical to the AHSP tool elements, with
+    fromAi() expressions replaced by direct process variable references.
+
+    Keep this file in sync with the AHSP in ai-agent-chat-with-tools.bpmn.
+    When tools are added, removed, or reconfigured in the AHSP, update here too.
+
+    HTTP tools covered: ListUsers, LoadUserByID, Search_Recipe, Jokes_API, Fetch_URL
+    Script tools (GetDateAndTime, SuperfluxCalculation, SendEmail) do not need
+    connector isolation tests — they run inline without an external connector job.
+    User tasks (Human_Send_Email_Request) are covered in E2E tests.
+  -->
+  <bpmn:process id="test-ai-agent-chat-with-tools" name="Test: AI Agent Chat With Tools — Connector Isolation" isExecutable="true">
+
+    <!-- ===== Row 1: ListUsers ===== -->
+    <bpmn:startEvent id="Start_ListUsers" name="Test&#10;ListUsers">
+      <bpmn:outgoing>Flow_ListUsers_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="ListUsers" name="List Users">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="https://jsonplaceholder.typicode.com/users" target="url" />
+          <zeebe:input source="false" target="storeResponse" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="false" target="ignoreNullValues" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={toolCallResult: for user in response.body return {id: user.id, name: user.name, username: user.username}}" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ListUsers_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_ListUsers_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_ListUsers">
+      <bpmn:incoming>Flow_ListUsers_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_ListUsers_1" sourceRef="Start_ListUsers" targetRef="ListUsers" />
+    <bpmn:sequenceFlow id="Flow_ListUsers_2" sourceRef="ListUsers" targetRef="End_ListUsers" />
+
+    <!-- ===== Row 2: LoadUserByID — input: userId (integer) ===== -->
+    <bpmn:startEvent id="Start_LoadUserByID" name="Test&#10;LoadUserByID">
+      <bpmn:outgoing>Flow_LoadUserByID_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="LoadUserByID" name="Load User By ID">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="=&quot;https://jsonplaceholder.typicode.com/users/&quot; + string(userId)" target="url" />
+          <zeebe:input source="false" target="storeResponse" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="false" target="ignoreNullValues" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={toolCallResult: if (is defined(response.body.id)) then response.body else &quot;User not found&quot;}" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_LoadUserByID_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_LoadUserByID_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_LoadUserByID">
+      <bpmn:incoming>Flow_LoadUserByID_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_LoadUserByID_1" sourceRef="Start_LoadUserByID" targetRef="LoadUserByID" />
+    <bpmn:sequenceFlow id="Flow_LoadUserByID_2" sourceRef="LoadUserByID" targetRef="End_LoadUserByID" />
+
+    <!-- ===== Row 3: Search_Recipe — input: searchQuery (string) ===== -->
+    <bpmn:startEvent id="Start_SearchRecipe" name="Test&#10;Search_Recipe">
+      <bpmn:outgoing>Flow_SearchRecipe_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Search_Recipe" name="Search Recipe">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="https://dummyjson.com/recipes/search" target="url" />
+          <zeebe:input source="={q: searchQuery}" target="queryParameters" />
+          <zeebe:input source="false" target="storeResponse" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="false" target="ignoreNullValues" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={toolCallResult: if (count(response.body.recipes) &gt; 0) then response.body.recipes else &quot;No result found.&quot;}" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_SearchRecipe_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_SearchRecipe_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_SearchRecipe">
+      <bpmn:incoming>Flow_SearchRecipe_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_SearchRecipe_1" sourceRef="Start_SearchRecipe" targetRef="Search_Recipe" />
+    <bpmn:sequenceFlow id="Flow_SearchRecipe_2" sourceRef="Search_Recipe" targetRef="End_SearchRecipe" />
+
+    <!-- ===== Row 4: Jokes_API — no input required ===== -->
+    <bpmn:startEvent id="Start_JokesAPI" name="Test&#10;Jokes_API">
+      <bpmn:outgoing>Flow_JokesAPI_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Jokes_API" name="Jokes API">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="https://v2.jokeapi.dev/joke/Any?format=txt&amp;safe-mode" target="url" />
+          <zeebe:input source="false" target="storeResponse" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="false" target="ignoreNullValues" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={toolCallResult: response.body}" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_JokesAPI_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_JokesAPI_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_JokesAPI">
+      <bpmn:incoming>Flow_JokesAPI_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_JokesAPI_1" sourceRef="Start_JokesAPI" targetRef="Jokes_API" />
+    <bpmn:sequenceFlow id="Flow_JokesAPI_2" sourceRef="Jokes_API" targetRef="End_JokesAPI" />
+
+    <!-- ===== Row 5: Fetch_URL — input: fetchUrl (string) ===== -->
+    <bpmn:startEvent id="Start_FetchURL" name="Test&#10;Fetch_URL">
+      <bpmn:outgoing>Flow_FetchURL_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Fetch_URL" name="Fetch URL">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="=fetchUrl" target="url" />
+          <zeebe:input source="true" target="storeResponse" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="false" target="ignoreNullValues" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={toolCallResult: response.document}" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_FetchURL_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_FetchURL_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End_FetchURL">
+      <bpmn:incoming>Flow_FetchURL_2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_FetchURL_1" sourceRef="Start_FetchURL" targetRef="Fetch_URL" />
+    <bpmn:sequenceFlow id="Flow_FetchURL_2" sourceRef="Fetch_URL" targetRef="End_FetchURL" />
+
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="test-ai-agent-chat-with-tools">
+
+      <!-- Row 1: ListUsers (center y=100) -->
+      <bpmndi:BPMNShape id="Start_ListUsers_di" bpmnElement="Start_ListUsers">
+        <dc:Bounds x="152" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="135" y="125" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ListUsers_di" bpmnElement="ListUsers">
+        <dc:Bounds x="252" y="60" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_ListUsers_di" bpmnElement="End_ListUsers">
+        <dc:Bounds x="406" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_ListUsers_1_di" bpmnElement="Flow_ListUsers_1">
+        <di:waypoint x="188" y="100" />
+        <di:waypoint x="252" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ListUsers_2_di" bpmnElement="Flow_ListUsers_2">
+        <di:waypoint x="352" y="100" />
+        <di:waypoint x="406" y="100" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Row 2: LoadUserByID (center y=250) -->
+      <bpmndi:BPMNShape id="Start_LoadUserByID_di" bpmnElement="Start_LoadUserByID">
+        <dc:Bounds x="152" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="128" y="275" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LoadUserByID_di" bpmnElement="LoadUserByID">
+        <dc:Bounds x="252" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_LoadUserByID_di" bpmnElement="End_LoadUserByID">
+        <dc:Bounds x="406" y="232" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_LoadUserByID_1_di" bpmnElement="Flow_LoadUserByID_1">
+        <di:waypoint x="188" y="250" />
+        <di:waypoint x="252" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LoadUserByID_2_di" bpmnElement="Flow_LoadUserByID_2">
+        <di:waypoint x="352" y="250" />
+        <di:waypoint x="406" y="250" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Row 3: Search_Recipe (center y=400) -->
+      <bpmndi:BPMNShape id="Start_SearchRecipe_di" bpmnElement="Start_SearchRecipe">
+        <dc:Bounds x="152" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="123" y="425" width="92" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Search_Recipe_di" bpmnElement="Search_Recipe">
+        <dc:Bounds x="252" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_SearchRecipe_di" bpmnElement="End_SearchRecipe">
+        <dc:Bounds x="406" y="382" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_SearchRecipe_1_di" bpmnElement="Flow_SearchRecipe_1">
+        <di:waypoint x="188" y="400" />
+        <di:waypoint x="252" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SearchRecipe_2_di" bpmnElement="Flow_SearchRecipe_2">
+        <di:waypoint x="352" y="400" />
+        <di:waypoint x="406" y="400" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Row 4: Jokes_API (center y=550) -->
+      <bpmndi:BPMNShape id="Start_JokesAPI_di" bpmnElement="Start_JokesAPI">
+        <dc:Bounds x="152" y="532" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="135" y="575" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Jokes_API_di" bpmnElement="Jokes_API">
+        <dc:Bounds x="252" y="510" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_JokesAPI_di" bpmnElement="End_JokesAPI">
+        <dc:Bounds x="406" y="532" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_JokesAPI_1_di" bpmnElement="Flow_JokesAPI_1">
+        <di:waypoint x="188" y="550" />
+        <di:waypoint x="252" y="550" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_JokesAPI_2_di" bpmnElement="Flow_JokesAPI_2">
+        <di:waypoint x="352" y="550" />
+        <di:waypoint x="406" y="550" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Row 5: Fetch_URL (center y=700) -->
+      <bpmndi:BPMNShape id="Start_FetchURL_di" bpmnElement="Start_FetchURL">
+        <dc:Bounds x="152" y="682" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="136" y="725" width="68" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fetch_URL_di" bpmnElement="Fetch_URL">
+        <dc:Bounds x="252" y="660" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_FetchURL_di" bpmnElement="End_FetchURL">
+        <dc:Bounds x="406" y="682" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_FetchURL_1_di" bpmnElement="Flow_FetchURL_1">
+        <di:waypoint x="188" y="700" />
+        <di:waypoint x="252" y="700" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FetchURL_2_di" bpmnElement="Flow_FetchURL_2">
+        <di:waypoint x="352" y="700" />
+        <di:waypoint x="406" y="700" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

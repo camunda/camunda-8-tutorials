@@ -31,7 +31,8 @@ import org.springframework.boot.test.context.SpringBootTest;
  * This means the agenticai connector and HTTP JSON connector run for real, against real APIs.
  *
  * Two test groups:
- *   1. REST endpoint tests — verify each HTTP connector wrapper process works independently
+ *   1. REST endpoint tests — each test activates one segment of the consolidated test BPMN
+ *      using startBeforeElement(). One BPMN, one deployment, one process ID for all tools.
  *   2. Agent tests — verify specific prompts trigger expected tool calls via real Bedrock
  *
  * After each agent test passes, capture the agent output for mock data:
@@ -41,7 +42,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * Prerequisites:
  *   - Docker running
  *   - AWS_BEDROCK_ACCESS_KEY and AWS_BEDROCK_SECRET_KEY set in environment
- *   - Run: env $(cat ../.env | grep -v '^#' | xargs) mvn test -P integration-test
+ *   - Run: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test
  *
  * Note: Connector runtime startup adds ~30-60s to the first test. @Timeout values account for this.
  * Note: Do NOT use @Nested classes — each nested class gets its own CPT runtime and
@@ -54,11 +55,7 @@ import org.springframework.boot.test.context.SpringBootTest;
     "ai-agent-chat-initial-request.form",
     "ai-agent-chat-user-feedback.form",
     "ai-agent-chat-human-send-email-request.form",
-    "bpmn/test-list-users.bpmn",
-    "bpmn/test-load-user-by-id.bpmn",
-    "bpmn/test-search-recipe.bpmn",
-    "bpmn/test-jokes-api.bpmn",
-    "bpmn/test-fetch-url.bpmn"
+    "bpmn/test-ai-agent-chat-with-tools.bpmn"
 })
 public class AgentJavaIT {
 
@@ -78,8 +75,13 @@ public class AgentJavaIT {
     // =========================================================================
     // REST endpoint isolation tests
     //
-    // Each test starts a minimal wrapper BPMN process and lets the real HTTP connector
-    // run against the public API. No mocks. Verifies connector config and API availability.
+    // Each test activates one segment of the consolidated test BPMN using
+    // startBeforeElement(). The real HTTP connector runs against the public API.
+    // No mocks. Verifies connector config, FEEL expressions, and API availability.
+    //
+    // Consolidated test BPMN: bpmn/test-ai-agent-chat-with-tools.bpmn
+    // Process ID: test-ai-agent-chat-with-tools
+    // Each tool has its own segment: Start_<ToolName> → <ToolName> → End_<ToolName>
     // =========================================================================
 
     @Test
@@ -87,13 +89,14 @@ public class AgentJavaIT {
     @DisplayName("REST: LoadUserByID — fetches user 1 from jsonplaceholder")
     void loadUserById() {
         var instance = client.newCreateInstanceCommand()
-            .bpmnProcessId("test-load-user-by-id")
+            .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
+            .startBeforeElement("Start_LoadUserByID")
             .variables(Map.of("userId", 1))
             .send().join();
 
         assertThatProcessInstance(instance)
-            .hasCompletedElements(byId("End"))
+            .hasCompletedElements(byId("End_LoadUserByID"))
             .isCompleted();
     }
 
@@ -102,8 +105,9 @@ public class AgentJavaIT {
     @DisplayName("REST: ListUsers — lists all users from jsonplaceholder")
     void listUsers() {
         var instance = client.newCreateInstanceCommand()
-            .bpmnProcessId("test-list-users")
+            .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
+            .startBeforeElement("Start_ListUsers")
             .send().join();
 
         assertThatProcessInstance(instance).isCompleted();
@@ -114,8 +118,9 @@ public class AgentJavaIT {
     @DisplayName("REST: Search_Recipe — searches 'pizza' on dummyjson")
     void searchRecipe() {
         var instance = client.newCreateInstanceCommand()
-            .bpmnProcessId("test-search-recipe")
+            .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
+            .startBeforeElement("Start_SearchRecipe")
             .variables(Map.of("searchQuery", "pizza"))
             .send().join();
 
@@ -127,8 +132,9 @@ public class AgentJavaIT {
     @DisplayName("REST: Jokes_API — fetches a random joke from jokeapi.dev")
     void jokesApi() {
         var instance = client.newCreateInstanceCommand()
-            .bpmnProcessId("test-jokes-api")
+            .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
+            .startBeforeElement("Start_JokesAPI")
             .send().join();
 
         assertThatProcessInstance(instance).isCompleted();
@@ -139,8 +145,9 @@ public class AgentJavaIT {
     @DisplayName("REST: Fetch_URL — fetches a dynamic URL (jsonplaceholder todo 1)")
     void fetchUrl() {
         var instance = client.newCreateInstanceCommand()
-            .bpmnProcessId("test-fetch-url")
+            .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
+            .startBeforeElement("Start_FetchURL")
             .variables(Map.of("fetchUrl", "https://jsonplaceholder.typicode.com/todos/1"))
             .send().join();
 
