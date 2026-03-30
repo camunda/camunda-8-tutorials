@@ -91,7 +91,7 @@ public class AgentJavaIT {
         var instance = client.newCreateInstanceCommand()
             .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
-            .startBeforeElement("Start_LoadUserByID")
+            .startBeforeElement("LoadUserByID")
             .variables(Map.of("userId", 1))
             .send().join();
 
@@ -107,7 +107,7 @@ public class AgentJavaIT {
         var instance = client.newCreateInstanceCommand()
             .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
-            .startBeforeElement("Start_ListUsers")
+            .startBeforeElement("ListUsers")
             .send().join();
 
         assertThatProcessInstance(instance).isCompleted();
@@ -120,7 +120,7 @@ public class AgentJavaIT {
         var instance = client.newCreateInstanceCommand()
             .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
-            .startBeforeElement("Start_SearchRecipe")
+            .startBeforeElement("Search_Recipe")
             .variables(Map.of("searchQuery", "pizza"))
             .send().join();
 
@@ -134,7 +134,7 @@ public class AgentJavaIT {
         var instance = client.newCreateInstanceCommand()
             .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
-            .startBeforeElement("Start_JokesAPI")
+            .startBeforeElement("Jokes_API")
             .send().join();
 
         assertThatProcessInstance(instance).isCompleted();
@@ -147,7 +147,7 @@ public class AgentJavaIT {
         var instance = client.newCreateInstanceCommand()
             .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
-            .startBeforeElement("Start_FetchURL")
+            .startBeforeElement("Fetch_URL")
             .variables(Map.of("fetchUrl", "https://jsonplaceholder.typicode.com/todos/1"))
             .send().join();
 
