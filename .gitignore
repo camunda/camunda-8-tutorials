@@ -4,3 +4,5 @@ target
 .classpath
 .vscode
 .DS_Store
+.claude/
+*.code-workspace
