@@ -74,6 +74,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: surefire-${{ matrix.solution != '' && hashFiles(format('{0}/test/target/surefire-reports/*.xml', matrix.solution)) || 'empty' }}
+          name: surefire-reports-${{ matrix.solution }}
           path: ${{ matrix.solution }}/test/target/surefire-reports/
           if-no-files-found: ignore
