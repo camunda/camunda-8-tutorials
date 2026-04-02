@@ -38,10 +38,6 @@
     <bpmn:messageFlow id="Flow_1047q9a" name="success" sourceRef="Activity_1ni426c" targetRef="Participant_1fh4ivu" />
   </bpmn:collaboration>
   <bpmn:process id="Process_wctxyvg" name="Bank: Trade Exception Remediation Processing" isExecutable="true">
-    <bpmn:textAnnotation id="TextAnnotation_capital_market_intro">
-      <bpmn:text>Triggered when a trade order is received from a broker. The happy-path outcome is the order validated, executed on the stock exchange, and successfully processed.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_capital_market_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_capital_market_intro" />
     <bpmn:startEvent id="StartEvent_1" name="Order received from broker">
       <bpmn:extensionElements>
         <zeebe:properties>
@@ -245,6 +241,10 @@
     <bpmn:sequenceFlow id="Flow_1pkkmwu" sourceRef="Event_15c6fg8" targetRef="Gateway_0fu4781" />
     <bpmn:sequenceFlow id="Flow_0lv893m" sourceRef="Event_1dogjg4" targetRef="Event_0jbyy73" />
     <bpmn:sequenceFlow id="Flow_1stlulk" sourceRef="Gateway_0fu4781" targetRef="Activity_1frnjx4" />
+    <bpmn:textAnnotation id="TextAnnotation_capital_market_intro">
+      <bpmn:text>Triggered when a trade order is received from a broker. The happy-path outcome is the order validated, executed on the stock exchange, and successfully processed.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_capital_market_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_capital_market_intro" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_15ie2ek">

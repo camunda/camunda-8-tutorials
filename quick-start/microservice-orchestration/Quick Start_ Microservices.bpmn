@@ -4,10 +4,6 @@
     <bpmn:startEvent id="StartEvent" name="Orchestration triggered">
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:textAnnotation id="TextAnnotation_tutorial_ms">
-      <bpmn:text>Triggered when a microservice needs to be invoked. The process calls a job worker microservice and ends once the worker completes the task.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_tutorial_ms" associationDirection="None" sourceRef="StartEvent" targetRef="TextAnnotation_tutorial_ms" />
     <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent" targetRef="Run_microservice" />
     <bpmn:endEvent id="EndEvent" name="Microservice completed">
       <bpmn:incoming>Flow_2</bpmn:incoming>
@@ -20,6 +16,10 @@
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_tutorial_ms">
+      <bpmn:text>Triggered when a microservice needs to be invoked. The process calls a job worker microservice and ends once the worker completes the task.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_tutorial_ms" associationDirection="None" sourceRef="StartEvent" targetRef="TextAnnotation_tutorial_ms" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="template-microservice-tutorial-18us19m">

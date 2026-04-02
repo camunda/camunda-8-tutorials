@@ -133,10 +133,6 @@ For more information, read https://docs.camunda.io/docs/guides/devops-lifecycle/
   "type": "default"
 }</zeebe:userTaskForm>
     </bpmn:extensionElements>
-    <bpmn:textAnnotation id="TextAnnotation_cicd_intro">
-      <bpmn:text>Triggered when a CI/CD pipeline run is initiated from Web Modeler. The happy-path outcome is all files deployed to production via GitLab merge request.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_cicd_intro" associationDirection="None" sourceRef="startCicd" targetRef="TextAnnotation_cicd_intro" />
     <bpmn:startEvent id="startCicd" name="CI/CD pipeline started">
       <bpmn:extensionElements>
         <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_22jqpc9" />
@@ -859,6 +855,10 @@ For more information, read https://docs.camunda.io/docs/guides/devops-lifecycle/
 https://docs.camunda.io/docs/next/components/modeler/web-modeler/git-sync/</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_01nnwlp" associationDirection="None" sourceRef="startCicd" targetRef="TextAnnotation_0eg8swt" />
+    <bpmn:textAnnotation id="TextAnnotation_cicd_intro">
+      <bpmn:text>Triggered when a CI/CD pipeline run is initiated from Web Modeler. The happy-path outcome is all files deployed to production via GitLab merge request.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_cicd_intro" associationDirection="None" sourceRef="startCicd" targetRef="TextAnnotation_cicd_intro" />
   </bpmn:process>
   <bpmn:error id="Error_0u4w06y" name="fileNotFoundError" errorCode="404" />
   <bpmn:error id="Error_0ue4so7" name="deployError" errorCode="500" />

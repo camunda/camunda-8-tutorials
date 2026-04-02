@@ -55,10 +55,6 @@
     <bpmn:sequenceFlow id="Flow_1izp9te" sourceRef="Event_0z73nuo" targetRef="GetAndConfirmReminderTask" />
     <bpmn:sequenceFlow id="Flow_0axp5vf" sourceRef="ClarifyRequestTask" targetRef="Gateway_0sz0cst" />
     <bpmn:sequenceFlow id="Flow_1d5wcnk" sourceRef="GetLineManagerTask" targetRef="Gateway_0sz0cst" />
-    <bpmn:textAnnotation id="TextAnnotation_absence_intro">
-      <bpmn:text>Triggered when an employee needs time off. The happy-path outcome is the absence request being approved, logged in the HR system, and the employee notified.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_absence_intro" associationDirection="None" sourceRef="TimeOffNeededStartEvent" targetRef="TextAnnotation_absence_intro" />
     <bpmn:startEvent id="TimeOffNeededStartEvent" name="Time off needed">
       <bpmn:outgoing>Flow_15yg3k5</bpmn:outgoing>
     </bpmn:startEvent>
@@ -148,6 +144,10 @@
         <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R/P2D</bpmn:timeCycle>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
+    <bpmn:textAnnotation id="TextAnnotation_absence_intro">
+      <bpmn:text>Triggered when an employee needs time off. The happy-path outcome is the absence request being approved, logged in the HR system, and the employee notified.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_absence_intro" associationDirection="None" sourceRef="TimeOffNeededStartEvent" targetRef="TextAnnotation_absence_intro" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="AbsenceRequestProcessPool">

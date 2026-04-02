@@ -40,10 +40,6 @@
   "executionPlatformVersion": "1.3"
 }</zeebe:userTaskForm>
     </bpmn:extensionElements>
-    <bpmn:textAnnotation id="TextAnnotation_tutorial_ht">
-      <bpmn:text>Triggered when someone is hungry and needs to decide what to eat. The process routes to the appropriate meal preparation task and ends once the meal is ready.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_tutorial_ht" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_tutorial_ht" />
     <bpmn:startEvent id="StartEvent_1" name="Hungry">
       <bpmn:outgoing>Flow_11y9y90</bpmn:outgoing>
     </bpmn:startEvent>
@@ -88,6 +84,10 @@
       <bpmn:incoming>salad-path</bpmn:incoming>
       <bpmn:outgoing>salad-prepared</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:textAnnotation id="TextAnnotation_tutorial_ht">
+      <bpmn:text>Triggered when someone is hungry and needs to decide what to eat. The process routes to the appropriate meal preparation task and ends once the meal is ready.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_tutorial_ht" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_tutorial_ht" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="template-human-task-tutorial-074nxxb">

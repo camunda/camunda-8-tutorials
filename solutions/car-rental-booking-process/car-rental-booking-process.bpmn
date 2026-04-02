@@ -46,10 +46,6 @@
     <bpmn:sequenceFlow id="Flow_081poii" sourceRef="Activity_02xqc92" targetRef="Gateway_11m63z7" />
     <bpmn:sequenceFlow id="Flow_0t1d6l2" sourceRef="Activity_1vv1nnm" targetRef="Gateway_11m63z7" />
     <bpmn:sequenceFlow id="Flow_15xuq47" sourceRef="Gateway_11m63z7" targetRef="Activity_0tw025l" />
-    <bpmn:textAnnotation id="TextAnnotation_car_rental_intro">
-      <bpmn:text>Triggered when a customer submits a car rental booking request. The happy-path outcome is all checks passed, car reserved, rental completed, and booking confirmed.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_car_rental_intro" associationDirection="None" sourceRef="Event_1k76lxn" targetRef="TextAnnotation_car_rental_intro" />
     <bpmn:startEvent id="Event_1k76lxn" name="Booking request received">
       <bpmn:extensionElements>
         <zeebe:properties>
@@ -557,6 +553,10 @@
       <bpmn:outgoing>Flow_1oxll6n</bpmn:outgoing>
     </bpmn:intermediateThrowEvent>
     <bpmn:sequenceFlow id="Flow_1oxll6n" sourceRef="Event_17omjj1" targetRef="Activity_02xqc92" />
+    <bpmn:textAnnotation id="TextAnnotation_car_rental_intro">
+      <bpmn:text>Triggered when a customer submits a car rental booking request. The happy-path outcome is all checks passed, car reserved, rental completed, and booking confirmed.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_car_rental_intro" associationDirection="None" sourceRef="Event_1k76lxn" targetRef="TextAnnotation_car_rental_intro" />
   </bpmn:process>
   <bpmn:error id="Error_1gjde7m" name="checks and validations failed" errorCode="checks_and_validations_failed" />
   <bpmn:error id="Error_0gu0bmf" name="car is unavailable or not ready" errorCode="car_unavailably_not_ready" />

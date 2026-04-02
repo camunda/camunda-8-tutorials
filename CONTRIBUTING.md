@@ -71,9 +71,7 @@ Follow the [Camunda ID naming conventions](https://docs.camunda.io/docs/next/com
 
 **IDs should reflect their element's name** — a reviewer reading the XML should be able to understand what each element does from its ID alone.
 
-**Existing blueprints** that were created in Web Modeler may have auto-generated IDs (e.g., `Process_l1jbzht`, `Activity_03z512o`). These must not be renamed after a blueprint is published — they are referenced in test files and deployment. Only apply the naming convention to new processes or new elements added to existing processes.
-
-**Never** rename any ID that is already referenced in a `.test.json` file without updating all references.
+**Existing blueprints** that were created in Web Modeler may have auto-generated IDs (e.g., `Process_l1jbzht`, `Activity_03z512o`). Rename these to follow the naming convention above — the process ID should match the BPMN filename, and all element IDs should be descriptive. Update any `.test.json` references at the same time.
 
 ### Modeling structure
 

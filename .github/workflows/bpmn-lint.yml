@@ -21,6 +21,9 @@ jobs:
       - name: Install bpmnlint
         run: npm install -g bpmnlint bpmnlint-plugin-camunda-compat
 
+      - name: Install xmllint
+        run: sudo apt-get install -y libxml2-utils
+
       - name: Check XML well-formedness
         run: |
           ERRORS=0

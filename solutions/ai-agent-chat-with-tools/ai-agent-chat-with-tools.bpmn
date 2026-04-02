@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_18jxukq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.45.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
   <bpmn:process id="ai-agent-chat-with-tools" name="AI Agent Chat With Tools" isExecutable="true">
-    <bpmn:textAnnotation id="TextAnnotation_tools_intro">
-      <bpmn:text>Triggered when a user submits a task for the AI agent to perform. The agent uses available tools to complete the task, and the process ends once the user confirms they are satisfied.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_tools_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_tools_intro" />
     <bpmn:startEvent id="StartEvent_1" name="Task to perform received">
       <bpmn:extensionElements>
         <zeebe:formDefinition formId="ai-agent-chat-initial-request" />
@@ -264,6 +260,10 @@
     <bpmn:textAnnotation id="TextAnnotation_01jo4ud">
       <bpmn:text>Each task you add represents a capability your agent will have. You can add new tasks and the agent will know what it's good for based on its documentation.</bpmn:text>
     </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_tools_intro">
+      <bpmn:text>Triggered when a user submits a task for the AI agent to perform. The agent uses available tools to complete the task, and the process ends once the user confirms they are satisfied.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_tools_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_tools_intro" />
   </bpmn:process>
   <bpmn:message id="Message_3mpc025" name="ai-agent-message">
     <bpmn:extensionElements>

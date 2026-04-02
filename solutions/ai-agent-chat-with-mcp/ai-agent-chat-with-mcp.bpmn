@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_18jxukq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.42.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0">
   <bpmn:process id="ai-agent-chat-with-mcp" name="AI Agent Chat With MCP" isExecutable="true">
-    <bpmn:textAnnotation id="TextAnnotation_mcp_intro">
-      <bpmn:text>Triggered when a user submits an initial chat request. The AI agent uses MCP tools to respond, and the process ends once the user is satisfied with the answer.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_mcp_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_mcp_intro" />
     <bpmn:startEvent id="StartEvent_1" name="Chat request received">
       <bpmn:extensionElements>
         <zeebe:formDefinition formId="ai-agent-chat-initial-request" />
@@ -241,6 +237,10 @@ else
     </bpmn:textAnnotation>
     <bpmn:group id="Group_16cfm2b" categoryValueRef="CategoryValue_19j2i0i" />
     <bpmn:association id="Association_03owhkm" associationDirection="None" sourceRef="SuperfluxProduct" targetRef="TextAnnotation_1rkjf45" />
+    <bpmn:textAnnotation id="TextAnnotation_mcp_intro">
+      <bpmn:text>Triggered when a user submits an initial chat request. The AI agent uses MCP tools to respond, and the process ends once the user is satisfied with the answer.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_mcp_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_mcp_intro" />
   </bpmn:process>
   <bpmn:category id="Category_0n3121e">
     <bpmn:categoryValue id="CategoryValue_19j2i0i" value="MCP with user confirmation" />

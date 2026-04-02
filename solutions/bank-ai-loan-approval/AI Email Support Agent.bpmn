@@ -466,10 +466,6 @@
     <bpmn:sequenceFlow id="Flow_0d6n3x7" sourceRef="Activity_1647ldd" targetRef="Event_0mw9iyy" />
     <bpmn:sequenceFlow id="Flow_16e6f6v" sourceRef="Gateway_0kp1fqr" targetRef="Activity_04glkkx" />
     <bpmn:sequenceFlow id="Flow_1tw35xw" sourceRef="Activity_04glkkx" targetRef="Activity_0tn95r9" />
-    <bpmn:textAnnotation id="TextAnnotation_loan_approval_intro">
-      <bpmn:text>Triggered when a customer sends a loan inquiry email. The AI agent handles the inquiry using available tools; the happy-path outcome is the case resolved autonomously by the agent and confirmed by a human reviewer.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_loan_approval_intro" associationDirection="None" sourceRef="Event_WaitForEmail" targetRef="TextAnnotation_loan_approval_intro" />
     <bpmn:startEvent id="Event_WaitForEmail" name="Customer email received" zeebe:modelerTemplate="io.camunda.connectors.inbound.EmailMessageStart.v1" zeebe:modelerTemplateVersion="2" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzkwXzI0MjApIj4KPHBhdGggZD0iTTguMzM4MzUgOS45NTM2NUwxMC4zODk0IDEyLjAxMDRMOC4zMzI2MiAxNC4wNjcyTDkuMTQ2MTYgMTQuODc1TDEyLjAxMDcgMTIuMDEwNEw5LjE0NjE2IDkuMTQ1ODNMOC4zMzgzNSA5Ljk1MzY1WiIgZmlsbD0iYmxhY2siLz4KPHBhdGggZD0iTTEyLjM0ODggOS45NTM2NUwxNC4zOTk4IDEyLjAxMDRMMTIuMzQzIDE0LjA2NzJMMTMuMTU2NiAxNC44NzVMMTYuMDIxMiAxMi4wMTA0TDEzLjE1NjYgOS4xNDU4M0wxMi4zNDg4IDkuOTUzNjVaIiBmaWxsPSJibGFjayIvPgo8cGF0aCBkPSJNMy45NzIgMTEuNDM3NUgxLjEyNTMzVjIuNzkyMTlMNy42NzM3NiA3LjMyMzk2QzcuNzY5NjcgNy4zOTA0OSA3Ljg4MzYgNy40MjYxNCA4LjAwMDMyIDcuNDI2MTRDOC4xMTcwNSA3LjQyNjE0IDguMjMwOTggNy4zOTA0OSA4LjMyNjg5IDcuMzIzOTZMMTQuODc1MyAyLjc5MjE5VjhIMTYuMDIxMlYyLjI3MDgzQzE2LjAyMTIgMS45NjY5NCAxNS45MDA0IDEuNjc1NDkgMTUuNjg1NiAxLjQ2MDYxQzE1LjQ3MDcgMS4yNDU3MiAxNS4xNzkyIDEuMTI1IDE0Ljg3NTMgMS4xMjVIMS4xMjUzM0MwLjgyMTQzMiAxLjEyNSAwLjUyOTk4NCAxLjI0NTcyIDAuMzE1MDk5IDEuNDYwNjFDMC4xMDAyMTQgMS42NzU0OSAtMC4wMjA1MDc4IDEuOTY2OTQgLTAuMDIwNTA3OCAyLjI3MDgzVjExLjQzNzVDLTAuMDIwNTA3OCAxMS43NDE0IDAuMTAwMjE0IDEyLjAzMjggMC4zMTUwOTkgMTIuMjQ3N0MwLjUyOTk4NCAxMi40NjI2IDAuODIxNDMyIDEyLjU4MzMgMS4xMjUzMyAxMi41ODMzSDMuOTcyVjExLjQzNzVaTTEzLjYxNDkgMi4yNzA4M0w4LjAwMDMyIDYuMTU1MjFMMi4zODU3NCAyLjI3MDgzSDEzLjYxNDlaIiBmaWxsPSIjRkM1RDBEIi8+CjxwYXRoIGQ9Ik00LjI4MjEgOS45NTM2NUw2LjMzMzE0IDEyLjAxMDRMNC4yNzYzNyAxNC4wNjcyTDUuMDg5OTEgMTQuODc1TDcuOTU0NDkgMTIuMDEwNEw1LjA4OTkxIDkuMTQ1ODNMNC4yODIxIDkuOTUzNjVaIiBmaWxsPSJibGFjayIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzkwXzI0MjAiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==">
       <bpmn:extensionElements>
         <zeebe:properties>
@@ -504,6 +500,10 @@
       <bpmn:text>save long term memory</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0p70jxz" associationDirection="None" sourceRef="Activity_0tn95r9" targetRef="TextAnnotation_0fpqtvh" />
+    <bpmn:textAnnotation id="TextAnnotation_loan_approval_intro">
+      <bpmn:text>Triggered when a customer sends a loan inquiry email. The AI agent handles the inquiry using available tools; the happy-path outcome is the case resolved autonomously by the agent and confirmed by a human reviewer.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_loan_approval_intro" associationDirection="None" sourceRef="Event_WaitForEmail" targetRef="TextAnnotation_loan_approval_intro" />
   </bpmn:process>
   <bpmn:escalation id="Escalation_1qaovql" name="human escalation" escalationCode="100_human_escalation" />
   <bpmn:error id="Error_1xmh0a2" name="index_not_found" errorCode="index_not_found" />

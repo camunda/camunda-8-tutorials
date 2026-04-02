@@ -952,10 +952,6 @@
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="Flow_1vaffxg" sourceRef="StartEvent_1" targetRef="Activity_CreateExpenseReport" />
     <bpmn:sequenceFlow id="Flow_0od82be" sourceRef="Activity_CreateExpenseReport" targetRef="Activity_ReviewExpenseReport_Manager" />
-    <bpmn:textAnnotation id="TextAnnotation_expense_intro">
-      <bpmn:text>Triggered when an employee submits an expense report for reimbursement. The happy-path outcome is the report approved by manager and finance, expenses reimbursed, and employee notified.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_expense_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_expense_intro" />
     <bpmn:startEvent id="StartEvent_1" name="Expense approval requested">
       <bpmn:outgoing>Flow_1vaffxg</bpmn:outgoing>
     </bpmn:startEvent>
@@ -1048,6 +1044,10 @@
     </bpmn:textAnnotation>
     <bpmn:association id="Association_12m4aqv" sourceRef="Activity_ReimburseExpenses" targetRef="TextAnnotation_02rliy5" />
     <bpmn:association id="Association_1c7637v" sourceRef="TextAnnotation_0k4qsxw" targetRef="Activity_1l5wj0t" />
+    <bpmn:textAnnotation id="TextAnnotation_expense_intro">
+      <bpmn:text>Triggered when an employee submits an expense report for reimbursement. The happy-path outcome is the report approved by manager and finance, expenses reimbursed, and employee notified.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_expense_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_expense_intro" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ExpenseReimbursement">

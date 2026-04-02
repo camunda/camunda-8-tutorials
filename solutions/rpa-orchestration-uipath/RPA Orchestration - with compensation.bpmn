@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="18bf3f8" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0" camunda:diagramRelationId="aa76d615-0d8a-4a8a-8bdc-1fda876d06b4">
   <bpmn:process id="Orchestrate_UiPath_Bot" name="RPA Integration" isExecutable="true">
-    <bpmn:textAnnotation id="TextAnnotation_rpa_intro">
-      <bpmn:text>Triggered when a task needs to be processed by a UiPath RPA bot. The happy-path outcome is the bot processing the queue item successfully and the item marked as processed.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_rpa_intro" associationDirection="None" sourceRef="Event_1qzd898" targetRef="TextAnnotation_rpa_intro" />
     <bpmn:startEvent id="Event_1qzd898" name="Task processing started">
       <bpmn:extensionElements />
       <bpmn:outgoing>Flow_0mhv1kc</bpmn:outgoing>
@@ -283,6 +279,10 @@
       <bpmn:text>here you can assign the task to a user (HTO)</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1e5wlm9" associationDirection="None" sourceRef="TextAnnotation_0nzl5pb" targetRef="Activity_1umb1rv" />
+    <bpmn:textAnnotation id="TextAnnotation_rpa_intro">
+      <bpmn:text>Triggered when a task needs to be processed by a UiPath RPA bot. The happy-path outcome is the bot processing the queue item successfully and the item marked as processed.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_rpa_intro" associationDirection="None" sourceRef="Event_1qzd898" targetRef="TextAnnotation_rpa_intro" />
   </bpmn:process>
   <bpmn:message id="Message_0j5kbwa" name="36a59b39-c6d5-41e6-aa34-bd805badab31" zeebe:modelerTemplate="io.camunda.connectors.webhook.WebhookConnectorIntermediate.v1">
     <bpmn:extensionElements>

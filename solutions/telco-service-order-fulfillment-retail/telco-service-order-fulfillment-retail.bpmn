@@ -55,10 +55,6 @@
         <bpmn:flowNodeRef>Event_0yf4w6e</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:textAnnotation id="TextAnnotation_telco_intro">
-      <bpmn:text>Triggered when a customer places a service order with the telco company. The happy-path outcome is fraud checks passed, inventory verified, all partial orders fulfilled, and customer notified.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_telco_intro" associationDirection="None" sourceRef="Event_047t2hg" targetRef="TextAnnotation_telco_intro" />
     <bpmn:startEvent id="Event_047t2hg" name="Service order received">
       <bpmn:extensionElements>
         <zeebe:properties>
@@ -366,6 +362,10 @@
     <bpmn:sequenceFlow id="Flow_0yy5tar" sourceRef="Activity_00cb2gw" targetRef="Event_0mtz2ay" />
     <bpmn:sequenceFlow id="Flow_1cg0tcv" sourceRef="Activity_1j83yc1" targetRef="Activity_1jyklqs" />
     <bpmn:sequenceFlow id="Flow_0cpodcm" sourceRef="Event_182kkjw" targetRef="Event_19y7b8u" />
+    <bpmn:textAnnotation id="TextAnnotation_telco_intro">
+      <bpmn:text>Triggered when a customer places a service order with the telco company. The happy-path outcome is fraud checks passed, inventory verified, all partial orders fulfilled, and customer notified.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_telco_intro" associationDirection="None" sourceRef="Event_047t2hg" targetRef="TextAnnotation_telco_intro" />
   </bpmn:process>
   <bpmn:error id="Error_0cbsxer" name="fraud found" errorCode="fraud_found" />
   <bpmn:signal id="Signal_0m4udet" name="inventory_updated" />

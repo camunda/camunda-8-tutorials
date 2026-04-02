@@ -29,10 +29,6 @@
     <bpmn:sequenceFlow id="Flow_0t0fgj1" sourceRef="Activity_0neec1e" targetRef="Event_09ign1n" />
     <bpmn:sequenceFlow id="Flow_0h21b3d" sourceRef="Activity_0ii025u" targetRef="Event_12a1edv" />
     <bpmn:sequenceFlow id="Flow_05vdl8x" sourceRef="Event_09ign1n" targetRef="Activity_0ii025u" />
-    <bpmn:textAnnotation id="TextAnnotation_loan_origination_intro">
-      <bpmn:text>Triggered when a customer submits a loan application via the bank chatbot. The happy-path outcome is the loan approved and the customer notified via the bank's systems.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_loan_origination_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_loan_origination_intro" />
     <bpmn:startEvent id="StartEvent_1" name="Loan requested">
       <bpmn:extensionElements>
         <zeebe:formDefinition formId="Form_16l6p9i" />
@@ -282,6 +278,10 @@
       <bpmn:sequenceFlow id="Flow_02qdyzp" sourceRef="Activity_06izmqr" targetRef="Activity_02ronq9" />
       <bpmn:sequenceFlow id="Flow_05a2cyr" sourceRef="Event_1cecpcb" targetRef="Activity_06izmqr" />
     </bpmn:subProcess>
+    <bpmn:textAnnotation id="TextAnnotation_loan_origination_intro">
+      <bpmn:text>Triggered when a customer submits a loan application via the bank chatbot. The happy-path outcome is the loan approved and the customer notified via the bank's systems.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_loan_origination_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_loan_origination_intro" />
   </bpmn:process>
   <bpmn:message id="Message_02eoed2" name="customer_accepts_offer">
     <bpmn:extensionElements>

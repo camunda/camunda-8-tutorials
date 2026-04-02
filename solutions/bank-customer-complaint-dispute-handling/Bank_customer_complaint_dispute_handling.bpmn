@@ -34,10 +34,6 @@
     <bpmn:sequenceFlow id="Flow_1jy0gq5" sourceRef="Activity_02tn153" targetRef="Gateway_10h5rgs" />
     <bpmn:sequenceFlow id="Flow_0i8sw0n" sourceRef="Activity_0ynau00" targetRef="Gateway_10h5rgs" />
     <bpmn:sequenceFlow id="Flow_1i9jx1l" sourceRef="Gateway_10h5rgs" targetRef="Gateway_10tcwko" />
-    <bpmn:textAnnotation id="TextAnnotation_dispute_intro">
-      <bpmn:text>Triggered when a customer files a credit card fraud dispute via the bank's CRM system. The happy-path outcome is the dispute investigated, a refund processed, and the customer notified.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_dispute_intro" associationDirection="None" sourceRef="Event_1694q1n" targetRef="TextAnnotation_dispute_intro" />
     <bpmn:startEvent id="Event_1694q1n" name="Credit card fraud dispute filed">
       <bpmn:documentation>To test different paths, change the dispute amount to be &lt;10, between 10 and 100 or &gt;100.</bpmn:documentation>
       <bpmn:extensionElements>
@@ -274,6 +270,10 @@
       <bpmn:outgoing>Flow_1g6chbg</bpmn:outgoing>
       <bpmn:escalationEventDefinition id="EscalationEventDefinition_1atb4s8" escalationRef="Escalation_37d5bgh" />
     </bpmn:boundaryEvent>
+    <bpmn:textAnnotation id="TextAnnotation_dispute_intro">
+      <bpmn:text>Triggered when a customer files a credit card fraud dispute via the bank's CRM system. The happy-path outcome is the dispute investigated, a refund processed, and the customer notified.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_dispute_intro" associationDirection="None" sourceRef="Event_1694q1n" targetRef="TextAnnotation_dispute_intro" />
   </bpmn:process>
   <bpmn:message id="Message_2hpi0qp" name="dispute_process_receive_documents">
     <bpmn:extensionElements>

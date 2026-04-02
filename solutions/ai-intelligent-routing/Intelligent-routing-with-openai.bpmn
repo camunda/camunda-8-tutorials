@@ -413,10 +413,6 @@
   "type": "default"
 }</zeebe:userTaskForm>
     </bpmn:extensionElements>
-    <bpmn:textAnnotation id="TextAnnotation_openai_routing_intro">
-      <bpmn:text>Triggered when a customer inquiry is received. The process uses OpenAI to classify and route the inquiry to the correct team; the happy-path outcome is the inquiry resolved by the appropriate team.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_openai_routing_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_openai_routing_intro" />
     <bpmn:startEvent id="StartEvent_1" name="Inquiry received">
       <bpmn:outgoing>Flow_0mqrso0</bpmn:outgoing>
     </bpmn:startEvent>
@@ -574,6 +570,10 @@
       <bpmn:incoming>Flow_0l09f7q</bpmn:incoming>
       <bpmn:outgoing>Flow_13kjm3t</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:textAnnotation id="TextAnnotation_openai_routing_intro">
+      <bpmn:text>Triggered when a customer inquiry is received. The process uses OpenAI to classify and route the inquiry to the correct team; the happy-path outcome is the inquiry resolved by the appropriate team.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_openai_routing_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_openai_routing_intro" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_vucacjg">

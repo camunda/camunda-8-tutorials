@@ -4,10 +4,6 @@
     <bpmn:startEvent id="StartEvent" name="API call requested">
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:textAnnotation id="TextAnnotation_tutorial_api">
-      <bpmn:text>Triggered when an API call is needed. The process calls an external REST endpoint (cat facts API) and ends once a successful response is received.</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_tutorial_api" associationDirection="None" sourceRef="StartEvent" targetRef="TextAnnotation_tutorial_api" />
     <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent" targetRef="make-request" />
     <bpmn:endEvent id="EndEvent" name="API response received">
       <bpmn:incoming>Flow_2</bpmn:incoming>
@@ -31,6 +27,10 @@
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_tutorial_api">
+      <bpmn:text>Triggered when an API call is needed. The process calls an external REST endpoint (cat facts API) and ends once a successful response is received.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_tutorial_api" associationDirection="None" sourceRef="StartEvent" targetRef="TextAnnotation_tutorial_api" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="template-api-orchestration-1ikt3hz-0ybh8py">
