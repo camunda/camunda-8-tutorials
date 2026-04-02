@@ -1,0 +1,8 @@
+{
+  "name": "camunda-8-tutorials",
+  "private": true,
+  "devDependencies": {
+    "bpmnlint": "^9.0.0",
+    "bpmnlint-plugin-camunda-compat": "^2.48.0"
+  }
+}

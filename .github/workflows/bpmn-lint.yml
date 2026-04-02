@@ -6,6 +6,8 @@ on:
       - '**/*.bpmn'
       - '**/*.dmn'
       - '.bpmnlintrc'
+      - 'package.json'
+      - 'package-lock.json'
 
 jobs:
   lint:
@@ -17,9 +19,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: npm
 
-      - name: Install bpmnlint
-        run: npm install -g bpmnlint bpmnlint-plugin-camunda-compat
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
 
       - name: Install xmllint
         run: sudo apt-get install -y libxml2-utils
@@ -39,4 +42,4 @@ jobs:
           fi
 
       - name: Run bpmnlint
-        run: bpmnlint --config .bpmnlintrc $(find . -name '*.bpmn' -not -path '*/node_modules/*')
+        run: npx bpmnlint --config .bpmnlintrc $(find . -name '*.bpmn' -not -path '*/node_modules/*')
