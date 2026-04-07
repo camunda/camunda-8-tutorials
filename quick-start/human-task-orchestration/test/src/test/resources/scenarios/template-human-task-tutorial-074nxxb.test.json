@@ -11,8 +11,8 @@
           "variables": {}
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "decide-dinner" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "decide-dinner" },
           "variables": { "meal": "chicken" }
         },
         {
@@ -22,8 +22,8 @@
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "prepare-chicken" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "prepare-chicken" },
           "variables": {}
         },
         {
@@ -43,8 +43,8 @@
           "variables": {}
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "decide-dinner" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "decide-dinner" },
           "variables": { "meal": "salad" }
         },
         {
@@ -54,8 +54,8 @@
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "prepare-salad" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "prepare-salad" },
           "variables": {}
         },
         {

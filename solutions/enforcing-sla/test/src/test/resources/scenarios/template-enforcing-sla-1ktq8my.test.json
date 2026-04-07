@@ -15,8 +15,8 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "AnswerInquireTask" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "AnswerInquireTask" },
           "variables": { "response": "Your order is being processed." }
         },
         {
@@ -37,8 +37,8 @@
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "LogReplyTask" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "LogReplyTask" },
           "variables": {}
         },
         {

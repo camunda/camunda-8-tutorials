@@ -64,8 +64,8 @@
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1lp5mcg" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_1lp5mcg" },
           "variables": {}
         },
         {

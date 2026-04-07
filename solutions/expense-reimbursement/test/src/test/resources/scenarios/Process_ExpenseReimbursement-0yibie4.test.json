@@ -15,8 +15,8 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_CreateExpenseReport" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_CreateExpenseReport" },
           "variables": {
             "expenses": [{ "description": "Hotel", "amount": 200.00 }, { "description": "Meals", "amount": 50.00 }]
           }
@@ -28,8 +28,8 @@
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
           "variables": { "reviewOutcome": "approved" }
         },
         {
@@ -39,8 +39,8 @@
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_ReviewExpenseReport_Finance" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Finance" },
           "variables": { "reviewOutcome": "approved" }
         },
         {
@@ -60,13 +60,13 @@
           "variables": { "employeeId": "EMP002", "totalAmount": 5000.00, "supervisorEmail": "supervisor@example.com" }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_CreateExpenseReport" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_CreateExpenseReport" },
           "variables": { "expenses": [{ "description": "Flight", "amount": 5000.00 }] }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
           "variables": { "reviewOutcome": "rejected" }
         },
         {
@@ -86,18 +86,18 @@
           "variables": { "employeeId": "EMP003", "totalAmount": 1500.00, "supervisorEmail": "supervisor@example.com" }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_CreateExpenseReport" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_CreateExpenseReport" },
           "variables": { "expenses": [{ "description": "Conference", "amount": 1500.00 }] }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
           "variables": { "reviewOutcome": "approved" }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_ReviewExpenseReport_Finance" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Finance" },
           "variables": { "reviewOutcome": "rejected" }
         },
         {
@@ -108,5 +108,5 @@
       ]
     }
   ],
-  "_integrationTestNotes": "Integration tests should verify: (1) Activity_ReimburseExpenses (plain bpmn:task, auto-executes in Zeebe) calls real payment/reimbursement system — in integration: replace with real job worker; (2) Activity_NotifyRejection (plain bpmn:task, auto-executes) sends real rejection notification email — in integration: replace with real job worker; (3) Activity_1l5wj0t (plain bpmn:task, auto-executes) performs pre-reimbursement setup — in integration: replace with real job worker. Note: Activity_ReviewExpenseReport_Manager and Activity_ReviewExpenseReport_Finance are bpmn:userTask elements (with formId) — in Zeebe 8.9, ALL userTask elements use COMPLETE_USER_TASK regardless of whether they have an explicit zeebe:userTask extension element."
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_ReimburseExpenses (plain bpmn:task, auto-executes in Zeebe) calls real payment/reimbursement system — in integration: replace with real job worker; (2) Activity_NotifyRejection (plain bpmn:task, auto-executes) sends real rejection notification email — in integration: replace with real job worker; (3) Activity_1l5wj0t (plain bpmn:task, auto-executes) performs pre-reimbursement setup — in integration: replace with real job worker. Note: Activity_CreateExpenseReport, Activity_ReviewExpenseReport_Manager, and Activity_ReviewExpenseReport_Finance are bpmn:userTask elements — in Zeebe/CPT ALL bpmn:userTask elements use COMPLETE_USER_TASK regardless of zeebe:userTask extension elements."
 }
