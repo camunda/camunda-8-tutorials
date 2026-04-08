@@ -7,45 +7,80 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_ExpenseReimbursement-0yibie4" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_ExpenseReimbursement-0yibie4"
+          },
           "variables": {
             "employeeId": "EMP001",
-            "totalAmount": 250.00,
+            "totalAmount": 250.0,
             "supervisorEmail": "supervisor@example.com"
           }
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_CreateExpenseReport" },
+          "userTaskSelector": {
+            "elementId": "Activity_CreateExpenseReport"
+          },
           "variables": {
-            "expenses": [{ "description": "Hotel", "amount": 200.00 }, { "description": "Meals", "amount": 50.00 }]
+            "expenses": [
+              {
+                "description": "Hotel",
+                "amount": 200.0
+              },
+              {
+                "description": "Meals",
+                "amount": 50.0
+              }
+            ]
           }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "Process_ExpenseReimbursement-0yibie4" },
-          "elementSelectors": [{ "elementId": "Activity_ReviewExpenseReport_Manager" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_ExpenseReimbursement-0yibie4"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_ReviewExpenseReport_Manager"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
-          "variables": { "reviewOutcome": "approved" }
+          "userTaskSelector": {
+            "elementId": "Activity_ReviewExpenseReport_Manager"
+          },
+          "variables": {
+            "reviewOutcome": "approved"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "Process_ExpenseReimbursement-0yibie4" },
-          "elementSelectors": [{ "elementId": "Activity_ReviewExpenseReport_Finance" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_ExpenseReimbursement-0yibie4"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_ReviewExpenseReport_Finance"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Finance" },
-          "variables": { "reviewOutcome": "approved" }
+          "userTaskSelector": {
+            "elementId": "Activity_ReviewExpenseReport_Finance"
+          },
+          "variables": {
+            "reviewOutcome": "approved"
+          }
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_ExpenseReimbursement-0yibie4" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_ExpenseReimbursement-0yibie4"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -56,22 +91,43 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_ExpenseReimbursement-0yibie4" },
-          "variables": { "employeeId": "EMP002", "totalAmount": 5000.00, "supervisorEmail": "supervisor@example.com" }
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_ExpenseReimbursement-0yibie4"
+          },
+          "variables": {
+            "employeeId": "EMP002",
+            "totalAmount": 5000.0,
+            "supervisorEmail": "supervisor@example.com"
+          }
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_CreateExpenseReport" },
-          "variables": { "expenses": [{ "description": "Flight", "amount": 5000.00 }] }
+          "userTaskSelector": {
+            "elementId": "Activity_CreateExpenseReport"
+          },
+          "variables": {
+            "expenses": [
+              {
+                "description": "Flight",
+                "amount": 5000.0
+              }
+            ]
+          }
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
-          "variables": { "reviewOutcome": "rejected" }
+          "userTaskSelector": {
+            "elementId": "Activity_ReviewExpenseReport_Manager"
+          },
+          "variables": {
+            "reviewOutcome": "rejected"
+          }
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_ExpenseReimbursement-0yibie4" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_ExpenseReimbursement-0yibie4"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -82,31 +138,56 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_ExpenseReimbursement-0yibie4" },
-          "variables": { "employeeId": "EMP003", "totalAmount": 1500.00, "supervisorEmail": "supervisor@example.com" }
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_ExpenseReimbursement-0yibie4"
+          },
+          "variables": {
+            "employeeId": "EMP003",
+            "totalAmount": 1500.0,
+            "supervisorEmail": "supervisor@example.com"
+          }
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_CreateExpenseReport" },
-          "variables": { "expenses": [{ "description": "Conference", "amount": 1500.00 }] }
+          "userTaskSelector": {
+            "elementId": "Activity_CreateExpenseReport"
+          },
+          "variables": {
+            "expenses": [
+              {
+                "description": "Conference",
+                "amount": 1500.0
+              }
+            ]
+          }
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Manager" },
-          "variables": { "reviewOutcome": "approved" }
+          "userTaskSelector": {
+            "elementId": "Activity_ReviewExpenseReport_Manager"
+          },
+          "variables": {
+            "reviewOutcome": "approved"
+          }
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_ReviewExpenseReport_Finance" },
-          "variables": { "reviewOutcome": "rejected" }
+          "userTaskSelector": {
+            "elementId": "Activity_ReviewExpenseReport_Finance"
+          },
+          "variables": {
+            "reviewOutcome": "rejected"
+          }
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_ExpenseReimbursement-0yibie4" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_ExpenseReimbursement-0yibie4"
+          },
           "state": "IS_COMPLETED"
         }
       ]
     }
   ],
-  "_integrationTestNotes": "Integration tests should verify: (1) Activity_ReimburseExpenses (plain bpmn:task, auto-executes in Zeebe) calls real payment/reimbursement system — in integration: replace with real job worker; (2) Activity_NotifyRejection (plain bpmn:task, auto-executes) sends real rejection notification email — in integration: replace with real job worker; (3) Activity_1l5wj0t (plain bpmn:task, auto-executes) performs pre-reimbursement setup — in integration: replace with real job worker. Note: Activity_CreateExpenseReport, Activity_ReviewExpenseReport_Manager, and Activity_ReviewExpenseReport_Finance are bpmn:userTask elements — in Zeebe/CPT ALL bpmn:userTask elements use COMPLETE_USER_TASK regardless of zeebe:userTask extension elements."
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_ReimburseExpenses (plain bpmn:task, auto-executes in Zeebe) calls real payment/reimbursement system — in integration: replace with real job worker; (2) Activity_NotifyRejection (plain bpmn:task, auto-executes) sends real rejection notification email — in integration: replace with real job worker; (3) Activity_1l5wj0t (plain bpmn:task, auto-executes) performs pre-reimbursement setup — in integration: replace with real job worker. Note: "
 }

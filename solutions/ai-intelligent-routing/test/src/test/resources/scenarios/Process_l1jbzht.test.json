@@ -13,18 +13,22 @@
           "variables": {}
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
             "elementId": "Activity_03z512o"
           },
-          "variables": { "inquiry": "I'd like to buy your product." }
+          "variables": {
+            "inquiry": "I'd like to buy your product."
+          }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "azure_openai_call"
           },
-          "variables": { "route": "SALES" }
+          "variables": {
+            "route": "SALES"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
@@ -32,16 +36,20 @@
             "processDefinitionId": "Process_l1jbzht"
           },
           "elementSelectors": [
-            { "elementId": "activity_sales_team" }
+            {
+              "elementId": "activity_sales_team"
+            }
           ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
             "elementId": "activity_sales_team"
           },
-          "variables": { "route": "resolved" }
+          "variables": {
+            "route": "resolved"
+          }
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
@@ -64,18 +72,22 @@
           "variables": {}
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
             "elementId": "Activity_03z512o"
           },
-          "variables": { "inquiry": "My integration is broken." }
+          "variables": {
+            "inquiry": "My integration is broken."
+          }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "azure_openai_call"
           },
-          "variables": { "route": "ENGINEERING" }
+          "variables": {
+            "route": "ENGINEERING"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
@@ -83,23 +95,29 @@
             "processDefinitionId": "Process_l1jbzht"
           },
           "elementSelectors": [
-            { "elementId": "activity_engineering_team" }
+            {
+              "elementId": "activity_engineering_team"
+            }
           ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
             "elementId": "activity_engineering_team"
           },
-          "variables": { "route": "feedback" }
+          "variables": {
+            "route": "feedback"
+          }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "azure_openai_call"
           },
-          "variables": { "route": "ENGINEERING" }
+          "variables": {
+            "route": "ENGINEERING"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
@@ -107,16 +125,20 @@
             "processDefinitionId": "Process_l1jbzht"
           },
           "elementSelectors": [
-            { "elementId": "activity_engineering_team" }
+            {
+              "elementId": "activity_engineering_team"
+            }
           ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
             "elementId": "activity_engineering_team"
           },
-          "variables": { "route": "resolved" }
+          "variables": {
+            "route": "resolved"
+          }
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
@@ -139,18 +161,22 @@
           "variables": {}
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
             "elementId": "Activity_03z512o"
           },
-          "variables": { "inquiry": "I need to review a contract clause." }
+          "variables": {
+            "inquiry": "I need to review a contract clause."
+          }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "azure_openai_call"
           },
-          "variables": { "route": "LEGAL" }
+          "variables": {
+            "route": "LEGAL"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
@@ -158,16 +184,20 @@
             "processDefinitionId": "Process_l1jbzht"
           },
           "elementSelectors": [
-            { "elementId": "Activity_04j3j7a" }
+            {
+              "elementId": "Activity_04j3j7a"
+            }
           ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
             "elementId": "Activity_04j3j7a"
           },
-          "variables": { "route": "resolved" }
+          "variables": {
+            "route": "resolved"
+          }
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",

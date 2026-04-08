@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.45.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0" camunda:diagramRelationId="3f4f46f7-e146-4fbe-91d6-cf2dac33a2a1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.45.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="3f4f46f7-e146-4fbe-91d6-cf2dac33a2a1">
   <bpmn:process id="Process_l1jbzht" name="Intelligent-routing-with-openai" isExecutable="true">
     <bpmn:extensionElements>
       <zeebe:userTaskForm id="UserTaskForm_1jtqu5f">{
@@ -458,20 +458,22 @@
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="activity_sales_team" name="Work on inquiry (Sales team)">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:ioMapping>
           <zeebe:input source="=customer_inquiry" target="customer_message" />
         </zeebe:ioMapping>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_1jtqu5f" />
+        <zeebe:formDefinition externalReference="UserTaskForm_1jtqu5f" />
       </bpmn:extensionElements>
       <bpmn:incoming>flow_sales_inquiry</bpmn:incoming>
       <bpmn:outgoing>Flow_07h5nkp</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="activity_engineering_team" name="Work on inquiry (Engineering team)">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:ioMapping>
           <zeebe:input source="=customer_inquiry" target="customer_message" />
         </zeebe:ioMapping>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_2l872ik" />
+        <zeebe:formDefinition externalReference="UserTaskForm_2l872ik" />
       </bpmn:extensionElements>
       <bpmn:incoming>flow_technical_inquiry</bpmn:incoming>
       <bpmn:outgoing>Flow_088ove7</bpmn:outgoing>
@@ -485,10 +487,11 @@
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="Activity_04j3j7a" name="Work on inquiry (Legal team)">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:ioMapping>
           <zeebe:input source="=customer_inquiry" target="customer_message" />
         </zeebe:ioMapping>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_17jodni" />
+        <zeebe:formDefinition externalReference="UserTaskForm_17jodni" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1gj1kgq</bpmn:incoming>
       <bpmn:outgoing>Flow_07c5po9</bpmn:outgoing>
@@ -512,7 +515,8 @@
     <bpmn:sequenceFlow id="Flow_07c5po9" sourceRef="Activity_04j3j7a" targetRef="gateway_sales_team" />
     <bpmn:userTask id="Activity_03z512o" name="Enter inquiry (customer)">
       <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_2o930gv" />
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="UserTaskForm_2o930gv" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0mqrso0</bpmn:incoming>
       <bpmn:outgoing>Flow_16ccfjo</bpmn:outgoing>
@@ -565,7 +569,8 @@
     <bpmn:sequenceFlow id="Flow_13kjm3t" sourceRef="Activity_1ltiek0" targetRef="gateway_sales_team" />
     <bpmn:userTask id="Activity_1ltiek0" name="Work on inquiry (default)">
       <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_3kl77cq" />
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="UserTaskForm_3kl77cq" />
         <zeebe:ioMapping>
           <zeebe:input source="=customer_inquiry" target="customer_message" />
         </zeebe:ioMapping>

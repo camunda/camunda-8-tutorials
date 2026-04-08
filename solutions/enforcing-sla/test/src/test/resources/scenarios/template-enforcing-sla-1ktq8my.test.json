@@ -7,7 +7,9 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "template-enforcing-sla-1ktq8my" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-enforcing-sla-1ktq8my"
+          },
           "variables": {
             "inquiryId": "INQ001",
             "customerEmail": "customer@example.com",
@@ -16,34 +18,52 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "AnswerInquireTask" },
-          "variables": { "response": "Your order is being processed." }
+          "userTaskSelector": {
+            "elementId": "AnswerInquireTask"
+          },
+          "variables": {
+            "response": "Your order is being processed."
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "SendResponseTask" },
+          "jobSelector": {
+            "elementId": "SendResponseTask"
+          },
           "variables": {}
         },
         {
           "type": "PUBLISH_MESSAGE",
           "name": "Reply",
           "correlationKey": "exampleKey",
-          "variables": { "reply": "Thank you for your response." }
+          "variables": {
+            "reply": "Thank you for your response."
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "template-enforcing-sla-1ktq8my" },
-          "elementSelectors": [{ "elementId": "LogReplyTask" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "template-enforcing-sla-1ktq8my"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "LogReplyTask"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "LogReplyTask" },
+          "userTaskSelector": {
+            "elementId": "LogReplyTask"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "template-enforcing-sla-1ktq8my" },
+          "processInstanceSelector": {
+            "processDefinitionId": "template-enforcing-sla-1ktq8my"
+          },
           "state": "IS_COMPLETED"
         }
       ]

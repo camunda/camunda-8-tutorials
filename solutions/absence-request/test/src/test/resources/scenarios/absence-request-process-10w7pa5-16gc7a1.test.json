@@ -7,7 +7,9 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
           "variables": {
             "employeeName": "Alice Smith",
             "department": "sales",
@@ -17,8 +19,10 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "RequestAbsenceTask" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "RequestAbsenceTask"
+          },
           "variables": {
             "employeeName": "Alice Smith",
             "department": "sales",
@@ -29,40 +33,70 @@
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
-          "elementSelectors": [{ "elementId": "ApproveAbsenceTask" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ApproveAbsenceTask"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "ApproveAbsenceTask" },
-          "variables": { "approvalResult": "approved" }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "ApproveAbsenceTask"
+          },
+          "variables": {
+            "approvalResult": "approved"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
-          "elementSelectors": [{ "elementId": "LogAbsenceTask" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "LogAbsenceTask"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "LogAbsenceTask" },
-          "variables": { "absenceLogged": true }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "LogAbsenceTask"
+          },
+          "variables": {
+            "absenceLogged": true
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
-          "elementSelectors": [{ "elementId": "GetNotification" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "GetNotification"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "GetNotification" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "GetNotification"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
+          "processInstanceSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -73,7 +107,9 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
           "variables": {
             "employeeName": "Carol Jones",
             "department": "it",
@@ -81,29 +117,48 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "RequestAbsenceTask" },
-          "variables": { "employeeName": "Carol Jones" }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "RequestAbsenceTask"
+          },
+          "variables": {
+            "employeeName": "Carol Jones"
+          }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "ApproveAbsenceTask" },
-          "variables": { "approvalResult": "rejected", "rejectionReason": "Insufficient cover" }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "ApproveAbsenceTask"
+          },
+          "variables": {
+            "approvalResult": "rejected",
+            "rejectionReason": "Insufficient cover"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
-          "elementSelectors": [{ "elementId": "GetNotification" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "GetNotification"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "GetNotification" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "GetNotification"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
+          "processInstanceSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -114,7 +169,9 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
           "variables": {
             "employeeName": "Eve Worker",
             "department": "finance",
@@ -122,13 +179,19 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "RequestAbsenceTask" },
-          "variables": { "employeeName": "Eve Worker" }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "RequestAbsenceTask"
+          },
+          "variables": {
+            "employeeName": "Eve Worker"
+          }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "ApproveAbsenceTask" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "ApproveAbsenceTask"
+          },
           "variables": {
             "approvalResult": "clarificationNeeded",
             "clarificationCommentLineManager": "Please provide exact dates"
@@ -136,13 +199,21 @@
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
-          "elementSelectors": [{ "elementId": "ClarifyRequestTask" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ClarifyRequestTask"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "ClarifyRequestTask" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "ClarifyRequestTask"
+          },
           "variables": {
             "clarificationCommentEmployee": "Dates are June 1-5",
             "absenceStartDate": "2025-06-01",
@@ -150,27 +221,39 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "ApproveAbsenceTask" },
-          "variables": { "approvalResult": "approved" }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "ApproveAbsenceTask"
+          },
+          "variables": {
+            "approvalResult": "approved"
+          }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "LogAbsenceTask" },
-          "variables": { "absenceLogged": true }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "LogAbsenceTask"
+          },
+          "variables": {
+            "absenceLogged": true
+          }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "GetNotification" },
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "GetNotification"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1" },
+          "processInstanceSelector": {
+            "processDefinitionId": "absence-request-process-10w7pa5-16gc7a1"
+          },
           "state": "IS_COMPLETED"
         }
       ]
     }
   ],
-  "_integrationTestNotes": "This process has no external service connectors — all tasks are job-based user tasks (no zeebe:userTask) and one service task (GetLineManagerTask). Integration tests should verify: (1) GetLineManagerTask job worker correctly assigns a line manager based on the employee department variable; (2) end-to-end flow with a real Zeebe cluster."
+  "_integrationTestNotes": "This process has no external service connectors — all user tasks are native Zeebe user tasks (zeebe:userTask) and one service task (GetLineManagerTask). Integration tests should verify: (1) GetLineManagerTask job worker correctly assigns a line manager based on the employee department variable; (2) end-to-end flow with a real Zeebe cluster."
 }

@@ -7,33 +7,53 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_1goj4fl" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
           "variables": {
             "claimId": "CLM001",
             "customerId": "CUST001",
-            "claimedAmount": 150.00
+            "claimedAmount": 150.0
           }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0mmcuzy" },
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
           "variables": {
-            "receipt_details": { "date_of_purchase": "2024-01-01", "price_at_purchase": 150.00 }
+            "receipt_details": {
+              "date_of_purchase": "2024-01-01",
+              "price_at_purchase": 150.0
+            }
           }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_17krtpn" },
-          "variables": { "identified_damage": { "item": "tv", "damage": "minor" } }
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
+          "variables": {
+            "identified_damage": {
+              "item": "tv",
+              "damage": "minor"
+            }
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1vdz63b" },
-          "variables": { "ticketId": 101 }
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": 101
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0etxz4e" },
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
           "variables": {
             "customer_claim_frequency_last_three_years": 0,
             "policy": "full"
@@ -41,23 +61,33 @@
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0poax8d" },
+          "jobSelector": {
+            "elementId": "Activity_0poax8d"
+          },
           "variables": {}
         },
         {
           "type": "PUBLISH_MESSAGE",
           "name": "banking_info_received",
           "correlationKey": "101",
-          "variables": { "bankingInfo": { "iban": "DE89370400440532013000" } }
+          "variables": {
+            "bankingInfo": {
+              "iban": "DE89370400440532013000"
+            }
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0ankyj2" },
+          "jobSelector": {
+            "elementId": "Activity_0ankyj2"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_1goj4fl" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -68,58 +98,96 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_1goj4fl" },
-          "variables": { "claimId": "CLM002", "customerId": "CUST002", "claimedAmount": 2000.00 }
-        },
-        {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0mmcuzy" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
           "variables": {
-            "receipt_details": { "date_of_purchase": "2024-02-01", "price_at_purchase": 2000.00 }
+            "claimId": "CLM002",
+            "customerId": "CUST002",
+            "claimedAmount": 2000.0
           }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_17krtpn" },
-          "variables": { "identified_damage": { "item": "laptop", "damage": "severe" } }
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
+          "variables": {
+            "receipt_details": {
+              "date_of_purchase": "2024-02-01",
+              "price_at_purchase": 2000.0
+            }
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1vdz63b" },
-          "variables": { "ticketId": 102 }
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
+          "variables": {
+            "identified_damage": {
+              "item": "laptop",
+              "damage": "severe"
+            }
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0etxz4e" },
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": 102
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
           "variables": {
             "customer_claim_frequency_last_three_years": 5,
             "policy": "partial"
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1afcosf" },
-          "variables": { "isApproved": true }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_1afcosf"
+          },
+          "variables": {
+            "isApproved": true
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0poax8d" },
+          "jobSelector": {
+            "elementId": "Activity_0poax8d"
+          },
           "variables": {}
         },
         {
           "type": "PUBLISH_MESSAGE",
           "name": "banking_info_received",
           "correlationKey": "102",
-          "variables": { "bankingInfo": { "iban": "DE89370400440532013001" } }
+          "variables": {
+            "bankingInfo": {
+              "iban": "DE89370400440532013001"
+            }
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0ankyj2" },
+          "jobSelector": {
+            "elementId": "Activity_0ankyj2"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_1goj4fl" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -130,47 +198,74 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_1goj4fl" },
-          "variables": { "claimId": "CLM003", "customerId": "CUST003", "claimedAmount": 50000.00 }
-        },
-        {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0mmcuzy" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
           "variables": {
-            "receipt_details": { "date_of_purchase": "2024-03-01", "price_at_purchase": 50000.00 }
+            "claimId": "CLM003",
+            "customerId": "CUST003",
+            "claimedAmount": 50000.0
           }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_17krtpn" },
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
+          "variables": {
+            "receipt_details": {
+              "date_of_purchase": "2024-03-01",
+              "price_at_purchase": 50000.0
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1vdz63b" },
-          "variables": { "ticketId": 103 }
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": 103
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0etxz4e" },
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
           "variables": {
             "customer_claim_frequency_last_three_years": 5,
             "policy": "partial"
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1afcosf" },
-          "variables": { "isApproved": false }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_1afcosf"
+          },
+          "variables": {
+            "isApproved": false
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_02uhc17" },
+          "jobSelector": {
+            "elementId": "Activity_02uhc17"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_1goj4fl" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
           "state": "IS_COMPLETED"
         }
       ]

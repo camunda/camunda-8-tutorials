@@ -7,28 +7,44 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "template-human-task-tutorial-074nxxb" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "decide-dinner" },
-          "variables": { "meal": "chicken" }
+          "userTaskSelector": {
+            "elementId": "decide-dinner"
+          },
+          "variables": {
+            "meal": "chicken"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "template-human-task-tutorial-074nxxb" },
-          "elementSelectors": [{ "elementId": "prepare-chicken" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "prepare-chicken"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "prepare-chicken" },
+          "userTaskSelector": {
+            "elementId": "prepare-chicken"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "template-human-task-tutorial-074nxxb" },
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -39,28 +55,44 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "template-human-task-tutorial-074nxxb" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "decide-dinner" },
-          "variables": { "meal": "salad" }
+          "userTaskSelector": {
+            "elementId": "decide-dinner"
+          },
+          "variables": {
+            "meal": "salad"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "template-human-task-tutorial-074nxxb" },
-          "elementSelectors": [{ "elementId": "prepare-salad" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "prepare-salad"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "prepare-salad" },
+          "userTaskSelector": {
+            "elementId": "prepare-salad"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "template-human-task-tutorial-074nxxb" },
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
           "state": "IS_COMPLETED"
         }
       ]

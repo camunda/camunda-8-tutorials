@@ -7,42 +7,68 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_0ffvgea" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
           "variables": {
             "customerId": "CUST001",
             "complaintType": "unauthorized_transaction",
             "disputeDetails": {
               "disputeId": "D001",
-              "disputeAmount": { "amount": 500, "currency": "EUR" },
+              "disputeAmount": {
+                "amount": 500,
+                "currency": "EUR"
+              },
               "disputeStartDate": "2024-08-07T10:00:00Z"
             }
           }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0f196ti" },
+          "jobSelector": {
+            "elementId": "Activity_0f196ti"
+          },
           "variables": {}
         },
         {
           "type": "PUBLISH_MESSAGE",
           "name": "dispute_process_receive_documents",
           "correlationKey": "D001CUST001",
-          "variables": { "documentsReceived": true }
+          "variables": {
+            "documentsReceived": true
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1nvtpnt" },
-          "variables": { "customerInfo": { "name": "Alice", "email": "alice@example.com" }, "customer_claim_frequency": 2 }
+          "jobSelector": {
+            "elementId": "Activity_1nvtpnt"
+          },
+          "variables": {
+            "customerInfo": {
+              "name": "Alice",
+              "email": "alice@example.com"
+            },
+            "customer_claim_frequency": 2
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1ec0e8t" },
+          "jobSelector": {
+            "elementId": "Activity_1ec0e8t"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1ys0vez" },
-          "variables": { "vendorInfo": { "name": "Vendor A" }, "vendor_claim_frequency": 3 }
+          "jobSelector": {
+            "elementId": "Activity_1ys0vez"
+          },
+          "variables": {
+            "vendorInfo": {
+              "name": "Vendor A"
+            },
+            "vendor_claim_frequency": 3
+          }
         },
         {
           "type": "PUBLISH_MESSAGE",
@@ -52,18 +78,28 @@
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "Process_0ffvgea" },
-          "elementSelectors": [{ "elementId": "Activity_0maynr7" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0maynr7"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0maynr7" },
+          "jobSelector": {
+            "elementId": "Activity_0maynr7"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_0ffvgea" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -74,41 +110,66 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_0ffvgea" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
           "variables": {
             "customerId": "CUST002",
             "disputeDetails": {
               "disputeId": "D002",
-              "disputeAmount": { "amount": 200, "currency": "EUR" },
+              "disputeAmount": {
+                "amount": 200,
+                "currency": "EUR"
+              },
               "disputeStartDate": "2024-08-08T10:00:00Z"
             }
           }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0f196ti" },
+          "jobSelector": {
+            "elementId": "Activity_0f196ti"
+          },
           "variables": {}
         },
         {
           "type": "PUBLISH_MESSAGE",
           "name": "dispute_process_receive_documents",
           "correlationKey": "D002CUST002",
-          "variables": { "documentsReceived": true }
+          "variables": {
+            "documentsReceived": true
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1nvtpnt" },
-          "variables": { "customerInfo": { "name": "Bob" }, "customer_claim_frequency": 8 }
+          "jobSelector": {
+            "elementId": "Activity_1nvtpnt"
+          },
+          "variables": {
+            "customerInfo": {
+              "name": "Bob"
+            },
+            "customer_claim_frequency": 8
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1ec0e8t" },
+          "jobSelector": {
+            "elementId": "Activity_1ec0e8t"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1ys0vez" },
-          "variables": { "vendorInfo": { "name": "Vendor B" }, "vendor_claim_frequency": 25 }
+          "jobSelector": {
+            "elementId": "Activity_1ys0vez"
+          },
+          "variables": {
+            "vendorInfo": {
+              "name": "Vendor B"
+            },
+            "vendor_claim_frequency": 25
+          }
         },
         {
           "type": "PUBLISH_MESSAGE",
@@ -118,29 +179,49 @@
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "Process_0ffvgea" },
-          "elementSelectors": [{ "elementId": "Activity_0ynau00" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0ynau00"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0ynau00" },
-          "variables": { "isRefund": false }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_0ynau00"
+          },
+          "variables": {
+            "isRefund": false
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "Process_0ffvgea" },
-          "elementSelectors": [{ "elementId": "Activity_0maynr7" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0maynr7"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0maynr7" },
+          "jobSelector": {
+            "elementId": "Activity_0maynr7"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_0ffvgea" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -151,41 +232,66 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_0ffvgea" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
           "variables": {
             "customerId": "CUST003",
             "disputeDetails": {
               "disputeId": "D003",
-              "disputeAmount": { "amount": 5, "currency": "EUR" },
+              "disputeAmount": {
+                "amount": 5,
+                "currency": "EUR"
+              },
               "disputeStartDate": "2024-08-09T10:00:00Z"
             }
           }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0f196ti" },
+          "jobSelector": {
+            "elementId": "Activity_0f196ti"
+          },
           "variables": {}
         },
         {
           "type": "PUBLISH_MESSAGE",
           "name": "dispute_process_receive_documents",
           "correlationKey": "D003CUST003",
-          "variables": { "documentsReceived": true }
+          "variables": {
+            "documentsReceived": true
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1nvtpnt" },
-          "variables": { "customerInfo": { "name": "Carol" }, "customer_claim_frequency": 8 }
+          "jobSelector": {
+            "elementId": "Activity_1nvtpnt"
+          },
+          "variables": {
+            "customerInfo": {
+              "name": "Carol"
+            },
+            "customer_claim_frequency": 8
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1ec0e8t" },
+          "jobSelector": {
+            "elementId": "Activity_1ec0e8t"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1ys0vez" },
-          "variables": { "vendorInfo": { "name": "Vendor C" }, "vendor_claim_frequency": 25 }
+          "jobSelector": {
+            "elementId": "Activity_1ys0vez"
+          },
+          "variables": {
+            "vendorInfo": {
+              "name": "Vendor C"
+            },
+            "vendor_claim_frequency": 25
+          }
         },
         {
           "type": "PUBLISH_MESSAGE",
@@ -195,27 +301,39 @@
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "Process_0ffvgea" },
-          "elementSelectors": [{ "elementId": "Activity_1pqdlzs" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_1pqdlzs"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1pqdlzs" },
+          "jobSelector": {
+            "elementId": "Activity_1pqdlzs"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1u3hrzx" },
+          "jobSelector": {
+            "elementId": "Activity_1u3hrzx"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_0ffvgea" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0ffvgea"
+          },
           "state": "IS_COMPLETED"
         }
       ]
     }
   ],
-  "_integrationTestNotes": "Integration tests should verify: (1) Activity_1nvtpnt (Store information and get customer info) calls real CRM API and returns actual customer data including claim frequency; (2) Activity_0iv8gg2 (DMN - fraud rating confidence 'determine-fraud-rating-1dmmwcu') evaluates real rules — COLLECT hit policy, inputs: customer_claim_frequency, vendor_claim_frequency, disputeDetails.disputeAmount.amount. DMN must be deployed: determine_fraud_rating_confidence.dmn; (3) Activity_1ys0vez (Get vendor info) calls real vendor API and returns vendor claim frequency; (4) Activity_1pqdlzs (Initiate credit and clawback action) calls real payment system. Key flow: after Activity_1ys0vez, inner sub-process hits event-based gateway (Gateway_1p7bkh1) — must publish EITHER dispute_process_refund_approved OR dispute_process_refund_declined (correlationKey=disputeDetails.disputeId) to unblock. Taking 'vendor declined' path (dispute_process_refund_declined) throws escalation directly to Activity_0ynau00 (bypasses DMN). Taking 'refund_approved' or timer path goes through DMN. Note: Activity_0ynau00 (Decide on fraud case) is bpmn:userTask WITHOUT <zeebe:userTask> extension — old-style job-based → use COMPLETE_JOB. decide_on_fraud_case.form must be deployed."
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_1nvtpnt (Store information and get customer info) calls real CRM API and returns actual customer data including claim frequency; (2) Activity_0iv8gg2 (DMN - fraud rating confidence 'determine-fraud-rating-1dmmwcu') evaluates real rules — COLLECT hit policy, inputs: customer_claim_frequency, vendor_claim_frequency, disputeDetails.disputeAmount.amount. DMN must be deployed: determine_fraud_rating_confidence.dmn; (3) Activity_1ys0vez (Get vendor info) calls real vendor API and returns vendor claim frequency; (4) Activity_1pqdlzs (Initiate credit and clawback action) calls real payment system. Key flow: after Activity_1ys0vez, inner sub-process hits event-based gateway (Gateway_1p7bkh1) — must publish EITHER dispute_process_refund_approved OR dispute_process_refund_declined (correlationKey=disputeDetails.disputeId) to unblock. Taking 'vendor declined' path (dispute_process_refund_declined) throws escalation directly to Activity_0ynau00 (bypasses DMN). Taking 'refund_approved' or timer path goes through DMN. Note: decide_on_fraud_case.form must be deployed."
 }

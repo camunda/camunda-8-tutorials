@@ -7,40 +7,59 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "template-error-handling-1s16sgi" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
           "variables": {
             "customerId": "CUST001",
-            "customerData": { "name": "Alice Smith", "email": "alice@example.com" }
+            "customerData": {
+              "name": "Alice Smith",
+              "email": "alice@example.com"
+            }
           }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1kpg3ok" },
-          "variables": { "dataValid": true }
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          },
+          "variables": {
+            "dataValid": true
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1v4xdzk" },
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_084s4zz" },
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_13eovqu" },
+          "jobSelector": {
+            "elementId": "Activity_13eovqu"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_00ef2n2" },
+          "jobSelector": {
+            "elementId": "Activity_00ef2n2"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "template-error-handling-1s16sgi" },
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -51,52 +70,84 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "template-error-handling-1s16sgi" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
           "variables": {
             "customerId": "CUST002",
-            "customerData": { "name": "", "email": "invalid" }
+            "customerData": {
+              "name": "",
+              "email": "invalid"
+            }
           }
         },
         {
           "type": "THROW_BPMN_ERROR_FROM_JOB",
-          "jobSelector": { "elementId": "Activity_1kpg3ok" },
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          },
           "errorCode": "ErrorInData",
-          "variables": { "errorMessage": "Name is required" }
+          "variables": {
+            "errorMessage": "Name is required"
+          }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "template-error-handling-1s16sgi" },
-          "elementSelectors": [{ "elementId": "Activity_0kzg0nb" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0kzg0nb"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0kzg0nb" },
-          "variables": { "customerData": { "name": "Alice Smith", "email": "alice@example.com" } }
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_0kzg0nb"
+          },
+          "variables": {
+            "customerData": {
+              "name": "Alice Smith",
+              "email": "alice@example.com"
+            }
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1v4xdzk" },
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_084s4zz" },
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_13eovqu" },
+          "jobSelector": {
+            "elementId": "Activity_13eovqu"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_00ef2n2" },
+          "jobSelector": {
+            "elementId": "Activity_00ef2n2"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "template-error-handling-1s16sgi" },
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -107,44 +158,66 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "template-error-handling-1s16sgi" },
-          "variables": { "customerId": "CUST003" }
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "variables": {
+            "customerId": "CUST003"
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1kpg3ok" },
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1v4xdzk" },
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
           "variables": {}
         },
         {
           "type": "THROW_BPMN_ERROR_FROM_JOB",
-          "jobSelector": { "elementId": "Activity_084s4zz" },
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
           "errorCode": "FailedToCreateRecord",
           "variables": {}
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "template-error-handling-1s16sgi" },
-          "elementSelectors": [{ "elementId": "Activity_0h20swu" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0h20swu"
+            }
+          ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0h20swu" },
+          "jobSelector": {
+            "elementId": "Activity_0h20swu"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_13kxvrs" },
+          "jobSelector": {
+            "elementId": "Activity_13kxvrs"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "template-error-handling-1s16sgi" },
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
           "state": "IS_COMPLETED"
         }
       ]

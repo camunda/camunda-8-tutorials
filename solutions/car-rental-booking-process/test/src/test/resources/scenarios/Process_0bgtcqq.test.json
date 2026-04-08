@@ -7,7 +7,9 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_0bgtcqq" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
           "variables": {
             "customerId": "CUST001",
             "bookingId": "BK001",
@@ -19,27 +21,44 @@
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0be5k9m" },
-          "variables": { "licenseValid": true }
+          "jobSelector": {
+            "elementId": "Activity_0be5k9m"
+          },
+          "variables": {
+            "licenseValid": true
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0825j6e" },
-          "variables": { "carId": "CAR001", "isCarAvailable": true }
+          "jobSelector": {
+            "elementId": "Activity_0825j6e"
+          },
+          "variables": {
+            "carId": "CAR001",
+            "isCarAvailable": true
+          }
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_05f95ch" },
-          "variables": { "isCarReady": true }
+          "userTaskSelector": {
+            "elementId": "Activity_05f95ch"
+          },
+          "variables": {
+            "isCarReady": true
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0t5ihdz" },
+          "jobSelector": {
+            "elementId": "Activity_0t5ihdz"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1n1lkhe" },
+          "jobSelector": {
+            "elementId": "Activity_1n1lkhe"
+          },
           "variables": {}
         },
         {
@@ -56,27 +75,39 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_0itdlql" },
-          "variables": { "hasCarDamage": false }
+          "userTaskSelector": {
+            "elementId": "Activity_0itdlql"
+          },
+          "variables": {
+            "hasCarDamage": false
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0tq09jo" },
+          "jobSelector": {
+            "elementId": "Activity_0tq09jo"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_1b9u86o" },
+          "jobSelector": {
+            "elementId": "Activity_1b9u86o"
+          },
           "variables": {}
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0mnt805" },
+          "jobSelector": {
+            "elementId": "Activity_0mnt805"
+          },
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_0bgtcqq" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -87,7 +118,9 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_0bgtcqq" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
           "variables": {
             "customerId": "CUST002",
             "bookingId": "BK002",
@@ -96,13 +129,17 @@
         },
         {
           "type": "THROW_BPMN_ERROR_FROM_JOB",
-          "jobSelector": { "elementId": "Activity_0be5k9m" },
+          "jobSelector": {
+            "elementId": "Activity_0be5k9m"
+          },
           "errorCode": "INVALID_LICENSE",
           "variables": {}
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_0bgtcqq" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
           "state": "IS_COMPLETED"
         }
       ]
@@ -113,7 +150,9 @@
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "Process_0bgtcqq" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
           "variables": {
             "customerId": "CUST003",
             "bookingId": "BK003",
@@ -122,21 +161,31 @@
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0be5k9m" },
-          "variables": { "licenseValid": true }
+          "jobSelector": {
+            "elementId": "Activity_0be5k9m"
+          },
+          "variables": {
+            "licenseValid": true
+          }
         },
         {
           "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0w37f54" },
-          "variables": { "creditScore": 500 }
+          "jobSelector": {
+            "elementId": "Activity_0w37f54"
+          },
+          "variables": {
+            "creditScore": 500
+          }
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "Process_0bgtcqq" },
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
           "state": "IS_COMPLETED"
         }
       ]
     }
   ],
-  "_integrationTestNotes": "Integration tests should verify: (1) Activity_0be5k9m (Validate driver license) calls real license validation API; (2) Activity_0w37f54 (Get credit score) calls real credit bureau; (3) Activity_0825j6e (Check car availability) queries real inventory system; (4) Activity_0t5ihdz (Verify payment method) validates real payment; (5) Activity_1b9u86o (Process payment) makes real payment transaction; (6) PUBLISH_MESSAGE for car_picked_up and car_returned requires real external events — correlationKey is bookingId. Note: Activity_05f95ch (Inspect car) and Activity_0itdlql (Inspect returned car) are bpmn:userTask elements — in Zeebe/CPT ALL bpmn:userTask elements use COMPLETE_USER_TASK. rentDuration must be provided as a FEEL duration string (e.g. 'P4D') for the event-based gateway timer; the timer is on the 'renting period exceeded' path and is evaluated when the event-based gateway activates after car_picked_up."
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_0be5k9m (Validate driver license) calls real license validation API; (2) Activity_0w37f54 (Get credit score) calls real credit bureau; (3) Activity_0825j6e (Check car availability) queries real inventory system; (4) Activity_0t5ihdz (Verify payment method) validates real payment; (5) Activity_1b9u86o (Process payment) makes real payment transaction; (6) PUBLISH_MESSAGE for car_picked_up and car_returned requires real external events — correlationKey is bookingId. Note: Activity_05f95ch (Inspect car) and Activity_0itdlql (Inspect returned car) are native Zeebe user tasks (zeebe:userTask) — use COMPLETE_USER_TASK. rentDuration must be provided as a FEEL duration string (e.g. 'P4D') for the event-based gateway timer; the timer is on the 'renting period exceeded' path and is evaluated when the event-based gateway activates after car_picked_up."
 }

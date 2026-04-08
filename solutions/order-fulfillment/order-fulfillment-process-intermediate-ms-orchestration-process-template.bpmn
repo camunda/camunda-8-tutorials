@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="8a2ba7e" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0" camunda:diagramRelationId="be7f76bc-7b81-45c2-a0b8-799e5fbd4700">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="8a2ba7e" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="be7f76bc-7b81-45c2-a0b8-799e5fbd4700">
   <bpmn:collaboration id="Collaboration_19s3sq9">
     <bpmn:participant id="Participant_15ao2op" name="Order Fulfillment Process&#10;(Intermediate MS orchestration template)" processRef="Process_OrderFulfillment_Intermediate" />
     <bpmn:participant id="Participant_00wwydn" name="Payment Microservice&#10;(Java)" />
@@ -91,10 +91,18 @@ If there occurs an error while retrieving the payment, a [BPMN Error event]() is
       <bpmn:outgoing>Flow_070qjl9</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="Activity_1ihyrlw" name="Inform customer about delay">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="Activity_1ihyrlw" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_00trqwr</bpmn:incoming>
       <bpmn:outgoing>Flow_17rok8q</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Activity_1lp5mcg" name="Inform customer about failed payment">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="Activity_1lp5mcg" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0ic9wry</bpmn:incoming>
       <bpmn:outgoing>Flow_0sg5i7z</bpmn:outgoing>
     </bpmn:userTask>
