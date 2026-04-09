@@ -1,0 +1,31 @@
+{
+  "components": [
+    {
+      "text": "# Prepare Salad",
+      "type": "text",
+      "id": "Field_header",
+      "layout": {
+        "row": "Row_1",
+        "columns": null
+      }
+    },
+    {
+      "text": "The meal decision has been made. Please prepare the salad and mark this task complete when done.",
+      "type": "text",
+      "id": "Field_instructions",
+      "layout": {
+        "row": "Row_2",
+        "columns": null
+      }
+    }
+  ],
+  "type": "default",
+  "id": "prepare-salad",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

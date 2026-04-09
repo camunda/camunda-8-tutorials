@@ -67,6 +67,8 @@
                 <directory>../</directory>
                 <includes>
                     <include>order-fulfillment-process-intermediate-ms-orchestration-process-template.bpmn</include>
+                    <include>inform-customer-delay.form</include>
+                    <include>inform-customer-failed-payment.form</include>
                 </includes>
             </testResource>
         </testResources>

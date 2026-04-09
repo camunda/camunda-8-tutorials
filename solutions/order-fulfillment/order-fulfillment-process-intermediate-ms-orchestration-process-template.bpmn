@@ -93,7 +93,7 @@ If there occurs an error while retrieving the payment, a [BPMN Error event]() is
     <bpmn:userTask id="Activity_1ihyrlw" name="Inform customer about delay">
       <bpmn:extensionElements>
         <zeebe:userTask />
-        <zeebe:formDefinition externalReference="Activity_1ihyrlw" />
+        <zeebe:formDefinition externalReference="inform-customer-delay" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_00trqwr</bpmn:incoming>
       <bpmn:outgoing>Flow_17rok8q</bpmn:outgoing>
@@ -101,7 +101,7 @@ If there occurs an error while retrieving the payment, a [BPMN Error event]() is
     <bpmn:userTask id="Activity_1lp5mcg" name="Inform customer about failed payment">
       <bpmn:extensionElements>
         <zeebe:userTask />
-        <zeebe:formDefinition externalReference="Activity_1lp5mcg" />
+        <zeebe:formDefinition externalReference="inform-customer-failed-payment" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0ic9wry</bpmn:incoming>
       <bpmn:outgoing>Flow_0sg5i7z</bpmn:outgoing>

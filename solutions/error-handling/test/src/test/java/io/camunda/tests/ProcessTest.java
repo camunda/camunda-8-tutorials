@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @CamundaSpringProcessTest
-@TestDeployment(resources = {"Error Handling.bpmn"})
+@TestDeployment(resources = {"Error Handling.bpmn", "view-and-correct-error.form"})
 public class ProcessTest {
 
     @Autowired

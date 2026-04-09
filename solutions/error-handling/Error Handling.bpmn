@@ -27,7 +27,7 @@
     <bpmn:userTask id="Activity_0kzg0nb" name="View and Correct Error">
       <bpmn:extensionElements>
         <zeebe:userTask />
-        <zeebe:formDefinition externalReference="Activity_0kzg0nb" />
+        <zeebe:formDefinition externalReference="view-and-correct-error" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1may791</bpmn:incoming>
       <bpmn:outgoing>Flow_0krdbvt</bpmn:outgoing>

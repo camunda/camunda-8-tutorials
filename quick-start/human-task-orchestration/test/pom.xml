@@ -64,11 +64,13 @@
             <testResource>
                 <directory>src/test/resources</directory>
             </testResource>
-            <!-- BPMN file from sibling directory. Filename contains spaces — valid in Java/Maven. -->
+            <!-- BPMN and form files from sibling directory. Filename contains spaces — valid in Java/Maven. -->
             <testResource>
                 <directory>../</directory>
                 <includes>
                     <include>Quick Start_ Human Tasks.bpmn</include>
+                    <include>prepare-chicken.form</include>
+                    <include>prepare-salad.form</include>
                 </includes>
             </testResource>
         </testResources>

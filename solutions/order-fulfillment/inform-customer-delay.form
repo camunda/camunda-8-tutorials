@@ -1,0 +1,56 @@
+{
+  "components": [
+    {
+      "text": "# Inform Customer About Delay",
+      "type": "text",
+      "id": "Field_header",
+      "layout": {
+        "row": "Row_1",
+        "columns": null
+      }
+    },
+    {
+      "text": "The customer's order has been delayed. Please contact the customer and provide an updated delivery estimate.",
+      "type": "text",
+      "id": "Field_instructions",
+      "layout": {
+        "row": "Row_2",
+        "columns": null
+      }
+    },
+    {
+      "label": "Order ID",
+      "type": "textfield",
+      "id": "Field_orderId",
+      "key": "orderId",
+      "disabled": true,
+      "layout": {
+        "row": "Row_3",
+        "columns": null
+      }
+    },
+    {
+      "label": "Customer contact notes",
+      "type": "textarea",
+      "id": "Field_contactNotes",
+      "key": "delayContactNotes",
+      "description": "Describe how the customer was informed and the new expected delivery date",
+      "validate": {
+        "required": true
+      },
+      "layout": {
+        "row": "Row_4",
+        "columns": null
+      }
+    }
+  ],
+  "type": "default",
+  "id": "inform-customer-delay",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

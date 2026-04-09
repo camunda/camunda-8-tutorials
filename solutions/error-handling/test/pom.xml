@@ -67,6 +67,7 @@
                 <directory>../</directory>
                 <includes>
                     <include>Error Handling.bpmn</include>
+                    <include>view-and-correct-error.form</include>
                 </includes>
             </testResource>
         </testResources>

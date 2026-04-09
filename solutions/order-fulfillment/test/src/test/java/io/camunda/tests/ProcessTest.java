@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @CamundaSpringProcessTest
-@TestDeployment(resources = {"order-fulfillment-process-intermediate-ms-orchestration-process-template.bpmn"})
+@TestDeployment(resources = {"order-fulfillment-process-intermediate-ms-orchestration-process-template.bpmn", "inform-customer-delay.form", "inform-customer-failed-payment.form"})
 public class ProcessTest {
 
     @Autowired

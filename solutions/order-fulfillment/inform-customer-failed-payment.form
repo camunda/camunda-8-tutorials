@@ -1,0 +1,67 @@
+{
+  "components": [
+    {
+      "text": "# Inform Customer About Failed Payment",
+      "type": "text",
+      "id": "Field_header",
+      "layout": {
+        "row": "Row_1",
+        "columns": null
+      }
+    },
+    {
+      "text": "The customer's payment has failed. Please contact the customer to resolve the payment issue.",
+      "type": "text",
+      "id": "Field_instructions",
+      "layout": {
+        "row": "Row_2",
+        "columns": null
+      }
+    },
+    {
+      "label": "Order ID",
+      "type": "textfield",
+      "id": "Field_orderId",
+      "key": "orderId",
+      "disabled": true,
+      "layout": {
+        "row": "Row_3",
+        "columns": null
+      }
+    },
+    {
+      "label": "Payment failure reason",
+      "type": "textfield",
+      "id": "Field_paymentFailureReason",
+      "key": "paymentFailureReason",
+      "disabled": true,
+      "layout": {
+        "row": "Row_4",
+        "columns": null
+      }
+    },
+    {
+      "label": "Resolution notes",
+      "type": "textarea",
+      "id": "Field_resolutionNotes",
+      "key": "paymentResolutionNotes",
+      "description": "Describe how the customer was informed and the next steps agreed",
+      "validate": {
+        "required": true
+      },
+      "layout": {
+        "row": "Row_5",
+        "columns": null
+      }
+    }
+  ],
+  "type": "default",
+  "id": "inform-customer-failed-payment",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}

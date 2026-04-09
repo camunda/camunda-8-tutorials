@@ -1,0 +1,56 @@
+{
+  "components": [
+    {
+      "text": "# View and Correct Error",
+      "type": "text",
+      "id": "Field_header",
+      "layout": {
+        "row": "Row_1",
+        "columns": null
+      }
+    },
+    {
+      "text": "An error has occurred in the process. Review the error details below and make the necessary corrections before continuing.",
+      "type": "text",
+      "id": "Field_instructions",
+      "layout": {
+        "row": "Row_2",
+        "columns": null
+      }
+    },
+    {
+      "label": "Error details",
+      "type": "textarea",
+      "id": "Field_errorDetails",
+      "key": "errorDetails",
+      "disabled": true,
+      "layout": {
+        "row": "Row_3",
+        "columns": null
+      }
+    },
+    {
+      "label": "Correction notes",
+      "type": "textarea",
+      "id": "Field_correctionNotes",
+      "key": "correctionNotes",
+      "description": "Describe the correction you made",
+      "validate": {
+        "required": true
+      },
+      "layout": {
+        "row": "Row_4",
+        "columns": null
+      }
+    }
+  ],
+  "type": "default",
+  "id": "view-and-correct-error",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.8.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "schemaVersion": 16
+}
