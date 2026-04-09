@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="80c4984" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0" camunda:diagramRelationId="ef560f6d-5a80-45df-a84a-c480c0df2fe2">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="80c4984" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0" camunda:diagramRelationId="ef560f6d-5a80-45df-a84a-c480c0df2fe2">
   <bpmn:error id="Error_18jsawn" name="price check unsuccessful" errorCode="prices_check_unsuccessful" />
   <bpmn:signal id="Signal_3smleom" name="=&#34;order_executed_&#34; + orderId" />
   <bpmn:error id="Error_0vd7mro" name="order aborted" errorCode="order_aborted" />
@@ -241,6 +241,10 @@
     <bpmn:sequenceFlow id="Flow_1pkkmwu" sourceRef="Event_15c6fg8" targetRef="Gateway_0fu4781" />
     <bpmn:sequenceFlow id="Flow_0lv893m" sourceRef="Event_1dogjg4" targetRef="Event_0jbyy73" />
     <bpmn:sequenceFlow id="Flow_1stlulk" sourceRef="Gateway_0fu4781" targetRef="Activity_1frnjx4" />
+    <bpmn:textAnnotation id="TextAnnotation_capital_market_intro">
+      <bpmn:text>Triggered when a trade order is received from a broker. The happy-path outcome is the order validated, executed on the stock exchange, and successfully processed.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_capital_market_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_capital_market_intro" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_15ie2ek">

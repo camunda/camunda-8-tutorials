@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="f22cba6" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.4.0" camunda:diagramRelationId="bd841594-d085-49ff-9c7d-c5e43ba4631d">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="f22cba6" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="bd841594-d085-49ff-9c7d-c5e43ba4631d">
   <bpmn:collaboration id="ExpenseReimbursement">
     <bpmn:participant id="Participant_ExpenseReimbursement" name="Expense Reimbursement" processRef="Process_ExpenseReimbursement-0yibie4" />
   </bpmn:collaboration>
@@ -968,8 +968,9 @@
     </bpmn:endEvent>
     <bpmn:userTask id="Activity_ReviewExpenseReport_Finance" name="Review expense report - finance">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:assignmentDefinition candidateGroups="Finance" />
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_326e1d1" />
+        <zeebe:formDefinition externalReference="userTaskForm_326e1d1" />
         <zeebe:ioMapping>
           <zeebe:output source="=reviewOutcome" target="financeReviewOutcome" />
           <zeebe:output source="=if reviewOutcome = &#34;rejected&#34; then rejectionReason else &#34;&#34;" target="rejectionReason" />
@@ -1002,8 +1003,9 @@
     </bpmn:task>
     <bpmn:userTask id="Activity_ReviewExpenseReport_Manager" name="Review expense report - manager">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:assignmentDefinition candidateGroups="Manager" candidateUsers="=[supervisorEmail]" />
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_3l1o3dg" />
+        <zeebe:formDefinition externalReference="userTaskForm_3l1o3dg" />
         <zeebe:ioMapping>
           <zeebe:output source="=reviewOutcome" target="managerReviewOutcome" />
           <zeebe:output source="=if reviewOutcome = &#34;rejected&#34; then rejectionReason else &#34;&#34;" target="rejectionReason" />
@@ -1028,7 +1030,8 @@
     <bpmn:sequenceFlow id="Flow_185jnzm" sourceRef="Gateway_0v75kn8" targetRef="Activity_NotifyRejection" />
     <bpmn:userTask id="Activity_CreateExpenseReport" name="Create expense report">
       <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_0jijmee" />
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="userTaskForm_0jijmee" />
         <zeebe:properties>
           <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10;  &#34;firstName&#34;: &#34;John&#34;,&#10;  &#34;lastName&#34;: &#34;Doe&#34;,&#10;  &#34;email&#34;: &#34;john.doe@camunda.com&#34;,&#10;  &#34;department&#34;: &#34;finance&#34;,&#10;  &#34;supervisorEmail&#34;: &#34;jane.doe@camunda.com&#34;,&#10;  &#34;expenseDate&#34;: &#34;2023-06-09&#34;,&#10;  &#34;expenseType&#34;: &#34;travel&#34;,&#10;  &#34;travelStart&#34;: &#34;2023-06-06&#34;,&#10;  &#34;travelEnd&#34;: &#34;2023-06-09&#34;,&#10;  &#34;travelLocation&#34;: &#34;Berlin&#34;,&#10;  &#34;expensePurpose&#34;: &#34;Travel to Berlin Office&#34;,&#10;  &#34;expenseAmount&#34;: 650&#10;}" />
         </zeebe:properties>
@@ -1044,6 +1047,10 @@
     </bpmn:textAnnotation>
     <bpmn:association id="Association_12m4aqv" sourceRef="Activity_ReimburseExpenses" targetRef="TextAnnotation_02rliy5" />
     <bpmn:association id="Association_1c7637v" sourceRef="TextAnnotation_0k4qsxw" targetRef="Activity_1l5wj0t" />
+    <bpmn:textAnnotation id="TextAnnotation_expense_intro">
+      <bpmn:text>Triggered when an employee submits an expense report for reimbursement. The happy-path outcome is the report approved by manager and finance, expenses reimbursed, and employee notified.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_expense_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_expense_intro" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ExpenseReimbursement">

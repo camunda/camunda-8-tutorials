@@ -1,0 +1,80 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - order delivered successfully",
+      "description": "Order received via message start event. Payment retrieved, goods fetched, goods shipped. Order delivered.",
+      "instructions": [
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "Msg_OrderReceived",
+          "correlationKey": "",
+          "variables": {
+            "orderId": "ORD001",
+            "customerId": "CUST001",
+            "items": [{ "sku": "ITEM001", "quantity": 2 }]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_RetrievePayment" },
+          "variables": { "paymentId": "PAY001", "paymentStatus": "success" }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0tmo7ip" },
+          "variables": { "warehouseLocation": "WH-A" }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_15rdezk" },
+          "variables": { "trackingNumber": "TRK001" }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "Process_OrderFulfillment_Intermediate" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "payment failed - customer informed",
+      "description": "Order received. Payment retrieval fails via boundary event. Customer informed about failed payment.",
+      "instructions": [
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "Msg_OrderReceived",
+          "correlationKey": "",
+          "variables": {
+            "orderId": "ORD002",
+            "customerId": "CUST002",
+            "items": []
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": { "elementId": "Activity_RetrievePayment" },
+          "errorCode": "paymentFailed",
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "Process_OrderFulfillment_Intermediate" },
+          "elementSelectors": [{ "elementId": "Activity_1lp5mcg" }],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "Activity_1lp5mcg" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "Process_OrderFulfillment_Intermediate" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Msg_OrderReceived message triggers process correctly with real message broker; (2) Activity_RetrievePayment calls real payment gateway and verifies payment is captured; (3) Activity_0tmo7ip (Fetch goods) calls real warehouse management system; (4) Activity_15rdezk (Ship goods) calls real shipping/logistics API and returns valid tracking number; (5) Non-interrupting timer boundary event on Activity_0tmo7ip requires time acceleration to test."
+}

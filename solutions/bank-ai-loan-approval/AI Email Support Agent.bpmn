@@ -186,7 +186,7 @@
       <bpmn:intermediateThrowEvent id="Event_0wh5ha7" name="ignore">
         <bpmn:incoming>Flow_0d4itte</bpmn:incoming>
       </bpmn:intermediateThrowEvent>
-      <bpmn:exclusiveGateway id="Gateway_1whb5u5" name="Save answer to Knowledge base">
+      <bpmn:exclusiveGateway id="Gateway_1whb5u5" name="Save answer to knowledge base?">
         <bpmn:incoming>Flow_0acq6om</bpmn:incoming>
         <bpmn:outgoing>Flow_1mudddl</bpmn:outgoing>
         <bpmn:outgoing>Flow_0lexqwn</bpmn:outgoing>
@@ -343,7 +343,7 @@
       <bpmn:incoming>Flow_0nq27w0</bpmn:incoming>
       <bpmn:outgoing>Flow_0v6pwqf</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="Gateway_0ua9lj6" default="Flow_0a79ens">
+    <bpmn:exclusiveGateway id="Gateway_0ua9lj6" name="Agent decision outcome?" default="Flow_0a79ens">
       <bpmn:incoming>Flow_1ocsi68</bpmn:incoming>
       <bpmn:outgoing>Flow_0nq27w0</bpmn:outgoing>
       <bpmn:outgoing>Flow_0a79ens</bpmn:outgoing>
@@ -500,6 +500,10 @@
       <bpmn:text>save long term memory</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_0p70jxz" associationDirection="None" sourceRef="Activity_0tn95r9" targetRef="TextAnnotation_0fpqtvh" />
+    <bpmn:textAnnotation id="TextAnnotation_loan_approval_intro">
+      <bpmn:text>Triggered when a customer sends a loan inquiry email. The AI agent handles the inquiry using available tools; the happy-path outcome is the case resolved autonomously by the agent and confirmed by a human reviewer.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_loan_approval_intro" associationDirection="None" sourceRef="Event_WaitForEmail" targetRef="TextAnnotation_loan_approval_intro" />
   </bpmn:process>
   <bpmn:escalation id="Escalation_1qaovql" name="human escalation" escalationCode="100_human_escalation" />
   <bpmn:error id="Error_1xmh0a2" name="index_not_found" errorCode="index_not_found" />

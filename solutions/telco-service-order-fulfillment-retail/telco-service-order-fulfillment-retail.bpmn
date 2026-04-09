@@ -55,7 +55,7 @@
         <bpmn:flowNodeRef>Event_0yf4w6e</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="Event_047t2hg" name="service order received">
+    <bpmn:startEvent id="Event_047t2hg" name="Service order received">
       <bpmn:extensionElements>
         <zeebe:properties>
           <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10;  &#34;orderId&#34;: 123,&#10;  &#34;orderItems&#34;: [&#10;    {&#10;      &#34;orderItemId&#34;: 456,&#10;      &#34;orderItemName&#34;: &#34;Internet L&#34;,&#10;      &#34;type&#34;: &#34;mobile&#34;,&#10;      &#34;price&#34;: 29.99,&#10;      &#34;reocurring&#34;: &#34;monthly&#34;&#10;    },&#10;   {&#10;      &#34;orderItemId&#34;: 368,&#10;      &#34;orderItemName&#34;: &#34;Mobile S&#34;,&#10;      &#34;type&#34;: &#34;mobile&#34;,&#10;      &#34;price&#34;: 9.99,&#10;      &#34;reocurring&#34;: &#34;monthly&#34;&#10;    },&#10;    {&#10;      &#34;orderItemId&#34;: 789,&#10;      &#34;orderItemName&#34;: &#34;Smartphone 42&#34;,&#10;      &#34;type&#34;: &#34;hardware&#34;,&#10;      &#34;price&#34;: 699.99,&#10;      &#34;reocurring&#34;: null&#10;    },&#10;    {&#10;      &#34;orderItemId&#34;: 125,&#10;      &#34;orderItemName&#34;: &#34;Laptop 66&#34;,&#10;      &#34;type&#34;: &#34;hardware&#34;,&#10;      &#34;price&#34;: 2599.99,&#10;      &#34;reocurring&#34;: null&#10;    }&#10;  ]&#10;}" />
@@ -63,7 +63,7 @@
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_09cipqi</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:inclusiveGateway id="Gateway_1iq0f31" name="which partial order type?">
+    <bpmn:inclusiveGateway id="Gateway_1iq0f31" name="Which partial order type?">
       <bpmn:incoming>Flow_1o7kv0t</bpmn:incoming>
       <bpmn:outgoing>Flow_1kk2ebv</bpmn:outgoing>
       <bpmn:outgoing>Flow_1z0egtx</bpmn:outgoing>
@@ -91,7 +91,7 @@
       <bpmn:incoming>Flow_1z0egtx</bpmn:incoming>
       <bpmn:outgoing>Flow_1175ybn</bpmn:outgoing>
     </bpmn:intermediateThrowEvent>
-    <bpmn:exclusiveGateway id="Gateway_16qnm75" name="sufficient inventory?" default="Flow_0b5tjep">
+    <bpmn:exclusiveGateway id="Gateway_16qnm75" name="Sufficient inventory?" default="Flow_0b5tjep">
       <bpmn:incoming>Flow_1avi087</bpmn:incoming>
       <bpmn:outgoing>Flow_0b5tjep</bpmn:outgoing>
       <bpmn:outgoing>Flow_1cducyj</bpmn:outgoing>
@@ -362,6 +362,10 @@
     <bpmn:sequenceFlow id="Flow_0yy5tar" sourceRef="Activity_00cb2gw" targetRef="Event_0mtz2ay" />
     <bpmn:sequenceFlow id="Flow_1cg0tcv" sourceRef="Activity_1j83yc1" targetRef="Activity_1jyklqs" />
     <bpmn:sequenceFlow id="Flow_0cpodcm" sourceRef="Event_182kkjw" targetRef="Event_19y7b8u" />
+    <bpmn:textAnnotation id="TextAnnotation_telco_intro">
+      <bpmn:text>Triggered when a customer places a service order with the telco company. The happy-path outcome is fraud checks passed, inventory verified, all partial orders fulfilled, and customer notified.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_telco_intro" associationDirection="None" sourceRef="Event_047t2hg" targetRef="TextAnnotation_telco_intro" />
   </bpmn:process>
   <bpmn:error id="Error_0cbsxer" name="fraud found" errorCode="fraud_found" />
   <bpmn:signal id="Signal_0m4udet" name="inventory_updated" />

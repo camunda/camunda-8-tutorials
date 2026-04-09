@@ -1,0 +1,73 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - inquiry answered and reply logged",
+      "description": "Inquiry received, agent answers it, response sent, reply logged. Process completes successfully.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-enforcing-sla-1ktq8my"
+          },
+          "variables": {
+            "inquiryId": "INQ001",
+            "customerEmail": "customer@example.com",
+            "inquiry": "What is the status of my order?"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "AnswerInquireTask"
+          },
+          "variables": {
+            "response": "Your order is being processed."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "SendResponseTask"
+          },
+          "variables": {}
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "Reply",
+          "correlationKey": "exampleKey",
+          "variables": {
+            "reply": "Thank you for your response."
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-enforcing-sla-1ktq8my"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "LogReplyTask"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "LogReplyTask"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-enforcing-sla-1ktq8my"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) SendResponseTask (HTTP connector) sends real HTTP request to the customer's endpoint with the inquiry response; (2) SendEscalationEmailTask (HTTP connector) sends a real escalation email when SLA timer fires (requires time acceleration or a 2-day wait); (3) Timer boundary events (SLA escalation) require time acceleration in integration tests."
+}

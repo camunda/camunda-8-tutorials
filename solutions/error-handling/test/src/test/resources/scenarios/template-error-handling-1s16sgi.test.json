@@ -1,0 +1,227 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - data verified, accounts created successfully",
+      "description": "Data verified successfully. CMS record updated, support account created, platform access granted. Success message sent.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "variables": {
+            "customerId": "CUST001",
+            "customerData": {
+              "name": "Alice Smith",
+              "email": "alice@example.com"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          },
+          "variables": {
+            "dataValid": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13eovqu"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_00ef2n2"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "data verification error - user corrects and resubmits",
+      "description": "Data verification fails. User views and corrects the error. Process continues successfully.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "variables": {
+            "customerId": "CUST002",
+            "customerData": {
+              "name": "",
+              "email": "invalid"
+            }
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          },
+          "errorCode": "ErrorInData",
+          "variables": {
+            "errorMessage": "Name is required"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0kzg0nb"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_0kzg0nb"
+          },
+          "variables": {
+            "customerData": {
+              "name": "Alice Smith",
+              "email": "alice@example.com"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13eovqu"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_00ef2n2"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "record creation fails - compensation triggered",
+      "description": "A record creation fails mid-process. Compensation removes any created records.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "variables": {
+            "customerId": "CUST003"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
+          "variables": {}
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
+          "errorCode": "FailedToCreateRecord",
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0h20swu"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0h20swu"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13kxvrs"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_1kpg3ok calls real CMS/validation API; (2) Activity_084s4zz creates a real support system account and can be verified; (3) Activity_0h20swu compensation correctly removes any created records when failure occurs. Note: Activity_17oxyev is a subprocess — complete its inner jobs directly (Activity_1v4xdzk, Activity_084s4zz, Activity_13eovqu)."
+}

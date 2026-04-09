@@ -1,0 +1,78 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - attendee registered with opt-in to notifications",
+      "description": "Registration stored in Google Sheets, attendee notified. Attendee opts in to future notifications — added to newsletter.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "Process_EventRegistration-1u9wzht" },
+          "variables": {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": "alice@example.com",
+            "phone_number": "",
+            "company": "Acme Corp",
+            "news_source": ["website"],
+            "news_source_alternative": "",
+            "additional_comments": "",
+            "future_notifications": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_StoreRegistrations" },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_NotifyAttendee" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "Process_EventRegistration-1u9wzht" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "attendee registered without opt-in",
+      "description": "Registration stored, attendee notified. Attendee does not opt in to future notifications.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "Process_EventRegistration-1u9wzht" },
+          "variables": {
+            "first_name": "Bob",
+            "last_name": "Jones",
+            "email": "bob@example.com",
+            "phone_number": "",
+            "company": "",
+            "news_source": [],
+            "news_source_alternative": "",
+            "additional_comments": "",
+            "future_notifications": false
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_StoreRegistrations" },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_NotifyAttendee" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "Process_EventRegistration-1u9wzht" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_StoreRegistrations (Google Sheets connector) appends a real row to the configured sheet with attendee data; (2) Activity_NotifyAttendee (SendGrid connector) sends a real confirmation email to the attendee address; (3) Activity_AddToNewsletter adds the attendee to the real newsletter list."
+}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="2e63a9a" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0" camunda:diagramRelationId="3f4f46f7-e146-4fbe-91d6-cf2dac33a2a1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.45.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="3f4f46f7-e146-4fbe-91d6-cf2dac33a2a1">
   <bpmn:process id="Process_l1jbzht" name="Intelligent-routing-with-openai" isExecutable="true">
     <bpmn:extensionElements>
       <zeebe:userTaskForm id="UserTaskForm_1jtqu5f">{
@@ -413,10 +413,10 @@
   "type": "default"
 }</zeebe:userTaskForm>
     </bpmn:extensionElements>
-    <bpmn:startEvent id="StartEvent_1" name="inquiry process started">
+    <bpmn:startEvent id="StartEvent_1" name="Inquiry received">
       <bpmn:outgoing>Flow_0mqrso0</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:endEvent id="happy-end" name="inquiry resolved">
+    <bpmn:endEvent id="happy-end" name="Inquiry resolved">
       <bpmn:incoming>Flow_005lakp</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:serviceTask id="azure_openai_call" name="Determine routing (AI)" zeebe:modelerTemplate="io.camunda.connectors.AzureOpenAI.outbound.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;utf8,%3Csvg xmlns=&#39;http://www.w3.org/2000/svg&#39; width=&#39;16&#39; height=&#39;16&#39; fill=&#39;none&#39; viewBox=&#39;0 0 513 512&#39;%3E%3Cg clip-path=&#39;url(%23a)&#39;%3E%3Crect width=&#39;512&#39; height=&#39;512&#39; x=&#39;.25&#39; fill=&#39;%23fff&#39; rx=&#39;76&#39;/%3E%3Cpath fill=&#39;url(%23b)&#39; d=&#39;M.25 76.8v358.4c0 42.411 34.39 76.8 76.8 76.8h358.4c42.411 0 76.8-34.389 76.8-76.8V76.8c0-42.41-34.389-76.8-76.8-76.8H77.05C34.64 0 .25 34.39.25 76.8ZM307.45 0v102.4c0 113.095 91.705 204.8 204.8 204.8h-102.4c-113.095 0-204.772 91.648-204.8 204.743V409.6c0-113.095-91.705-204.8-204.8-204.8h102.4c113.095 0 204.8-91.705 204.8-204.8Z&#39;/%3E%3C/g%3E%3Cdefs%3E%3CradialGradient id=&#39;b&#39; cx=&#39;0&#39; cy=&#39;0&#39; r=&#39;1&#39; gradientTransform=&#39;rotate(45 -176.261 403.94) scale(321.165 437.107)&#39; gradientUnits=&#39;userSpaceOnUse&#39;%3E%3Cstop stop-color=&#39;%2383B9F9&#39;/%3E%3Cstop offset=&#39;1&#39; stop-color=&#39;%230078D4&#39;/%3E%3C/radialGradient%3E%3CclipPath id=&#39;a&#39;%3E%3Crect width=&#39;512&#39; height=&#39;512&#39; x=&#39;.25&#39; fill=&#39;%23fff&#39; rx=&#39;76&#39;/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E">
@@ -449,7 +449,7 @@
       <bpmn:incoming>Flow_024pys7</bpmn:incoming>
       <bpmn:outgoing>Flow_0vcinh5</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="gateway_routing" name="route to which deparment?" default="Flow_0l09f7q">
+    <bpmn:exclusiveGateway id="gateway_routing" name="Which department handles this?" default="Flow_0l09f7q">
       <bpmn:incoming>Flow_1b1rhvq</bpmn:incoming>
       <bpmn:outgoing>flow_sales_inquiry</bpmn:outgoing>
       <bpmn:outgoing>flow_technical_inquiry</bpmn:outgoing>
@@ -458,20 +458,22 @@
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="activity_sales_team" name="Work on inquiry (Sales team)">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:ioMapping>
           <zeebe:input source="=customer_inquiry" target="customer_message" />
         </zeebe:ioMapping>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_1jtqu5f" />
+        <zeebe:formDefinition externalReference="UserTaskForm_1jtqu5f" />
       </bpmn:extensionElements>
       <bpmn:incoming>flow_sales_inquiry</bpmn:incoming>
       <bpmn:outgoing>Flow_07h5nkp</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="activity_engineering_team" name="Work on inquiry (Engineering team)">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:ioMapping>
           <zeebe:input source="=customer_inquiry" target="customer_message" />
         </zeebe:ioMapping>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_2l872ik" />
+        <zeebe:formDefinition externalReference="UserTaskForm_2l872ik" />
       </bpmn:extensionElements>
       <bpmn:incoming>flow_technical_inquiry</bpmn:incoming>
       <bpmn:outgoing>Flow_088ove7</bpmn:outgoing>
@@ -485,10 +487,11 @@
     </bpmn:exclusiveGateway>
     <bpmn:userTask id="Activity_04j3j7a" name="Work on inquiry (Legal team)">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:ioMapping>
           <zeebe:input source="=customer_inquiry" target="customer_message" />
         </zeebe:ioMapping>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_17jodni" />
+        <zeebe:formDefinition externalReference="UserTaskForm_17jodni" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1gj1kgq</bpmn:incoming>
       <bpmn:outgoing>Flow_07c5po9</bpmn:outgoing>
@@ -499,20 +502,21 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0vcinh5" sourceRef="azure_openai_call" targetRef="Gateway_1m3zdr2" />
     <bpmn:sequenceFlow id="flow_sales_inquiry" name="sales" sourceRef="gateway_routing" targetRef="activity_sales_team">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=matches(route, "SALES", "i")</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=route = "SALES"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="flow_technical_inquiry" name="technical" sourceRef="gateway_routing" targetRef="activity_engineering_team">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=matches(route, "ENGINEERING", "i")</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=route = "ENGINEERING"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1gj1kgq" name="legal" sourceRef="gateway_routing" targetRef="Activity_04j3j7a">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=matches(route, "LEGAL", "i")</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=route = "LEGAL"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_07h5nkp" sourceRef="activity_sales_team" targetRef="gateway_sales_team" />
     <bpmn:sequenceFlow id="Flow_088ove7" sourceRef="activity_engineering_team" targetRef="gateway_sales_team" />
     <bpmn:sequenceFlow id="Flow_07c5po9" sourceRef="Activity_04j3j7a" targetRef="gateway_sales_team" />
     <bpmn:userTask id="Activity_03z512o" name="Enter inquiry (customer)">
       <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_2o930gv" />
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="UserTaskForm_2o930gv" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0mqrso0</bpmn:incoming>
       <bpmn:outgoing>Flow_16ccfjo</bpmn:outgoing>
@@ -525,7 +529,7 @@
       <bpmn:outgoing>Flow_024pys7</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_024pys7" sourceRef="Gateway_01n9u1n" targetRef="azure_openai_call" />
-    <bpmn:exclusiveGateway id="Gateway_0wwrp47" name="inquiry response">
+    <bpmn:exclusiveGateway id="Gateway_0wwrp47" name="Inquiry resolved?">
       <bpmn:incoming>Flow_1h01n0i</bpmn:incoming>
       <bpmn:outgoing>Flow_005lakp</bpmn:outgoing>
       <bpmn:outgoing>Flow_0jp9ged</bpmn:outgoing>
@@ -565,7 +569,8 @@
     <bpmn:sequenceFlow id="Flow_13kjm3t" sourceRef="Activity_1ltiek0" targetRef="gateway_sales_team" />
     <bpmn:userTask id="Activity_1ltiek0" name="Work on inquiry (default)">
       <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:UserTaskForm_3kl77cq" />
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="UserTaskForm_3kl77cq" />
         <zeebe:ioMapping>
           <zeebe:input source="=customer_inquiry" target="customer_message" />
         </zeebe:ioMapping>
@@ -573,6 +578,10 @@
       <bpmn:incoming>Flow_0l09f7q</bpmn:incoming>
       <bpmn:outgoing>Flow_13kjm3t</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:textAnnotation id="TextAnnotation_azure_routing_intro">
+      <bpmn:text>Triggered when a customer inquiry is received. The process uses Azure AI to classify and route the inquiry to the correct team; the happy-path outcome is the inquiry resolved by the appropriate team.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_azure_routing_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_azure_routing_intro" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_l1jbzht">

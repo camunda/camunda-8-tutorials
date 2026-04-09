@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.24.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0" camunda:diagramRelationId="85f5b096-5a43-4668-93ef-b132f519bbbc">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.24.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="85f5b096-5a43-4668-93ef-b132f519bbbc">
   <bpmn:collaboration id="Collaboration_1qr2ldp">
     <bpmn:participant id="Participant_06rogqo" name="Bank" processRef="Process_0ffvgea" />
     <bpmn:participant id="Participant_15e0f4x" name="Customer" />
@@ -34,7 +34,7 @@
     <bpmn:sequenceFlow id="Flow_1jy0gq5" sourceRef="Activity_02tn153" targetRef="Gateway_10h5rgs" />
     <bpmn:sequenceFlow id="Flow_0i8sw0n" sourceRef="Activity_0ynau00" targetRef="Gateway_10h5rgs" />
     <bpmn:sequenceFlow id="Flow_1i9jx1l" sourceRef="Gateway_10h5rgs" targetRef="Gateway_10tcwko" />
-    <bpmn:startEvent id="Event_1694q1n" name="credit card fraud dispute started">
+    <bpmn:startEvent id="Event_1694q1n" name="Credit card fraud dispute filed">
       <bpmn:documentation>To test different paths, change the dispute amount to be &lt;10, between 10 and 100 or &gt;100.</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:properties>
@@ -210,7 +210,7 @@
         <bpmn:incoming>Flow_1y2i3of</bpmn:incoming>
         <bpmn:outgoing>Flow_19sw79f</bpmn:outgoing>
       </bpmn:businessRuleTask>
-      <bpmn:exclusiveGateway id="Gateway_0vlbih2" name="fraud rating confidence?" default="Flow_1c4aye9">
+      <bpmn:exclusiveGateway id="Gateway_0vlbih2" name="Fraud rating confidence?" default="Flow_1c4aye9">
         <bpmn:incoming>Flow_19sw79f</bpmn:incoming>
         <bpmn:outgoing>Flow_0glz68g</bpmn:outgoing>
         <bpmn:outgoing>Flow_1c4aye9</bpmn:outgoing>
@@ -231,6 +231,7 @@
     </bpmn:subProcess>
     <bpmn:userTask id="Activity_0ynau00" name="Decide on fraud case">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:formDefinition formId="decide-on-fraud-case-000115q" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1g6chbg</bpmn:incoming>
@@ -261,7 +262,7 @@
       <bpmn:incoming>Flow_0i8sw0n</bpmn:incoming>
       <bpmn:outgoing>Flow_1i9jx1l</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="Gateway_10tcwko" name="decision outcome?" default="Flow_0cceqh3">
+    <bpmn:exclusiveGateway id="Gateway_10tcwko" name="Decision outcome?" default="Flow_0cceqh3">
       <bpmn:incoming>Flow_1i9jx1l</bpmn:incoming>
       <bpmn:outgoing>Flow_0cceqh3</bpmn:outgoing>
       <bpmn:outgoing>Flow_1ruxjhu</bpmn:outgoing>
@@ -270,6 +271,10 @@
       <bpmn:outgoing>Flow_1g6chbg</bpmn:outgoing>
       <bpmn:escalationEventDefinition id="EscalationEventDefinition_1atb4s8" escalationRef="Escalation_37d5bgh" />
     </bpmn:boundaryEvent>
+    <bpmn:textAnnotation id="TextAnnotation_dispute_intro">
+      <bpmn:text>Triggered when a customer files a credit card fraud dispute via the bank's CRM system. The happy-path outcome is the dispute investigated, a refund processed, and the customer notified.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_dispute_intro" associationDirection="None" sourceRef="Event_1694q1n" targetRef="TextAnnotation_dispute_intro" />
   </bpmn:process>
   <bpmn:message id="Message_2hpi0qp" name="dispute_process_receive_documents">
     <bpmn:extensionElements>

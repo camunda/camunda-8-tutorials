@@ -1,0 +1,47 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - booking succeeded",
+      "description": "Seats reserved, payment requested, payment received message published, ticket generated. Booking succeeded.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "template-ticket-booking-18vy8wg" },
+          "variables": {
+            "customerId": "CUST001",
+            "eventId": "EVT001",
+            "seats": ["A1", "A2"]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "ReserveSeatsActivity" },
+          "variables": { "reservationId": "RES001" }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0lox1kf" },
+          "variables": { "paymentRequestId": "PAY001" }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "msg-payment-received",
+          "correlationKey": "PAY001",
+          "variables": { "paymentConfirmed": true }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0etdda4" },
+          "variables": { "ticketId": "TKT001" }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "template-ticket-booking-18vy8wg" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) ReserveSeatsActivity (HTTP connector) calls real seat reservation API and holds seats; (2) Activity_0lox1kf (Request Payment) calls real payment gateway and returns payment URL/reference; (3) msg-payment-received message is published by the real payment webhook handler with the paymentRequestId as correlation key; (4) Activity_0etdda4 (Generate Ticket) calls real ticket generation service; (5) Timer boundary event (AfterFiveMinutesTimer) requires time acceleration or real 5-minute wait in integration tests. NOTE: Error_11kp03o (ErrorSeatsNotAvailable) is defined in the BPMN but has no error boundary event on ReserveSeatsActivity or process-level catch — throwing this error from the job would cause an unhandled incident. If seats-not-available handling is desired, a BPMN change is needed: add an error boundary event on ReserveSeatsActivity that catches ErrorSeatsNotAvailable and routes to the Booking cancelled end event (Event_05eni0s)."
+}

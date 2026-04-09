@@ -1,0 +1,147 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - mobile order with one-time setup fee, low price, no fraud check",
+      "description": "Mobile order (monthly) + one-time setup fee (service type). Both prices non-null and below thresholds — no fraud check. Mobile fulfillment completed, monthly payments set up. Note: setup fee has item.type=service so it does not create a fulfillment sub-process iteration.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "telco_service_order_fulfillment_retail" },
+          "variables": {
+            "orderId": "ORD001",
+            "customerId": "CUST001",
+            "orderItems": [
+              { "orderItemId": 456, "orderItemName": "Internet L", "item": { "type": "mobile" }, "type": "mobile", "price": 29.99, "reocurring": "monthly" },
+              { "orderItemId": 457, "orderItemName": "One-time Setup Fee", "item": { "type": "service" }, "type": "service", "price": 1.00, "reocurring": null }
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_1tjr8w6" },
+          "variables": { "mobileNumber": "+49123456789" }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0yf9g2p" },
+          "variables": {}
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "resource_activation_completed",
+          "correlationKey": "ORD001_456",
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0fo7pq6" },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0dwooye" },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0lawqru" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "telco_service_order_fulfillment_retail" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "fraud detected - high-value order aborted",
+      "description": "Order with hardware price > 3000 triggers fraud check. Fraud detected. Fraud attempt recorded and order aborted.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "telco_service_order_fulfillment_retail" },
+          "variables": {
+            "orderId": "ORD002",
+            "customerId": "CUST002",
+            "orderItems": [
+              { "orderItemId": 789, "orderItemName": "Laptop Pro", "item": { "type": "hardware" }, "type": "hardware", "price": 3500.00, "reocurring": null }
+            ]
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": { "elementId": "Activity_1rg0k6z" },
+          "errorCode": "fraud_found",
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0teyocj" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "telco_service_order_fulfillment_retail" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "hardware order with monthly service fee, low price, no fraud check",
+      "description": "Hardware order (one-time) + monthly service fee (service type). Both prices non-null and below thresholds — no fraud check. Inventory available. Hardware fulfillment completed, one-time payment claimed. Note: monthly service fee has item.type=service so it does not create a fulfillment sub-process iteration.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "telco_service_order_fulfillment_retail" },
+          "variables": {
+            "orderId": "ORD003",
+            "customerId": "CUST003",
+            "orderItems": [
+              { "orderItemId": 111, "orderItemName": "Basic Phone", "item": { "type": "hardware" }, "type": "hardware", "price": 199.99, "reocurring": null },
+              { "orderItemId": 112, "orderItemName": "Monthly Service Fee", "item": { "type": "service" }, "type": "service", "price": 1.00, "reocurring": "monthly" }
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0tiqi9e" },
+          "variables": { "areAllHardwareItemsAvailable": true }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0k3m6zy" },
+          "variables": { "trackingNumber": "TRK001" }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "tracking_information_received",
+          "correlationKey": "ORD003_111",
+          "variables": { "trackingNumber": "TRK001" }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_13qigvi" },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0d5nxde" },
+          "variables": { "paymentConfirmation": "PAY001" }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_00cb2gw" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "telco_service_order_fulfillment_retail" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_0tiqi9e (Check and reserve inventory) calls real inventory management system; (2) Activity_1tjr8w6 (Reserve mobile number) calls real mobile number provisioning system; (3) Activity_0yf9g2p (Request resource activation) sends real activation request and Event_1nlbn8z awaits real activation confirmation message; (4) Activity_1rg0k6z (Perform fraud check) calls real fraud detection service; (5) Activity_0k3m6zy (Initialize shipping) calls real logistics system and Event_08o7bb6 awaits real tracking message; (6) Activity_0d5nxde (Claim one-time payment) and Activity_0dwooye (Set up monthly payments) call real payment/billing systems; (7) Multi-instance subprocesses require one job completion per order item in integration tests."
+}

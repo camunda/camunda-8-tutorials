@@ -1,0 +1,64 @@
+name: BPMN Lint
+
+on:
+  pull_request:
+    paths:
+      - '**/*.bpmn'
+      - '**/*.dmn'
+      - '.bpmnlintrc'
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  lint:
+    name: Lint BPMN/DMN files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Install xmllint
+        run: sudo apt-get install -y libxml2-utils
+
+      - name: Find changed BPMN/DMN files
+        id: changed
+        run: |
+          FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }}...${{ github.sha }} \
+            | grep -E '\.(bpmn|dmn)$' \
+            | grep -v '/target/' \
+            | tr '\n' ' ')
+          echo "files=$FILES" >> "$GITHUB_OUTPUT"
+          echo "Changed BPMN/DMN files: $FILES"
+
+      - name: Check XML well-formedness (changed files only)
+        if: steps.changed.outputs.files != ''
+        run: |
+          ERRORS=0
+          for file in ${{ steps.changed.outputs.files }}; do
+            if [ -f "$file" ]; then
+              if ! xmllint --noout "$file" 2>/tmp/xmllint-err; then
+                echo "::error file=$file::$(cat /tmp/xmllint-err)"
+                ERRORS=$((ERRORS + 1))
+              fi
+            fi
+          done
+          if [ $ERRORS -gt 0 ]; then
+            echo "$ERRORS BPMN file(s) failed XML well-formedness check."
+            exit 1
+          fi
+
+      - name: Run bpmnlint (changed files only — informational)
+        if: steps.changed.outputs.files != ''
+        # Violations are reported but do not block merges.
+        # Pre-existing issues in legacy files are tech debt tracked separately.
+        # XML well-formedness (above) is the hard gate.
+        run: npx bpmnlint --config .bpmnlintrc ${{ steps.changed.outputs.files }} || true

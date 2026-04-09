@@ -1,0 +1,213 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - sales routing resolved",
+      "description": "Customer enters an inquiry, AI routes to sales team, sales agent marks it resolved. Process ends at happy-end.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_03z512o"
+          },
+          "variables": {
+            "inquiry": "I'd like to buy your product."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "azure_openai_call"
+          },
+          "variables": {
+            "route": "SALES"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "activity_sales_team"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "activity_sales_team"
+          },
+          "variables": {
+            "route": "resolved"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "feedback loop - engineering team loops once then resolves",
+      "description": "AI routes to engineering team. Agent requests feedback (re-run AI routing). On second pass AI routes to engineering again, agent resolves. Process ends at happy-end.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_03z512o"
+          },
+          "variables": {
+            "inquiry": "My integration is broken."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "azure_openai_call"
+          },
+          "variables": {
+            "route": "ENGINEERING"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "activity_engineering_team"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "activity_engineering_team"
+          },
+          "variables": {
+            "route": "feedback"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "azure_openai_call"
+          },
+          "variables": {
+            "route": "ENGINEERING"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "activity_engineering_team"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "activity_engineering_team"
+          },
+          "variables": {
+            "route": "resolved"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "legal routing resolved",
+      "description": "Customer enters a legal inquiry, AI routes to legal team, legal agent resolves it. Process ends at happy-end.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_03z512o"
+          },
+          "variables": {
+            "inquiry": "I need to review a contract clause."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "azure_openai_call"
+          },
+          "variables": {
+            "route": "LEGAL"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_04j3j7a"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_04j3j7a"
+          },
+          "variables": {
+            "route": "resolved"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_l1jbzht"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_03z512o (collect inquiry user task) renders the correct form and submits the inquiry variable; (2) azure_openai_call (Azure OpenAI connector) sends the inquiry to the real Azure OpenAI endpoint and receives a routing decision — verify the returned route value is one of SALES, ENGINEERING, or LEGAL; (3) each team's user task (activity_sales_team, activity_engineering_team, Activity_04j3j7a) is correctly assigned and completable by the relevant user; (4) the feedback loop routes back through azure_openai_call correctly when route=feedback is returned. Note: the gateway conditions were fixed from matches() to exact equality (=route = \"SALES\") — integration tests should confirm the AI model returns uppercase values matching these exact strings."
+}

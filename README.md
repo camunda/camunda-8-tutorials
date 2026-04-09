@@ -19,7 +19,7 @@ Solutions:
 * Level Medium
    * [AI Agent Chat with Tools](solutions/ai-agent-chat-with-tools)
    * [AI Agent Chat with MCP](solutions/ai-agent-chat-with-mcp)
-   * [AI Bank agent for loan approval](solutions/bank-ai-loan-approval)
+   * [AI Bank Agent for Loan Approval](solutions/bank-ai-loan-approval)
    * [Absence Request](solutions/absence-request)
    * [Enforcing SLA](solutions/enforcing-sla)
    * [Error Handling](solutions/error-handling)
@@ -34,5 +34,5 @@ Solutions:
    * [Telco: Service Order Fulfillment](solutions/telco-service-order-fulfillment-retail)
 
 * Level Complex
-   * [RPA Orchestration UI PAth](solutions/rpa-orchestration-uipath)
+   * [RPA Orchestration UI Path](solutions/rpa-orchestration-uipath)
    * [CI/CD Pipeline](solutions/ci-cd)

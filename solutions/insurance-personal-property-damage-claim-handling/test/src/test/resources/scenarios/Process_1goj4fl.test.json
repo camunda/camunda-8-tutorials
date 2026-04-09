@@ -1,0 +1,275 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - claim approved automatically",
+      "description": "Receipt analyzed, damage identified, ticket created, customer data retrieved. DMN auto-approves small claim with full policy and zero prior claims. Approval email sent. Banking info received. Payment triggered.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "claimId": "CLM001",
+            "customerId": "CUST001",
+            "claimedAmount": 150.0
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
+          "variables": {
+            "receipt_details": {
+              "date_of_purchase": "2024-01-01",
+              "price_at_purchase": 150.0
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
+          "variables": {
+            "identified_damage": {
+              "item": "tv",
+              "damage": "minor"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": 101
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
+          "variables": {
+            "customer_claim_frequency_last_three_years": 0,
+            "policy": "full"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0poax8d"
+          },
+          "variables": {}
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "banking_info_received",
+          "correlationKey": "101",
+          "variables": {
+            "bankingInfo": {
+              "iban": "DE89370400440532013000"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0ankyj2"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "claim requires manual adjudication - approved",
+      "description": "High claim frequency and large amount. DMN does not auto-approve. Escalation triggers adjudication user task. Adjuster approves. Approval email sent. Banking info received. Payment triggered.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "claimId": "CLM002",
+            "customerId": "CUST002",
+            "claimedAmount": 2000.0
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
+          "variables": {
+            "receipt_details": {
+              "date_of_purchase": "2024-02-01",
+              "price_at_purchase": 2000.0
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
+          "variables": {
+            "identified_damage": {
+              "item": "laptop",
+              "damage": "severe"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": 102
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
+          "variables": {
+            "customer_claim_frequency_last_three_years": 5,
+            "policy": "partial"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_1afcosf"
+          },
+          "variables": {
+            "isApproved": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0poax8d"
+          },
+          "variables": {}
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "banking_info_received",
+          "correlationKey": "102",
+          "variables": {
+            "bankingInfo": {
+              "iban": "DE89370400440532013001"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0ankyj2"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "claim manually adjudicated and declined",
+      "description": "DMN does not auto-approve. Adjuster declines the claim after review. Decline email sent. Process ends.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "claimId": "CLM003",
+            "customerId": "CUST003",
+            "claimedAmount": 50000.0
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
+          "variables": {
+            "receipt_details": {
+              "date_of_purchase": "2024-03-01",
+              "price_at_purchase": 50000.0
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": 103
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
+          "variables": {
+            "customer_claim_frequency_last_three_years": 5,
+            "policy": "partial"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_1afcosf"
+          },
+          "variables": {
+            "isApproved": false
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_02uhc17"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_0mmcuzy (Analyze receipt) calls real AI/OCR service; (2) Activity_17krtpn (Identify damage in photo) calls real computer vision service; (3) Activity_0etxz4e calls real CRM/policy system for customer and policy data; (4) Activity_100o6io DMN evaluates real business rules; (5) Activity_0ankyj2 triggers real payment process integration. Note: correlationKey for banking_info_received is the ticketId (as a string)."
+}

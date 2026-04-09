@@ -1,0 +1,14 @@
+camunda:
+  process-test:
+    # "shared" reuses one embedded Zeebe container per test class (fastest).
+    # Override to "per-test" if tests pollute each other's state.
+    runtime-mode: shared
+
+logging:
+  level:
+    root: warn
+    io.camunda.process.test: info
+    io.camunda.tests: info
+    # Suppress noisy Testcontainers output
+    org.testcontainers: warn
+    tc: error

@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "bpmnlint:recommended",
+    "plugin:camunda-compat/camunda-cloud-8-6"
+  ],
+  "rules": {
+    "no-bpmndi": "off"
+  }
+}

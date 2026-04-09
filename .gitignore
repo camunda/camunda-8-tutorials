@@ -1,6 +1,9 @@
 .settings
 target
+node_modules/
 .project
 .classpath
 .vscode
 .DS_Store
+.claude/
+*.code-workspace

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - trade accepted within threshold, order executed",
+      "description": "BUY_LIMIT order. Market price within threshold. DMN auto-approves trade. Order registered. Order executed message received. Customer informed.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "Process_wctxyvg" },
+          "variables": {
+            "orderId": "ORD001",
+            "orderType": "BUY_LIMIT",
+            "limitPricePerStock": { "price": 100.0, "currency": "USD" },
+            "orderExpiryDate": "2099-12-31T23:59:59Z"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_18y2a76" },
+          "variables": { "marketPrice": { "price": 99.5, "currency": "USD" } }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0s29l30" },
+          "variables": {}
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "order_executed",
+          "correlationKey": "ORD001",
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_1ni426c" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "Process_wctxyvg" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "trade rejected - price outside threshold, order cancelled",
+      "description": "BUY_LIMIT order. Market price far outside threshold. DMN rejects trade. Broker informed. Cancellation received. Order aborted.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "Process_wctxyvg" },
+          "variables": {
+            "orderId": "ORD002",
+            "orderType": "BUY_LIMIT",
+            "limitPricePerStock": { "price": 100.0, "currency": "USD" }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_18y2a76" },
+          "variables": { "marketPrice": { "price": 120.0, "currency": "USD" } }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_1w8rn3q" },
+          "variables": {}
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "order_cancellation_received",
+          "correlationKey": "ORD002",
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_1ccl3v1" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "Process_wctxyvg" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_18y2a76 (Retrieve market price) calls real market data API; (2) Activity_169hqdg DMN (Compare prices) evaluates real limit vs market price using DMN rules; (3) Activity_0s29l30 (Register order) persists to real order management system; (4) Event_1srf2st receives real message from broker confirming order execution; (5) Activity_1ni426c (Inform customer) sends real notification."
+}

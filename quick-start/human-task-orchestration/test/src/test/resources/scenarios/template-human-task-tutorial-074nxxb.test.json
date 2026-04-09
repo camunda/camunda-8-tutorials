@@ -1,0 +1,102 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "chicken path - decide chicken, prepare chicken, process ends",
+      "description": "User selects chicken at the decision task. Asserts routing to prepare-chicken before completing it.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "decide-dinner"
+          },
+          "variables": {
+            "meal": "chicken"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "prepare-chicken"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "prepare-chicken"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "salad path - decide salad, prepare salad, process ends",
+      "description": "User selects salad at the decision task. Asserts routing to prepare-salad before completing it.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "decide-dinner"
+          },
+          "variables": {
+            "meal": "salad"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "prepare-salad"
+            }
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "prepare-salad"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) decide-dinner user task appears in Tasklist and can be completed by a real user with a meal selection variable; (2) the gateway correctly routes to prepare-chicken or prepare-salad based on the meal variable value; (3) the prepare-* user tasks appear in Tasklist for the correct user; (4) process completes after the preparation task is finished."
+}

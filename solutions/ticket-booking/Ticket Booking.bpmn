@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1a4gt8m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="f22cba6" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.4.0" camunda:diagramRelationId="5d811647-c4c2-48bc-8d57-3e7d197f91cd">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1a4gt8m" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="f22cba6" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0" camunda:diagramRelationId="5d811647-c4c2-48bc-8d57-3e7d197f91cd">
   <bpmn:collaboration id="Collaboration_0t1vxrh">
     <bpmn:participant id="template-ticket-booking-participant" name="Ticket Booking" processRef="template-ticket-booking-18vy8wg" />
     <bpmn:participant id="Participant_1l2gxa0" name="Payment" />
@@ -95,6 +95,10 @@
     <bpmn:sequenceFlow id="Flow_19x2sei" sourceRef="Activity_0etdda4" targetRef="Event_1mqmjv4" />
     <bpmn:sequenceFlow id="Flow_012b8wg" sourceRef="AfterFiveMinutesTimer" targetRef="Event_05eni0s" />
     <bpmn:sequenceFlow id="Flow_0qbwde5" sourceRef="ReserveSeatsActivity" targetRef="Activity_0lox1kf" />
+    <bpmn:textAnnotation id="TextAnnotation_ticket_intro">
+      <bpmn:text>Triggered when a customer submits a ticket booking request. The happy-path outcome is seats reserved, payment received, ticket generated, and booking confirmed.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_ticket_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_ticket_intro" />
   </bpmn:process>
   <bpmn:message id="Message_04xnjbt" name="msg-payment-received">
     <bpmn:extensionElements>

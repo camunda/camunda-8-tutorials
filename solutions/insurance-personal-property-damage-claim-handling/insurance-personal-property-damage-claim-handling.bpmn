@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="2f4fbd4" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0" camunda:diagramRelationId="5390ece3-0d72-41c0-b611-ff38eeb21c35">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="2f4fbd4" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="5390ece3-0d72-41c0-b611-ff38eeb21c35">
   <bpmn:collaboration id="Collaboration_0i80io7">
     <bpmn:participant id="Participant_1yaong8" name="Insurance" processRef="Process_1goj4fl" />
     <bpmn:participant id="Participant_10v0y6r" name="Customer" />
@@ -40,7 +40,7 @@
     <bpmn:sequenceFlow id="Flow_0yaksw4" sourceRef="Event_0jpjmuu" targetRef="Gateway_01i08li" />
     <bpmn:sequenceFlow id="Flow_19ex45h" sourceRef="Event_0tsl7de" targetRef="Activity_02uhc17" />
     <bpmn:sequenceFlow id="Flow_11igtuv" sourceRef="Activity_02uhc17" targetRef="Event_0vn5a71" />
-    <bpmn:startEvent id="Event_1cl4eo7" name="claim initiated">
+    <bpmn:startEvent id="Event_1cl4eo7" name="Claim initiated">
       <bpmn:extensionElements>
         <zeebe:formDefinition formId="claim-initiated-101u3bt" />
         <zeebe:properties>
@@ -167,6 +167,7 @@
     </bpmn:boundaryEvent>
     <bpmn:userTask id="Activity_1afcosf" name="Adjudicate">
       <bpmn:extensionElements>
+        <zeebe:userTask />
         <zeebe:formDefinition formId="adjudicate-0rmquh9" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1ejmmy9</bpmn:incoming>
@@ -198,6 +199,10 @@
       <bpmn:incoming>Flow_0klg33h</bpmn:incoming>
       <bpmn:outgoing>Flow_19ex45h</bpmn:outgoing>
     </bpmn:intermediateThrowEvent>
+    <bpmn:textAnnotation id="TextAnnotation_insurance_intro">
+      <bpmn:text>Triggered when a customer initiates a personal property damage claim via the insurer's CRM. The happy-path outcome is the claim assessed, approved, and payment settled with the customer.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_insurance_intro" associationDirection="None" sourceRef="Event_1cl4eo7" targetRef="TextAnnotation_insurance_intro" />
   </bpmn:process>
   <bpmn:escalation id="Escalation_3jmt46q" name="claim not approved" escalationCode="claim_not_approved" />
   <bpmn:message id="Message_1apk6eo" name="banking_info_received">

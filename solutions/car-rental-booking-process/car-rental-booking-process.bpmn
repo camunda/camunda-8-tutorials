@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="3ffff27" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0" camunda:diagramRelationId="c671e50b-f806-401a-8aa1-fa3b85a177e7">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="3ffff27" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="c671e50b-f806-401a-8aa1-fa3b85a177e7">
   <bpmn:collaboration id="Collaboration_1006g2v">
     <bpmn:participant id="Participant_0gpkl5f" name="Car Rental: Booking Process" processRef="Process_0bgtcqq" />
     <bpmn:participant id="Participant_0eew51h" name="Customer" />
@@ -46,7 +46,7 @@
     <bpmn:sequenceFlow id="Flow_081poii" sourceRef="Activity_02xqc92" targetRef="Gateway_11m63z7" />
     <bpmn:sequenceFlow id="Flow_0t1d6l2" sourceRef="Activity_1vv1nnm" targetRef="Gateway_11m63z7" />
     <bpmn:sequenceFlow id="Flow_15xuq47" sourceRef="Gateway_11m63z7" targetRef="Activity_0tw025l" />
-    <bpmn:startEvent id="Event_1k76lxn" name="booking request received">
+    <bpmn:startEvent id="Event_1k76lxn" name="Booking request received">
       <bpmn:extensionElements>
         <zeebe:properties>
           <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10;  &#34;bookingId&#34;: 123,&#10;  &#34;rentDuration&#34;: &#34;P2D&#34;,&#10;  &#34;rentalCarValue&#34;: 35000,&#10;  &#34;rentCost&#34;: 140&#10;}" />
@@ -259,6 +259,7 @@
       </bpmn:serviceTask>
       <bpmn:userTask id="Activity_05f95ch" name="Inspect car">
         <bpmn:extensionElements>
+        <zeebe:userTask />
           <zeebe:formDefinition formId="inspect-car-0h29i18" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0w44dcf</bpmn:incoming>
@@ -321,6 +322,7 @@
       <bpmn:subProcess id="Activity_09vukrz" name="Proposal of alternative car" triggeredByEvent="true">
         <bpmn:userTask id="Activity_0skmsoh" name="Propose alternative">
           <bpmn:extensionElements>
+        <zeebe:userTask />
             <zeebe:formDefinition formId="propose-alternative-1u7fzsr" />
           </bpmn:extensionElements>
           <bpmn:incoming>Flow_05tafhq</bpmn:incoming>
@@ -460,6 +462,7 @@
       <bpmn:sequenceFlow id="Flow_0ztcxbp" sourceRef="Event_0sew45l" targetRef="Activity_0itdlql" />
       <bpmn:userTask id="Activity_0itdlql" name="Inspect returned car">
         <bpmn:extensionElements>
+        <zeebe:userTask />
           <zeebe:formDefinition formId="inspect-returned-car-0cloeow" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0ztcxbp</bpmn:incoming>
@@ -553,6 +556,10 @@
       <bpmn:outgoing>Flow_1oxll6n</bpmn:outgoing>
     </bpmn:intermediateThrowEvent>
     <bpmn:sequenceFlow id="Flow_1oxll6n" sourceRef="Event_17omjj1" targetRef="Activity_02xqc92" />
+    <bpmn:textAnnotation id="TextAnnotation_car_rental_intro">
+      <bpmn:text>Triggered when a customer submits a car rental booking request. The happy-path outcome is all checks passed, car reserved, rental completed, and booking confirmed.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_car_rental_intro" associationDirection="None" sourceRef="Event_1k76lxn" targetRef="TextAnnotation_car_rental_intro" />
   </bpmn:process>
   <bpmn:error id="Error_1gjde7m" name="checks and validations failed" errorCode="checks_and_validations_failed" />
   <bpmn:error id="Error_0gu0bmf" name="car is unavailable or not ready" errorCode="car_unavailably_not_ready" />

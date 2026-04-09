@@ -1,0 +1,86 @@
+name: Process Test Suites
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  detect:
+    name: Detect changed solutions
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      has-tests: ${{ steps.set-matrix.outputs.has-tests }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Find changed solutions with test suites
+        id: set-matrix
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # On push to main, test all changes in this push
+            BASE="${{ github.event.before }}"
+            HEAD="${{ github.sha }}"
+          else
+            # On pull requests, diff between the PR base and head commits
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+          fi
+
+          # Find solutions/quick-start dirs that changed AND have a test subdir
+          CHANGED=$(git diff --name-only "$BASE"..."$HEAD" \
+            | grep -E '^(solutions|quick-start)/[^/]+/' \
+            | cut -d'/' -f1-2 \
+            | sort -u)
+
+          MATRIX=()
+          for dir in $CHANGED; do
+            if [ -f "$dir/test/pom.xml" ]; then
+              MATRIX+=("$dir")
+            fi
+          done
+
+          if [ ${#MATRIX[@]} -eq 0 ]; then
+            echo "matrix=[]" >> "$GITHUB_OUTPUT"
+            echo "has-tests=false" >> "$GITHUB_OUTPUT"
+          else
+            JSON=$(printf '%s\n' "${MATRIX[@]}" | jq -R . | jq -cs .)
+            echo "matrix=$JSON" >> "$GITHUB_OUTPUT"
+            echo "has-tests=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  test:
+    name: Test ${{ matrix.solution }}
+    needs: detect
+    if: needs.detect.outputs.has-tests == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        solution: ${{ fromJson(needs.detect.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sanitize artifact name
+        id: meta
+        run: echo "artifact=surefire-reports-$(echo '${{ matrix.solution }}' | tr '/' '-')" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+          cache: maven
+
+      - name: Run tests — ${{ matrix.solution }}
+        run: mvn test --no-transfer-progress -f ${{ matrix.solution }}/test/pom.xml
+
+      - name: Upload Surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.meta.outputs.artifact }}
+          path: ${{ matrix.solution }}/test/target/surefire-reports/
+          if-no-files-found: ignore

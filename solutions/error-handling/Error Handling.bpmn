@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_01p3jf9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.4.0" camunda:diagramRelationId="d0c9a046-d4e9-4e44-871a-e47b408710c1">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_01p3jf9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="d0c9a046-d4e9-4e44-871a-e47b408710c1">
   <bpmn:process id="template-error-handling-1s16sgi" name="Error Handling Example" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_1" name="Process Customer Data">
+    <bpmn:startEvent id="StartEvent_1" name="Customer data received">
       <bpmn:outgoing>Flow_0rfbpf0</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_0rfbpf0" sourceRef="StartEvent_1" targetRef="Activity_1kpg3ok" />
@@ -25,6 +25,10 @@
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0krdbvt" sourceRef="Activity_0kzg0nb" targetRef="Gateway_1n3fnvz" />
     <bpmn:userTask id="Activity_0kzg0nb" name="View and Correct Error">
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="Activity_0kzg0nb" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1may791</bpmn:incoming>
       <bpmn:outgoing>Flow_0krdbvt</bpmn:outgoing>
     </bpmn:userTask>
@@ -100,7 +104,7 @@
       </bpmn:sendTask>
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_1vt6ezk" sourceRef="Activity_17oxyev" targetRef="Activity_00ef2n2" />
-    <bpmn:endEvent id="Event_08k7n7c" name="Information Created successfully">
+    <bpmn:endEvent id="Event_08k7n7c" name="Data processed successfully">
       <bpmn:incoming>Flow_02o6lmr</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_02o6lmr" sourceRef="Activity_00ef2n2" targetRef="Event_08k7n7c" />
@@ -111,6 +115,10 @@
       <bpmn:incoming>Flow_1vt6ezk</bpmn:incoming>
       <bpmn:outgoing>Flow_02o6lmr</bpmn:outgoing>
     </bpmn:sendTask>
+    <bpmn:textAnnotation id="TextAnnotation_error_intro">
+      <bpmn:text>Triggered when customer data needs to be processed. The happy-path outcome is the customer data verified, all records created, and a success message sent to the user.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_error_intro" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_error_intro" />
   </bpmn:process>
   <bpmn:error id="Error_0gyjhl0" name="ErrorInData" errorCode="ErrorInData" />
   <bpmn:error id="Error_0df5ic3" name="FailedToCreateRecord" errorCode="FailedToCreateRecord" />

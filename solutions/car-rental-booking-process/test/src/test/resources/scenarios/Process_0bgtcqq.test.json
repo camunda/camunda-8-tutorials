@@ -1,0 +1,191 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - booking and rental completed, no damages",
+      "description": "License validated. No credit check (high-value car). Car available and ready. Contract sent. Car picked up and returned. No damage. Payment processed. Rental complete.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
+          "variables": {
+            "customerId": "CUST001",
+            "bookingId": "BK001",
+            "rentalCarValue": 30000,
+            "rentalStartDate": "2025-07-01",
+            "rentalEndDate": "2025-07-05",
+            "rentDuration": "P4D"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0be5k9m"
+          },
+          "variables": {
+            "licenseValid": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0825j6e"
+          },
+          "variables": {
+            "carId": "CAR001",
+            "isCarAvailable": true
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_05f95ch"
+          },
+          "variables": {
+            "isCarReady": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0t5ihdz"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1n1lkhe"
+          },
+          "variables": {}
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "car_picked_up",
+          "correlationKey": "BK001",
+          "variables": {}
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "car_returned",
+          "correlationKey": "BK001",
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_0itdlql"
+          },
+          "variables": {
+            "hasCarDamage": false
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0tq09jo"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1b9u86o"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0mnt805"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "invalid license - booking aborted",
+      "description": "Driver license validation fails with error. Booking aborted (errorEndEvent, process completes).",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
+          "variables": {
+            "customerId": "CUST002",
+            "bookingId": "BK002",
+            "rentalCarValue": 30000
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0be5k9m"
+          },
+          "errorCode": "INVALID_LICENSE",
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "credit score insufficient - booking aborted",
+      "description": "Credit check needed (low-value car). Credit score below threshold. Booking aborted (errorEndEvent, process completes).",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
+          "variables": {
+            "customerId": "CUST003",
+            "bookingId": "BK003",
+            "rentalCarValue": 20000
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0be5k9m"
+          },
+          "variables": {
+            "licenseValid": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0w37f54"
+          },
+          "variables": {
+            "creditScore": 500
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_0bgtcqq"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_0be5k9m (Validate driver license) calls real license validation API; (2) Activity_0w37f54 (Get credit score) calls real credit bureau; (3) Activity_0825j6e (Check car availability) queries real inventory system; (4) Activity_0t5ihdz (Verify payment method) validates real payment; (5) Activity_1b9u86o (Process payment) makes real payment transaction; (6) PUBLISH_MESSAGE for car_picked_up and car_returned requires real external events — correlationKey is bookingId. Note: Activity_05f95ch (Inspect car) and Activity_0itdlql (Inspect returned car) are native Zeebe user tasks (zeebe:userTask) — use COMPLETE_USER_TASK. rentDuration must be provided as a FEEL duration string (e.g. 'P4D') for the event-based gateway timer; the timer is on the 'renting period exceeded' path and is evaluated when the event-based gateway activates after car_picked_up."
+}

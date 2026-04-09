@@ -1,0 +1,133 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - user satisfied after first agent response",
+      "description": "Process starts, AI agent runs to completion, user is satisfied. Process ends.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
+          "variables": {
+            "inputText": "What is the weather in Berlin today?",
+            "inputDocuments": []
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "variables": {
+            "agent": {
+              "responseText": "I am unable to retrieve live weather data, but Berlin typically has mild weather in spring.",
+              "context": {
+                "state": "READY",
+                "metrics": { "modelCalls": 1, "tokenUsage": { "inputTokenCount": 100, "outputTokenCount": 50 } },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    { "role": "user", "content": [{ "type": "text", "text": "What is the weather in Berlin today?" }] },
+                    { "role": "assistant", "content": [{ "type": "text", "text": "I am unable to retrieve live weather data, but Berlin typically has mild weather in spring." }] }
+                  ]
+                }
+              }
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
+          "elementSelectors": [{ "elementId": "User_Feedback" }],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "User_Feedback" },
+          "variables": { "userSatisfied": true }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "follow-up loop - user not satisfied, asks follow-up, then satisfied",
+      "description": "User not satisfied with first response. Agent runs again with follow-up input. User satisfied on second attempt.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
+          "variables": {
+            "inputText": "List files in my home directory",
+            "inputDocuments": []
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "variables": {
+            "agent": {
+              "responseText": "I attempted to list files but encountered an error.",
+              "context": {
+                "state": "READY",
+                "metrics": { "modelCalls": 1, "tokenUsage": { "inputTokenCount": 80, "outputTokenCount": 30 } },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    { "role": "user", "content": [{ "type": "text", "text": "List files in my home directory" }] },
+                    { "role": "assistant", "content": [{ "type": "text", "text": "I attempted to list files but encountered an error." }] }
+                  ]
+                }
+              }
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "User_Feedback" },
+          "variables": {
+            "userSatisfied": false,
+            "followUpInput": "Try listing /home instead"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "variables": {
+            "agent": {
+              "responseText": "Successfully listed /home: user1, user2",
+              "context": {
+                "state": "READY",
+                "metrics": { "modelCalls": 2, "tokenUsage": { "inputTokenCount": 150, "outputTokenCount": 60 } },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    { "role": "user", "content": [{ "type": "text", "text": "List files in my home directory" }] },
+                    { "role": "assistant", "content": [{ "type": "text", "text": "I attempted to list files but encountered an error." }] },
+                    { "role": "user", "content": [{ "type": "text", "text": "Try listing /home instead" }] },
+                    { "role": "assistant", "content": [{ "type": "text", "text": "Successfully listed /home: user1, user2" }] }
+                  ]
+                }
+              }
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": { "elementId": "User_Feedback" },
+          "variables": { "userSatisfied": true }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) AI_Agent adHocSubProcess invokes real AWS Bedrock (Claude Sonnet) via aiagent-job-worker; (2) OpenMemory MCP client tool calls reach real OpenMemory server; (3) Filesystem MCP client tool calls reach real filesystem MCP server; (4) Activity_0mdux6v (Ask for confirmation) user task fires when filesystem tool requires user approval; (5) Full agent loop with real LLM may require longer timeouts."
+}

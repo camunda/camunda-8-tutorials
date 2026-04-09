@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.4.0" camunda:diagramRelationId="dd3bb858-30cd-4f85-8d20-0b75762fbdf6">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.8.0" camunda:diagramRelationId="dd3bb858-30cd-4f85-8d20-0b75762fbdf6">
   <bpmn:process id="template-human-task-tutorial-074nxxb" isExecutable="true">
     <bpmn:extensionElements>
       <zeebe:userTaskForm id="userTaskForm_0pjtr0l">{
@@ -69,21 +69,32 @@
     <bpmn:sequenceFlow id="salad-prepared" sourceRef="prepare-salad" targetRef="Gateway_0ve5rnc" />
     <bpmn:userTask id="decide-dinner" name="Decide what&#39;s for dinner">
       <bpmn:extensionElements>
-        <zeebe:formDefinition formKey="camunda-forms:bpmn:userTaskForm_0pjtr0l" />
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="userTaskForm_0pjtr0l" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_11y9y90</bpmn:incoming>
       <bpmn:outgoing>Flow_06ss774</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="prepare-chicken" name="Prepare chicken">
-      <bpmn:extensionElements />
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="prepare-chicken" />
+      </bpmn:extensionElements>
       <bpmn:incoming>chicken-path</bpmn:incoming>
       <bpmn:outgoing>chicken-prepared</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="prepare-salad" name="Prepare salad">
-      <bpmn:extensionElements />
+      <bpmn:extensionElements>
+        <zeebe:userTask />
+        <zeebe:formDefinition externalReference="prepare-salad" />
+      </bpmn:extensionElements>
       <bpmn:incoming>salad-path</bpmn:incoming>
       <bpmn:outgoing>salad-prepared</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:textAnnotation id="TextAnnotation_tutorial_ht">
+      <bpmn:text>Triggered when someone is hungry and needs to decide what to eat. The process routes to the appropriate meal preparation task and ends once the meal is ready.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_tutorial_ht" associationDirection="None" sourceRef="StartEvent_1" targetRef="TextAnnotation_tutorial_ht" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="template-human-task-tutorial-074nxxb">

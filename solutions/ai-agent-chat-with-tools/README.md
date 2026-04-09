@@ -92,4 +92,47 @@ Example inputs which can be entered in the initial form:
   the message such as "include emojis" or "include a spanish translation". 
 - `Tell me about this document` can be used to analyze a PDF document with the file upload picker provided in the initial form.
 
+---
+
+## Testing with Camunda Process Test (CPT)
+
+Tests live in `test/`. Two suites: **process tests** (fast, no credentials) and **integration tests** (real connectors + Bedrock).
+
+### Prerequisites
+
+- Java 21+
+- Docker running (for process tests)
+- AWS Bedrock credentials in `.env` (for integration tests):
+  ```
+  AWS_BEDROCK_ACCESS_KEY=<your-access-key>
+  AWS_BEDROCK_SECRET_KEY=<your-secret-key>
+  ```
+
+### Process tests — fast, no credentials needed
+
+Mocks the AI agent job. Tests outer-process routing: happy path and the loop path.
+
+```bash
+cd test
+mvn test
+```
+
+### Integration tests — real connectors + real Bedrock
+
+Runs 5 REST endpoint isolation tests (one per HTTP connector), 5 agent tool-routing tests (real Bedrock), and 2 E2E tests.
+
+```bash
+cd test
+env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test
+```
+
+> **Always use `mvn clean`** when switching between process and integration profiles — stale `target/test-classes` from the previous run can cause both test sets to run together.
+
+### What's covered
+
+| Suite | What runs | LLM calls |
+|-------|-----------|-----------|
+| `mvn test` | Outer-process routing (mocked agent) | None |
+| `mvn clean test -P integration-test` | REST connector isolation + agent tool-routing + E2E | Yes (Bedrock) |
+
 _Made with ❤️ by Camunda_

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - microservice completes and process ends",
+      "description": "Starts the process, mocks the microservice job (type: orchestrate-something), and asserts the process completes.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "template-microservice-tutorial-18us19m" },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Run_microservice" },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "template-microservice-tutorial-18us19m" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Run_microservice (job type: orchestrate-something) is picked up and completed by the real job worker implementation; (2) the worker correctly connects to Zeebe and activates jobs of this type; (3) confirm the worker completes the job without errors and the process reaches IS_COMPLETED."
+}

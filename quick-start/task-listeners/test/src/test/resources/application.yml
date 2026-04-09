@@ -1,0 +1,8 @@
+camunda:
+  process-test:
+    runtime-mode: shared
+
+logging:
+  level:
+    root: WARN
+    io.camunda: INFO

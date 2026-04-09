@@ -1,0 +1,68 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "happy path - bot processes queue item successfully",
+      "description": "Task added to UiPath queue. Webhook intermediate catch event receives transactionCompleted message. Item processed successfully.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "Orchestrate_UiPath_Bot" },
+          "variables": {
+            "itemId": "ITEM001",
+            "itemData": { "type": "invoice", "amount": 1000 }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_118pfe1" },
+          "variables": { "queueItemId": "Q001" }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "36a59b39-c6d5-41e6-aa34-bd805badab31",
+          "correlationKey": "Q001",
+          "variables": { "queueItemStatus": "queueItem.transactionCompleted" }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "Orchestrate_UiPath_Bot" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "bot item abandoned - manual review, item processed manually",
+      "description": "Task added to queue. Webhook receives transactionAbandoned status. Error caught by boundary on sub-process. Agent reviews queue item info, decides to manually handle. ManualTask and Activity_1umb1rv auto-execute. Process ends.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "Orchestrate_UiPath_Bot" },
+          "variables": { "itemId": "ITEM003" }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_118pfe1" },
+          "variables": { "queueItemId": "Q003" }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "36a59b39-c6d5-41e6-aa34-bd805badab31",
+          "correlationKey": "Q003",
+          "variables": { "queueItemStatus": "queueItem.transactionAbandoned" }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0svfozj" },
+          "variables": { "decision": "manual" }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "Orchestrate_UiPath_Bot" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) Activity_118pfe1 (add task to queue) calls real UiPath Orchestrator API and confirms item is queued; (2) Event_16yd83w (webhook intermediate catch event, message name '36a59b39-c6d5-41e6-aa34-bd805badab31') receives real UiPath status callbacks — correlationKey is queueItemId; (3) Activity_1dibkd5 (revert RPA job) is a compensation handler (isForCompensation=true) triggered by compensation events, not directly accessible via CPT assertions — test via integration with real UiPath Orchestrator; (4) Activity_0svfozj (get queue item info) and Activity_0hztmxc (manually review queue item) are reached via boundary timer on Activity_1ko88ft in real environment; (5) Error boundary Event_04itckl on Activity_118pfe1 is a compensation boundary (not error) — compensation path requires real UiPath failure scenario. Note: Event_08710ws is an ERROR end event (errorCode=item_timed_out_or_abandoned) — when queueItemStatus=transactionAbandoned, it throws an error caught by boundary Event_16ail2y on Activity_1ko88ft → Activity_0svfozj (get queue item info). After Activity_0svfozj, Activity_0hztmxc (manualTask) and Activity_1umb1rv (manualTask) auto-execute in Zeebe. Gateway_0z2t5ph needs decision='manual' to route to the manual processing path."
+}

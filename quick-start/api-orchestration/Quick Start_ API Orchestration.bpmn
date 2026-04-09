@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="f22cba6" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.4.0" camunda:diagramRelationId="1785a5af-b649-4435-acf0-f40d0ef2d41a">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="f22cba6" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0" camunda:diagramRelationId="1785a5af-b649-4435-acf0-f40d0ef2d41a">
   <bpmn:process id="template-api-orchestration-1ikt3hz-0ybh8py" name="API Orchestration Tutorial" isExecutable="true">
-    <bpmn:startEvent id="StartEvent" name="Start">
+    <bpmn:startEvent id="StartEvent" name="API call requested">
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent" targetRef="make-request" />
-    <bpmn:endEvent id="EndEvent" name="End">
+    <bpmn:endEvent id="EndEvent" name="API response received">
       <bpmn:incoming>Flow_2</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_2" sourceRef="make-request" targetRef="EndEvent" />
@@ -27,6 +27,10 @@
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:textAnnotation id="TextAnnotation_tutorial_api">
+      <bpmn:text>Triggered when an API call is needed. The process calls an external REST endpoint (cat facts API) and ends once a successful response is received.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_tutorial_api" associationDirection="None" sourceRef="StartEvent" targetRef="TextAnnotation_tutorial_api" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="template-api-orchestration-1ikt3hz-0ybh8py">

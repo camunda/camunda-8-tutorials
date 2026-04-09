@@ -1,0 +1,320 @@
+{
+  "components": [
+    {
+      "text": "# Expense Claim Review\n\nPlease review the following expense reimbursement claim, and either approve or reject it.",
+      "type": "text",
+      "layout": {
+        "row": "Row_0b02kr1",
+        "columns": null
+      },
+      "id": "Field_1gbvbm7"
+    },
+    {
+      "text": "### Requester Information",
+      "type": "text",
+      "layout": {
+        "row": "Row_1ef2qla",
+        "columns": null
+      },
+      "id": "Field_1sbsc67",
+      "conditional": {
+        "hide": "=isReview"
+      }
+    },
+    {
+      "label": "First name",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_11isqe5",
+        "columns": null
+      },
+      "id": "Field_0zyjfuh",
+      "key": "firstName",
+      "validate": {
+        "required": false
+      },
+      "readonly": false,
+      "disabled": true
+    },
+    {
+      "label": "Last name",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_11isqe5",
+        "columns": null
+      },
+      "id": "Field_0m4s208",
+      "key": "lastName",
+      "validate": {
+        "required": false
+      },
+      "disabled": true
+    },
+    {
+      "label": "Email",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0f1wn8t",
+        "columns": null
+      },
+      "id": "Field_02tkefw",
+      "key": "email",
+      "appearance": {
+        "prefixAdorner": "@"
+      },
+      "validate": {
+        "validationType": "email",
+        "required": false
+      },
+      "disabled": true
+    },
+    {
+      "values": [
+        {
+          "label": "IT",
+          "value": "IT"
+        },
+        {
+          "label": "Product",
+          "value": "product"
+        },
+        {
+          "label": "Finance",
+          "value": "finance"
+        },
+        {
+          "label": "Accounting",
+          "value": "accounting"
+        },
+        {
+          "label": "Marketing",
+          "value": "marketing"
+        }
+      ],
+      "label": "Department",
+      "type": "select",
+      "layout": {
+        "row": "Row_0f1wn8t",
+        "columns": null
+      },
+      "id": "Field_07rt8k5",
+      "key": "department",
+      "searchable": true,
+      "disabled": true
+    },
+    {
+      "text": "### Expense Details",
+      "type": "text",
+      "layout": {
+        "row": "Row_0jzv103",
+        "columns": null
+      },
+      "id": "Field_0rozem8"
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Expense date",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_1orcvpn",
+        "columns": null
+      },
+      "id": "Field_0z4pwh0",
+      "key": "expenseDate",
+      "validate": {
+        "required": false
+      },
+      "disabled": true
+    },
+    {
+      "values": [
+        {
+          "label": "Custom",
+          "value": "custom"
+        },
+        {
+          "label": "Travel",
+          "value": "travel"
+        }
+      ],
+      "label": "Expense type",
+      "type": "select",
+      "layout": {
+        "row": "Row_1orcvpn",
+        "columns": null
+      },
+      "id": "Field_1eiqop0",
+      "key": "expenseType",
+      "searchable": true,
+      "disabled": true
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Travel start",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_010wbhw",
+        "columns": null
+      },
+      "id": "Field_17w0xsu",
+      "key": "travelStart",
+      "conditional": {
+        "hide": "=not(expenseType = \"travel\")"
+      },
+      "description": "Enter the start and end date of your travel",
+      "disabled": true
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Travel end",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "Row_010wbhw",
+        "columns": null
+      },
+      "id": "Field_1ttfo0c",
+      "key": "travelEnd",
+      "conditional": {
+        "hide": "=not(expenseType = \"travel\")"
+      },
+      "disabled": true
+    },
+    {
+      "label": "Travel location",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_00kdr2a",
+        "columns": null
+      },
+      "id": "Field_1xz2kcy",
+      "key": "travelLocation",
+      "appearance": {
+        "prefixAdorner": "\ud83d\udccd"
+      },
+      "conditional": {
+        "hide": "=not(expenseType = \"travel\")"
+      },
+      "disabled": true
+    },
+    {
+      "label": "Custom expense type",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1tqe6ut",
+        "columns": null
+      },
+      "id": "Field_03ow051",
+      "key": "customExpenseType",
+      "conditional": {
+        "hide": "=not(expenseType = \"custom\")"
+      },
+      "disabled": true
+    },
+    {
+      "label": "Expense purpose",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_0ar8roa",
+        "columns": null
+      },
+      "id": "Field_136skvr",
+      "key": "expensePurpose",
+      "validate": {
+        "required": false
+      },
+      "description": "Describe the purpose of your expense. A good description increases the likelihood of quick approval.",
+      "disabled": true
+    },
+    {
+      "label": "Expense amount",
+      "type": "number",
+      "layout": {
+        "row": "Row_0jjom6t",
+        "columns": 8
+      },
+      "id": "Field_189ka5c",
+      "key": "expenseAmount",
+      "appearance": {
+        "prefixAdorner": "USD"
+      },
+      "validate": {
+        "required": false
+      },
+      "decimalDigits": 2,
+      "increment": "0.5",
+      "disabled": true
+    },
+    {
+      "text": "---",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_1nymijp",
+        "columns": null
+      },
+      "id": "Field_19s421w"
+    },
+    {
+      "text": "### Approval",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_00khae6",
+        "columns": null
+      },
+      "id": "Field_1ptafde"
+    },
+    {
+      "values": [
+        {
+          "label": "I approve the expense claim.",
+          "value": "approved"
+        },
+        {
+          "label": "I reject the expense claim.",
+          "value": "rejected"
+        }
+      ],
+      "label": "Approval outcome",
+      "type": "radio",
+      "layout": {
+        "row": "Row_0nr03f7",
+        "columns": null
+      },
+      "id": "Field_0qcvtwe",
+      "key": "reviewOutcome",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Rejection reason",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_0ehktzg",
+        "columns": null
+      },
+      "id": "Field_1l1k9fd",
+      "key": "rejectionReason",
+      "conditional": {
+        "hide": "=not(reviewOutcome = \"rejected\")"
+      },
+      "description": "Provide a reason for rejecting this claim.",
+      "validate": {
+        "minLength": 10
+      }
+    }
+  ],
+  "type": "default",
+  "id": "Form_ExpenseClaimReview",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.2.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.12.0-rc.0"
+  },
+  "schemaVersion": 9
+}

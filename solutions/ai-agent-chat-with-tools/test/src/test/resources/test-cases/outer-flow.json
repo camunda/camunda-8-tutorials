@@ -1,0 +1,893 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "testCases": [
+    {
+      "name": "Happy path — user satisfied on first response (no tool calls)",
+      "description": "The AI agent responds directly without calling any tools. The user is satisfied on the first response and the process completes. Tests outer-flow gateway routing on the happy path.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "What is the capital of France?"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 400, "outputTokenCount": 80}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "What is the capital of France?"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "The capital of France is Paris."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "The capital of France is Paris."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "StartEvent_1"},
+            {"elementId": "AI_Agent"},
+            {"elementId": "User_Feedback"},
+            {"elementId": "Event_0i39jej"}
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Loop path — user not satisfied, then satisfied on second try",
+      "description": "User answers 'not satisfied' after the first agent response. The process loops back through the gateway and the AHSP runs again. User is satisfied on the second response. Tests the loop gateway branch.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List all available users for me."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 500, "outputTokenCount": 80}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "List all available users for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are the available users with their usernames."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are the available users with their usernames."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": false,
+            "followUpInput": "Please also show me the email of each user."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 900, "outputTokenCount": 150}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Please also show me the email of each user."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are the users with their email addresses."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are the users with their email addresses."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "ListUsers tool — agent calls ListUsers then responds",
+      "description": "The AI agent calls the ListUsers HTTP tool to fetch all users, then delivers its response. Tests the full AHSP tool-call lifecycle: agent job round 1 (tool activation) → ListUsers job completes → agent job round 2 (final response).",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List all available users for me."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 500, "outputTokenCount": 60}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "List all available users for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_001", "name": "ListUsers", "input": {}}
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "completionConditionFulfilled": false,
+          "activateElements": [
+            {
+              "elementId": "ListUsers",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_001", "name": "ListUsers"}
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ListUsers"
+          },
+          "variables": {
+            "toolCallResult": [
+              {"id": 1, "name": "Leanne Graham", "username": "Bret"},
+              {"id": 2, "name": "Ervin Howell", "username": "Antonette"},
+              {"id": 3, "name": "Clementine Bauch", "username": "Samantha"}
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 900, "outputTokenCount": 120}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "List all available users for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_001", "name": "ListUsers", "input": {}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_001", "content": "[{\"id\":1,\"name\":\"Leanne Graham\",\"username\":\"Bret\"},{\"id\":2,\"name\":\"Ervin Howell\",\"username\":\"Antonette\"},{\"id\":3,\"name\":\"Clementine Bauch\",\"username\":\"Samantha\"}]"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are 3 available users: Leanne Graham (Bret), Ervin Howell (Antonette), Clementine Bauch (Samantha)."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are 3 available users: Leanne Graham (Bret), Ervin Howell (Antonette), Clementine Bauch (Samantha)."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Search_Recipe tool — agent searches for a recipe",
+      "description": "The AI agent calls the Search_Recipe HTTP tool with a dynamic search query, receives recipe results, then responds. Tests the fromAi() searchQuery expression and recipe result mapping.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Find me a pasta carbonara recipe."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 460, "outputTokenCount": 58}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Find me a pasta carbonara recipe."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_003", "name": "Search_Recipe", "input": {"searchQuery": "pasta carbonara"}}
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "completionConditionFulfilled": false,
+          "activateElements": [
+            {
+              "elementId": "Search_Recipe",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_003", "name": "Search_Recipe"},
+                  "searchQuery": "pasta carbonara"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Search_Recipe"
+          },
+          "variables": {
+            "toolCallResult": [
+              {
+                "id": 1,
+                "name": "Classic Spaghetti Carbonara",
+                "prepTimeMinutes": 15,
+                "cookTimeMinutes": 20,
+                "servings": 4,
+                "difficulty": "Medium"
+              }
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 800, "outputTokenCount": 130}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Find me a pasta carbonara recipe."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_003", "name": "Search_Recipe", "input": {"searchQuery": "pasta carbonara"}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_003", "content": "[{\"name\":\"Classic Spaghetti Carbonara\",\"prepTimeMinutes\":15,\"cookTimeMinutes\":20}]"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "I found 'Classic Spaghetti Carbonara': prep 15 min, cook 20 min, serves 4, difficulty Medium."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "I found 'Classic Spaghetti Carbonara': prep 15 min, cook 20 min, serves 4, difficulty Medium."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Jokes_API tool — agent fetches a random joke",
+      "description": "The AI agent calls the Jokes_API HTTP tool to fetch a random joke, then includes it in its response. Tests the tool activation and result mapping for a no-input HTTP connector.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Tell me a joke."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 430, "outputTokenCount": 52}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Tell me a joke."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_004", "name": "Jokes_API", "input": {}}
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "completionConditionFulfilled": false,
+          "activateElements": [
+            {
+              "elementId": "Jokes_API",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_004", "name": "Jokes_API"}
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Jokes_API"
+          },
+          "variables": {
+            "toolCallResult": "Why don't scientists trust atoms? Because they make up everything!"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 750, "outputTokenCount": 90}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Tell me a joke."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_004", "name": "Jokes_API", "input": {}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_004", "content": "Why don't scientists trust atoms? Because they make up everything!"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here's a joke: Why don't scientists trust atoms? Because they make up everything!"}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here's a joke: Why don't scientists trust atoms? Because they make up everything!"
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Fetch_URL tool — agent fetches a URL",
+      "description": "The AI agent calls the Fetch_URL HTTP tool with a dynamic URL from the conversation, fetches the content, then responds. Tests the fromAi() URL expression.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Fetch the contents of https://jsonplaceholder.typicode.com/posts/1 for me."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 510, "outputTokenCount": 62}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Fetch the contents of https://jsonplaceholder.typicode.com/posts/1 for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_005", "name": "Fetch_URL", "input": {"url": "https://jsonplaceholder.typicode.com/posts/1"}}
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "completionConditionFulfilled": false,
+          "activateElements": [
+            {
+              "elementId": "Fetch_URL",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_005", "name": "Fetch_URL"},
+                  "url": "https://jsonplaceholder.typicode.com/posts/1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Fetch_URL"
+          },
+          "variables": {
+            "toolCallResult": {
+              "userId": 1,
+              "id": 1,
+              "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+              "body": "quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 950, "outputTokenCount": 140}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Fetch the contents of https://jsonplaceholder.typicode.com/posts/1 for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_005", "name": "Fetch_URL", "input": {"url": "https://jsonplaceholder.typicode.com/posts/1"}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_005", "content": "{\"id\":1,\"title\":\"sunt aut facere repellat provident\",\"userId\":1}"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "The post at that URL has title: 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit' by user 1."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "The post at that URL has title: 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit' by user 1."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "GetDateAndTime tool — agent gets the current date and time",
+      "description": "The AI agent calls the GetDateAndTime script tool, which executes automatically (no HTTP call, no job worker needed). Tests tool activation for a Zeebe script task inside the AHSP.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "What is the current date and time?"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 420, "outputTokenCount": 50}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "What is the current date and time?"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_006", "name": "GetDateAndTime", "input": {}}
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "completionConditionFulfilled": false,
+          "activateElements": [
+            {
+              "elementId": "GetDateAndTime",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_006", "name": "GetDateAndTime"}
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 700, "outputTokenCount": 95}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "What is the current date and time?"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_006", "name": "GetDateAndTime", "input": {}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_006", "content": "2026-04-02T10:30:00+00:00"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "The current date and time is April 2, 2026 at 10:30 AM UTC."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "The current date and time is April 2, 2026 at 10:30 AM UTC."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "User_Feedback"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Process tests mock the AHSP by simulating agent behavior. Tool tests use activateElements to activate individual tool tasks and COMPLETE_JOB to mock their output. GetDateAndTime activates the script task — it auto-executes, no COMPLETE_JOB needed. LoadUserByID is EXCLUDED from process tests: its URL input mapping uses fromAi(toolCall.id, 'The user ID', 'number') — the 3-arg form with a type hint. The embedded Zeebe engine in CPT only registers the 2-arg fromAi variant; calling with 3 args causes a FEEL evaluation error that prevents the job from being created. LoadUserByID is covered by the loadUserByIdConnector() integration test in AgentJavaIT.java. BPMN recommendation: consider removing the type-hint ('number') third argument from the fromAi() call to restore process-test coverage, or set retries to at least 1 (currently retries=0, which means any HTTP failure immediately raises an incident). Run integration tests with: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test (requires AWS Bedrock credentials in ../.env)."
+}

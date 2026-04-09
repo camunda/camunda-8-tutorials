@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Process Coverage Report</title>
+  <style>body{font-family:sans-serif;padding:2em;}pre{background:#f4f4f4;padding:1em;overflow:auto;}</style>
+</head>
+<body>
+  <h1>Process Coverage Report</h1>
+  <p>Full coverage UI requires the final 8.9.0 release. Raw data:</p>
+  <pre id="data"></pre>
+  <script>
+    var data = {{ COVERAGE_DATA }};
+    document.getElementById("data").textContent = JSON.stringify(data, null, 2);
+  </script>
+</body>
+</html>
