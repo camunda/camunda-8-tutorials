@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="department_line_mgr" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.7.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0">
+  <decision id="department_line_manager" name="Department line manager">
+    <decisionTable id="DecisionTable_0eewwh1">
+      <input id="Input_1" label="Department">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>department</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Line manager" name="department_line_manager" typeRef="string" />
+      <rule id="DecisionRule_06pkz9v">
+        <inputEntry id="UnaryTests_1yvfhwg">
+          <text>"sales"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0n940hk">
+          <text>"John"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1c0ppyq">
+        <inputEntry id="UnaryTests_0ow3bmu">
+          <text>"marketing"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_08lw0ir">
+          <text>"Paul"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0awgf9f">
+        <inputEntry id="UnaryTests_0r3kqoq">
+          <text>"finance"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0apqfmt">
+          <text>"George"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0nyywph">
+        <inputEntry id="UnaryTests_12qoz5n">
+          <text>"it"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1xybenc">
+          <text>"Ringo"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="department_line_manager">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

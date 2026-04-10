@@ -59,14 +59,17 @@
       <bpmn:incoming>Flow_15yg3k5</bpmn:incoming>
       <bpmn:outgoing>Flow_0xnutez</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:scriptTask id="GetLineManagerTask" name="Get line manager">
-      <bpmn:documentation>Each department has a line manager. This task uses a FEEL script to get the line manager of the employee. The result is stored in the variable "assignedLineManager". It is used to assign upcoming user tasks to the responsible line manager.</bpmn:documentation>
+    <bpmn:businessRuleTask id="GetLineManagerTask" name="Get line manager">
+      <bpmn:documentation>Each department has a line manager. This task uses a DMN decision table to get the line manager of the employee. The result is stored in the variable "assignedLineManager". It is used to assign upcoming user tasks to the responsible line manager.</bpmn:documentation>
       <bpmn:extensionElements>
-        <zeebe:script expression="= get value({&#34;sales&#34;: &#34;John&#34;, &#34;marketing&#34;: &#34;Paul&#34;, &#34;finance&#34;:&#34;George&#34;, &#34;it&#34;: &#34;Ringo&#34;}, department) " resultVariable="assignedLineManager" />
+        <zeebe:calledDecision decisionId="department_line_manager" resultVariable="department_line_manager" />
+        <zeebe:ioMapping>
+          <zeebe:output source="=department_line_manager" target="assignedLineManager" />
+        </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0xnutez</bpmn:incoming>
       <bpmn:outgoing>Flow_1d5wcnk</bpmn:outgoing>
-    </bpmn:scriptTask>
+    </bpmn:businessRuleTask>
     <bpmn:exclusiveGateway id="Gateway_0sz0cst">
       <bpmn:incoming>Flow_0axp5vf</bpmn:incoming>
       <bpmn:incoming>Flow_1d5wcnk</bpmn:incoming>
