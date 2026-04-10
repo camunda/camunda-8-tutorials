@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @CamundaSpringProcessTest
 @TestDeployment(resources = {
     "Absence Request.bpmn",
+    "department_line_manager.dmn",
     "RequestAbsence.form",
     "ClarifyRequest.form",
     "AcknowledgeApprovalReminder.form",
