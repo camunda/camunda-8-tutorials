@@ -820,7 +820,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_human_control_end_di" bpmnElement="Flow_human_control_end">
-        <di:waypoint x="2143" y="418" />
+        <di:waypoint x="2213" y="418" />
         <di:waypoint x="2270" y="418" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_08s0wt5_di" bpmnElement="Flow_08s0wt5">
