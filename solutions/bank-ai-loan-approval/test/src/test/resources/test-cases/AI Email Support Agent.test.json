@@ -3,7 +3,7 @@
   "testCases": [
     {
       "name": "happy path - agent resolves successfully, case solved",
-      "description": "Customer email received. Past conversations fetched. Agent handles request. Agent-as-a-Judge rates AGENT_SUCCESS. Final answer sent. Human reviews. Case solved.",
+      "description": "Customer email received. Past conversations fetched. Agent handles request. Agent-as-a-Judge rates AGENT_SUCCESS. Human reviews resolution. Final answer sent. Case solved.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -64,13 +64,19 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0d9av47" },
-          "variables": {}
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "Process_0j5qzil" },
+          "elementSelectors": [{ "elementId": "Activity_1647ldd" }],
+          "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": { "elementId": "Activity_1647ldd" },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0d9av47" },
           "variables": {}
         },
         {
@@ -216,13 +222,19 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": { "elementId": "Activity_0d9av47" },
-          "variables": {}
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "Process_0j5qzil" },
+          "elementSelectors": [{ "elementId": "Activity_1647ldd" }],
+          "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": { "elementId": "Activity_1647ldd" },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": { "elementId": "Activity_0d9av47" },
           "variables": {}
         },
         {
