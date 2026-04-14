@@ -38,7 +38,7 @@
       <bpmn:outgoing>Flow_1aqhjsr</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_0mhv1kc" sourceRef="Event_1qzd898" targetRef="Activity_118pfe1" />
-    <bpmn:boundaryEvent id="Event_04itckl" attachedToRef="Activity_118pfe1">
+    <bpmn:boundaryEvent id="Event_04itckl" name="Compensate" attachedToRef="Activity_118pfe1">
       <bpmn:compensateEventDefinition id="CompensateEventDefinition_1nba3la" />
     </bpmn:boundaryEvent>
     <bpmn:serviceTask id="Activity_1dibkd5" name="revert RPA job" isForCompensation="true" zeebe:modelerTemplate="io.camunda.connectors.UIPath.v1" zeebe:modelerTemplateVersion="4" zeebe:modelerTemplateIcon="data:image/svg+xml;utf8,%3C%3Fxml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;%3F%3E%3Csvg version=&#39;1.1&#39; width=&#39;18&#39; height=&#39;18&#39; id=&#39;Extra_Large&#39; xmlns=&#39;http://www.w3.org/2000/svg&#39; xmlns:xlink=&#39;http://www.w3.org/1999/xlink&#39; x=&#39;0px&#39; y=&#39;0px&#39; viewBox=&#39;0 0 3261 1200&#39; style=&#39;enable-background:new 0 0 3261 1200;&#39; xml:space=&#39;preserve&#39;%3E%3Cstyle type=&#39;text/css&#39;%3E .st0%7Bfill:%23FA4616;%7D%0A%3C/style%3E%3Cg%3E%3Cpath class=&#39;st0&#39; d=&#39;M0,0h1200v1200H0V0z M124.2,1075.8h951.6V124.2H124.2V1075.8z M604,309.5h124.2v363.6 c0,164.3-93.2,263.4-250.4,263.4c-154.3,0-245.4-97.2-245.4-263.4V309.5h124.2v363.6c0,91.2,38.1,146.2,124.2,146.2 c83.1,0,123.2-52.1,123.2-146.2V309.5z M964.6,309.5c0,44.1-32.1,74.1-76.1,74.1c-44.1,0-76.1-30-76.1-74.1 c0-45.1,32.1-76.1,76.1-76.1C932.5,233.4,964.6,264.4,964.6,309.5z M826.4,442.7h124.2v487.8H826.4V442.7z M1784,517.9 c0,133.2-88.1,212.4-223.4,212.4h-112.2v200.3h-124.2v-621h236.4C1697.8,309.5,1784,389.6,1784,517.9z M1657.8,517.9 c0-68.1-39.1-108.2-110.2-108.2h-99.2v221.4h99.2C1618.7,631.1,1657.8,591,1657.8,517.9z M2201.7,442.7h124.2v487.8h-124.2v-55.1 c-33.1,39.1-85.1,61.1-158.3,61.1c-132.2,0-225.4-104.2-225.4-249.4c0-144.2,91.2-250.4,225.4-250.4c71.1,0,125.2,25,158.3,67.1 V442.7z M2201.7,687.1c0-84.1-50.1-142.2-129.2-142.2c-79.1,0-128.2,55.1-128.2,142.2c0,81.1,44.1,140.2,128.2,140.2 C2148.6,827.4,2201.7,772.3,2201.7,687.1z M2629.4,824.4h49.1v106.2h-65.1c-118.2,0-169.3-56.1-169.3-171.3V547.9H2386V442.7h58.1 V309.5h124.2v133.2h109.2v105.2h-109.2v212.3C2568.3,803.3,2581.3,824.4,2629.4,824.4z M3214.3,647.1v283.5h-124.2V661.1 c0-74.1-38.1-122.2-111.2-122.2s-117.2,50.1-117.2,133.2v258.4h-124.2V279.5h124.2v213.4c31.1-37.1,80.1-57.1,147.2-57.1 C3124.2,435.7,3214.3,518.9,3214.3,647.1z M3200,279.5h21.7v4.2h-8.5v25.8h-4.8v-25.8h-8.5V279.5z M3261,279.5v30h-4.8v-22.8 l-9.7,22.8h-3.6l-9.7-22.8v22.8h-4.8v-30h6l10.3,23.4l10.3-23.4H3261z&#39;/%3E%3C/g%3E%3C/svg%3E%0A">
@@ -224,9 +224,13 @@
         <bpmn:messageEventDefinition id="MessageEventDefinition_1rhrndp" messageRef="Message_0j5kbwa" />
       </bpmn:intermediateCatchEvent>
       <bpmn:sequenceFlow id="Flow_129m2m2" sourceRef="Event_16yd83w" targetRef="Gateway_16qm1s0" />
-      <bpmn:eventBasedGateway id="Gateway_1j8nunf">
-        <bpmn:incoming>Flow_1tyl6gu</bpmn:incoming>
-        <bpmn:incoming>Flow_1mqad0z</bpmn:incoming>
+      <bpmn:exclusiveGateway id="Gateway_join_before_ebg" name="" gatewayDirection="Converging">
+      <bpmn:incoming>Flow_1mqad0z</bpmn:incoming>
+      <bpmn:incoming>Flow_1tyl6gu</bpmn:incoming>
+      <bpmn:outgoing>Flow_join_to_ebg</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:eventBasedGateway id="Gateway_1j8nunf">
+        <bpmn:incoming>Flow_join_to_ebg</bpmn:incoming>
         <bpmn:outgoing>Flow_0j1hv6o</bpmn:outgoing>
         <bpmn:outgoing>Flow_0qdcgkg</bpmn:outgoing>
       </bpmn:eventBasedGateway>
@@ -235,8 +239,8 @@
       <bpmn:startEvent id="Event_1fr1ftj" name="item check started">
         <bpmn:outgoing>Flow_1mqad0z</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:sequenceFlow id="Flow_1mqad0z" sourceRef="Event_1fr1ftj" targetRef="Gateway_1j8nunf" />
-      <bpmn:sequenceFlow id="Flow_1tyl6gu" sourceRef="Activity_0om9p4a" targetRef="Gateway_1j8nunf" />
+      <bpmn:sequenceFlow id="Flow_1mqad0z" sourceRef="Event_1fr1ftj" targetRef="Gateway_join_before_ebg" />
+      <bpmn:sequenceFlow id="Flow_1tyl6gu" sourceRef="Activity_0om9p4a" targetRef="Gateway_join_before_ebg" />
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_1j5h7i1" sourceRef="Activity_1ko88ft" targetRef="Event_14ev0fk" />
     <bpmn:boundaryEvent id="Event_0f7bls8" name="item failed" attachedToRef="Activity_1ko88ft">
@@ -283,6 +287,7 @@
       <bpmn:text>Triggered when a task needs to be processed by a UiPath RPA bot. The happy-path outcome is the bot processing the queue item successfully and the item marked as processed.</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_rpa_intro" associationDirection="None" sourceRef="Event_1qzd898" targetRef="TextAnnotation_rpa_intro" />
+    <bpmn:sequenceFlow id="Flow_join_to_ebg" sourceRef="Gateway_join_before_ebg" targetRef="Gateway_1j8nunf" />
   </bpmn:process>
   <bpmn:message id="Message_0j5kbwa" name="36a59b39-c6d5-41e6-aa34-bd805badab31" zeebe:modelerTemplate="io.camunda.connectors.webhook.WebhookConnectorIntermediate.v1">
     <bpmn:extensionElements>
@@ -468,7 +473,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1mqad0z_di" bpmnElement="Flow_1mqad0z">
         <di:waypoint x="598" y="210" />
-        <di:waypoint x="665" y="210" />
+        <di:waypoint x="585" y="210" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_0us0wja" bpmnElement="Flow_1tyl6gu">
         <di:waypoint x="1150" y="570" />
@@ -618,6 +623,20 @@
       <bpmndi:BPMNEdge id="Association_1e5wlm9_di" bpmnElement="Association_1e5wlm9">
         <di:waypoint x="1885" y="201" />
         <di:waypoint x="1863" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_rpa_intro_di" bpmnElement="TextAnnotation_rpa_intro">
+        <dc:Bounds x="112" y="102" width="300" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_rpa_intro_di" bpmnElement="Association_rpa_intro">
+        <di:waypoint x="162" y="192" />
+        <di:waypoint x="262" y="172" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_join_before_ebg_di" bpmnElement="Gateway_join_before_ebg" isMarkerVisible="true">
+        <dc:Bounds x="585" y="185" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_join_to_ebg_di" bpmnElement="Flow_join_to_ebg">
+        <di:waypoint x="635" y="210" />
+        <di:waypoint x="665" y="210" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

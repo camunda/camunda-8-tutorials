@@ -515,9 +515,6 @@
   <bpmn:escalation id="Escalation_1x4421v" name="human escalation" escalationCode="100_human_escalation" />
   <bpmn:escalation id="Escalation_1fpfwz8" name="human escalation" escalationCode="100_human_escalation" />
   <bpmn:error id="Error_04dhtpa" name="index_not_found" errorCode="index_not_found" />
-  <bpmn:message id="Message_0fr5ip9" name="116d29be-ca23-4ab4-acfd-f3a278c341e2">
-    <bpmn:extensionElements />
-  </bpmn:message>
   <bpmn:message id="Message_0whm78z" name="3c562193-4e24-4d28-8407-3f6079e80f0e" zeebe:modelerTemplate="io.camunda.connectors.inbound.EmailMessageStart.v1" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0j5qzil">
@@ -810,6 +807,13 @@
       <bpmndi:BPMNEdge id="Association_0p70jxz_di" bpmnElement="Association_0p70jxz">
         <di:waypoint x="1456" y="250" />
         <di:waypoint x="1494" y="211" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_loan_approval_intro_di" bpmnElement="TextAnnotation_loan_approval_intro">
+        <dc:Bounds x="122" y="182" width="300" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_loan_approval_intro_di" bpmnElement="Association_loan_approval_intro">
+        <di:waypoint x="172" y="272" />
+        <di:waypoint x="272" y="252" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

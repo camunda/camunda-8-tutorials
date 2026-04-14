@@ -283,6 +283,13 @@
         <di:waypoint x="1168" y="660" />
         <di:waypoint x="1176" y="640" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_expense_intro_di" bpmnElement="TextAnnotation_expense_intro">
+        <dc:Bounds x="242" y="82" width="300" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_expense_intro_di" bpmnElement="Association_expense_intro">
+        <di:waypoint x="292" y="172" />
+        <di:waypoint x="392" y="152" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

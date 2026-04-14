@@ -366,6 +366,13 @@
         <di:waypoint x="950" y="130" />
         <di:waypoint x="985" y="130" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_azure_routing_intro_di" bpmnElement="TextAnnotation_azure_routing_intro">
+        <dc:Bounds x="162" y="22" width="300" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_azure_routing_intro_di" bpmnElement="Association_azure_routing_intro">
+        <di:waypoint x="212" y="112" />
+        <di:waypoint x="312" y="92" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

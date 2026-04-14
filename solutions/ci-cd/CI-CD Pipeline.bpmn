@@ -109,7 +109,7 @@ For more information, read https://docs.camunda.io/docs/guides/devops-lifecycle/
           <bpmn:incoming>Flow_16ry3vq</bpmn:incoming>
           <bpmn:outgoing>Flow_11yblik</bpmn:outgoing>
         </bpmn:exclusiveGateway>
-        <bpmn:boundaryEvent id="fileNotFoundBoundaryEvent" attachedToRef="checkFileExists">
+        <bpmn:boundaryEvent id="fileNotFoundBoundaryEvent" name="File not found" attachedToRef="checkFileExists">
           <bpmn:outgoing>Flow_1xy4jx8</bpmn:outgoing>
           <bpmn:errorEventDefinition id="ErrorEventDefinition_1kxrs6h" errorRef="Error_0u4w06y" />
         </bpmn:boundaryEvent>
@@ -867,6 +867,13 @@ https://docs.camunda.io/docs/next/components/modeler/web-modeler/git-sync/</bpmn
       <bpmndi:BPMNEdge id="Association_01nnwlp_di" bpmnElement="Association_01nnwlp">
         <di:waypoint x="190" y="112" />
         <di:waypoint x="190" y="73" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_cicd_intro_di" bpmnElement="TextAnnotation_cicd_intro">
+        <dc:Bounds x="122" y="22" width="300" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_cicd_intro_di" bpmnElement="Association_cicd_intro">
+        <di:waypoint x="172" y="112" />
+        <di:waypoint x="272" y="92" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -200,6 +200,13 @@
         <di:waypoint x="510" y="238" />
         <di:waypoint x="510" y="140" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_event_reg_intro_di" bpmnElement="TextAnnotation_event_reg_intro">
+        <dc:Bounds x="192" y="170" width="300" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_event_reg_intro_di" bpmnElement="Association_event_reg_intro">
+        <di:waypoint x="242" y="260" />
+        <di:waypoint x="342" y="240" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

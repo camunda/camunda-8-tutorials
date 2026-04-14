@@ -105,7 +105,6 @@
       <zeebe:subscription correlationKey="=paymentRequestId" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:error id="Error_11kp03o" name="ErrorSeatsNotAvailable" errorCode="ErrorSeatsNotAvailable" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_0t1vxrh">
       <bpmndi:BPMNShape id="Participant_1xi7sa7_di" bpmnElement="Participant_1l2gxa0" isHorizontal="true">
@@ -210,6 +209,13 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="855" y="393" width="30" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_ticket_intro_di" bpmnElement="TextAnnotation_ticket_intro">
+        <dc:Bounds x="189" y="100" width="300" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_ticket_intro_di" bpmnElement="Association_ticket_intro">
+        <di:waypoint x="239" y="190" />
+        <di:waypoint x="339" y="170" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
