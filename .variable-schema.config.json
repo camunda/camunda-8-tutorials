@@ -1,0 +1,8 @@
+{
+  "$comment": "Repo-level defaults for the process variable schema system. Per-solution variables.schema.json metadata may override scope and owner.",
+  "convention": "camelCase",
+  "scope": "process",
+  "enforceNaming": false,
+  "similarityTier": "levenshtein",
+  "cdmEndpoint": null
+}

@@ -1,0 +1,8 @@
+# CODEOWNERS — process variable schema
+# Changes to the schema infrastructure and either group vocabulary require review.
+
+schema/                           @HanselIdes
+solutions/variables.schema.json   @HanselIdes
+quick-start/variables.schema.json @HanselIdes
+tools/schema/                     @HanselIdes
+.variable-schema.config.json      @HanselIdes
