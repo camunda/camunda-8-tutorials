@@ -7,10 +7,9 @@
     <bpmn:exclusiveGateway id="Gateway_SelectTool" name="Which tool?">
       <bpmn:incoming>Flow_Start_Gateway</bpmn:incoming>
       <bpmn:outgoing>Flow_Gateway_ListUsers</bpmn:outgoing>
-      <bpmn:outgoing>Flow_Gateway_LoadUserByID</bpmn:outgoing>
       <bpmn:outgoing>Flow_Gateway_SearchRecipe</bpmn:outgoing>
       <bpmn:outgoing>Flow_Gateway_JokesAPI</bpmn:outgoing>
-      <bpmn:outgoing>Flow_Gateway_FetchURL</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Gateway_TechStuff</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_Start_Gateway" sourceRef="Start" targetRef="Gateway_SelectTool" />
     <bpmn:sequenceFlow id="Flow_Gateway_ListUsers" name="List Users" sourceRef="Gateway_SelectTool" targetRef="ListUsers">
@@ -39,32 +38,6 @@
       <bpmn:incoming>Flow_ListUsers_End</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_ListUsers_End" sourceRef="ListUsers" targetRef="End_ListUsers" />
-    <bpmn:sequenceFlow id="Flow_Gateway_LoadUserByID" name="Load User By ID" sourceRef="Gateway_SelectTool" targetRef="LoadUserByID">
-      <bpmn:conditionExpression>=connectorTest = "LoadUserByID"</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="LoadUserByID" name="Load User By ID">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
-        <zeebe:ioMapping>
-          <zeebe:input source="noAuth" target="authentication.type" />
-          <zeebe:input source="GET" target="method" />
-          <zeebe:input source="=&#34;https://jsonplaceholder.typicode.com/users/&#34; + string(userId)" target="url" />
-          <zeebe:input source="false" target="storeResponse" />
-          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
-          <zeebe:input source="20" target="readTimeoutInSeconds" />
-          <zeebe:input source="false" target="ignoreNullValues" />
-        </zeebe:ioMapping>
-        <zeebe:taskHeaders>
-          <zeebe:header key="resultExpression" value="={toolCallResult: if (is defined(response.body.id)) then response.body else &#34;User not found&#34;}" />
-        </zeebe:taskHeaders>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_Gateway_LoadUserByID</bpmn:incoming>
-      <bpmn:outgoing>Flow_LoadUserByID_End</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:endEvent id="End_LoadUserByID" name="Load User By ID">
-      <bpmn:incoming>Flow_LoadUserByID_End</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_LoadUserByID_End" sourceRef="LoadUserByID" targetRef="End_LoadUserByID" />
     <bpmn:sequenceFlow id="Flow_Gateway_SearchRecipe" name="Search Recipe" sourceRef="Gateway_SelectTool" targetRef="Search_Recipe">
       <bpmn:conditionExpression>=connectorTest = "Search_Recipe"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -118,36 +91,36 @@
       <bpmn:incoming>Flow_JokesAPI_End</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_JokesAPI_End" sourceRef="Jokes_API" targetRef="End_JokesAPI" />
-    <bpmn:sequenceFlow id="Flow_Gateway_FetchURL" name="Fetch URL" sourceRef="Gateway_SelectTool" targetRef="Fetch_URL">
-      <bpmn:conditionExpression>=connectorTest = "Fetch_URL"</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_Gateway_TechStuff" name="Tech Stuff" sourceRef="Gateway_SelectTool" targetRef="Activity_0x3prgn">
+      <bpmn:conditionExpression>=connectorTest = "Activity_0x3prgn"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Fetch_URL" name="Fetch URL">
+    <bpmn:serviceTask id="Activity_0x3prgn" name="Get list of Tech Stuff">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
         <zeebe:ioMapping>
+          <zeebe:input source="false" target="ignoreNullValues" />
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="GET" target="method" />
-          <zeebe:input source="=fetchUrl" target="url" />
-          <zeebe:input source="true" target="storeResponse" />
+          <zeebe:input source="https://api.restful-api.dev/objects" target="url" />
+          <zeebe:input source="false" target="storeResponse" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
-          <zeebe:input source="false" target="ignoreNullValues" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
-          <zeebe:header key="resultExpression" value="={toolCallResult: response.document}" />
+          <zeebe:header key="resultVariable" value="toolCallResult" />
         </zeebe:taskHeaders>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_Gateway_FetchURL</bpmn:incoming>
-      <bpmn:outgoing>Flow_FetchURL_End</bpmn:outgoing>
+      <bpmn:incoming>Flow_Gateway_TechStuff</bpmn:incoming>
+      <bpmn:outgoing>Flow_TechStuff_End</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="End_FetchURL" name="Fetch URL">
-      <bpmn:incoming>Flow_FetchURL_End</bpmn:incoming>
+    <bpmn:endEvent id="End_TechStuff" name="Tech Stuff">
+      <bpmn:incoming>Flow_TechStuff_End</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_FetchURL_End" sourceRef="Fetch_URL" targetRef="End_FetchURL" />
+    <bpmn:sequenceFlow id="Flow_TechStuff_End" sourceRef="Activity_0x3prgn" targetRef="End_TechStuff" />
     <bpmn:textAnnotation id="TextAnnotation_1ci1ixk">
       <bpmn:documentation>Integration test BPMN for ai-agent-chat-with-tools. Used exclusively for connector isolation — no LLM or agenticai connector involved. Each HTTP tool from the AHSP has a segment here, activated via startBeforeElement(). CPT managed runtime: embedded Zeebe + Docker connector runtime.
 
-Tools covered (HTTP connectors): ListUsers, LoadUserByID, Search_Recipe, Jokes_API, Fetch_URL. Not covered: script tasks (GetDateAndTime, SendEmail) and AHSP user tasks (Human_Send_Email_Request) — those are covered by agent E2E tests in AgentJavaIT.java.
+Tools covered (HTTP connectors): ListUsers, Search_Recipe, Jokes_API, Activity_0x3prgn (Get list of Tech Stuff).
 
 Sync rule: when a tool is added, removed, or reconfigured in the AHSP in ai-agent-chat-with-tools.bpmn, update this file and the matching test method in AgentJavaIT.java.
 
@@ -179,15 +152,6 @@ Run: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-tes
           <dc:Bounds x="629" y="105" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="LoadUserByID_di" bpmnElement="LoadUserByID">
-        <dc:Bounds x="500" y="160" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_LoadUserByID_di" bpmnElement="End_LoadUserByID">
-        <dc:Bounds x="652" y="182" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="621" y="225" width="98" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Search_Recipe_di" bpmnElement="Search_Recipe">
         <dc:Bounds x="500" y="280" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -206,10 +170,10 @@ Run: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-tes
           <dc:Bounds x="629" y="465" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Fetch_URL_di" bpmnElement="Fetch_URL">
+      <bpmndi:BPMNShape id="Activity_0x3prgn_di" bpmnElement="Activity_0x3prgn">
         <dc:Bounds x="500" y="520" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_FetchURL_di" bpmnElement="End_FetchURL">
+      <bpmndi:BPMNShape id="End_TechStuff_di" bpmnElement="End_TechStuff">
         <dc:Bounds x="652" y="542" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="629" y="585" width="82" height="14" />
@@ -235,14 +199,6 @@ Run: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-tes
           <dc:Bounds x="414" y="173" width="52" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Gateway_LoadUserByID_di" bpmnElement="Flow_Gateway_LoadUserByID">
-        <di:waypoint x="395" y="295" />
-        <di:waypoint x="395" y="200" />
-        <di:waypoint x="500" y="200" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="414" y="241" width="82" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Gateway_SearchRecipe_di" bpmnElement="Flow_Gateway_SearchRecipe">
         <di:waypoint x="420" y="320" />
         <di:waypoint x="500" y="320" />
@@ -258,7 +214,7 @@ Run: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-tes
           <dc:Bounds x="414" y="386" width="52" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Gateway_FetchURL_di" bpmnElement="Flow_Gateway_FetchURL">
+      <bpmndi:BPMNEdge id="Flow_Gateway_TechStuff_di" bpmnElement="Flow_Gateway_TechStuff">
         <di:waypoint x="395" y="345" />
         <di:waypoint x="395" y="560" />
         <di:waypoint x="500" y="560" />
@@ -270,10 +226,6 @@ Run: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-tes
         <di:waypoint x="600" y="80" />
         <di:waypoint x="652" y="80" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_LoadUserByID_End_di" bpmnElement="Flow_LoadUserByID_End">
-        <di:waypoint x="600" y="200" />
-        <di:waypoint x="652" y="200" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_SearchRecipe_End_di" bpmnElement="Flow_SearchRecipe_End">
         <di:waypoint x="600" y="320" />
         <di:waypoint x="652" y="320" />
@@ -282,7 +234,7 @@ Run: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-tes
         <di:waypoint x="600" y="440" />
         <di:waypoint x="652" y="440" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_FetchURL_End_di" bpmnElement="Flow_FetchURL_End">
+      <bpmndi:BPMNEdge id="Flow_TechStuff_End_di" bpmnElement="Flow_TechStuff_End">
         <di:waypoint x="600" y="560" />
         <di:waypoint x="652" y="560" />
       </bpmndi:BPMNEdge>
