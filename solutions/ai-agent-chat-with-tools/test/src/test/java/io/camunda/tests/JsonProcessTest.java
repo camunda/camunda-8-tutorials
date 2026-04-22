@@ -23,8 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @TestDeployment(resources = {
     "ai-agent-chat-with-tools.bpmn",
     "ai-agent-chat-initial-request.form",
-    "ai-agent-chat-user-feedback.form",
-    "ai-agent-chat-human-send-email-request.form"
+    "ai-agent-chat-user-feedback.form"
 })
 public class JsonProcessTest {
 

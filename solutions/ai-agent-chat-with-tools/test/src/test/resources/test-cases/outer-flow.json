@@ -626,8 +626,8 @@
       ]
     },
     {
-      "name": "Fetch_URL tool — agent fetches a URL",
-      "description": "The AI agent calls the Fetch_URL HTTP tool with a dynamic URL from the conversation, fetches the content, then responds. Tests the fromAi() URL expression.",
+      "name": "Activity_0x3prgn tool — agent gets list of tech stuff",
+      "description": "The AI agent calls the Get list of Tech Stuff HTTP tool to fetch all tech objects, then delivers its response. Tests the full AHSP tool-call lifecycle for the static-URL tech stuff endpoint.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -635,7 +635,7 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variables": {
-            "inputText": "Fetch the contents of https://jsonplaceholder.typicode.com/posts/1 for me."
+            "inputText": "Show me all available tech stuff."
           }
         },
         {
@@ -649,19 +649,19 @@
                 "state": "WAITING_FOR_TOOL_CALL_RESULTS",
                 "metrics": {
                   "modelCalls": 1,
-                  "tokenUsage": {"inputTokenCount": 510, "outputTokenCount": 62}
+                  "tokenUsage": {"inputTokenCount": 480, "outputTokenCount": 55}
                 },
                 "conversation": {
                   "type": "in-process",
                   "messages": [
                     {
                       "role": "user",
-                      "content": [{"type": "text", "text": "Fetch the contents of https://jsonplaceholder.typicode.com/posts/1 for me."}]
+                      "content": [{"type": "text", "text": "Show me all available tech stuff."}]
                     },
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_005", "name": "Fetch_URL", "input": {"url": "https://jsonplaceholder.typicode.com/posts/1"}}
+                        {"type": "tool_use", "id": "tool_005", "name": "Activity_0x3prgn", "input": {}}
                       ]
                     }
                   ]
@@ -672,11 +672,10 @@
           "completionConditionFulfilled": false,
           "activateElements": [
             {
-              "elementId": "Fetch_URL",
+              "elementId": "Activity_0x3prgn",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_005", "name": "Fetch_URL"},
-                  "url": "https://jsonplaceholder.typicode.com/posts/1"
+                  "_meta": {"id": "tool_005", "name": "Activity_0x3prgn"}
                 }
               }
             }
@@ -685,15 +684,13 @@
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
-            "elementId": "Fetch_URL"
+            "elementId": "Activity_0x3prgn"
           },
           "variables": {
-            "toolCallResult": {
-              "userId": 1,
-              "id": 1,
-              "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-              "body": "quia et suscipit suscipit recusandae consequuntur expedita et cum reprehenderit molestiae"
-            }
+            "toolCallResult": [
+              {"id": "1", "name": "Google Pixel 6 Pro", "data": {"color": "Cloudy White", "capacity": "128 GB"}},
+              {"id": "2", "name": "Apple iPhone 12 Mini", "data": {"color": "Blue", "capacity": "256 GB"}}
+            ]
           }
         },
         {
@@ -707,155 +704,31 @@
                 "state": "READY",
                 "metrics": {
                   "modelCalls": 2,
-                  "tokenUsage": {"inputTokenCount": 950, "outputTokenCount": 140}
+                  "tokenUsage": {"inputTokenCount": 900, "outputTokenCount": 130}
                 },
                 "conversation": {
                   "type": "in-process",
                   "messages": [
                     {
                       "role": "user",
-                      "content": [{"type": "text", "text": "Fetch the contents of https://jsonplaceholder.typicode.com/posts/1 for me."}]
+                      "content": [{"type": "text", "text": "Show me all available tech stuff."}]
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_005", "name": "Fetch_URL", "input": {"url": "https://jsonplaceholder.typicode.com/posts/1"}}]
+                      "content": [{"type": "tool_use", "id": "tool_005", "name": "Activity_0x3prgn", "input": {}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_005", "content": "{\"id\":1,\"title\":\"sunt aut facere repellat provident\",\"userId\":1}"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_005", "content": "[{\"id\":\"1\",\"name\":\"Google Pixel 6 Pro\"},{\"id\":\"2\",\"name\":\"Apple iPhone 12 Mini\"}]"}]
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "text", "text": "The post at that URL has title: 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit' by user 1."}]
+                      "content": [{"type": "text", "text": "Here are the available tech items: Google Pixel 6 Pro (128 GB, Cloudy White) and Apple iPhone 12 Mini (256 GB, Blue)."}]
                     }
                   ]
                 }
               },
-              "responseText": "The post at that URL has title: 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit' by user 1."
-            }
-          },
-          "completionConditionFulfilled": true
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelectors": [
-            {"elementId": "User_Feedback"}
-          ],
-          "state": "IS_ACTIVE"
-        },
-        {
-          "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": {
-            "elementId": "User_Feedback"
-          },
-          "variables": {
-            "userSatisfied": true
-          }
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "state": "IS_COMPLETED"
-        }
-      ]
-    },
-    {
-      "name": "GetDateAndTime tool — agent gets the current date and time",
-      "description": "The AI agent calls the GetDateAndTime script tool, which executes automatically (no HTTP call, no job worker needed). Tests tool activation for a Zeebe script task inside the AHSP.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variables": {
-            "inputText": "What is the current date and time?"
-          }
-        },
-        {
-          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
-          },
-          "variables": {
-            "agent": {
-              "context": {
-                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
-                "metrics": {
-                  "modelCalls": 1,
-                  "tokenUsage": {"inputTokenCount": 420, "outputTokenCount": 50}
-                },
-                "conversation": {
-                  "type": "in-process",
-                  "messages": [
-                    {
-                      "role": "user",
-                      "content": [{"type": "text", "text": "What is the current date and time?"}]
-                    },
-                    {
-                      "role": "assistant",
-                      "content": [
-                        {"type": "tool_use", "id": "tool_006", "name": "GetDateAndTime", "input": {}}
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "completionConditionFulfilled": false,
-          "activateElements": [
-            {
-              "elementId": "GetDateAndTime",
-              "variables": {
-                "toolCall": {
-                  "_meta": {"id": "tool_006", "name": "GetDateAndTime"}
-                }
-              }
-            }
-          ]
-        },
-        {
-          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
-          },
-          "variables": {
-            "agent": {
-              "context": {
-                "state": "READY",
-                "metrics": {
-                  "modelCalls": 2,
-                  "tokenUsage": {"inputTokenCount": 700, "outputTokenCount": 95}
-                },
-                "conversation": {
-                  "type": "in-process",
-                  "messages": [
-                    {
-                      "role": "user",
-                      "content": [{"type": "text", "text": "What is the current date and time?"}]
-                    },
-                    {
-                      "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_006", "name": "GetDateAndTime", "input": {}}]
-                    },
-                    {
-                      "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_006", "content": "2026-04-02T10:30:00+00:00"}]
-                    },
-                    {
-                      "role": "assistant",
-                      "content": [{"type": "text", "text": "The current date and time is April 2, 2026 at 10:30 AM UTC."}]
-                    }
-                  ]
-                }
-              },
-              "responseText": "The current date and time is April 2, 2026 at 10:30 AM UTC."
+              "responseText": "Here are the available tech items: Google Pixel 6 Pro (128 GB, Cloudy White) and Apple iPhone 12 Mini (256 GB, Blue)."
             }
           },
           "completionConditionFulfilled": true
@@ -889,5 +762,5 @@
       ]
     }
   ],
-  "_integrationTestNotes": "Process tests mock the AHSP by simulating agent behavior. Tool tests use activateElements to activate individual tool tasks and COMPLETE_JOB to mock their output. GetDateAndTime activates the script task — it auto-executes, no COMPLETE_JOB needed. LoadUserByID is EXCLUDED from process tests: its URL input mapping uses fromAi(toolCall.id, 'The user ID', 'number') — the 3-arg form with a type hint. The embedded Zeebe engine in CPT only registers the 2-arg fromAi variant; calling with 3 args causes a FEEL evaluation error that prevents the job from being created. LoadUserByID is covered by the loadUserByIdConnector() integration test in AgentJavaIT.java. BPMN recommendation: consider removing the type-hint ('number') third argument from the fromAi() call to restore process-test coverage, or set retries to at least 1 (currently retries=0, which means any HTTP failure immediately raises an incident). Run integration tests with: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test (requires AWS Bedrock credentials in ../.env)."
+  "_integrationTestNotes": "Process tests mock the AHSP by simulating agent behavior. Tool tests use activateElements to activate individual tool tasks and COMPLETE_JOB to mock their output. Available tools: ListUsers, Search_Recipe, Jokes_API, Activity_0x3prgn (Get list of Tech Stuff). Run integration tests with: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test (requires AWS Bedrock credentials in ../.env)."
 }

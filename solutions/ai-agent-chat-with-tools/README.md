@@ -62,15 +62,10 @@ The process (`ai-agent-chat-with-tools.bpmn`) works as follows:
 2. **AI Agent Task**: The Agentic AI connector receives the request, context, and available tools. It generates a response and may request tool calls.
 3. **Tool Call Gateway**: If the agent wants to use tools, the process enters the `Agent Tools` ad-hoc sub-process.
 4. **Agent Tools Sub-Process**: For each tool call requested by the agent, the corresponding task is executed. Tools include:
-	- Get Date and Time
-	- Load user by ID (HTTP API)
 	- List users (HTTP API)
 	- Search recipe (HTTP API)
-	- Superflux product calculation (script)
-	- Ask human to send email (user task)
-	- Send email (script)
-	- Fetch a joke (HTTP API)
-	- Fetch URL (HTTP API)
+	- Jokes API (HTTP API)
+	- Get list of Tech Stuff (HTTP API)
 5. **Loopback**: Tool results are returned to the agent, which may generate further tool calls or a final answer.
 6. **User Feedback**: The user is asked if they are satisfied with the answer.
 	- If not, the process loops for follow-up.
@@ -78,7 +73,6 @@ The process (`ai-agent-chat-with-tools.bpmn`) works as follows:
 
 **Key Features:**
 - Dynamic tool invocation by the agent
-- Human-in-the-loop for actions like sending emails
 - Extensible: add your own tools as new tasks in the sub-process
 
 ---
@@ -87,10 +81,10 @@ The process (`ai-agent-chat-with-tools.bpmn`) works as follows:
 
 Example inputs which can be entered in the initial form:
 
-- `Send Ervin a joke`: this will need to do multiple tool calling steps to find a user named "Ervin", to fetch a joke
-  and to compose an e-mail for the "Ask human to send email" task. The email sending user can provide feedback to update
-  the message such as "include emojis" or "include a spanish translation". 
-- `Tell me about this document` can be used to analyze a PDF document with the file upload picker provided in the initial form.
+- `Tell me a joke`: the agent will use the Jokes API tool to fetch a joke.
+- `Find me a recipe for pasta`: the agent will use the Search recipe tool.
+- `Which user have the longest name`: the agent will use the List users tool to retrieve user data.
+- `Which iPhones are available` will call the tech API for available gadgets and filter for iPhones.
 
 ---
 

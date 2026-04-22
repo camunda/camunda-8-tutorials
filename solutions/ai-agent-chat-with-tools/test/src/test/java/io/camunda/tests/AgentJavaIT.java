@@ -54,7 +54,6 @@ import org.springframework.boot.test.context.SpringBootTest;
     "ai-agent-chat-with-tools.bpmn",
     "ai-agent-chat-initial-request.form",
     "ai-agent-chat-user-feedback.form",
-    "ai-agent-chat-human-send-email-request.form",
     "bpmn/test-ai-agent-chat-with-tools.bpmn"
 })
 public class AgentJavaIT {
@@ -83,22 +82,6 @@ public class AgentJavaIT {
     // Process ID: test-ai-agent-chat-with-tools
     // Each tool has its own segment: Start_<ToolName> → <ToolName> → End_<ToolName>
     // =========================================================================
-
-    @Test
-    @Timeout(120)
-    @DisplayName("REST: LoadUserByID — fetches user 1 from jsonplaceholder")
-    void loadUserById() {
-        var instance = client.newCreateInstanceCommand()
-            .bpmnProcessId("test-ai-agent-chat-with-tools")
-            .latestVersion()
-            .startBeforeElement("LoadUserByID")
-            .variables(Map.of("userId", 1))
-            .send().join();
-
-        assertThatProcessInstance(instance)
-            .hasCompletedElements(byId("End_LoadUserByID"))
-            .isCompleted();
-    }
 
     @Test
     @Timeout(120)
@@ -142,13 +125,12 @@ public class AgentJavaIT {
 
     @Test
     @Timeout(120)
-    @DisplayName("REST: Fetch_URL — fetches a dynamic URL (jsonplaceholder todo 1)")
-    void fetchUrl() {
+    @DisplayName("REST: Get Tech Stuff — fetches tech objects from restful-api.dev")
+    void getTechStuff() {
         var instance = client.newCreateInstanceCommand()
             .bpmnProcessId("test-ai-agent-chat-with-tools")
             .latestVersion()
-            .startBeforeElement("Fetch_URL")
-            .variables(Map.of("fetchUrl", "https://jsonplaceholder.typicode.com/todos/1"))
+            .startBeforeElement("Activity_0x3prgn")
             .send().join();
 
         assertThatProcessInstance(instance).isCompleted();
@@ -193,21 +175,6 @@ public class AgentJavaIT {
 
     @Test
     @Timeout(300)
-    @DisplayName("Agent: 'Who is user 1?' → agent calls LoadUserByID tool")
-    void shouldCallLoadUserByIdTool() {
-        var instance = startProcess("Who is user with ID 1? Use the load user by ID tool to get their details.");
-
-        assertThatProcessInstance(instance).hasCompletedElements(byId("LoadUserByID"));
-        assertThatUserTask(byElementId("User_Feedback")).isCreated();
-
-        processTestContext.completeUserTask(
-            byElementId("User_Feedback"), Map.of("userSatisfied", true));
-
-        assertThatProcessInstance(instance).isCompleted();
-    }
-
-    @Test
-    @Timeout(300)
     @DisplayName("Agent: 'Find a pasta recipe' → agent calls Search_Recipe tool")
     void shouldCallSearchRecipeTool() {
         var instance = startProcess("Find me a pasta recipe using the recipe search tool.");
@@ -238,11 +205,11 @@ public class AgentJavaIT {
 
     @Test
     @Timeout(300)
-    @DisplayName("Agent: 'What time is it?' → agent calls GetDateAndTime tool")
-    void shouldCallGetDateAndTimeTool() {
-        var instance = startProcess("What is the current date and time? Use the date and time tool.");
+    @DisplayName("Agent: 'Show me tech stuff' → agent calls Get Tech Stuff tool")
+    void shouldCallGetTechStuffTool() {
+        var instance = startProcess("Show me all available tech stuff. Use the tech stuff tool.");
 
-        assertThatProcessInstance(instance).hasCompletedElements(byId("GetDateAndTime"));
+        assertThatProcessInstance(instance).hasCompletedElements(byId("Activity_0x3prgn"));
         assertThatUserTask(byElementId("User_Feedback")).isCreated();
 
         processTestContext.completeUserTask(
@@ -290,9 +257,16 @@ public class AgentJavaIT {
             ));
 
         // Process loops back — agent runs again with followUpInput.
-        // completeAhspUserTasksIfPresent polls until User_Feedback is active,
-        // completing any AHSP user tasks (e.g. Human_Send_Email_Request) along the way.
-        completeAhspUserTasksIfPresent();
+        // Wait until User_Feedback is active again (AHSP done).
+        Awaitility.await()
+            .atMost(Duration.ofMinutes(5))
+            .pollInterval(Duration.ofSeconds(2))
+            .until(() -> {
+                var feedbackTasks = client.newUserTaskSearchRequest()
+                    .filter(f -> f.elementId("User_Feedback").state(UserTaskState.CREATED))
+                    .send().join();
+                return !feedbackTasks.items().isEmpty();
+            });
 
         // Second iteration: User_Feedback is now guaranteed active
         processTestContext.completeUserTask(
@@ -304,36 +278,6 @@ public class AgentJavaIT {
     // =========================================================================
     // Helpers
     // =========================================================================
-
-    /**
-     * After a User_Feedback completion with userSatisfied=false, the process loops back
-     * and the agent runs again inside the AHSP. The AHSP may activate user tasks
-     * (e.g. Human_Send_Email_Request) before completing. This helper polls every 2s
-     * for up to 5 minutes: completing any AHSP user tasks found, and returning only
-     * once User_Feedback is active again (AHSP done). Without this, AHSP hangs waiting
-     * for the user task to be completed and the test times out.
-     */
-    private void completeAhspUserTasksIfPresent() {
-        Awaitility.await()
-            .atMost(Duration.ofMinutes(5))
-            .pollInterval(Duration.ofSeconds(2))
-            .until(() -> {
-                // Complete any AHSP human-approval tasks that the agent may have activated
-                var emailTasks = client.newUserTaskSearchRequest()
-                    .filter(f -> f.elementId("Human_Send_Email_Request").state(UserTaskState.CREATED))
-                    .send().join();
-                emailTasks.items().forEach(task ->
-                    processTestContext.completeUserTask(
-                        byElementId("Human_Send_Email_Request"),
-                        Map.of("sendEmailApproved", false)));
-
-                // Return true once the outer User_Feedback task is active (AHSP completed)
-                var feedbackTasks = client.newUserTaskSearchRequest()
-                    .filter(f -> f.elementId("User_Feedback").state(UserTaskState.CREATED))
-                    .send().join();
-                return !feedbackTasks.items().isEmpty();
-            });
-    }
 
     private ProcessInstanceEvent startProcess(String inputText) {
         return client.newCreateInstanceCommand()
