@@ -59,14 +59,15 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - name: Install ajv-cli
         run: npm install -g ajv-cli
-      - name: Validate meta-schema structure
+      - name: Validate group schemas against meta-schema
         run: |
           ajv validate \
             --spec=draft2020 \
             -s schema/process-variables.meta-schema.json \
-            -d schema/process-variables.meta-schema.json \
+            -d solutions/variables.schema.json \
+            -d quick-start/variables.schema.json \
             --strict=false
-          echo "Meta-schema structural check complete."
+          echo "Schema validation complete."
 
   check:
     name: Check ${{ matrix.group }}
