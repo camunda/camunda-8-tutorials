@@ -1,5 +1,5 @@
 {
-  "$schema": "../schema/process-variables.meta-schema.json",
+  "$schema": "https://raw.githubusercontent.com/camunda/camunda-8-tutorials/main/schema/process-variables.meta-schema.json",
   "title": "Camunda 8 Tutorials — Quick Start Process Variables",
   "metadata": {
     "convention": "camelCase",
