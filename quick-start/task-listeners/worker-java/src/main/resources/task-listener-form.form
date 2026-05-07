@@ -1,0 +1,18 @@
+{
+  "components": [
+    {
+      "text": "# Task assigned by listener",
+      "type": "text",
+      "id": "Field_task_listener_form_text"
+    }
+  ],
+  "schemaVersion": 4,
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "5b7b5bc"
+  },
+  "type": "default",
+  "id": "task-listener-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "1.3"
+}

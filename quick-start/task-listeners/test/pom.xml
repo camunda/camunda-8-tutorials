@@ -64,11 +64,12 @@
             <testResource>
                 <directory>src/test/resources</directory>
             </testResource>
-            <!-- BPMN lives inside the worker-java Maven project's main resources -->
+            <!-- BPMN and forms live inside the worker-java Maven project's main resources -->
             <testResource>
                 <directory>../worker-java/src/main/resources</directory>
                 <includes>
                     <include>Quick_Start_Task_Listeners.bpmn</include>
+                    <include>*.form</include>
                 </includes>
             </testResource>
         </testResources>

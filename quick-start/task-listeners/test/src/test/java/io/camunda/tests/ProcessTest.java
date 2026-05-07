@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @CamundaSpringProcessTest
-@TestDeployment(resources = {"Quick_Start_Task_Listeners.bpmn"})
+@TestDeployment(resources = {"Quick_Start_Task_Listeners.bpmn", "task-listener-form.form"})
 public class ProcessTest {
 
     @Autowired

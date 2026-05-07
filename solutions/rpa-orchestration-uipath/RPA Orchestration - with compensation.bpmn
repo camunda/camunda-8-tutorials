@@ -254,6 +254,7 @@
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_1ut4ave" sourceRef="Event_16ail2y" targetRef="Activity_0svfozj" />
     <bpmn:sequenceFlow id="Flow_1aqhjsr" sourceRef="Activity_118pfe1" targetRef="Gateway_1jz7av2" />
+    <bpmn:sequenceFlow id="Flow_join_to_ebg" sourceRef="Gateway_join_before_ebg" targetRef="Gateway_1j8nunf" />
     <bpmn:association id="Association_0wps4yf" associationDirection="One" sourceRef="Event_04itckl" targetRef="Activity_1dibkd5" />
     <bpmn:textAnnotation id="TextAnnotation_1ti5l8v">
       <bpmn:text>add a queue, where you reverting the actions from the bot</bpmn:text>
@@ -287,7 +288,6 @@
       <bpmn:text>Triggered when a task needs to be processed by a UiPath RPA bot. The happy-path outcome is the bot processing the queue item successfully and the item marked as processed.</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_rpa_intro" associationDirection="None" sourceRef="Event_1qzd898" targetRef="TextAnnotation_rpa_intro" />
-    <bpmn:sequenceFlow id="Flow_join_to_ebg" sourceRef="Gateway_join_before_ebg" targetRef="Gateway_1j8nunf" />
   </bpmn:process>
   <bpmn:message id="Message_0j5kbwa" name="36a59b39-c6d5-41e6-aa34-bd805badab31" zeebe:modelerTemplate="io.camunda.connectors.webhook.WebhookConnectorIntermediate.v1">
     <bpmn:extensionElements>
