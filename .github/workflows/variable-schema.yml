@@ -65,7 +65,7 @@ jobs:
             --spec=draft2020 \
             -s schema/process-variables.meta-schema.json \
             -d schema/process-variables.meta-schema.json \
-            --strict=false || true
+            --strict=false
           echo "Meta-schema structural check complete."
 
   check:

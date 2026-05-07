@@ -3,7 +3,7 @@
   "title": "Camunda 8 Tutorials — Solutions Process Variables",
   "metadata": {
     "convention": "camelCase",
-    "scope": "--extract",
+    "scope": "process",
     "owner": "@HanselIdes"
   },
   "variables": {
