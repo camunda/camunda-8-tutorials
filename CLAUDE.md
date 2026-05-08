@@ -27,7 +27,7 @@ Both point `$schema` at the absolute URL: `https://raw.githubusercontent.com/cam
 
 The schema system is described in full in GitHub issue #95. Claude maintains it autonomously:
 
-- **Add a new process variable:** add it to the appropriate group schema with `title`, `type`, `description`, and `examples`. For object variables add `properties`. `examples` is required at every nesting level — every entry with a `type` field must carry `examples`, including nested object `properties`.
+- **Add a new process variable:** add it to the appropriate group schema with `title`, `type`, `description`, and `examples`. For object variables add `properties`. `examples` is required at every nesting level: every entry with a `type` field must carry `examples`, including nested object `properties`.
 - **Check on PR:** run `--check --group solutions|quick-start` and `--dead --group solutions|quick-start`; fix unregistered variable errors; post dead-variable candidates as PR comments.
 - **Naming violations:** fix in BPMN output targets, DMN outputs, form keys, and test JSON in one commit (order: form keys → BPMN → DMN → test JSON). Update the schema entry name to match.
 - **Structural similarity:** run `node tools/schema/find-similar-variables.mjs`; evaluate whether cross-group consolidation into `schema/$defs/` is warranted at Jaccard ≥ 0.70.
@@ -37,7 +37,7 @@ The schema system is described in full in GitHub issue #95. Claude maintains it 
 ## BPMN and process changes
 
 - Run `npx bpmnlint --config .bpmnlintrc <file>` after every BPMN edit; fix all errors before committing.
-- When resolving a merge conflict on a lint-fix PR, run `git checkout origin/main -- <file>` then `npm run lint` to confirm the main version already carries the fix. If lint passes, the conflict is resolved — don't attempt a manual 3-way merge of BPMN XML.
+- When resolving a merge conflict on a lint-fix PR, run `git checkout origin/main -- <file>` then `npm run lint` to confirm the main version already carries the fix. If lint passes, the conflict is resolved; don't attempt a manual 3-way merge of BPMN XML.
 - Do not rename BPMN element `id` attributes — they break test references.
 - Only propose `name` attribute changes and test JSON updates.
 - After fixing BPMN names, open in Camunda Modeler: `open -a "Camunda Modeler" <file>`.
