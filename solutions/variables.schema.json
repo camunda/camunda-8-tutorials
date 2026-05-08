@@ -84,6 +84,7 @@
             "metrics": {
               "type": "object",
               "description": "Token usage counters.",
+              "examples": [{"modelCalls": 1, "tokenUsage": {"inputTokenCount": 100, "outputTokenCount": 50}}],
               "properties": {
                 "modelCalls": {
                   "type": "integer",
@@ -95,6 +96,7 @@
                 "tokenUsage": {
                   "type": "object",
                   "description": "Input and output token counts.",
+                  "examples": [{"inputTokenCount": 100, "outputTokenCount": 50}],
                   "properties": {
                     "inputTokenCount": {
                       "type": "integer",
