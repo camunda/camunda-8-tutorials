@@ -1,0 +1,164 @@
+name: Variable Schema
+
+on:
+  pull_request:
+    paths:
+      - '**/*.bpmn'
+      - '**/*.dmn'
+      - '**/*.form'
+      - '**/*.test.json'
+      - 'solutions/variables.schema.json'
+      - 'quick-start/variables.schema.json'
+      - 'schema/**'
+      - '.variable-schema.config.json'
+      - 'tools/schema/**'
+
+jobs:
+  detect:
+    name: Detect changed groups
+    runs-on: ubuntu-latest
+    outputs:
+      groups: ${{ steps.detect.outputs.groups }}
+      schema-changed: ${{ steps.detect.outputs.schema-changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect which groups changed
+        id: detect
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.sha }}"
+          CHANGED=$(git diff --name-only "$BASE"..."$HEAD")
+
+          GROUPS=()
+          echo "$CHANGED" | grep -qE '^solutions/' && GROUPS+=("solutions")
+          echo "$CHANGED" | grep -qE '^quick-start/' && GROUPS+=("quick-start")
+
+          SCHEMA_CHANGED=false
+          echo "$CHANGED" | grep -qE '^schema/' && SCHEMA_CHANGED=true
+
+          if [ ${#GROUPS[@]} -eq 0 ]; then
+            echo "groups=[]" >> "$GITHUB_OUTPUT"
+          else
+            JSON=$(printf '%s\n' "${GROUPS[@]}" | jq -R . | jq -cs .)
+            echo "groups=$JSON" >> "$GITHUB_OUTPUT"
+          fi
+          echo "schema-changed=$SCHEMA_CHANGED" >> "$GITHUB_OUTPUT"
+
+  validate-meta-schema:
+    name: Validate meta-schema
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli
+      - name: Validate group schemas against meta-schema
+        run: |
+          ajv validate \
+            --spec=draft2020 \
+            -s schema/process-variables.meta-schema.json \
+            -d solutions/variables.schema.json \
+            -d quick-start/variables.schema.json \
+            --strict=false
+          echo "Schema validation complete."
+
+  check:
+    name: Check ${{ matrix.group }}
+    needs: detect
+    if: needs.detect.outputs.groups != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group: ${{ fromJson(needs.detect.outputs.groups) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+
+      - name: Validate group schema against meta-schema
+        if: ${{ hashFiles(format('{0}/variables.schema.json', matrix.group)) != '' }}
+        run: |
+          npx ajv validate \
+            --spec=draft2020 \
+            -s schema/process-variables.meta-schema.json \
+            -d "${{ matrix.group }}/variables.schema.json" \
+            --strict=false
+
+      - name: Check for unregistered variables
+        run: |
+          node tools/schema/extract-variables.mjs \
+            --check \
+            --group "${{ matrix.group }}"
+
+      - name: Lint naming convention
+        run: |
+          node tools/schema/lint-naming.mjs \
+            --group "${{ matrix.group }}"
+
+  dead-scan:
+    name: Dead variable scan (${{ matrix.group }})
+    needs: [detect, check]
+    if: needs.detect.outputs.groups != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group: ${{ fromJson(needs.detect.outputs.groups) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - name: Scan for dead variables
+        run: |
+          node tools/schema/extract-variables.mjs \
+            --dead \
+            --group "${{ matrix.group }}"
+
+  similarity:
+    name: Variable similarity scan
+    needs: [detect, check]
+    if: needs.detect.outputs.groups != '[]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - name: Find similar variables (advisory)
+        run: node tools/schema/find-similar-variables.mjs
+
+  cascade-warning:
+    name: Cascade impact warning
+    needs: detect
+    if: needs.detect.outputs.schema-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Report schema cascade impact
+        run: |
+          echo "## Shared Schema Change" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The \`schema/\` directory changed in this PR. Both group schemas reference the meta-schema." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Affected schemas:" >> $GITHUB_STEP_SUMMARY
+          for f in solutions/variables.schema.json quick-start/variables.schema.json; do
+            [ -f "$f" ] && echo "- \`$f\`" >> $GITHUB_STEP_SUMMARY
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Review both group schemas and run full check before merging." >> $GITHUB_STEP_SUMMARY

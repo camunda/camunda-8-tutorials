@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/camunda/camunda-8-tutorials/main/schema/process-variables.meta-schema.json",
+  "title": "Process Variable Schema — meta-schema",
+  "description": "Validates the structure of schema/process-variables.json. Enforces required fields on every variable entry, fully-typed properties on object variables, items schema on array variables, and at least one example on every entry.",
+  "type": "object",
+  "required": ["$schema", "variables"],
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/camunda/camunda-8-tutorials/main/schema/process-variables.meta-schema.json"
+    },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "metadata": {
+      "type": "object",
+      "description": "Generation-time configuration for this schema file.",
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": ["process", "all"],
+          "description": "Controls whether sub-process-scoped variables are included. 'process' = top-level only; 'all' = all scopes."
+        },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "processIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "$defs": {
+      "type": "object",
+      "description": "Reusable complex type definitions referenced via $ref. Each entry must satisfy the same shape requirements as a variable entry.",
+      "additionalProperties": { "$ref": "#/$defs/VariableEntry" }
+    },
+    "variables": {
+      "type": "object",
+      "description": "Flat vocabulary of all process-scope variables. One entry per logical variable name. Dead variables remain here with description prefixed 'DEAD - <date>.'",
+      "additionalProperties": { "$ref": "#/$defs/VariableEntry" }
+    }
+  },
+  "$defs": {
+    "VariableEntry": {
+      "type": "object",
+      "description": "A single variable in the process vocabulary, or a reusable type definition in $defs.",
+      "required": ["title", "description", "examples"],
+      "anyOf": [
+        { "required": ["type"] },
+        { "required": ["$ref"] }
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Short human-readable label for the variable.",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Business-level description. Dead variables must begin with 'DEAD - <date>.' followed by what superseded them.",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "JSON Schema primitive or structural type.",
+          "enum": ["string", "number", "integer", "boolean", "object", "array", "null"]
+        },
+        "$ref": {
+          "type": "string",
+          "description": "Reference to a reusable type defined in $defs."
+        },
+        "examples": {
+          "type": "array",
+          "description": "At least one representative example value showing the realistic shape of the variable.",
+          "minItems": 1
+        },
+        "enum": {
+          "type": "array",
+          "description": "Closed set of valid values. Use when the variable is constrained to a fixed vocabulary.",
+          "minItems": 2,
+          "uniqueItems": true
+        },
+        "format": {
+          "type": "string",
+          "description": "Well-known string format annotation.",
+          "enum": ["date", "date-time", "time", "email", "uri", "uuid", "ipv4", "ipv6"]
+        },
+        "required": {
+          "type": "array",
+          "description": "Mandatory property names for object variables.",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "properties": {
+          "type": "object",
+          "description": "Sub-property definitions for object variables. Every property must be fully typed and documented.",
+          "additionalProperties": { "$ref": "#/$defs/PropertyEntry" }
+        },
+        "items": {
+          "description": "Schema for the elements of an array variable. Either a full inline schema or a $ref.",
+          "oneOf": [
+            { "$ref": "#/$defs/PropertyEntry" },
+            {
+              "type": "object",
+              "required": ["$ref"],
+              "properties": { "$ref": { "type": "string" } },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "if": {
+        "properties": { "type": { "const": "object" } },
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["properties"]
+      },
+      "else": {
+        "if": {
+          "properties": { "type": { "const": "array" } },
+          "required": ["type"]
+        },
+        "then": {
+          "required": ["items"]
+        }
+      }
+    },
+    "PropertyEntry": {
+      "type": "object",
+      "description": "A named property within an object variable or $defs type. Must be fully typed and documented at every depth.",
+      "required": ["type", "description", "examples"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["string", "number", "integer", "boolean", "object", "array", "null"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 1
+        },
+        "enum": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true
+        },
+        "format": {
+          "type": "string",
+          "enum": ["date", "date-time", "time", "email", "uri", "uuid", "ipv4", "ipv6"]
+        },
+        "required": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "properties": {
+          "type": "object",
+          "description": "Nested sub-properties for object-typed properties. Recursively enforces the same shape.",
+          "additionalProperties": { "$ref": "#/$defs/PropertyEntry" }
+        },
+        "items": {
+          "description": "Schema for array-typed properties.",
+          "oneOf": [
+            { "$ref": "#/$defs/PropertyEntry" },
+            {
+              "type": "object",
+              "required": ["$ref"],
+              "properties": { "$ref": { "type": "string" } },
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "if": {
+        "properties": { "type": { "const": "object" } },
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["properties"]
+      },
+      "else": {
+        "if": {
+          "properties": { "type": { "const": "array" } },
+          "required": ["type"]
+        },
+        "then": {
+          "required": ["items"]
+        }
+      }
+    }
+  }
+}

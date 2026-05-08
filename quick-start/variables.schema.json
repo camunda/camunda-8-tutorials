@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/camunda/camunda-8-tutorials/main/schema/process-variables.meta-schema.json",
+  "title": "Camunda 8 Tutorials — Quick Start Process Variables",
+  "metadata": {
+    "convention": "camelCase",
+    "scope": "process",
+    "owner": "@HanselIdes"
+  },
+  "variables": {
+    "meal": {
+      "title": "Meal choice",
+      "type": "string",
+      "description": "The meal selected by the user on the human task form. Represents the output of the 'Decide what's for dinner' decision.",
+      "examples": ["pizza"]
+    }
+  }
+}
