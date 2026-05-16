@@ -21,7 +21,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <camunda.version>8.9.0-rc4</camunda.version>
+        <camunda.version>8.9.5</camunda.version>
     </properties>
 
     <repositories>
