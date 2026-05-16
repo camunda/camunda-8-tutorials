@@ -31,7 +31,7 @@
             artifactory. Update to a GA release (e.g. 8.9.1) once it ships to Maven Central.
             Check: https://search.maven.org/search?q=camunda-process-test-spring
         -->
-        <camunda.version>8.9.0-rc4</camunda.version>
+        <camunda.version>8.9.5</camunda.version>
     </properties>
 
     <repositories>
