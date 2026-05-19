@@ -4,6 +4,16 @@ This example demonstrates how to deploy and run an AI-driven chat process in Cam
 
 ---
 
+## 🚀 Zero-config LLM on Camunda SaaS
+
+**Running on Camunda SaaS?** You don't need to bring your own LLM. Camunda provides a managed LLM that works **out of the box** — no API keys, no cloud accounts, no setup. Just deploy and run.
+
+👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
+
+Simply select **Camunda** as the AI provider in the Agentic AI connector configuration and you're ready to go. It's that easy.
+
+---
+
 ## Prerequisites
 
 - **Camunda 8.8+** (SaaS or Self-Managed)
@@ -15,7 +25,9 @@ This example demonstrates how to deploy and run an AI-driven chat process in Cam
 
 ## Secrets & Configuration
 
-This example requires AWS Bedrock access. You need to set up the following credentials. Create the following secrets in your Camunda cluster:
+This example is pre-configured to use AWS Bedrock. If you are on **Camunda SaaS**, skip this section and use the [Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/) instead — no credentials required.
+
+Otherwise, set up the following secrets in your Camunda cluster for AWS Bedrock access:
 
 | Secret Name                  | Purpose                        |
 |------------------------------|--------------------------------|

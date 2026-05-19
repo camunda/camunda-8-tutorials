@@ -9,6 +9,16 @@ integrating with the [MCP Client](https://docs.camunda.io/docs/components/early-
 
 ---
 
+## 🚀 Camunda-provided LLM — zero config on SaaS
+
+The **MCP client configuration** in this blueprint requires a self-managed or hybrid setup, but the AI model itself doesn't have to be self-hosted. When running in [hybrid mode](https://docs.camunda.io/docs/components/connectors/use-connectors-in-hybrid-mode/) alongside Camunda SaaS, you can use the **Camunda-provided LLM** for the Agentic AI connector — no external LLM credentials needed.
+
+👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
+
+Simply select **Camunda** as the AI provider in the Agentic AI connector — the LLM is fully managed and works out of the box.
+
+---
+
 ## Prerequisites
 
 - **Camunda 8.8** (Self-Managed)

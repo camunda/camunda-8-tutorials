@@ -10,6 +10,16 @@ A ready-to-import solution that demonstrates an AI-driven email conversation loo
 
 ---
 
+## 🚀 Zero-config LLM on Camunda SaaS
+
+**Running on Camunda SaaS?** You don't need to bring your own LLM — Camunda provides one for you. The Camunda-provided LLM works **out of the box** with no external API keys, no AWS account, and no configuration overhead. Get your AI blueprint running in minutes.
+
+👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
+
+> **Note:** Long-term memory still requires an AWS OpenSearch vector index (see prerequisites). However, the AI model itself is fully managed by Camunda on SaaS — just select **Camunda** as the AI provider in the Agentic AI connector.
+
+---
+
 ## 1 · one-click import  🡒  **Web Modeler link**
 
 Visit the [Camunda Marketplace](https://marketplace.camunda.com/en-US/apps/522492/ai-email-support-agent) and click the SaaS button.
