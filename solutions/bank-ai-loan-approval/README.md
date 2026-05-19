@@ -12,7 +12,7 @@ A ready-to-import solution that demonstrates an AI-driven email conversation loo
 
 ## 🚀 Zero-config LLM on Camunda SaaS
 
-**Running on Camunda SaaS?** You don't need to bring your own LLM — Camunda provides one for you. The Camunda-provided LLM works **out of the box** with no external API keys, no AWS account, and no configuration overhead. Get your AI blueprint running in minutes.
+**Running on Camunda SaaS?** You don't need to bring your own LLM — Camunda provides one for you. This blueprint is pre-configured to use the **Camunda-provided LLM**. The required secrets (`CAMUNDA_PROVIDED_LLM_API_ENDPOINT` and `CAMUNDA_PROVIDED_LLM_API_KEY`) are automatically available on Camunda SaaS — no external API keys, no AWS account, and no configuration overhead. Get your AI blueprint running in minutes.
 
 👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
 

@@ -11,11 +11,9 @@ integrating with the [MCP Client](https://docs.camunda.io/docs/components/early-
 
 ## 🚀 Camunda-provided LLM — zero config on SaaS
 
-The **MCP client configuration** in this blueprint requires a self-managed or hybrid setup, but the AI model itself doesn't have to be self-hosted. When running in [hybrid mode](https://docs.camunda.io/docs/components/connectors/use-connectors-in-hybrid-mode/) alongside Camunda SaaS, you can use the **Camunda-provided LLM** for the Agentic AI connector — no external LLM credentials needed.
+The **MCP client configuration** in this blueprint requires a self-managed or hybrid setup, but the AI model itself doesn't have to be self-hosted. This blueprint is pre-configured to use the **Camunda-provided LLM** via the `openaiCompatible` provider. When running in [hybrid mode](https://docs.camunda.io/docs/components/connectors/use-connectors-in-hybrid-mode/) alongside Camunda SaaS, the required secrets (`CAMUNDA_PROVIDED_LLM_API_ENDPOINT` and `CAMUNDA_PROVIDED_LLM_API_KEY`) are automatically available — no external LLM credentials needed.
 
 👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
-
-Simply select **Camunda** as the AI provider in the Agentic AI connector — the LLM is fully managed and works out of the box.
 
 ---
 
@@ -29,7 +27,9 @@ Simply select **Camunda** as the AI provider in the Agentic AI connector — the
 
 ## Secrets
 
-This example requires AWS Bedrock access. You need to set up the following credentials. Create the following secrets in your Camunda cluster:
+This example is pre-configured to use the **Camunda-provided LLM** via the `CAMUNDA_PROVIDED_LLM_API_ENDPOINT` and `CAMUNDA_PROVIDED_LLM_API_KEY` secrets. When running in hybrid mode with a Camunda SaaS cluster, these secrets are automatically available.
+
+If you want to use a different LLM provider (e.g. AWS Bedrock), update the Agentic AI connector configuration and create the corresponding secrets:
 
 | Secret Name              | Purpose                |
 |--------------------------|------------------------|

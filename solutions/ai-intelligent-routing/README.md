@@ -13,8 +13,8 @@ This process blueprint exemplifies the use of AI to intelligently route customer
 
 ## 🚀 Zero-config LLM on Camunda SaaS
 
-**Running on Camunda SaaS?** Skip the hassle of setting up an external AI provider. Camunda provides a managed LLM that works **out of the box** — no API keys, no third-party accounts, no configuration required. Just deploy your process and start routing intelligently from day one.
+**Running on Camunda SaaS?** Skip the hassle of setting up an external AI provider. This blueprint is pre-configured to use the **Camunda-provided LLM** — a fully managed model that works out of the box. The required secrets (`CAMUNDA_PROVIDED_LLM_API_ENDPOINT` and `CAMUNDA_PROVIDED_LLM_API_KEY`) are automatically available on Camunda SaaS — no external API keys, no third-party accounts, no configuration required.
 
 👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
 
-Simply select **Camunda** as the AI provider in the Agentic AI connector configuration. That's it — your intelligent routing process is live on SaaS in minutes.
+Just deploy your process to your SaaS cluster and start routing intelligently from day one.
