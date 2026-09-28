@@ -78,6 +78,8 @@ The same Maven run also executes five managed-runtime integration tests:
 - one live test for each of the four public HTTP connectors;
 - one E2E process test that completes both the joke and recipe tools in a single agent turn.
 
+Each connector test starts directly at its tool inside the agent subprocess, terminates immediately after that tool, and asserts that no other tool or user-feedback task was activated. The E2E agent segment starts immediately before the agent and terminates immediately after it, before user feedback.
+
 The integration tests derive their deployed model from the production BPMN and replace only the agent worker, so the real HTTP connectors run while CI avoids paid, nondeterministic LLM calls. Live model-driven tool selection remains covered by the importable Test Studio suite.
 
 ```bash
