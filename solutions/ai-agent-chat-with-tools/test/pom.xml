@@ -16,9 +16,9 @@
     <packaging>jar</packaging>
     <name>AI Agent Chat With Tools — Process Tests</name>
     <description>
-        Deterministic CPT harness for the ai-agent-chat-with-tools process.
-        The AI agent and connector jobs are controlled by JSON instructions so the
-        full modeled flow can run in CI without credentials or external services.
+        CPT harness for deterministic process coverage plus credential-free live
+        HTTP connector and end-to-end integration tests. Agent jobs are controlled
+        so CI does not make paid LLM calls.
     </description>
 
     <properties>
@@ -81,6 +81,7 @@
                 <version>3.2.5</version>
                 <!-- Default: run process tests, exclude integration tests -->
                 <configuration>
+                    <runOrder>alphabetical</runOrder>
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>

@@ -69,9 +69,16 @@ Agent responses and tool ordering are nondeterministic. Tests assert modeled pat
 
 Live execution depends on the SaaS prerequisites and public services above, so it is intentionally not part of CI.
 
-### Deterministic CPT coverage
+### CPT process and connector coverage
 
 `test/src/test/resources/test-cases/ai-agent-chat-with-tools.test.json` controls agent and connector jobs to cover every reachable BPMN element and sequence flow, including the feedback loop and all four tools.
+
+The same Maven run also executes five managed-runtime integration tests:
+
+- one live test for each of the four public HTTP connectors;
+- one E2E process test that completes both the joke and recipe tools in a single agent turn.
+
+The integration tests derive their deployed model from the production BPMN and replace only the agent worker, so the real HTTP connectors run while CI avoids paid, nondeterministic LLM calls. Live model-driven tool selection remains covered by the importable Test Studio suite.
 
 ```bash
 cd test
