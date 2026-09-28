@@ -1,0 +1,121 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "ai-agent-chat-with-tools",
+  "testCases": [
+    {
+      "name": "Live E2E - agent uses joke and recipe tools",
+      "description": "Runs on Camunda 8.10 SaaS with the Camunda-provided LLM and keyless public HTTP APIs. Verifies that a multi-part request reaches both expected tools without asserting tool order or response wording.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Tell me a safe joke and find a pasta recipe.",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Jokes_API"
+            },
+            {
+              "elementId": "Search_Recipe"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Live segment - list users tool",
+      "description": "Starts immediately before the agent and terminates after the expected keyless tool completes, minimizing model calls and connector cost.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List all available users.",
+            "inputDocuments": []
+          },
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "ListUsers"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ListUsers"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Live segment - tech products tool",
+      "description": "Starts immediately before the agent and terminates after the expected keyless tool completes, minimizing model calls and connector cost.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Which sample technology products are available?",
+            "inputDocuments": []
+          },
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "Activity_0x3prgn"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0x3prgn"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ]
+}

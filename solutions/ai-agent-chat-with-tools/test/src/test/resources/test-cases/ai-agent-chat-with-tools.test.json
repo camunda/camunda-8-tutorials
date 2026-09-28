@@ -1,5 +1,6 @@
 {
-  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "ai-agent-chat-with-tools",
   "testCases": [
     {
       "name": "Happy path — user satisfied on first response (no tool calls)",
@@ -17,7 +18,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -103,7 +104,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -155,7 +156,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -228,7 +229,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -284,7 +285,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -365,7 +366,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -427,7 +428,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -508,7 +509,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -560,7 +561,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -641,7 +642,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -696,7 +697,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -762,5 +763,5 @@
       ]
     }
   ],
-  "_integrationTestNotes": "Process tests mock the AHSP by simulating agent behavior. Tool tests use activateElements to activate individual tool tasks and COMPLETE_JOB to mock their output. Available tools: ListUsers, Search_Recipe, Jokes_API, Activity_0x3prgn (Get list of Tech Stuff). Run integration tests with: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test (requires AWS Bedrock credentials in ../.env)."
+  "_testNotes": "Deterministic CPT tests control the AHSP and connector jobs. The importable live Test Studio scenarios are in ../../../../ai-agent-chat-with-tools.test.json and exercise all four tools on Camunda 8.10 SaaS."
 }

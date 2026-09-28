@@ -12,9 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 /**
  * Runs JSON process tests from src/test/resources/test-cases/ against an embedded Zeebe engine.
  *
- * The AI agent job (io.camunda.agenticai:aiagent-job-worker:1) is mocked in each test case
- * using realistic output captured from AgentJavaIT integration runs. This lets the outer
- * process flow be tested deterministically without any API calls or running the real agent.
+ * The AI agent job (io.camunda.agenticai:aiagent:subprocess:2) is mocked in each test case
+ * with controlled output. Tool jobs are controlled in the same way so the
+ * complete modeled flow is tested deterministically without credentials or external services.
  *
  * Run with: mvn test   (Docker must be running)
  */

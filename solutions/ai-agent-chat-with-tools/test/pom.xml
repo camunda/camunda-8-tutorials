@@ -16,17 +16,9 @@
     <packaging>jar</packaging>
     <name>AI Agent Chat With Tools — Process Tests</name>
     <description>
-        CPT test harness for the ai-agent-chat-with-tools Node.js process.
-
-        Two test layers:
-          mvn test                          Process tests (embedded Zeebe via Docker).
-                                            AI agent job mocked with realistic output
-                                            captured from integration run.
-
-          mvn test -P integration-test      Integration tests (embedded Zeebe + embedded
-                                            connector runtime including agenticai + HTTP).
-                                            Requires: Docker, AWS Bedrock env vars.
-                                            Run: env $(cat ../.env | grep -v '^#' | xargs) mvn test -P integration-test
+        Deterministic CPT harness for the ai-agent-chat-with-tools process.
+        The AI agent and connector jobs are controlled by JSON instructions so the
+        full modeled flow can run in CI without credentials or external services.
     </description>
 
     <properties>
@@ -34,7 +26,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <camunda.version>8.9.8</camunda.version>
+        <camunda.version>8.10.0-rc2</camunda.version>
     </properties>
 
 
@@ -97,37 +89,4 @@
         </plugins>
     </build>
 
-    <profiles>
-        <!--
-            Integration-test profile: runs *IT.java tests with the connector runtime enabled.
-            Activates the "integration" Spring profile which sets runtime-mode=managed and
-            connectors-enabled=true. Process tests (*Test.java) are excluded.
-
-            Requires: Docker running, AWS_BEDROCK_ACCESS_KEY and AWS_BEDROCK_SECRET_KEY env vars.
-            Run: env $(cat ../.env | grep -v '^#' | xargs) mvn test -P integration-test
-        -->
-        <profile>
-            <id>integration-test</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <!-- Flip: run only IT tests, exclude process tests -->
-                            <excludes>
-                                <exclude>**/JsonProcessTest.java</exclude>
-                            </excludes>
-                            <includes>
-                                <include>**/*IT.java</include>
-                            </includes>
-                            <systemPropertyVariables>
-                                <spring.profiles.active>integration</spring.profiles.active>
-                            </systemPropertyVariables>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
