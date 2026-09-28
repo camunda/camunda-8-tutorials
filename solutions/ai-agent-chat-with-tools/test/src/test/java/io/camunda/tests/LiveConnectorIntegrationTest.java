@@ -156,6 +156,76 @@ class LiveConnectorIntegrationTest {
             byId(RECIPE_ID), byId(JOKES_ID), byId(FEEDBACK_ID));
   }
 
+  @Test
+  @Timeout(180)
+  @DisplayName("E2E topology - user rejects then approves (mocked agent, live connectors)")
+  void completesFeedbackLoopWithLiveConnectors() {
+    final ProcessInstanceEvent instance =
+        client
+            .newCreateInstanceCommand()
+            .bpmnProcessId(PROCESS_ID)
+            .latestVersion()
+            .variables(
+                Map.of(
+                    "inputText",
+                    "List the available users.",
+                    "inputDocuments",
+                    new Object[0]))
+            .send()
+            .join();
+
+    completeAgent(
+        result ->
+            result
+                .activateElement(LIST_USERS_ID)
+                .variables(toolCall("list-users-feedback", LIST_USERS_ID, Map.of())));
+
+    assertThatProcessInstance(instance)
+        .hasCompletedElements(byId(LIST_USERS_ID))
+        .hasVariableSatisfiesExpression("toolCallResult", USER_FIXTURE);
+
+    completeAgentResponse();
+    assertThatProcessInstance(instance).hasActiveElements(byId(FEEDBACK_ID));
+
+    processTestContext.completeUserTask(
+        FEEDBACK_ID,
+        Map.of(
+            "userSatisfied",
+            false,
+            "followUpInput",
+            "That is helpful, but please also tell me which sample technology products are available.",
+            "followUpDocuments",
+            new Object[0]));
+
+    completeAgent(
+        result ->
+            result
+                .activateElement(TECHNOLOGY_PRODUCTS_ID)
+                .variables(
+                    toolCall(
+                        "technology-products-feedback",
+                        TECHNOLOGY_PRODUCTS_ID,
+                        Map.of())));
+
+    assertThatProcessInstance(instance)
+        .hasCompletedElements(byId(TECHNOLOGY_PRODUCTS_ID))
+        .hasVariableSatisfiesExpression(
+            "toolCallResult", TECHNOLOGY_FIXTURE);
+
+    completeAgentResponse();
+    assertThatProcessInstance(instance).hasActiveElements(byId(FEEDBACK_ID));
+
+    processTestContext.completeUserTask(
+        FEEDBACK_ID, Map.of("userSatisfied", true));
+
+    assertThatProcessInstance(instance)
+        .isCompleted()
+        .hasCompletedElement(byId(AGENT_ID), 2)
+        .hasCompletedElement(byId(FEEDBACK_ID), 2)
+        .hasCompletedElements(byId(LIST_USERS_ID), byId(TECHNOLOGY_PRODUCTS_ID))
+        .hasNotActivatedElements(byId(RECIPE_ID), byId(JOKES_ID));
+  }
+
   private void runSingleToolSegment(
       final String toolId,
       final Map<String, Object> toolVariables,
