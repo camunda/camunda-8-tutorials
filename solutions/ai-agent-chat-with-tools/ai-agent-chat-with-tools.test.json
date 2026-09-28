@@ -67,6 +67,72 @@
           "satisfiesExpression": "count(toolCallResults) >= 2 and (every result in toolCallResults satisfies result.name in [\"Jokes_API\", \"Search_Recipe\"]) and (some result in toolCallResults satisfies result.name = \"Jokes_API\" and result.content != null and string length(result.content) > 0) and (some result in toolCallResults satisfies result.name = \"Search_Recipe\" and result.content != null and count(result.content) > 0)"
         }
       ]
+    },
+    {
+      "name": "Live E2E - agent uses users and technology tools",
+      "description": "Runs the real agent, Camunda-provided LLM, and public HTTP APIs. Verifies that a multi-part request reaches the users and technology tools and receives non-empty live payloads without asserting order or response wording.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List the available users and tell me which sample technology products are available.",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ListUsers"
+            },
+            {
+              "elementId": "Activity_0x3prgn"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Search_Recipe"
+            },
+            {
+              "elementId": "Jokes_API"
+            },
+            {
+              "elementId": "User_Feedback"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "ASSERT_VARIABLE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          },
+          "variableName": "toolCallResults",
+          "satisfiesExpression": "count(toolCallResults) >= 2 and (every result in toolCallResults satisfies result.name in [\"ListUsers\", \"Activity_0x3prgn\"]) and (some result in toolCallResults satisfies result.name = \"ListUsers\" and result.content != null and count(result.content) > 0 and result.content[1].name != null and string length(result.content[1].name) > 0) and (some result in toolCallResults satisfies result.name = \"Activity_0x3prgn\" and result.content != null and result.content.status = 200 and count(result.content.body) > 0 and result.content.body[1].name != null and string length(result.content.body[1].name) > 0)"
+        }
+      ]
     }
   ]
 }
