@@ -81,7 +81,7 @@ The deterministic CPT suite changes the agent and HTTP connector job types only 
 
 ### Importable live E2E suite
 
-`ai-agent-chat-with-tools.test.json` contains two real model-driven E2E scenarios. They:
+`ai-agent-chat-with-tools.test.json` contains three real model-driven E2E scenarios. They:
 
 - use the Camunda-provided LLM to select joke plus recipe, and users plus technology products;
 - call all four real public APIs across the two scenarios;
@@ -89,6 +89,8 @@ The deterministic CPT suite changes the agent and HTTP connector job types only 
 - assert the stable user, recipe, and technology-product fixture IDs and names;
 - assert the random joke by type and non-empty shape rather than exact content;
 - reject unexpected tool results without asserting tool order or generated response wording.
+
+The full-process scenario starts with a users request, rejects the first response with a technology-products follow-up, waits for a second agent response, approves it, and asserts that the process ends after exactly two agent and user-feedback passes.
 
 Live execution depends on the SaaS prerequisites and public services above, so it is intentionally not part of CI.
 

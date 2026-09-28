@@ -133,6 +133,144 @@
           "satisfiesExpression": "count(toolCallResults) >= 2 and (every result in toolCallResults satisfies result.name in [\"ListUsers\", \"Activity_0x3prgn\"]) and (some result in toolCallResults satisfies result.name = \"ListUsers\" and result.content != null and (some user in result.content satisfies user.id = 1 and user.name = \"Leanne Graham\" and user.username = \"Bret\")) and (some result in toolCallResults satisfies result.name = \"Activity_0x3prgn\" and result.content != null and result.content.status = 200 and (some product in result.content.body satisfies product.id = \"1\" and product.name = \"Google Pixel 6 Pro\"))"
         }
       ]
+    },
+    {
+      "name": "Live E2E - user rejects then approves",
+      "description": "Runs the complete process with the real agent and connectors. The user rejects a users response, asks for technology products, then approves the second response and reaches the end event.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List the available users.",
+            "inputDocuments": []
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "ListUsers"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "User_Feedback"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Search_Recipe"
+            },
+            {
+              "elementId": "Jokes_API"
+            },
+            {
+              "elementId": "Activity_0x3prgn"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": false,
+            "followUpInput": "That is helpful, but please also tell me which sample technology products are available.",
+            "followUpDocuments": []
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "Activity_0x3prgn"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "User_Feedback"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "User_Feedback"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          },
+          "state": "IS_COMPLETED",
+          "amount": 2
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "User_Feedback"
+          },
+          "state": "IS_COMPLETED",
+          "amount": 2
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Search_Recipe"
+            },
+            {
+              "elementId": "Jokes_API"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
     }
   ]
 }
