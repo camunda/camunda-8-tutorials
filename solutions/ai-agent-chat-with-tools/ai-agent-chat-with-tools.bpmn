@@ -210,17 +210,17 @@
         <dc:Bounds x="419" y="220" width="311" height="300" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0kkpyxf_di" bpmnElement="ListUsers" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+      <bpmndi:BPMNShape id="Activity_0kkpyxf_di" bpmnElement="ListUsers">
         <dc:Bounds x="449" y="290" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0d8luif_di" bpmnElement="Search_Recipe" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+      <bpmndi:BPMNShape id="Activity_0d8luif_di" bpmnElement="Search_Recipe">
         <dc:Bounds x="449" y="390" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1l8tp85_di" bpmnElement="Jokes_API" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+      <bpmndi:BPMNShape id="Activity_1l8tp85_di" bpmnElement="Jokes_API">
         <dc:Bounds x="590" y="290" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0hxolnr_di" bpmnElement="Activity_0x3prgn" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+      <bpmndi:BPMNShape id="Activity_0hxolnr_di" bpmnElement="Activity_0x3prgn">
         <dc:Bounds x="590" y="390" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
