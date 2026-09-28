@@ -4,7 +4,7 @@
   "testCases": [
     {
       "name": "Live E2E - agent uses joke and recipe tools",
-      "description": "Runs the real agent, Camunda-provided LLM, and public HTTP APIs. Verifies that a multi-part request reaches both expected tools and receives non-empty live payloads without asserting order or response wording.",
+      "description": "Runs the real agent, Camunda-provided LLM, and public HTTP APIs. Verifies that a multi-part request reaches both expected tools, receives a text joke, and returns the stable pasta recipe record without asserting order or response wording.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -64,13 +64,13 @@
             "elementId": "AI_Agent"
           },
           "variableName": "toolCallResults",
-          "satisfiesExpression": "count(toolCallResults) >= 2 and (every result in toolCallResults satisfies result.name in [\"Jokes_API\", \"Search_Recipe\"]) and (some result in toolCallResults satisfies result.name = \"Jokes_API\" and result.content != null and string length(result.content) > 0) and (some result in toolCallResults satisfies result.name = \"Search_Recipe\" and result.content != null and count(result.content) > 0)"
+          "satisfiesExpression": "count(toolCallResults) >= 2 and (every result in toolCallResults satisfies result.name in [\"Jokes_API\", \"Search_Recipe\"]) and (some result in toolCallResults satisfies result.name = \"Jokes_API\" and result.content instance of string and string length(result.content) > 0) and (some result in toolCallResults satisfies result.name = \"Search_Recipe\" and result.content != null and (some recipe in result.content satisfies recipe.id = 4 and recipe.name = \"Chicken Alfredo Pasta\"))"
         }
       ]
     },
     {
       "name": "Live E2E - agent uses users and technology tools",
-      "description": "Runs the real agent, Camunda-provided LLM, and public HTTP APIs. Verifies that a multi-part request reaches the users and technology tools and receives non-empty live payloads without asserting order or response wording.",
+      "description": "Runs the real agent, Camunda-provided LLM, and public HTTP APIs. In one agent segment, verifies both expected tool selections and the stable user and technology-product records without asserting order or response wording.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -130,7 +130,7 @@
             "elementId": "AI_Agent"
           },
           "variableName": "toolCallResults",
-          "satisfiesExpression": "count(toolCallResults) >= 2 and (every result in toolCallResults satisfies result.name in [\"ListUsers\", \"Activity_0x3prgn\"]) and (some result in toolCallResults satisfies result.name = \"ListUsers\" and result.content != null and count(result.content) > 0 and result.content[1].name != null and string length(result.content[1].name) > 0) and (some result in toolCallResults satisfies result.name = \"Activity_0x3prgn\" and result.content != null and result.content.status = 200 and count(result.content.body) > 0 and result.content.body[1].name != null and string length(result.content.body[1].name) > 0)"
+          "satisfiesExpression": "count(toolCallResults) >= 2 and (every result in toolCallResults satisfies result.name in [\"ListUsers\", \"Activity_0x3prgn\"]) and (some result in toolCallResults satisfies result.name = \"ListUsers\" and result.content != null and (some user in result.content satisfies user.id = 1 and user.name = \"Leanne Graham\" and user.username = \"Bret\")) and (some result in toolCallResults satisfies result.name = \"Activity_0x3prgn\" and result.content != null and result.content.status = 200 and (some product in result.content.body satisfies product.id = \"1\" and product.name = \"Google Pixel 6 Pro\"))"
         }
       ]
     }

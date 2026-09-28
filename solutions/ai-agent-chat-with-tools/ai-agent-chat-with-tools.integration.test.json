@@ -68,7 +68,7 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variableName": "toolCallResult",
-          "satisfiesExpression": "toolCallResult != null and toolCallResult.status = 200 and count(toolCallResult.body) > 0 and toolCallResult.body[1].name != null and string length(toolCallResult.body[1].name) > 0"
+          "satisfiesExpression": "toolCallResult != null and count(toolCallResult) > 0 and (some user in toolCallResult satisfies user.id = 1 and user.name = \"Leanne Graham\" and user.username = \"Bret\")"
         }
       ]
     },
@@ -139,7 +139,7 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variableName": "toolCallResult",
-          "satisfiesExpression": "toolCallResult != null and count(toolCallResult) > 0 and toolCallResult[1].name != null and string length(toolCallResult[1].name) > 0"
+          "satisfiesExpression": "toolCallResult != null and count(toolCallResult) > 0 and (some recipe in toolCallResult satisfies recipe.id = 4 and recipe.name = \"Chicken Alfredo Pasta\")"
         }
       ]
     },
@@ -209,7 +209,7 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variableName": "toolCallResult",
-          "satisfiesExpression": "toolCallResult != null and string length(toolCallResult) > 0"
+          "satisfiesExpression": "toolCallResult instance of string and string length(toolCallResult) > 0"
         }
       ]
     },
@@ -279,7 +279,7 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variableName": "toolCallResult",
-          "satisfiesExpression": "toolCallResult != null and count(toolCallResult) > 0 and toolCallResult[1].name != null and string length(toolCallResult[1].name) > 0"
+          "satisfiesExpression": "toolCallResult != null and toolCallResult.status = 200 and count(toolCallResult.body) > 0 and (some product in toolCallResult.body satisfies product.id = \"1\" and product.name = \"Google Pixel 6 Pro\")"
         }
       ]
     }

@@ -36,29 +36,43 @@ class LiveConnectorIntegrationTest {
   private static final String RECIPE_ID = "Search_Recipe";
   private static final String JOKES_ID = "Jokes_API";
   private static final String TECHNOLOGY_PRODUCTS_ID = "Activity_0x3prgn";
-  private static final String NON_EMPTY_LIST_WITH_NAME =
+  private static final String USER_FIXTURE =
       "toolCallResult != null and count(toolCallResult) > 0"
-          + " and toolCallResult[1].name != null"
-          + " and string length(toolCallResult[1].name) > 0";
+          + " and (some user in toolCallResult satisfies"
+          + " user.id = 1"
+          + " and user.name = \"Leanne Graham\""
+          + " and user.username = \"Bret\")";
+  private static final String RECIPE_FIXTURE =
+      "toolCallResult != null and count(toolCallResult) > 0"
+          + " and (some recipe in toolCallResult satisfies"
+          + " recipe.id = 4"
+          + " and recipe.name = \"Chicken Alfredo Pasta\")";
   private static final String NON_EMPTY_TEXT =
-      "toolCallResult != null and string length(toolCallResult) > 0";
-  private static final String NON_EMPTY_HTTP_RESPONSE_WITH_NAMED_BODY_ITEM =
+      "toolCallResult instance of string and string length(toolCallResult) > 0";
+  private static final String TECHNOLOGY_FIXTURE =
       "toolCallResult != null and toolCallResult.status = 200"
           + " and count(toolCallResult.body) > 0"
-          + " and toolCallResult.body[1].name != null"
-          + " and string length(toolCallResult.body[1].name) > 0";
-  private static final String JOKE_AND_RECIPE_PAYLOADS =
+          + " and (some product in toolCallResult.body satisfies"
+          + " product.id = \"1\""
+          + " and product.name = \"Google Pixel 6 Pro\")";
+  private static final String USER_AND_TECHNOLOGY_PAYLOADS =
       "count(toolCallResults) >= 2"
           + " and (every result in toolCallResults satisfies"
-          + " result.name in [\"Jokes_API\", \"Search_Recipe\"])"
+          + " result.name in [\"ListUsers\", \"Activity_0x3prgn\"])"
           + " and (some result in toolCallResults satisfies"
-          + " result.name = \"Jokes_API\""
+          + " result.name = \"ListUsers\""
           + " and result.content != null"
-          + " and string length(result.content) > 0)"
+          + " and (some user in result.content satisfies"
+          + " user.id = 1"
+          + " and user.name = \"Leanne Graham\""
+          + " and user.username = \"Bret\"))"
           + " and (some result in toolCallResults satisfies"
-          + " result.name = \"Search_Recipe\""
+          + " result.name = \"Activity_0x3prgn\""
           + " and result.content != null"
-          + " and count(result.content) > 0)";
+          + " and result.content.status = 200"
+          + " and (some product in result.content.body satisfies"
+          + " product.id = \"1\""
+          + " and product.name = \"Google Pixel 6 Pro\"))";
   @Autowired private CamundaClient client;
   @Autowired private CamundaProcessTestContext processTestContext;
 
@@ -74,7 +88,7 @@ class LiveConnectorIntegrationTest {
     runSingleToolSegment(
         LIST_USERS_ID,
         toolCall("list-users", LIST_USERS_ID, Map.of()),
-        NON_EMPTY_LIST_WITH_NAME);
+        USER_FIXTURE);
   }
 
   @Test
@@ -84,7 +98,7 @@ class LiveConnectorIntegrationTest {
     runSingleToolSegment(
         RECIPE_ID,
         toolCall("search-recipe", RECIPE_ID, Map.of("searchQuery", "pasta")),
-        NON_EMPTY_LIST_WITH_NAME);
+        RECIPE_FIXTURE);
   }
 
   @Test
@@ -104,40 +118,42 @@ class LiveConnectorIntegrationTest {
     runSingleToolSegment(
         TECHNOLOGY_PRODUCTS_ID,
         toolCall("technology-products", TECHNOLOGY_PRODUCTS_ID, Map.of()),
-        NON_EMPTY_HTTP_RESPONSE_WITH_NAMED_BODY_ITEM);
+        TECHNOLOGY_FIXTURE);
   }
 
   @Test
   @Timeout(180)
-  @DisplayName("Connector integration - joke and recipe payloads in one agent segment")
+  @DisplayName("Connector integration - user and technology payloads in one agent segment")
   void completesMultiToolConnectorPath() {
     final ProcessInstanceEvent instance =
-        startAgentSegment("Tell me a safe joke and find a pasta recipe.");
+        startAgentSegment(
+            "List the available users and tell me which sample technology products are available.");
 
     completeAgent(
         result ->
             result
-                .activateElement(JOKES_ID)
-                .variables(toolCall("jokes-api", JOKES_ID, Map.of()))
-                .activateElement(RECIPE_ID)
+                .activateElement(LIST_USERS_ID)
+                .variables(toolCall("list-users", LIST_USERS_ID, Map.of()))
+                .activateElement(TECHNOLOGY_PRODUCTS_ID)
                 .variables(
                     toolCall(
-                        "search-recipe",
-                        RECIPE_ID,
-                        Map.of("searchQuery", "pasta"))));
+                        "technology-products",
+                        TECHNOLOGY_PRODUCTS_ID,
+                        Map.of())));
 
     assertThatProcessInstance(instance)
-        .hasCompletedElements(byId(JOKES_ID), byId(RECIPE_ID))
+        .hasCompletedElements(byId(LIST_USERS_ID), byId(TECHNOLOGY_PRODUCTS_ID))
         .hasLocalVariableSatisfiesExpression(
             byId(AGENT_ID),
             "toolCallResults",
-            JOKE_AND_RECIPE_PAYLOADS);
+            USER_AND_TECHNOLOGY_PAYLOADS);
 
     completeAgentResponse();
 
     assertThatProcessInstance(instance)
         .isTerminated()
-        .hasNotActivatedElements(byId(FEEDBACK_ID));
+        .hasNotActivatedElements(
+            byId(RECIPE_ID), byId(JOKES_ID), byId(FEEDBACK_ID));
   }
 
   private void runSingleToolSegment(

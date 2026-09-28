@@ -86,7 +86,8 @@ The deterministic CPT suite changes the agent and HTTP connector job types only 
 - use the Camunda-provided LLM to select joke plus recipe, and users plus technology products;
 - call all four real public APIs across the two scenarios;
 - assert that both expected tools complete in each scenario;
-- assert that every live payload is non-empty and contains a representative field;
+- assert the stable user, recipe, and technology-product fixture IDs and names;
+- assert the random joke by type and non-empty shape rather than exact content;
 - reject unexpected tool results without asserting tool order or generated response wording.
 
 Live execution depends on the SaaS prerequisites and public services above, so it is intentionally not part of CI.
