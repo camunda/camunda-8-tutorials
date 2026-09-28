@@ -90,9 +90,9 @@ The deterministic CPT suite changes the agent and HTTP connector job types only 
 - assert the random joke by type and non-empty shape rather than exact content;
 - reject unexpected tool results without asserting tool order or generated response wording.
 
-The full-process scenario starts with a users request, rejects the first response with a technology-products follow-up, waits for a second agent response, approves it, and asserts that the process ends after exactly two agent and user-feedback passes.
+The full-process scenario requests a joke and recipe on the first turn, rejects that response with a users and technology-products follow-up, waits for both remaining tools on the second turn, approves it, and asserts that the process ends after exactly two agent and user-feedback passes.
 
-The managed integration suite contains the same full-process topology so it appears in the local CPT report. That local test uses live users and technology connectors with exact fixture assertions, but mocks the agent's two tool-selection decisions. The importable Test Studio scenario is the real-LLM counterpart.
+The managed integration suite contains the same all-four-tool topology so it appears in the local CPT report. That local test uses all four live connectors, but mocks the agent's two tool-selection decisions. The importable Test Studio scenario is the real-LLM counterpart.
 
 Live execution depends on the SaaS prerequisites and public services above, so it is intentionally not part of CI.
 

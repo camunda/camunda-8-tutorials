@@ -136,7 +136,7 @@
     },
     {
       "name": "Live E2E - user rejects then approves",
-      "description": "Runs the complete process with the real agent and connectors. The user rejects a users response, asks for technology products, then approves the second response and reaches the end event.",
+      "description": "Runs the complete process with the real agent and connectors. The first turn calls joke and recipe, the user rejects with a users and technology follow-up, and the second turn calls both remaining tools before approval.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -144,19 +144,9 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variables": {
-            "inputText": "List the available users.",
+            "inputText": "Tell me a safe joke and find a pasta recipe.",
             "inputDocuments": []
           }
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "ListUsers"
-          },
-          "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",
@@ -175,10 +165,22 @@
           },
           "elementSelectors": [
             {
-              "elementId": "Search_Recipe"
+              "elementId": "Jokes_API"
             },
             {
-              "elementId": "Jokes_API"
+              "elementId": "Search_Recipe"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ListUsers"
             },
             {
               "elementId": "Activity_0x3prgn"
@@ -193,18 +195,23 @@
           },
           "variables": {
             "userSatisfied": false,
-            "followUpInput": "That is helpful, but please also tell me which sample technology products are available.",
+            "followUpInput": "That is helpful, but please also list the available users and tell me which sample technology products are available.",
             "followUpDocuments": []
           }
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCE",
+          "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
-          "elementSelector": {
-            "elementId": "Activity_0x3prgn"
-          },
+          "elementSelectors": [
+            {
+              "elementId": "ListUsers"
+            },
+            {
+              "elementId": "Activity_0x3prgn"
+            }
+          ],
           "state": "IS_COMPLETED"
         },
         {
@@ -247,21 +254,6 @@
           },
           "state": "IS_COMPLETED",
           "amount": 2
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelectors": [
-            {
-              "elementId": "Search_Recipe"
-            },
-            {
-              "elementId": "Jokes_API"
-            }
-          ],
-          "state": "IS_NOT_ACTIVATED"
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",

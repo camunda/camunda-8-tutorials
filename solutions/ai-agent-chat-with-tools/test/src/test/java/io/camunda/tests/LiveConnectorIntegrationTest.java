@@ -158,7 +158,7 @@ class LiveConnectorIntegrationTest {
 
   @Test
   @Timeout(180)
-  @DisplayName("E2E topology - user rejects then approves (mocked agent, live connectors)")
+  @DisplayName("E2E topology - all four tools across reject and approve")
   void completesFeedbackLoopWithLiveConnectors() {
     final ProcessInstanceEvent instance =
         client
@@ -168,7 +168,7 @@ class LiveConnectorIntegrationTest {
             .variables(
                 Map.of(
                     "inputText",
-                    "List the available users.",
+                    "Tell me a safe joke and find a pasta recipe.",
                     "inputDocuments",
                     new Object[0]))
             .send()
@@ -177,12 +177,17 @@ class LiveConnectorIntegrationTest {
     completeAgent(
         result ->
             result
-                .activateElement(LIST_USERS_ID)
-                .variables(toolCall("list-users-feedback", LIST_USERS_ID, Map.of())));
+                .activateElement(JOKES_ID)
+                .variables(toolCall("jokes-feedback", JOKES_ID, Map.of()))
+                .activateElement(RECIPE_ID)
+                .variables(
+                    toolCall(
+                        "recipe-feedback",
+                        RECIPE_ID,
+                        Map.of("searchQuery", "pasta"))));
 
     assertThatProcessInstance(instance)
-        .hasCompletedElements(byId(LIST_USERS_ID))
-        .hasVariableSatisfiesExpression("toolCallResult", USER_FIXTURE);
+        .hasCompletedElements(byId(JOKES_ID), byId(RECIPE_ID));
 
     completeAgentResponse();
     assertThatProcessInstance(instance).hasActiveElements(byId(FEEDBACK_ID));
@@ -193,13 +198,15 @@ class LiveConnectorIntegrationTest {
             "userSatisfied",
             false,
             "followUpInput",
-            "That is helpful, but please also tell me which sample technology products are available.",
+            "That is helpful, but please also list the available users and tell me which sample technology products are available.",
             "followUpDocuments",
             new Object[0]));
 
     completeAgent(
         result ->
             result
+                .activateElement(LIST_USERS_ID)
+                .variables(toolCall("list-users-feedback", LIST_USERS_ID, Map.of()))
                 .activateElement(TECHNOLOGY_PRODUCTS_ID)
                 .variables(
                     toolCall(
@@ -208,9 +215,7 @@ class LiveConnectorIntegrationTest {
                         Map.of())));
 
     assertThatProcessInstance(instance)
-        .hasCompletedElements(byId(TECHNOLOGY_PRODUCTS_ID))
-        .hasVariableSatisfiesExpression(
-            "toolCallResult", TECHNOLOGY_FIXTURE);
+        .hasCompletedElements(byId(LIST_USERS_ID), byId(TECHNOLOGY_PRODUCTS_ID));
 
     completeAgentResponse();
     assertThatProcessInstance(instance).hasActiveElements(byId(FEEDBACK_ID));
@@ -222,8 +227,11 @@ class LiveConnectorIntegrationTest {
         .isCompleted()
         .hasCompletedElement(byId(AGENT_ID), 2)
         .hasCompletedElement(byId(FEEDBACK_ID), 2)
-        .hasCompletedElements(byId(LIST_USERS_ID), byId(TECHNOLOGY_PRODUCTS_ID))
-        .hasNotActivatedElements(byId(RECIPE_ID), byId(JOKES_ID));
+        .hasCompletedElements(
+            byId(JOKES_ID),
+            byId(RECIPE_ID),
+            byId(LIST_USERS_ID),
+            byId(TECHNOLOGY_PRODUCTS_ID));
   }
 
   private void runSingleToolSegment(
