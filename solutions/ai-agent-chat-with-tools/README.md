@@ -32,6 +32,7 @@ Self-Managed users must replace the Camunda-provided LLM configuration with a su
    - `ai-agent-chat-with-tools.bpmn`
    - `ai-agent-chat-initial-request.form`
    - `ai-agent-chat-user-feedback.form`
+   - `ai-agent-chat-with-tools.integration.test.json`
    - `ai-agent-chat-with-tools.test.json`
 2. Deploy the BPMN process and both forms to a Camunda 8.10 development cluster.
 3. Open `ai-agent-chat-with-tools.test.json` in Test Studio and run a scenario.
@@ -58,14 +59,35 @@ Agent responses and tool ordering are nondeterministic. Tests assert modeled pat
 
 ## Test assets
 
-### Live Test Studio scenarios
+### What is mocked
 
-`ai-agent-chat-with-tools.test.json` is the importable live suite. It:
+| Suite | Agent/LLM | HTTP connectors | Payload assertions | Test Studio import |
+|---|---|---|---|---|
+| Deterministic process tests | Mocked | Mocked | Fixed test data only | Compatible, but intended for automated CPT |
+| Live connector integration tests | Mocked or bypassed | **Real public APIs** | **Non-empty live payload and representative field** | Yes |
+| Live E2E test | **Real Camunda-provided LLM** | **Real public APIs** | **Non-empty joke and recipe payloads** | Yes |
 
-- contains one E2E agent run that must reach both the joke and recipe tools;
-- covers the list-users and technology-products tools with short segments;
-- exercises all four HTTP connectors against their real, keyless endpoints;
-- uses no Mailpit, WireMock, Testcontainers, local worker, or customer credential.
+The deterministic CPT suite changes the agent and HTTP connector job types only in its in-memory deployment. It never modifies the production BPMN. The integration deployment changes only the agent job type; it does not mock, stub, intercept, or replace HTTP. The Test Studio integration suite starts directly at each connector and therefore bypasses the agent without mocking it.
+
+### Importable live connector integration suite
+
+`ai-agent-chat-with-tools.integration.test.json` contains one isolated scenario per connector. Each scenario:
+
+- starts directly before the connector and terminates immediately after it;
+- calls the public endpoint configured in the production BPMN;
+- asserts connector completion and a non-empty `toolCallResult`;
+- checks a representative payload field such as a user, recipe, or product name;
+- uses no LLM, mock server, Mailpit, WireMock, Testcontainers, or local worker.
+
+### Importable live E2E suite
+
+`ai-agent-chat-with-tools.test.json` contains the real model-driven E2E scenario. It:
+
+- uses the Camunda-provided LLM to select both the joke and recipe tools;
+- calls both real public APIs;
+- asserts that both expected tools complete;
+- asserts that the joke text and recipe list are non-empty;
+- rejects unexpected tool results without asserting tool order or generated response wording.
 
 Live execution depends on the SaaS prerequisites and public services above, so it is intentionally not part of CI.
 
@@ -76,11 +98,11 @@ Live execution depends on the SaaS prerequisites and public services above, so i
 The same Maven run also executes five managed-runtime integration tests:
 
 - one live test for each of the four public HTTP connectors;
-- one E2E process test that completes both the joke and recipe tools in a single agent turn.
+- one multi-connector integration test that completes both the joke and recipe tools in a single mocked-agent segment.
 
-Each connector test starts directly at its tool inside the agent subprocess, terminates immediately after that tool, and asserts that no other tool or user-feedback task was activated. The E2E agent segment starts immediately before the agent and terminates immediately after it, before user feedback.
+Each connector test starts directly at its tool inside the agent subprocess, terminates immediately after that tool, asserts a non-empty live payload, and asserts that no other tool or user-feedback task was activated. The multi-connector segment starts immediately before the agent and terminates immediately after it, before user feedback.
 
-The integration tests derive their deployed model from the production BPMN and replace only the agent worker, so the real HTTP connectors run while CI avoids paid, nondeterministic LLM calls. Live model-driven tool selection remains covered by the importable Test Studio suite.
+The integration tests derive their deployed model from the production BPMN and replace only the agent worker, so the real HTTP connectors run while CI avoids paid, nondeterministic LLM calls. This is not labeled E2E because the Java test selects the tools instead of the LLM. Live model-driven tool selection is covered only by the importable Test Studio E2E suite.
 
 ```bash
 cd test

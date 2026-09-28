@@ -1,0 +1,287 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "ai-agent-chat-with-tools",
+  "testCases": [
+    {
+      "name": "Live connector integration - list users returns users",
+      "description": "Runs only the real HTTP connector against JSONPlaceholder and verifies that it returns at least one named user.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "toolCall": {
+              "_meta": {
+                "id": "list-users-integration",
+                "name": "ListUsers"
+              }
+            }
+          },
+          "startInstructions": [
+            {
+              "elementId": "ListUsers"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "ListUsers"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "ListUsers"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Search_Recipe"
+            },
+            {
+              "elementId": "Jokes_API"
+            },
+            {
+              "elementId": "Activity_0x3prgn"
+            },
+            {
+              "elementId": "User_Feedback"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "ASSERT_VARIABLE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableName": "toolCallResult",
+          "satisfiesExpression": "toolCallResult != null and toolCallResult.status = 200 and count(toolCallResult.body) > 0 and toolCallResult.body[1].name != null and string length(toolCallResult.body[1].name) > 0"
+        }
+      ]
+    },
+    {
+      "name": "Live connector integration - recipe search returns recipes",
+      "description": "Runs only the real HTTP connector against DummyJSON and verifies that a pasta query returns at least one named recipe.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "toolCall": {
+              "searchQuery": "pasta",
+              "_meta": {
+                "id": "recipe-integration",
+                "name": "Search_Recipe"
+              }
+            }
+          },
+          "startInstructions": [
+            {
+              "elementId": "Search_Recipe"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "Search_Recipe"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "Search_Recipe"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ListUsers"
+            },
+            {
+              "elementId": "Jokes_API"
+            },
+            {
+              "elementId": "Activity_0x3prgn"
+            },
+            {
+              "elementId": "User_Feedback"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "ASSERT_VARIABLE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableName": "toolCallResult",
+          "satisfiesExpression": "toolCallResult != null and count(toolCallResult) > 0 and toolCallResult[1].name != null and string length(toolCallResult[1].name) > 0"
+        }
+      ]
+    },
+    {
+      "name": "Live connector integration - jokes API returns a joke",
+      "description": "Runs only the real HTTP connector against JokeAPI and verifies that it returns non-empty joke text.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "toolCall": {
+              "_meta": {
+                "id": "joke-integration",
+                "name": "Jokes_API"
+              }
+            }
+          },
+          "startInstructions": [
+            {
+              "elementId": "Jokes_API"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "Jokes_API"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "Jokes_API"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ListUsers"
+            },
+            {
+              "elementId": "Search_Recipe"
+            },
+            {
+              "elementId": "Activity_0x3prgn"
+            },
+            {
+              "elementId": "User_Feedback"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "ASSERT_VARIABLE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableName": "toolCallResult",
+          "satisfiesExpression": "toolCallResult != null and string length(toolCallResult) > 0"
+        }
+      ]
+    },
+    {
+      "name": "Live connector integration - technology API returns products",
+      "description": "Runs only the real HTTP connector against restful-api.dev and verifies that it returns at least one named product.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "toolCall": {
+              "_meta": {
+                "id": "technology-integration",
+                "name": "Activity_0x3prgn"
+              }
+            }
+          },
+          "startInstructions": [
+            {
+              "elementId": "Activity_0x3prgn"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "Activity_0x3prgn"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "Activity_0x3prgn"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ListUsers"
+            },
+            {
+              "elementId": "Search_Recipe"
+            },
+            {
+              "elementId": "Jokes_API"
+            },
+            {
+              "elementId": "User_Feedback"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "ASSERT_VARIABLE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableName": "toolCallResult",
+          "satisfiesExpression": "toolCallResult != null and count(toolCallResult) > 0 and toolCallResult[1].name != null and string length(toolCallResult[1].name) > 0"
+        }
+      ]
+    }
+  ]
+}

@@ -36,6 +36,29 @@ class LiveConnectorIntegrationTest {
   private static final String RECIPE_ID = "Search_Recipe";
   private static final String JOKES_ID = "Jokes_API";
   private static final String TECHNOLOGY_PRODUCTS_ID = "Activity_0x3prgn";
+  private static final String NON_EMPTY_LIST_WITH_NAME =
+      "toolCallResult != null and count(toolCallResult) > 0"
+          + " and toolCallResult[1].name != null"
+          + " and string length(toolCallResult[1].name) > 0";
+  private static final String NON_EMPTY_TEXT =
+      "toolCallResult != null and string length(toolCallResult) > 0";
+  private static final String NON_EMPTY_HTTP_RESPONSE_WITH_NAMED_BODY_ITEM =
+      "toolCallResult != null and toolCallResult.status = 200"
+          + " and count(toolCallResult.body) > 0"
+          + " and toolCallResult.body[1].name != null"
+          + " and string length(toolCallResult.body[1].name) > 0";
+  private static final String JOKE_AND_RECIPE_PAYLOADS =
+      "count(toolCallResults) >= 2"
+          + " and (every result in toolCallResults satisfies"
+          + " result.name in [\"Jokes_API\", \"Search_Recipe\"])"
+          + " and (some result in toolCallResults satisfies"
+          + " result.name = \"Jokes_API\""
+          + " and result.content != null"
+          + " and string length(result.content) > 0)"
+          + " and (some result in toolCallResults satisfies"
+          + " result.name = \"Search_Recipe\""
+          + " and result.content != null"
+          + " and count(result.content) > 0)";
   @Autowired private CamundaClient client;
   @Autowired private CamundaProcessTestContext processTestContext;
 
@@ -49,7 +72,9 @@ class LiveConnectorIntegrationTest {
   @DisplayName("Connector integration - list users")
   void callsListUsersConnector() {
     runSingleToolSegment(
-        LIST_USERS_ID, toolCall("list-users", LIST_USERS_ID, Map.of()));
+        LIST_USERS_ID,
+        toolCall("list-users", LIST_USERS_ID, Map.of()),
+        NON_EMPTY_LIST_WITH_NAME);
   }
 
   @Test
@@ -58,7 +83,8 @@ class LiveConnectorIntegrationTest {
   void callsRecipeSearchConnector() {
     runSingleToolSegment(
         RECIPE_ID,
-        toolCall("search-recipe", RECIPE_ID, Map.of("searchQuery", "pasta")));
+        toolCall("search-recipe", RECIPE_ID, Map.of("searchQuery", "pasta")),
+        NON_EMPTY_LIST_WITH_NAME);
   }
 
   @Test
@@ -66,7 +92,9 @@ class LiveConnectorIntegrationTest {
   @DisplayName("Connector integration - jokes API")
   void callsJokesConnector() {
     runSingleToolSegment(
-        JOKES_ID, toolCall("jokes-api", JOKES_ID, Map.of()));
+        JOKES_ID,
+        toolCall("jokes-api", JOKES_ID, Map.of()),
+        NON_EMPTY_TEXT);
   }
 
   @Test
@@ -75,13 +103,14 @@ class LiveConnectorIntegrationTest {
   void callsTechnologyProductsConnector() {
     runSingleToolSegment(
         TECHNOLOGY_PRODUCTS_ID,
-        toolCall("technology-products", TECHNOLOGY_PRODUCTS_ID, Map.of()));
+        toolCall("technology-products", TECHNOLOGY_PRODUCTS_ID, Map.of()),
+        NON_EMPTY_HTTP_RESPONSE_WITH_NAMED_BODY_ITEM);
   }
 
   @Test
   @Timeout(180)
-  @DisplayName("E2E - joke and recipe tools complete in one agent turn")
-  void completesMultiToolEndToEndPath() {
+  @DisplayName("Connector integration - joke and recipe payloads in one agent segment")
+  void completesMultiToolConnectorPath() {
     final ProcessInstanceEvent instance =
         startAgentSegment("Tell me a safe joke and find a pasta recipe.");
 
@@ -98,7 +127,11 @@ class LiveConnectorIntegrationTest {
                         Map.of("searchQuery", "pasta"))));
 
     assertThatProcessInstance(instance)
-        .hasCompletedElements(byId(JOKES_ID), byId(RECIPE_ID));
+        .hasCompletedElements(byId(JOKES_ID), byId(RECIPE_ID))
+        .hasLocalVariableSatisfiesExpression(
+            byId(AGENT_ID),
+            "toolCallResults",
+            JOKE_AND_RECIPE_PAYLOADS);
 
     completeAgentResponse();
 
@@ -108,7 +141,9 @@ class LiveConnectorIntegrationTest {
   }
 
   private void runSingleToolSegment(
-      final String toolId, final Map<String, Object> toolVariables) {
+      final String toolId,
+      final Map<String, Object> toolVariables,
+      final String payloadExpression) {
     final ProcessInstanceEvent instance =
         client
             .newCreateInstanceCommand()
@@ -122,6 +157,7 @@ class LiveConnectorIntegrationTest {
 
     assertThatProcessInstance(instance)
         .hasCompletedElements(byId(toolId))
+        .hasVariableSatisfiesExpression("toolCallResult", payloadExpression)
         .hasNotActivatedElements(forbiddenElements(toolId))
         .isTerminated();
   }
