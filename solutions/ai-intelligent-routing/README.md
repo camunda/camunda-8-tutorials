@@ -11,13 +11,19 @@ This process blueprint exemplifies the use of AI to intelligently route customer
 
 ---
 
-## 🚀 Zero-config LLM on Camunda SaaS
+## Secrets & Configuration
 
-**Running on Camunda SaaS?** Skip the hassle of setting up an external AI provider. This blueprint is pre-configured to use the **Camunda-provided LLM** — a fully managed model that works out of the box. The required secrets (`CAMUNDA_PROVIDED_LLM_API_ENDPOINT` and `CAMUNDA_PROVIDED_LLM_API_KEY`) are automatically available on Camunda SaaS — no external API keys, no third-party accounts, no configuration required.
+This blueprint does not use the Camunda-provided LLM. Each process variant calls its AI provider directly, so you need an account with that provider. Before you deploy a variant, create the connector secrets that it uses:
 
-👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
+| Process variant                             | Secret Name               | Purpose                                    |
+|---------------------------------------------|---------------------------|--------------------------------------------|
+| `Intelligent-routing-with-openai.bpmn`      | `openAiApiKey`            | OpenAI API key                             |
+| `Intelligent routing with Azure AI.bpmn`    | `azureOpenAiApiKey`       | Azure OpenAI API key                       |
+| `Intelligent routing with Azure AI.bpmn`    | `azureOpenAiResourceName` | Name of your Azure OpenAI resource         |
+| `Intelligent routing with Azure AI.bpmn`    | `azureOpenAiDeploymentId` | Name of your Azure OpenAI model deployment |
+| `Intelligent routing with HuggingFace.bpmn` | `hfApiToken`              | Hugging Face access token                  |
 
-Just deploy your process to your SaaS cluster and start routing intelligently from day one.
+On Camunda SaaS, add the secrets to your cluster in Camunda Console. 👉 [Learn how to manage connector secrets](https://docs.camunda.io/docs/components/console/manage-clusters/manage-secrets/)
 
 ---
 
