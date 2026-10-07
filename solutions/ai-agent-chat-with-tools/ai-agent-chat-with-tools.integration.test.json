@@ -1,0 +1,670 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "ai-agent-chat-with-tools",
+  "testCases": [
+    {
+      "name": "Agent segment \u2014 joke and recipe tools",
+      "description": "Starts immediately before the AI Agent with a predefined prompt, asserts the expected tool/path, and terminates at the earliest useful assertion point. Runs the real agent, Camunda-provided LLM, and public HTTP APIs. Verifies that a multi-part request reaches both expected tools and exposes their results without asserting order or response wording.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Tell me a safe joke and find a pasta recipe.",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "AI_Agent"
+            }
+          ],
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "FetchSafeJoke"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "SearchRecipes"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResults"
+          ],
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agent segment \u2014 sample users and products",
+      "description": "Starts immediately before the AI Agent with a predefined prompt, asserts the expected tool/path, and terminates at the earliest useful assertion point. Runs the real agent, Camunda-provided LLM, and public HTTP APIs. In one agent segment, verifies both expected tool selections and exposes their results without asserting order or response wording.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List the available users and tell me which sample technology products are available.",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "AI_Agent"
+            }
+          ],
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "LookupSampleUsers"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "ListSampleTechnologyProducts"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResults"
+          ],
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Live E2E \u2014 reject feedback then approve final answer",
+      "description": "Runs the complete process through the agent, live connectors, a rejected response, a follow-up answer, and final user approval. The named business outcome is a completed process instance; the test asserts each expected tool and terminal state without asserting tool order or response wording.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Tell me a safe joke and find a pasta recipe.",
+            "inputDocuments": []
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "FetchSafeJoke"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "SearchRecipes"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": false,
+            "followUpInput": "That is helpful, but please also list the available users and tell me which sample technology products are available.",
+            "followUpDocuments": []
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "LookupSampleUsers"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "ListSampleTechnologyProducts"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          },
+          "state": "IS_COMPLETED",
+          "amount": 2
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "state": "IS_COMPLETED",
+          "amount": 2
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Live connector integration \u2014 list users returns users",
+      "description": "Runs only the real HTTP connector against JSONPlaceholder and verifies that the connector completes with a result.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "toolCall": {
+              "_meta": {
+                "id": "list-users-integration",
+                "name": "LookupSampleUsers"
+              }
+            }
+          },
+          "startInstructions": [
+            {
+              "elementId": "LookupSampleUsers"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "LookupSampleUsers"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "LookupSampleUsers"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Live connector integration \u2014 recipe search returns recipes",
+      "description": "Runs only the real HTTP connector against DummyJSON and verifies that the connector completes with a result.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "toolCall": {
+              "searchQuery": "pasta",
+              "_meta": {
+                "id": "recipe-integration",
+                "name": "SearchRecipes"
+              }
+            }
+          },
+          "startInstructions": [
+            {
+              "elementId": "SearchRecipes"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "SearchRecipes"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "SearchRecipes"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Live connector integration \u2014 jokes API returns a joke",
+      "description": "Runs only the real HTTP connector against JokeAPI and verifies that the connector completes with a result.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "toolCall": {
+              "_meta": {
+                "id": "joke-integration",
+                "name": "FetchSafeJoke"
+              }
+            }
+          },
+          "startInstructions": [
+            {
+              "elementId": "FetchSafeJoke"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "FetchSafeJoke"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "FetchSafeJoke"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Live connector integration \u2014 technology API returns products",
+      "description": "Runs only the real HTTP connector against restful-api.dev and verifies that the connector completes with a result.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "toolCall": {
+              "_meta": {
+                "id": "technology-integration",
+                "name": "ListSampleTechnologyProducts"
+              }
+            }
+          },
+          "startInstructions": [
+            {
+              "elementId": "ListSampleTechnologyProducts"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "ListSampleTechnologyProducts"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "ListSampleTechnologyProducts"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Agent segment \u2014 answer without a tool",
+      "description": "Starts immediately before the AI Agent with a predefined prompt, asserts the expected tool/path, and terminates at the earliest useful assertion point. Runs the real agent with a general-knowledge prompt and verifies that the agent completes with a response. Test Studio cannot visibly assert that no tool activated, so confirm the absence of tool execution in the run view.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "What is the capital of France?",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "AI_Agent"
+            }
+          ],
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "agent"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Agent segment \u2014 choose sample users tool",
+      "description": "Starts immediately before the AI Agent with a predefined prompt, asserts the expected tool/path, and terminates at the earliest useful assertion point. Runs the real agent with a users prompt and verifies that the users tool completes. The live tool can execute before Test Studio cancels the instance.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List all users.",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "LookupSampleUsers"
+            }
+          ],
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "LookupSampleUsers"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Agent segment \u2014 choose recipe search tool",
+      "description": "Starts immediately before the AI Agent with a predefined prompt, asserts the expected tool/path, and terminates at the earliest useful assertion point. Runs the real agent with a recipe prompt and verifies that the recipe tool completes. The live tool can execute before Test Studio cancels the instance.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Find pasta recipes.",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "SearchRecipes"
+            }
+          ],
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "SearchRecipes"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Agent segment \u2014 choose safe joke tool",
+      "description": "Starts immediately before the AI Agent with a predefined prompt, asserts the expected tool/path, and terminates at the earliest useful assertion point. Runs the real agent with a joke prompt and verifies that the jokes tool completes. The live tool can execute before Test Studio cancels the instance.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Tell me a random joke using the available joke tool.",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "FetchSafeJoke"
+            }
+          ],
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "FetchSafeJoke"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Agent segment \u2014 choose technology products tool",
+      "description": "Starts immediately before the AI Agent with a predefined prompt, asserts the expected tool/path, and terminates at the earliest useful assertion point. Runs the real agent with a technology prompt and verifies that the technology tool completes. The live tool can execute before Test Studio cancels the instance.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "Find technology products.",
+            "inputDocuments": []
+          },
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "ListSampleTechnologyProducts"
+            }
+          ],
+          "startInstructions": [
+            {
+              "elementId": "AI_Agent"
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "ListSampleTechnologyProducts"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        }
+      ]
+    }
+  ]
+}

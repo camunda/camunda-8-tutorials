@@ -3,8 +3,8 @@
   "processId": "ai-agent-chat-with-tools",
   "testCases": [
     {
-      "name": "Live E2E \u2014 agent uses joke and recipe tools",
-      "description": "Runs the real agent, Camunda-provided LLM, and public HTTP APIs. Verifies that a multi-part request reaches both expected tools and exposes their results without asserting order or response wording.",
+      "name": "Happy path — user satisfied on first response (no tool calls)",
+      "description": "The AI agent responds directly without calling any tools. The user is satisfied on the first response and the process completes. Tests outer-flow gateway routing on the happy path.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -12,209 +12,72 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variables": {
-            "inputText": "Tell me a safe joke and find a pasta recipe.",
-            "inputDocuments": []
+            "inputText": "What is the capital of France?"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
           },
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "AI_Agent"
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 400, "outputTokenCount": 80}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "What is the capital of France?"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "The capital of France is Paris."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "The capital of France is Paris."
             }
-          ]
+          },
+          "completionConditionFulfilled": true
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCE",
+          "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
-          "elementSelector": {
-            "elementId": "Jokes_API"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Search_Recipe"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResults"
+          "elementSelectors": [
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
-          "elementSelector": {
-            "elementId": "AI_Agent"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Live E2E \u2014 agent uses users and technology tools",
-      "description": "Runs the real agent, Camunda-provided LLM, and public HTTP APIs. In one agent segment, verifies both expected tool selections and exposes their results without asserting order or response wording.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variables": {
-            "inputText": "List the available users and tell me which sample technology products are available.",
-            "inputDocuments": []
-          },
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "AI_Agent"
-            }
-          ]
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "ListUsers"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Activity_0x3prgn"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResults"
-          ],
-          "elementSelector": {
-            "elementId": "AI_Agent"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Live E2E \u2014 user rejects then approves",
-      "description": "Runs the complete process with the real agent and connectors. The first turn calls joke and recipe, the user rejects with a users and technology follow-up, and the second turn calls both remaining tools before approval.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variables": {
-            "inputText": "Tell me a safe joke and find a pasta recipe.",
-            "inputDocuments": []
-          }
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Jokes_API"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Search_Recipe"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": {
-            "elementId": "User_Feedback"
-          },
-          "variables": {
-            "userSatisfied": false,
-            "followUpInput": "That is helpful, but please also list the available users and tell me which sample technology products are available.",
-            "followUpDocuments": []
-          }
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "ListUsers"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Activity_0x3prgn"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "User_Feedback"
-          },
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": {
-            "elementId": "User_Feedback"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
             "userSatisfied": true
           }
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCE",
+          "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
-          "elementSelector": {
-            "elementId": "AI_Agent"
-          },
-          "state": "IS_COMPLETED",
-          "amount": 2
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "User_Feedback"
-          },
-          "state": "IS_COMPLETED",
-          "amount": 2
+          "elementSelectors": [
+            {"elementId": "StartEvent_TaskReceived"},
+            {"elementId": "AI_Agent"},
+            {"elementId": "UserTask_ReviewAgentResponse"},
+            {"elementId": "EndEvent_UserSatisfied"}
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
@@ -226,8 +89,8 @@
       ]
     },
     {
-      "name": "Live connector integration \u2014 list users returns users",
-      "description": "Runs only the real HTTP connector against JSONPlaceholder and verifies that the connector completes with a result.",
+      "name": "Loop path — user not satisfied, then satisfied on second try",
+      "description": "User answers 'not satisfied' after the first agent response. The process loops back through the gateway and the AHSP runs again. User is satisfied on the second response. Tests the loop gateway branch.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -235,49 +98,261 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variables": {
-            "toolCall": {
-              "_meta": {
-                "id": "list-users-integration",
-                "name": "ListUsers"
+            "inputText": "List all available users for me."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 500, "outputTokenCount": 80}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "List all available users for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are the available users with their usernames."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are the available users with their usernames."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "UserTask_ReviewAgentResponse"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": false,
+            "followUpInput": "Please also show me the email of each user."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 900, "outputTokenCount": 150}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Please also show me the email of each user."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are the users with their email addresses."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are the users with their email addresses."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "UserTask_ReviewAgentResponse"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "LookupSampleUsers tool — agent calls LookupSampleUsers then responds",
+      "description": "The AI agent calls the LookupSampleUsers HTTP tool to fetch all users, then delivers its response. Tests the full AHSP tool-call lifecycle: agent job round 1 (tool activation) → LookupSampleUsers job completes → agent job round 2 (final response).",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variables": {
+            "inputText": "List all available users for me."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 500, "outputTokenCount": 60}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "List all available users for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_001", "name": "LookupSampleUsers", "input": {}}
+                      ]
+                    }
+                  ]
+                }
               }
             }
           },
-          "startInstructions": [
+          "completionConditionFulfilled": false,
+          "activateElements": [
             {
-              "elementId": "ListUsers"
-            }
-          ],
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "ListUsers"
+              "elementId": "LookupSampleUsers",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_001", "name": "LookupSampleUsers"}
+                }
+              }
             }
           ]
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCE",
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "LookupSampleUsers"
+          },
+          "variables": {
+            "toolCallResult": [
+              {"id": 1, "name": "Leanne Graham", "username": "Bret"},
+              {"id": 2, "name": "Ervin Howell", "username": "Antonette"},
+              {"id": 3, "name": "Clementine Bauch", "username": "Samantha"}
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 900, "outputTokenCount": 120}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "List all available users for me."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_001", "name": "LookupSampleUsers", "input": {}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_001", "content": "[{\"id\":1,\"name\":\"Leanne Graham\",\"username\":\"Bret\"},{\"id\":2,\"name\":\"Ervin Howell\",\"username\":\"Antonette\"},{\"id\":3,\"name\":\"Clementine Bauch\",\"username\":\"Samantha\"}]"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are 3 available users: Leanne Graham (Bret), Ervin Howell (Antonette), Clementine Bauch (Samantha)."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are 3 available users: Leanne Graham (Bret), Ervin Howell (Antonette), Clementine Bauch (Samantha)."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
-          "elementSelector": {
-            "elementId": "ListUsers"
+          "elementSelectors": [
+            {"elementId": "UserTask_ReviewAgentResponse"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
     {
-      "name": "Live connector integration \u2014 recipe search returns recipes",
-      "description": "Runs only the real HTTP connector against DummyJSON and verifies that the connector completes with a result.",
+      "name": "SearchRecipes tool — agent searches for a recipe",
+      "description": "The AI agent calls the SearchRecipes HTTP tool with a dynamic search query, receives recipe results, then responds. Tests the fromAi() searchQuery expression and recipe result mapping.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -285,50 +360,142 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variables": {
-            "toolCall": {
-              "searchQuery": "pasta",
-              "_meta": {
-                "id": "recipe-integration",
-                "name": "Search_Recipe"
+            "inputText": "Find me a pasta carbonara recipe."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 460, "outputTokenCount": 58}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Find me a pasta carbonara recipe."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_003", "name": "SearchRecipes", "input": {"searchQuery": "pasta carbonara"}}
+                      ]
+                    }
+                  ]
+                }
               }
             }
           },
-          "startInstructions": [
+          "completionConditionFulfilled": false,
+          "activateElements": [
             {
-              "elementId": "Search_Recipe"
-            }
-          ],
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "Search_Recipe"
+              "elementId": "SearchRecipes",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_003", "name": "SearchRecipes"},
+                  "searchQuery": "pasta carbonara"
+                }
+              }
             }
           ]
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCE",
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "SearchRecipes"
+          },
+          "variables": {
+            "toolCallResult": [
+              {
+                "id": 1,
+                "name": "Classic Spaghetti Carbonara",
+                "prepTimeMinutes": 15,
+                "cookTimeMinutes": 20,
+                "servings": 4,
+                "difficulty": "Medium"
+              }
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 800, "outputTokenCount": 130}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Find me a pasta carbonara recipe."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_003", "name": "SearchRecipes", "input": {"searchQuery": "pasta carbonara"}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_003", "content": "[{\"name\":\"Classic Spaghetti Carbonara\",\"prepTimeMinutes\":15,\"cookTimeMinutes\":20}]"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "I found 'Classic Spaghetti Carbonara': prep 15 min, cook 20 min, serves 4, difficulty Medium."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "I found 'Classic Spaghetti Carbonara': prep 15 min, cook 20 min, serves 4, difficulty Medium."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
-          "elementSelector": {
-            "elementId": "Search_Recipe"
+          "elementSelectors": [
+            {"elementId": "UserTask_ReviewAgentResponse"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
     {
-      "name": "Live connector integration \u2014 jokes API returns a joke",
-      "description": "Runs only the real HTTP connector against JokeAPI and verifies that the connector completes with a result.",
+      "name": "FetchSafeJoke tool — agent fetches a random joke",
+      "description": "The AI agent calls the FetchSafeJoke HTTP tool to fetch a random joke, then includes it in its response. Tests the tool activation and result mapping for a no-input HTTP connector.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -336,49 +503,132 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variables": {
-            "toolCall": {
-              "_meta": {
-                "id": "joke-integration",
-                "name": "Jokes_API"
+            "inputText": "Tell me a joke."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 430, "outputTokenCount": 52}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Tell me a joke."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_004", "name": "FetchSafeJoke", "input": {}}
+                      ]
+                    }
+                  ]
+                }
               }
             }
           },
-          "startInstructions": [
+          "completionConditionFulfilled": false,
+          "activateElements": [
             {
-              "elementId": "Jokes_API"
-            }
-          ],
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "Jokes_API"
+              "elementId": "FetchSafeJoke",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_004", "name": "FetchSafeJoke"}
+                }
+              }
             }
           ]
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCE",
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "FetchSafeJoke"
+          },
+          "variables": {
+            "toolCallResult": "Why don't scientists trust atoms? Because they make up everything!"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 750, "outputTokenCount": 90}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Tell me a joke."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_004", "name": "FetchSafeJoke", "input": {}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_004", "content": "Why don't scientists trust atoms? Because they make up everything!"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here's a joke: Why don't scientists trust atoms? Because they make up everything!"}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here's a joke: Why don't scientists trust atoms? Because they make up everything!"
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
-          "elementSelector": {
-            "elementId": "Jokes_API"
+          "elementSelectors": [
+            {"elementId": "UserTask_ReviewAgentResponse"}
+          ],
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
     {
-      "name": "Live connector integration \u2014 technology API returns products",
-      "description": "Runs only the real HTTP connector against restful-api.dev and verifies that the connector completes with a result.",
+      "name": "ListSampleTechnologyProducts tool — agent gets list of tech stuff",
+      "description": "The AI agent calls the Get list of Tech Stuff HTTP tool to fetch all tech objects, then delivers its response. Tests the full AHSP tool-call lifecycle for the static-URL tech stuff endpoint.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -386,250 +636,132 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "variables": {
-            "toolCall": {
-              "_meta": {
-                "id": "technology-integration",
-                "name": "Activity_0x3prgn"
+            "inputText": "Show me all available tech stuff."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "WAITING_FOR_TOOL_CALL_RESULTS",
+                "metrics": {
+                  "modelCalls": 1,
+                  "tokenUsage": {"inputTokenCount": 480, "outputTokenCount": 55}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Show me all available tech stuff."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [
+                        {"type": "tool_use", "id": "tool_005", "name": "ListSampleTechnologyProducts", "input": {}}
+                      ]
+                    }
+                  ]
+                }
               }
             }
           },
-          "startInstructions": [
+          "completionConditionFulfilled": false,
+          "activateElements": [
             {
-              "elementId": "Activity_0x3prgn"
+              "elementId": "ListSampleTechnologyProducts",
+              "variables": {
+                "toolCall": {
+                  "_meta": {"id": "tool_005", "name": "ListSampleTechnologyProducts"}
+                }
+              }
             }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ListSampleTechnologyProducts"
+          },
+          "variables": {
+            "toolCallResult": [
+              {"id": "1", "name": "Google Pixel 6 Pro", "data": {"color": "Cloudy White", "capacity": "128 GB"}},
+              {"id": "2", "name": "Apple iPhone 12 Mini", "data": {"color": "Blue", "capacity": "256 GB"}}
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "jobType": "test:ai-agent:subprocess"
+          },
+          "variables": {
+            "agent": {
+              "context": {
+                "state": "READY",
+                "metrics": {
+                  "modelCalls": 2,
+                  "tokenUsage": {"inputTokenCount": 900, "outputTokenCount": 130}
+                },
+                "conversation": {
+                  "type": "in-process",
+                  "messages": [
+                    {
+                      "role": "user",
+                      "content": [{"type": "text", "text": "Show me all available tech stuff."}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "tool_use", "id": "tool_005", "name": "ListSampleTechnologyProducts", "input": {}}]
+                    },
+                    {
+                      "role": "tool",
+                      "content": [{"type": "tool_result", "tool_use_id": "tool_005", "content": "[{\"id\":\"1\",\"name\":\"Google Pixel 6 Pro\"},{\"id\":\"2\",\"name\":\"Apple iPhone 12 Mini\"}]"}]
+                    },
+                    {
+                      "role": "assistant",
+                      "content": [{"type": "text", "text": "Here are the available tech items: Google Pixel 6 Pro (128 GB, Cloudy White) and Apple iPhone 12 Mini (256 GB, Blue)."}]
+                    }
+                  ]
+                }
+              },
+              "responseText": "Here are the available tech items: Google Pixel 6 Pro (128 GB, Cloudy White) and Apple iPhone 12 Mini (256 GB, Blue)."
+            }
+          },
+          "completionConditionFulfilled": true
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelectors": [
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "Activity_0x3prgn"
-            }
-          ]
+          "state": "IS_ACTIVE"
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Activity_0x3prgn"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Live agent selection \u2014 answers without a tool",
-      "description": "Runs the real agent with a general-knowledge prompt and verifies that the agent completes with a response. Test Studio cannot visibly assert that no tool activated, so confirm the absence of tool execution in the run view.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
-            "inputText": "What is the capital of France?",
-            "inputDocuments": []
-          },
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "AI_Agent"
-            }
-          ]
+            "userSatisfied": true
+          }
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCE",
+          "type": "ASSERT_PROCESS_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "AI_Agent"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "agent"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Live agent selection \u2014 chooses the users tool",
-      "description": "Runs the real agent with a users prompt and verifies that the users tool completes. The live tool can execute before Test Studio cancels the instance.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variables": {
-            "inputText": "List all users.",
-            "inputDocuments": []
-          },
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "ListUsers"
-            }
-          ]
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "ListUsers"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Live agent selection \u2014 chooses the recipe tool",
-      "description": "Runs the real agent with a recipe prompt and verifies that the recipe tool completes. The live tool can execute before Test Studio cancels the instance.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variables": {
-            "inputText": "Find pasta recipes.",
-            "inputDocuments": []
-          },
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "Search_Recipe"
-            }
-          ]
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Search_Recipe"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Live agent selection \u2014 chooses the jokes tool",
-      "description": "Runs the real agent with a joke prompt and verifies that the jokes tool completes. The live tool can execute before Test Studio cancels the instance.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variables": {
-            "inputText": "Tell me a random joke using the available joke tool.",
-            "inputDocuments": []
-          },
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "Jokes_API"
-            }
-          ]
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Jokes_API"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "Live agent selection \u2014 chooses the technology tool",
-      "description": "Runs the real agent with a technology prompt and verifies that the technology tool completes. The live tool can execute before Test Studio cancels the instance.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variables": {
-            "inputText": "Find technology products.",
-            "inputDocuments": []
-          },
-          "runtimeInstructions": [
-            {
-              "type": "TERMINATE_PROCESS_INSTANCE",
-              "afterElementId": "Activity_0x3prgn"
-            }
-          ]
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "Activity_0x3prgn"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     }
-  ]
+  ],
+  "_testNotes": "Deterministic scenarios in this file are shared by Test Studio Test mode and the Maven CPT runner. Live Test Studio integration scenarios are in ai-agent-chat-with-tools.integration.test.json."
 }

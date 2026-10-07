@@ -1,98 +1,76 @@
 # AI Agent Chat With Tools test plan
 
-The four test layers answer progressively broader questions: does the process route correctly, does each integration work in isolation, does the complete process reach its business outcome, and does a person observe the expected external behavior?
+The six deterministic cases in `ai-agent-chat-with-tools.test.json` are shared by Test Studio Test mode and the Maven CPT runner. Live agent/tool tests are kept in `ai-agent-chat-with-tools.integration.test.json` and require an eligible SaaS environment.
 
-## Process tests
+## Deterministic process coverage
 
-- **Verifies:** Every reachable BPMN element and sequence flow, including no-tool, each tool, rejection, retry, and approval.
-- **Required evidence:** 10/10 reachable elements and 6/6 sequence flows in the CPT coverage report.
-- **Mocks:** All external systems.
+The shared suite mocks agent and tool jobs to cover all reachable BPMN elements and sequence flows without LLM calls or external services.
 
-| ID | Test | Guarantee |
+| Case | Covered path |
+|---|---|
+| Happy path — user satisfied on first response (no tool calls) | Start → retry gateway → agent → feedback → satisfaction gateway → end |
+| Loop path — user not satisfied, then satisfied on second try | Start → retry gateway → agent → feedback → rejection loop → agent → feedback → satisfaction gateway → end |
+| LookupSampleUsers tool — agent calls LookupSampleUsers then responds | Agent → sample-user tool → feedback |
+| SearchRecipes tool — agent searches for a recipe | Agent → recipe-search tool → feedback |
+| FetchSafeJoke tool — agent fetches a random joke | Agent → safe-joke tool → feedback |
+| ListSampleTechnologyProducts tool — agent gets list of tech stuff | Agent → sample-technology tool → feedback |
+
+The first two cases cover all six sequence flows, both gateway outcomes, the start/end events, user task, and agent subprocess. The remaining cases cover each of the four tool activities. The latest CPT report is generated at `test/target/coverage-report/report.html`; the machine-readable report is `test/target/coverage-report/report.json`.
+
+`JsonProcessTest` reads the root `ai-agent-chat-with-tools.test.json` directly; there is no separately maintained copy of those case definitions.
+
+## Live Test Studio integration
+
+Import both JSON files into Test Studio. The integration suite has 12 cases:
+
+| Cases | Start point | Expected assertions |
 |---|---|---|
-| P-1 | `process/no-tool` | A direct answer can complete without a tool. |
-| P-2 | `process/feedback-retry` | Rejected feedback retries and later approval completes. |
-| P-3 | `process/all-tools` | All four tools are reachable through the agent subprocess. |
+| 7 agent segments | Immediately before `AI_Agent` | No-tool response, each of four individual tool paths, and two explicit two-tool sets |
+| 4 connector segments | Directly before each tool activity | Tool completion and `toolCallResult` presence |
+| 1 full E2E | Process start | Joke/recipe first turn, rejected feedback, users/products follow-up, user approval, completed process |
 
-## Segment integration tests
+Every agent segment has an explicit expected tool set and stops after the agent or expected tool completes. Test Studio exposes element assertions as singular checks; these prove the expected tools completed but cannot reject additional tool activation. Tests do not assert tool order, exact response wording, or semantic answer quality. The Test Studio instructions only check that connector result variables exist.
 
-- **Verifies:** The real agent prompt selects the expected tool behavior, and each connector path independently returns its documented stable shape.
-- **Required evidence:** All 5 Test Studio-visible agent scenarios complete the expected agent or tool element, and all 4 connector contracts pass.
-- **Mocks:** None. Agent-selection tests use the real agent and live tool workers; connector tests bypass the agent.
+## Java-only connector checks
 
-| ID | Test | Guarantee |
-|---|---|---|
-| S-1 | `segment/agent-no-tool` | A direct-answer prompt completes the agent and exposes its response. Confirm no tool execution in the Test Studio run view. |
-| S-2 | `segment/agent-list-users` | A user-directory prompt completes the user-directory tool, then the instance is cancelled. |
-| S-3 | `segment/agent-search-recipe` | A recipe prompt completes the recipe-search tool, then the instance is cancelled. |
-| S-4 | `segment/agent-jokes-api` | A joke prompt completes the jokes tool, then the instance is cancelled. |
-| S-5 | `segment/agent-technology-products` | A technology-products prompt completes the technology-products tool, then the instance is cancelled. |
-| S-6 | `segment/connector-list-users` | The user-directory connector returns the documented user shape. |
-| S-7 | `segment/connector-search-recipe` | The recipe-search connector returns the documented recipe shape. |
-| S-8 | `segment/connector-jokes-api` | The jokes connector returns non-empty text. |
-| S-9 | `segment/connector-technology-products` | The technology-products connector returns the documented product shape. |
+The four Java CPT tests execute live HTTP connectors and assert stable response content and shape (known JSONPlaceholder user, DummyJSON recipe, non-empty JokeAPI text, and a sample product). These FEEL result-shape assertions are retained in Java because the imported instruction format cannot express them. Agent jobs remain controlled in Maven; Maven does not make LLM calls.
 
-**Limitation:** Test Studio can terminate after an element completes, not between agent selection and tool activation. The selected live tool therefore executes before cancellation. The visible assertions prove expected completion but do not reject additional tool activation or validate the generated tool inputs.
+## Manual checks
 
-## Process integration tests
+These require a human using the running forms and public services:
 
-- **Verifies:** A real agent selects the expected tool set, real connectors return usable results, and the complete process reaches the expected outcome.
-- **Required evidence:** 3/3 automated scenarios pass.
-- **Mocks:** None.
-- **Boundary:** These tests verify process behavior, not external-system impacts.
+| Journey | Pass condition |
+|---|---|
+| Users and products | Both sample sources return usable data and the user approves the answer. |
+| Joke and recipe | Both sources return usable data and the user approves the answer. |
+| Feedback retry | The user rejects the first answer, provides a follow-up, then approves the second response. |
 
-| ID | Test | Guarantee |
-|---|---|---|
-| PI-1 | `process-integration/users-and-products` | A users-and-products request completes the user-directory and technology-products tools, then completes. |
-| PI-2 | `process-integration/joke-and-recipe` | A joke-and-recipe request completes the jokes and recipe-search tools, then completes. |
-| PI-3 | `process-integration/feedback-retry` | The first turn completes jokes and recipe search; rejected feedback triggers a second turn completing user directory and technology products; later approval completes. |
-
-Tool sets are unordered. Tests assert expected tool completion, result-variable existence, feedback topology, and terminal state, but not exact generated wording.
-
-**Limitation:** Test Studio only displays editable summaries for singular element assertions and basic variable assertions. The importable scenarios therefore prove that expected tools complete and result variables exist, but do not automatically reject additional tool activation or validate result shape with FEEL. The managed segment tests retain shape and isolation assertions; manual tests verify the human-facing tool choice.
-
-**Assertion strategy:** This plan prioritizes business visibility for importable live scenarios, accepting weaker Test Studio assertions such as checking that `toolCallResult` exists. Managed CPT tests retain stronger native assertions such as FEEL result-shape expressions. Do not silently weaken an assertion: choose and document whether a suite optimizes for CPT power or Test Studio visibility.
-
-## Manual tests
-
-- **Verifies:** A person can complete the expected journeys and observe the expected behavior in the process and external systems.
-- **Required evidence:** 3/3 policy-required checks pass once.
-- **Mocks:** None.
-
-| ID | Test | Steps and pass condition |
-|---|---|---|
-| M-1 | Users and products | Ask for the available users and sample technology products. Confirm both external services return usable information, the response includes both categories, and approval completes the process. |
-| M-2 | Joke and recipe | Ask for a safe joke and a pasta recipe. Confirm both external services return usable information, the response includes both results, and approval completes the process. |
-| M-3 | Feedback retry | Ask for a joke and recipe, reject the response, then ask for users and technology products. Confirm both turns use the appropriate external services and approval completes the process after two feedback steps. |
-
-Do not judge exact wording or tool order. Repeating these checks to measure model reliability is optional.
+Do not judge exact wording or tool order. Test Studio and Maven results do not replace these user-facing checks.
 
 ## Run and inspect
 
-Prerequisites: Java 21+, Maven, a Docker-compatible runtime, an eligible Camunda 8.10 SaaS cluster, Camunda-provided LLM budget, and access to the public services.
-
-Run the process and segment-integration suites:
+Prerequisites for Maven: Java 21+, Maven, and a Docker-compatible runtime. Public API access is required for its four connector tests. The live Test Studio suite additionally requires Camunda 8.10 SaaS, AI features enabled, available Camunda-provided LLM budget, and outbound internet access.
 
 ```bash
 cd solutions/ai-agent-chat-with-tools/test
-mvn test
+mvn clean test
 ```
 
-Run all 12 scenarios in `ai-agent-chat-with-tools.test.json` in Test Studio: nine segment scenarios and three process-integration scenarios. The feedback-retry scenario omits an immediate `User_Feedback IS_ACTIVE` assertion after process creation because it races asynchronous agent and connector work. Perform the policy-required manual tests separately.
+Run the six deterministic cases in Test mode and the 12 live scenarios in the integration suite. Review the live run history for the no-tool segment, because the test format cannot assert the absence of tool activation. Perform the three manual journeys separately.
 
 Reports:
 
-- Interactive coverage: `test/target/coverage-report/report.html`
-- Machine coverage: `test/target/coverage-report/report.json`
+- CPT coverage: `test/target/coverage-report/report.html` and `test/target/coverage-report/report.json`
 - JUnit results: `test/target/surefire-reports/`
-- Automated process-integration results: Test Studio run history
-- Manual acceptance: policy checklist
+- Live Test Studio results: Test Studio run history
+
+The latest local Maven run passed all 10 tests (6 deterministic process cases and 4 live HTTP connector checks). The deterministic suite covers all 10 executable BPMN nodes and all 6 sequence flows; the connector checks separately verify each external tool's response shape.
 
 ## Artifacts
 
 - [Source BPMN](./ai-agent-chat-with-tools.bpmn)
-- [Deterministic CPT scenarios](./test/src/test/resources/test-cases/ai-agent-chat-with-tools.test.json)
-- [Managed segment-integration tests](./test/src/test/java/io/camunda/tests/LiveConnectorIntegrationTest.java)
-- [All live Test Studio scenarios](./ai-agent-chat-with-tools.test.json)
-- [Solution prerequisites and test details](./README.md)
+- [Shared deterministic Test mode/Maven suite](./ai-agent-chat-with-tools.test.json)
+- [Live Test Studio integration scenarios](./ai-agent-chat-with-tools.integration.test.json)
+- [Java-only connector result-shape tests](./test/src/test/java/io/camunda/tests/LiveConnectorIntegrationTest.java)
+- [Quick-start prerequisites](./README.md)
 - [Camunda Process Test documentation](https://docs.camunda.io/docs/apis-tools/testing/getting-started/)

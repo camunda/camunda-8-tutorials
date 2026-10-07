@@ -16,9 +16,8 @@
     <packaging>jar</packaging>
     <name>AI Agent Chat With Tools — Process Tests</name>
     <description>
-        CPT harness for deterministic process coverage plus credential-free live
-        HTTP connector and end-to-end integration tests. Agent jobs are controlled
-        so CI does not make paid LLM calls.
+        CPT harness for deterministic process coverage and live HTTP connector
+        contract tests. Agent jobs are controlled so Maven does not make LLM calls.
     </description>
 
     <properties>
@@ -26,7 +25,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <camunda.version>8.10.0-rc2</camunda.version>
+        <camunda.version>8.10.0</camunda.version>
     </properties>
 
 
@@ -70,6 +69,7 @@
                     <include>*.bpmn</include>
                     <include>*.dmn</include>
                     <include>*.form</include>
+                    <include>*.test.json</include>
                 </includes>
             </testResource>
         </testResources>

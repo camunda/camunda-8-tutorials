@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Runs JSON process tests from src/test/resources/test-cases/ against an embedded Zeebe engine.
+ * Runs the shared 8.10 test-mode suite against an embedded Zeebe engine.
  *
  * The AI agent job (io.camunda.agenticai:aiagent:subprocess:2) is mocked in each test case
  * with controlled output. Tool jobs are controlled in the same way so the
@@ -54,27 +54,27 @@ public class JsonProcessTest {
     }
 
     @Test
-    @DisplayName("Process - deterministic ListUsers tool path")
-    void coversListUsersToolPath() {
-        runScenario("ListUsers tool — agent calls ListUsers then responds");
+    @DisplayName("Process - deterministic LookupSampleUsers tool path")
+    void coversLookupSampleUsersToolPath() {
+        runScenario("LookupSampleUsers tool — agent calls LookupSampleUsers then responds");
     }
 
     @Test
     @DisplayName("Process - deterministic recipe tool path")
     void coversRecipeToolPath() {
-        runScenario("Search_Recipe tool — agent searches for a recipe");
+        runScenario("SearchRecipes tool — agent searches for a recipe");
     }
 
     @Test
     @DisplayName("Process - deterministic jokes tool path")
     void coversJokesToolPath() {
-        runScenario("Jokes_API tool — agent fetches a random joke");
+        runScenario("FetchSafeJoke tool — agent fetches a random joke");
     }
 
     @Test
     @DisplayName("Process - deterministic technology products tool path")
     void coversTechnologyProductsToolPath() {
-        runScenario("Activity_0x3prgn tool — agent gets list of tech stuff");
+        runScenario("ListSampleTechnologyProducts tool — agent gets list of tech stuff");
     }
 
     private void runScenario(final String scenarioName) {
@@ -84,7 +84,7 @@ public class JsonProcessTest {
 
     private TestCase loadScenario(final String scenarioName) {
         try (var stream = getClass().getResourceAsStream(
-                "/test-cases/ai-agent-chat-with-tools.test.json")) {
+                "/ai-agent-chat-with-tools.test.json")) {
             if (stream == null) {
                 throw new IllegalStateException("Missing deterministic test scenarios");
             }
