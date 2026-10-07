@@ -1,6 +1,6 @@
 # AI Agent Chat With Tools Example
 
-This example demonstrates how to deploy and run an AI-driven chat process in Camunda 8, where an AI agent can answer questions and use external tools (APIs, scripts, etc.) to provide more accurate responses. The process showcases tool integration, user feedback, and human-in-the-loop capabilities.
+This example demonstrates an AI Agent Sub-process that can answer questions, use external tools, and collect human feedback. The BPMN uses the v2 AI Agent connector template and targets Camunda 8.10 or later.
 
 ---
 
@@ -16,7 +16,7 @@ Just deploy the process to your SaaS cluster and run — the AI is ready to go.
 
 ## Prerequisites
 
-- **Camunda 8.8+** (SaaS or Self-Managed)
+- **Camunda 8.10+** (SaaS or Self-Managed)
 - Access to Camunda Connectors (Agentic AI, HTTP, etc.)
 - Outbound internet access for connectors (to reach APIs)
 - (Optional) Credentials for any external APIs/tools you want to use
@@ -43,7 +43,7 @@ Configure the connectors in the Web Modeler or via environment variables as need
 
 1. **Import the BPMN Model**
 	- Open Camunda Web Modeler.
-	- Import `ai-agent-chat-with-tools.bpmn` and all the form files from this folder.
+	- Import `ai-agent-chat-with-tools.bpmn`, both form files, and `ai-agent-chat-with-tools.test.json` into the same project.
 
 2. **Configure Connectors**
 	- Configure any HTTP connectors or other tools you want the agent to use.
@@ -71,15 +71,13 @@ Configure the connectors in the Web Modeler or via environment variables as need
 The process (`ai-agent-chat-with-tools.bpmn`) works as follows:
 
 1. **Start Event**: User submits an initial chat request via a form.
-2. **AI Agent Task**: The Agentic AI connector receives the request, context, and available tools. It generates a response and may request tool calls.
-3. **Tool Call Gateway**: If the agent wants to use tools, the process enters the `Agent Tools` ad-hoc sub-process.
-4. **Agent Tools Sub-Process**: For each tool call requested by the agent, the corresponding task is executed. Tools include:
+2. **AI Agent Sub-process (v2)**: The Agentic AI connector receives the request and available tools, then generates a response and may request tool calls.
+3. **Tools**: The selected tool activities inside the ad-hoc sub-process execute and return results to the agent. Tools include:
 	- List users (HTTP API)
 	- Search recipe (HTTP API)
 	- Jokes API (HTTP API)
 	- Get list of Tech Stuff (HTTP API)
-5. **Loopback**: Tool results are returned to the agent, which may generate further tool calls or a final answer.
-6. **User Feedback**: The user is asked if they are satisfied with the answer.
+4. **User Feedback**: The user is asked if they are satisfied with the answer.
 	- If not, the process loops for follow-up.
 	- If yes, the process ends.
 
@@ -102,44 +100,27 @@ Example inputs which can be entered in the initial form:
 
 ## Testing with Camunda Process Test (CPT)
 
-Tests live in `test/`. Two suites: **process tests** (fast, no credentials) and **integration tests** (real connectors + Bedrock).
+Tests live in `test/`. The process uses the AI Agent Sub-process v2 job type and the Test Studio suite uses the Camunda 8.10 test-case schema.
 
 ### Prerequisites
 
 - Java 21+
 - Docker running (for process tests)
-- AWS Bedrock credentials in `.env` (for integration tests):
-  ```
-  AWS_BEDROCK_ACCESS_KEY=<your-access-key>
-  AWS_BEDROCK_SECRET_KEY=<your-secret-key>
-  ```
 
-### Process tests — fast, no credentials needed
+### Maven tests
 
-Mocks the AI agent job. Tests outer-process routing: happy path and the loop path.
+Run the deterministic process tests and live HTTP connector integration tests (Docker required):
 
 ```bash
 cd test
-mvn test
+mvn clean test
 ```
 
-### Integration tests — real connectors + real Bedrock
+The AI Agent job is controlled in the local tests to avoid paid LLM calls; the four HTTP integration tests call their public APIs. The suite covers all reachable process elements and sequence flows.
 
-Runs 5 REST endpoint isolation tests (one per HTTP connector), 5 agent tool-routing tests (real Bedrock), and 2 E2E tests.
+### Test Studio
 
-```bash
-cd test
-env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test
-```
-
-> **Always use `mvn clean`** when switching between process and integration profiles — stale `target/test-classes` from the previous run can cause both test sets to run together.
-
-### What's covered
-
-| Suite | What runs | LLM calls |
-|-------|-----------|-----------|
-| `mvn test` | Outer-process routing (mocked agent) | None |
-| `mvn clean test -P integration-test` | REST connector isolation + agent tool-routing + E2E | Yes (Bedrock) |
+Import `ai-agent-chat-with-tools.test.json` into Test Studio for the live agent-selection, connector-isolation, and end-to-end scenarios. Eligible SaaS clusters use the Camunda-provided LLM; the suite calls public HTTP APIs and requires outbound internet access. See [TESTING.md](./TESTING.md) for scenarios, assertions, and known Test Studio limitations.
 
 ---
 
