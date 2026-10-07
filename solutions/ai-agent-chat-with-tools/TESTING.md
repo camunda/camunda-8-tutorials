@@ -31,6 +31,8 @@ Import both JSON files into Test Studio. The integration suite has 12 cases:
 
 Every agent segment has an explicit expected tool set and stops after the agent or expected tool completes. Test Studio exposes element assertions as singular checks; these prove the expected tools completed but cannot reject additional tool activation. Tests do not assert tool order, exact response wording, or semantic answer quality. The Test Studio instructions only check that connector result variables exist.
 
+The 12-case suite completed successfully in Test Studio on 2026-10-07 against a healthy Zeebe 8.10.0-alpha5 cluster, including the feedback-retry E2E. Test Studio continued to report “Ad-hoc subprocesses are not supported in Test mode” for the v2 agent, so this run is useful evidence but does not replace validation against a released 8.10.0+ SaaS cluster.
+
 ## Java-only connector checks
 
 The four Java CPT tests execute live HTTP connectors and assert stable response content and shape (known JSONPlaceholder user, DummyJSON recipe, non-empty JokeAPI text, and a sample product). These FEEL result-shape assertions are retained in Java because the imported instruction format cannot express them. Agent jobs remain controlled in Maven; Maven does not make LLM calls.
