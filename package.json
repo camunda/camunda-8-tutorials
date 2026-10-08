@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "bpmnlint": "^11.12.0",
-    "bpmnlint-plugin-camunda-compat": "^2.48.0",
+    "bpmnlint-plugin-camunda-compat": "^2.61.1",
     "zeebe-bpmn-moddle": "^2.0.0"
   }
 }

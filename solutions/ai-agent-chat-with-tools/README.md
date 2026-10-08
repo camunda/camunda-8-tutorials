@@ -24,7 +24,7 @@ SaaS trial organizations have AI features enabled by default. For enterprise org
 
 ## Secrets & Configuration
 
-The default AI Agent mapping uses `{{secrets.CAMUNDA_PROVIDED_LLM_API_ENDPOINT}}`, `{{secrets.CAMUNDA_PROVIDED_LLM_API_KEY}}`, and `{{secrets.CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL}}`. These SaaS-managed secrets are available only when Camunda-provided LLM is enabled.
+The default AI Agent mapping uses the Camunda 8.10 secret references `=camunda.secrets.CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `=camunda.secrets.CAMUNDA_PROVIDED_LLM_API_KEY`, and `=camunda.secrets.CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL`. These SaaS-managed secrets are available only when Camunda-provided LLM is enabled.
 
 Camunda-provided LLM is not available in Self-Managed environments. Configure the AI Agent template for a supported customer-managed provider instead, such as Amazon Bedrock, Ollama, or another OpenAI-compatible endpoint, and provide its credentials to the Connectors runtime. The process uses three retries for the agent job; persistent provider, configuration, or budget failures can create an incident that must be inspected and resolved.
 
