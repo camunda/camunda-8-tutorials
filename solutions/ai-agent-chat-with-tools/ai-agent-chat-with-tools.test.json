@@ -249,7 +249,7 @@
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_001", "name": "LookupSampleUsers", "input": {}}
+                        {"type": "tool_use", "id": "LookupSampleUsers", "name": "LookupSampleUsers", "input": {}}
                       ]
                     }
                   ]
@@ -263,7 +263,7 @@
               "elementId": "LookupSampleUsers",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_001", "name": "LookupSampleUsers"}
+                  "_meta": {"id": "LookupSampleUsers", "name": "LookupSampleUsers"}
                 }
               }
             }
@@ -304,11 +304,11 @@
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_001", "name": "LookupSampleUsers", "input": {}}]
+                      "content": [{"type": "tool_use", "id": "LookupSampleUsers", "name": "LookupSampleUsers", "input": {}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_001", "content": "[{\"id\":1,\"name\":\"Leanne Graham\",\"username\":\"Bret\"},{\"id\":2,\"name\":\"Ervin Howell\",\"username\":\"Antonette\"},{\"id\":3,\"name\":\"Clementine Bauch\",\"username\":\"Samantha\"}]"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "LookupSampleUsers", "content": "[{\"id\":1,\"name\":\"Leanne Graham\",\"username\":\"Bret\"},{\"id\":2,\"name\":\"Ervin Howell\",\"username\":\"Antonette\"},{\"id\":3,\"name\":\"Clementine Bauch\",\"username\":\"Samantha\"}]"}]
                     },
                     {
                       "role": "assistant",
@@ -386,7 +386,7 @@
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_003", "name": "SearchRecipes", "input": {"searchQuery": "pasta carbonara"}}
+                        {"type": "tool_use", "id": "SearchRecipes", "name": "SearchRecipes", "input": {"searchQuery": "pasta carbonara"}}
                       ]
                     }
                   ]
@@ -400,7 +400,7 @@
               "elementId": "SearchRecipes",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_003", "name": "SearchRecipes"},
+                  "_meta": {"id": "SearchRecipes", "name": "SearchRecipes"},
                   "searchQuery": "pasta carbonara"
                 }
               }
@@ -447,11 +447,11 @@
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_003", "name": "SearchRecipes", "input": {"searchQuery": "pasta carbonara"}}]
+                      "content": [{"type": "tool_use", "id": "SearchRecipes", "name": "SearchRecipes", "input": {"searchQuery": "pasta carbonara"}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_003", "content": "[{\"name\":\"Classic Spaghetti Carbonara\",\"prepTimeMinutes\":15,\"cookTimeMinutes\":20}]"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "SearchRecipes", "content": "[{\"name\":\"Classic Spaghetti Carbonara\",\"prepTimeMinutes\":15,\"cookTimeMinutes\":20}]"}]
                     },
                     {
                       "role": "assistant",
@@ -529,7 +529,7 @@
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_004", "name": "FetchSafeJoke", "input": {}}
+                        {"type": "tool_use", "id": "FetchSafeJoke", "name": "FetchSafeJoke", "input": {}}
                       ]
                     }
                   ]
@@ -543,7 +543,7 @@
               "elementId": "FetchSafeJoke",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_004", "name": "FetchSafeJoke"}
+                  "_meta": {"id": "FetchSafeJoke", "name": "FetchSafeJoke"}
                 }
               }
             }
@@ -580,11 +580,11 @@
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_004", "name": "FetchSafeJoke", "input": {}}]
+                      "content": [{"type": "tool_use", "id": "FetchSafeJoke", "name": "FetchSafeJoke", "input": {}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_004", "content": "Why don't scientists trust atoms? Because they make up everything!"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "FetchSafeJoke", "content": "Why don't scientists trust atoms? Because they make up everything!"}]
                     },
                     {
                       "role": "assistant",
@@ -662,7 +662,7 @@
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_005", "name": "ListSampleTechnologyProducts", "input": {}}
+                        {"type": "tool_use", "id": "ListSampleTechnologyProducts", "name": "ListSampleTechnologyProducts", "input": {}}
                       ]
                     }
                   ]
@@ -676,7 +676,7 @@
               "elementId": "ListSampleTechnologyProducts",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_005", "name": "ListSampleTechnologyProducts"}
+                  "_meta": {"id": "ListSampleTechnologyProducts", "name": "ListSampleTechnologyProducts"}
                 }
               }
             }
@@ -716,11 +716,11 @@
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_005", "name": "ListSampleTechnologyProducts", "input": {}}]
+                      "content": [{"type": "tool_use", "id": "ListSampleTechnologyProducts", "name": "ListSampleTechnologyProducts", "input": {}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_005", "content": "[{\"id\":\"1\",\"name\":\"Google Pixel 6 Pro\"},{\"id\":\"2\",\"name\":\"Apple iPhone 12 Mini\"}]"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "ListSampleTechnologyProducts", "content": "[{\"id\":\"1\",\"name\":\"Google Pixel 6 Pro\"},{\"id\":\"2\",\"name\":\"Apple iPhone 12 Mini\"}]"}]
                     },
                     {
                       "role": "assistant",
