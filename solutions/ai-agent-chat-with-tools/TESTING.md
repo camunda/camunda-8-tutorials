@@ -33,8 +33,6 @@ Every agent segment has an explicit expected tool set and stops after the agent 
 
 The 12-case suite completed successfully in Test Studio on 2026-10-07 against a healthy Zeebe 8.10.0-alpha5 cluster, including the feedback-retry E2E. Test Studio continued to report “Ad-hoc subprocesses are not supported in Test mode” for the v2 agent, so this run is useful evidence but does not replace validation against a released 8.10.0+ SaaS cluster.
 
-On 2026-10-08, an isolated local process completed the feedback-retry E2E on c8run 8.10.2 using the OpenAI Responses API through OpenRouter's EU endpoint and `anthropic/claude-sonnet-4.6`. All four real HTTP tools completed across two agent turns; the follow-up recalled the first turn's recipes, and final approval completed the process with no incidents. User tasks were completed through the API, not the forms UI. This verifies the Responses configuration with that provider, not the SaaS-managed gateway or the outstanding released-version Test Studio run.
-
 ## Java-only connector checks
 
 The four Java CPT tests execute live HTTP connectors and assert stable response content and shape (known JSONPlaceholder user, DummyJSON recipe, non-empty JokeAPI text, and a sample product). These FEEL result-shape assertions are retained in Java because the imported instruction format cannot express them. Agent jobs remain controlled in Maven; Maven does not make LLM calls.
