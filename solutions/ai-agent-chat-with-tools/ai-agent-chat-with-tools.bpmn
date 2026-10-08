@@ -46,7 +46,7 @@
         <zeebe:taskDefinition type="io.camunda.agenticai:aiagent:subprocess:2" retries="3" />
         <zeebe:ioMapping>
           <zeebe:input source="openai" target="provider.type" />
-          <zeebe:input source="completions" target="provider.openai.api.type" />
+          <zeebe:input source="responses" target="provider.openai.api.type" />
           <zeebe:input source="custom" target="provider.openai.backend.type" />
           <zeebe:input source="=camunda.secrets.CAMUNDA_PROVIDED_LLM_API_ENDPOINT" target="provider.openai.backend.custom.endpoint" />
           <zeebe:input source="apiKey" target="provider.openai.backend.custom.authentication.type" />

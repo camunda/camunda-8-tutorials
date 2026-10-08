@@ -26,6 +26,8 @@ SaaS trial organizations have AI features enabled by default. For enterprise org
 
 The default AI Agent mapping uses the Camunda 8.10 secret references `=camunda.secrets.CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `=camunda.secrets.CAMUNDA_PROVIDED_LLM_API_KEY`, and `=camunda.secrets.CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL`. These SaaS-managed secrets are available only when Camunda-provided LLM is enabled.
 
+The agent uses the OpenAI **Responses API** with a custom backend. The endpoint secret must contain the base URL, without `/responses`; the connector appends that path. Your gateway must support Responses. OpenRouter requires stateless requests, with conversation history retained by the agent's in-process memory. A live local run verified tool calling and feedback continuity on Camunda 8.10.2 with `https://eu.openrouter.ai/api/v1` and `anthropic/claude-sonnet-4.6`. This does not verify every SaaS-managed gateway; for a backend that supports only Chat Completions, select that API in the agent configuration before deploying.
+
 Camunda-provided LLM is not available in Self-Managed environments. Configure the AI Agent template for a supported customer-managed provider instead, such as Amazon Bedrock, Ollama, or another OpenAI-compatible endpoint, and provide its credentials to the Connectors runtime. The process uses three retries for the agent job; persistent provider, configuration, or budget failures can create an incident that must be inspected and resolved.
 
 ---
