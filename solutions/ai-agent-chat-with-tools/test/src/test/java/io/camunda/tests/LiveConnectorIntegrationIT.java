@@ -6,11 +6,11 @@ import static io.camunda.process.test.api.assertions.ElementSelectors.byId;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.process.test.api.CamundaSpringProcessTest;
+import io.camunda.process.test.api.TestDeployment;
 import io.camunda.process.test.api.assertions.ElementSelector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -23,7 +23,13 @@ import org.springframework.boot.test.context.SpringBootTest;
       "io.camunda.process.test.connectors-enabled=true"
     })
 @CamundaSpringProcessTest
-class LiveConnectorIntegrationTest {
+@TestDeployment(
+    resources = {
+      "ai-agent-chat-with-tools.bpmn",
+      "ai-agent-chat-initial-request.form",
+      "ai-agent-chat-user-feedback.form"
+    })
+class LiveConnectorIntegrationIT {
 
   private static final String PROCESS_ID = "ai-agent-chat-with-tools";
   private static final String LIST_USERS_ID = "LookupSampleUsers";
@@ -49,11 +55,6 @@ class LiveConnectorIntegrationTest {
           + " product.id = \"1\""
           + " and product.name = \"Google Pixel 6 Pro\")";
   @Autowired private CamundaClient client;
-
-  @BeforeEach
-  void deployProductionModelWithTestAgentWorker() {
-    TestModelDeployment.deploy(client, true);
-  }
 
   @Test
   @Timeout(180)

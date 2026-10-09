@@ -18,7 +18,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -104,7 +104,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -156,7 +156,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -229,7 +229,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -285,7 +285,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -366,7 +366,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -428,7 +428,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -509,7 +509,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -561,7 +561,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -642,7 +642,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -697,7 +697,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "test:ai-agent:subprocess"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {

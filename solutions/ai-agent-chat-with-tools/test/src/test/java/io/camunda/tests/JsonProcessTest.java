@@ -1,13 +1,12 @@
 package io.camunda.tests;
 
-import io.camunda.client.CamundaClient;
 import io.camunda.process.test.api.CamundaSpringProcessTest;
+import io.camunda.process.test.api.TestDeployment;
 import io.camunda.process.test.api.testCases.TestCase;
 import io.camunda.process.test.api.testCases.TestCaseRunner;
 import io.camunda.process.test.impl.testCases.TestCasesReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +19,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(
     properties = {
       "camunda.client.worker.defaults.enabled=false",
-      "io.camunda.process.test.connectors-enabled=true"
+      "io.camunda.process.test.connectors-enabled=false"
     })
 @CamundaSpringProcessTest
+@TestDeployment(
+    resources = {
+      "ai-agent-chat-with-tools.bpmn",
+      "ai-agent-chat-initial-request.form",
+      "ai-agent-chat-user-feedback.form"
+    })
 public class JsonProcessTest {
 
     @Autowired
     private TestCaseRunner testCaseRunner;
-
-    @Autowired
-    private CamundaClient client;
-
-    @BeforeEach
-    void deployDeterministicTestModel() {
-        TestModelDeployment.deploy(client, false);
-    }
 
     @Test
     @DisplayName("Process - direct answer and satisfied user")

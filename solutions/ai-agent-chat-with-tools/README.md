@@ -10,7 +10,7 @@ The example is set up for the **Camunda-provided LLM**. You do not need your own
 
 1. Import the [AI Agent Chat Quick Start from Marketplace](https://marketplace.camunda.com/en-US/apps/587865/ai-agent-chat-quick-start) into Camunda Hub.
 2. Open the diagram, then open **Test mode**.
-3. Follow the Test mode instructions to deploy and start the process. Enter `Find me a recipe for pasta` in the start form.
+3. Follow the Test mode instructions to deploy and start the process. Enter `Find me a recipe for pasta` in the start form's **How can I help you today?** field.
 4. Open **User Feedback** to read the answer.
 5. Approve the answer to end the process, or enter a follow-up request.
 
@@ -24,7 +24,7 @@ These tests call the LLM and public APIs. They exercise direct answers, tool cal
 
 The tests check that expected tools complete and result variables exist, not answer quality or extra tool calls. Review the answers and check the run history for unexpected calls.
 
-Do not import `ai-agent-chat-with-tools.test.json` into Hub. It mocks the agent and connectors and requires Camunda Process Test (CPT) to run.
+Do not upload `ai-agent-chat-with-tools.test.json` to Hub. It uses CPT instructions to complete agent subprocess jobs with controlled results, which Test mode does not currently support. Run that deterministic suite with Camunda Process Test (CPT).
 
 ## Use your own LLM provider
 
@@ -35,7 +35,7 @@ Use this approach on SaaS without Camunda-provided secrets, or on Self-Managed.
 3. Add your provider credentials as secrets. On SaaS, use [cluster secrets](https://docs.camunda.io/docs/components/saas/clusters/manage-secrets/). On Self-Managed, [configure a secret store](https://docs.camunda.io/docs/self-managed/components/orchestration-cluster/core-settings/configuration/properties/#secrets) for the Orchestration Cluster.
 4. Replace the `CAMUNDA_PROVIDED_LLM_*` references in **AI Agent** with your provider settings and `camunda.secrets.<name>` references.
 
-Then follow the [SaaS run steps](#-zero-config-llm-on-camunda-saas). Without Hub, deploy the BPMN and forms to your cluster and start an instance in Tasklist. Use **User Feedback** to approve the answer or send a follow-up.
+Then follow the [SaaS run steps](#-zero-config-llm-on-camunda-saas). Without Hub, deploy the BPMN and both referenced forms to your cluster and start an instance in Tasklist. The start form collects the initial request; use **User Feedback** to approve the answer or send a follow-up.
 
 The HTTP tools need no credentials.
 
@@ -67,11 +67,17 @@ The process tests supply agent and tool results to check approval, follow-up, an
 
 ### Run locally
 
-You need Java 21+, Maven, and Docker. The connector tests also need internet access. From this example's directory:
+You need Java 21+, Maven, and Docker. From this example's directory, run the deterministic process tests:
 
 ```bash
 cd test
 mvn clean test
+```
+
+To also run the four live HTTP connector tests, which require internet access, use the integration-test profile:
+
+```bash
+mvn clean verify -Pintegration-test
 ```
 
 Reports:
@@ -82,7 +88,7 @@ Reports:
 
 ### Explore the tests
 
-Start with the scenarios in [`ai-agent-chat-with-tools.test.json`](./ai-agent-chat-with-tools.test.json) and their [Java runner](./test/src/test/java/io/camunda/tests/JsonProcessTest.java). For live HTTP connector checks, see [`LiveConnectorIntegrationTest.java`](./test/src/test/java/io/camunda/tests/LiveConnectorIntegrationTest.java).
+Start with the scenarios in [`ai-agent-chat-with-tools.test.json`](./ai-agent-chat-with-tools.test.json) and their [Java runner](./test/src/test/java/io/camunda/tests/JsonProcessTest.java). For live HTTP connector checks, see [`LiveConnectorIntegrationIT.java`](./test/src/test/java/io/camunda/tests/LiveConnectorIntegrationIT.java).
 
 ## Customize the example
 
