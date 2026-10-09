@@ -763,5 +763,5 @@
       ]
     }
   ],
-  "_testNotes": "Deterministic scenarios in this file are shared by Test Studio Test mode and the Maven CPT runner. Live Test Studio integration scenarios are in ai-agent-chat-with-tools.integration.test.json."
+  "_testNotes": "Run these scenarios with Maven only. They use a test-only agent job type. For Test Studio, import ai-agent-chat-with-tools.integration.test.json instead."
 }

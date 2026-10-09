@@ -14,13 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Runs the shared 8.10 test-mode suite against an embedded Zeebe engine.
- *
- * The AI agent job (io.camunda.agenticai:aiagent:subprocess:2) is mocked in each test case
- * with controlled output. Tool jobs are controlled in the same way so the
- * complete modeled flow is tested deterministically without credentials or external services.
- *
- * Run with: mvn test   (Docker must be running)
+ * Runs the Maven process scenarios with controlled agent and tool results.
+ * No LLM calls or external services are used.
  */
 @SpringBootTest(
     properties = {
