@@ -28,6 +28,18 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResults"
+          ],
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          }
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -46,18 +58,6 @@
             "elementId": "SearchRecipes"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResults"
-          ],
-          "elementSelector": {
-            "elementId": "AI_Agent"
-          }
         }
       ]
     },
@@ -87,6 +87,18 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResults"
+          ],
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          }
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -105,18 +117,6 @@
             "elementId": "ListSampleTechnologyProducts"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResults"
-          ],
-          "elementSelector": {
-            "elementId": "AI_Agent"
-          }
         }
       ]
     },
@@ -133,6 +133,65 @@
             "inputText": "Tell me a safe joke and find a pasta recipe.",
             "inputDocuments": []
           }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": false,
+            "followUpInput": "That is helpful, but please also list the available users and tell me which sample technology products are available.",
+            "followUpDocuments": []
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "variables": {
+            "userSatisfied": true
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "AI_Agent"
+          },
+          "state": "IS_COMPLETED",
+          "amount": 2
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "elementSelector": {
+            "elementId": "UserTask_ReviewAgentResponse"
+          },
+          "state": "IS_COMPLETED",
+          "amount": 2
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",
@@ -155,17 +214,6 @@
           "state": "IS_COMPLETED"
         },
         {
-          "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": {
-            "elementId": "UserTask_ReviewAgentResponse"
-          },
-          "variables": {
-            "userSatisfied": false,
-            "followUpInput": "That is helpful, but please also list the available users and tell me which sample technology products are available.",
-            "followUpDocuments": []
-          }
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -182,54 +230,6 @@
           },
           "elementSelector": {
             "elementId": "ListSampleTechnologyProducts"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "UserTask_ReviewAgentResponse"
-          },
-          "state": "IS_ACTIVE"
-        },
-        {
-          "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": {
-            "elementId": "UserTask_ReviewAgentResponse"
-          },
-          "variables": {
-            "userSatisfied": true
-          }
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "AI_Agent"
-          },
-          "state": "IS_COMPLETED",
-          "amount": 2
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "UserTask_ReviewAgentResponse"
-          },
-          "state": "IS_COMPLETED",
-          "amount": 2
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "state": "IS_COMPLETED"
         }
@@ -265,6 +265,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -273,15 +282,6 @@
             "elementId": "LookupSampleUsers"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
@@ -316,6 +316,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -324,15 +333,6 @@
             "elementId": "SearchRecipes"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
@@ -366,6 +366,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -374,15 +383,6 @@
             "elementId": "FetchSafeJoke"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
@@ -416,6 +416,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -424,15 +433,6 @@
             "elementId": "ListSampleTechnologyProducts"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
@@ -462,6 +462,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "agent"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -470,15 +479,6 @@
             "elementId": "AI_Agent"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "agent"
-          ]
         }
       ]
     },
@@ -508,6 +508,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -516,15 +525,6 @@
             "elementId": "LookupSampleUsers"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
@@ -554,6 +554,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -562,15 +571,6 @@
             "elementId": "SearchRecipes"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
@@ -600,6 +600,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -608,15 +617,6 @@
             "elementId": "FetchSafeJoke"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     },
@@ -646,6 +646,15 @@
           ]
         },
         {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "ai-agent-chat-with-tools"
+          },
+          "variableNames": [
+            "toolCallResult"
+          ]
+        },
+        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "ai-agent-chat-with-tools"
@@ -654,15 +663,6 @@
             "elementId": "ListSampleTechnologyProducts"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "variableNames": [
-            "toolCallResult"
-          ]
         }
       ]
     }
