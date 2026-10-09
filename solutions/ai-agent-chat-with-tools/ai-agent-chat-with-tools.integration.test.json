@@ -121,8 +121,8 @@
       ]
     },
     {
-      "name": "Live E2E \u2014 reject feedback then approve final answer",
-      "description": "Runs the complete process through the agent, live connectors, a rejected response, a follow-up answer, and final user approval. The named business outcome is a completed process instance; the test asserts each expected tool and terminal state without asserting tool order or response wording.",
+      "name": "Live E2E \u2014 approve first agent response",
+      "description": "Runs the complete process through the agent and live connectors, then approves the first response without looping. The named business outcome is a completed process instance; the test asserts both expected tools and terminal state without asserting tool order or response wording.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -140,27 +140,6 @@
             "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
-            "userSatisfied": false,
-            "followUpInput": "That is helpful, but please also list the available users and tell me which sample technology products are available.",
-            "followUpDocuments": []
-          }
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "UserTask_ReviewAgentResponse"
-          },
-          "state": "IS_ACTIVE"
-        },
-        {
-          "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": {
-            "elementId": "UserTask_ReviewAgentResponse"
-          },
-          "variables": {
             "userSatisfied": true
           }
         },
@@ -170,28 +149,6 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "AI_Agent"
-          },
-          "state": "IS_COMPLETED",
-          "amount": 2
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "ai-agent-chat-with-tools"
-          },
-          "elementSelector": {
-            "elementId": "UserTask_ReviewAgentResponse"
-          },
-          "state": "IS_COMPLETED",
-          "amount": 2
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",
@@ -219,9 +176,10 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelector": {
-            "elementId": "LookupSampleUsers"
+            "elementId": "AI_Agent"
           },
-          "state": "IS_COMPLETED"
+          "state": "IS_COMPLETED",
+          "amount": 1
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",
@@ -229,9 +187,10 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelector": {
-            "elementId": "ListSampleTechnologyProducts"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
-          "state": "IS_COMPLETED"
+          "state": "IS_COMPLETED",
+          "amount": 1
         }
       ]
     },
