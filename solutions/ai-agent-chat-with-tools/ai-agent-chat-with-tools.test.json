@@ -1,5 +1,6 @@
 {
-  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "ai-agent-chat-with-tools",
   "testCases": [
     {
       "name": "Happy path — user satisfied on first response (no tool calls)",
@@ -17,7 +18,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -52,14 +53,14 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelectors": [
-            {"elementId": "User_Feedback"}
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": {
-            "elementId": "User_Feedback"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
             "userSatisfied": true
@@ -71,10 +72,10 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelectors": [
-            {"elementId": "StartEvent_1"},
+            {"elementId": "StartEvent_TaskReceived"},
             {"elementId": "AI_Agent"},
-            {"elementId": "User_Feedback"},
-            {"elementId": "Event_0i39jej"}
+            {"elementId": "UserTask_ReviewAgentResponse"},
+            {"elementId": "EndEvent_UserSatisfied"}
           ],
           "state": "IS_COMPLETED_IN_ORDER"
         },
@@ -103,7 +104,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -138,14 +139,14 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelectors": [
-            {"elementId": "User_Feedback"}
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": {
-            "elementId": "User_Feedback"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
             "userSatisfied": false,
@@ -155,7 +156,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -190,14 +191,14 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelectors": [
-            {"elementId": "User_Feedback"}
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": {
-            "elementId": "User_Feedback"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
             "userSatisfied": true
@@ -213,8 +214,8 @@
       ]
     },
     {
-      "name": "ListUsers tool — agent calls ListUsers then responds",
-      "description": "The AI agent calls the ListUsers HTTP tool to fetch all users, then delivers its response. Tests the full AHSP tool-call lifecycle: agent job round 1 (tool activation) → ListUsers job completes → agent job round 2 (final response).",
+      "name": "LookupSampleUsers tool — agent calls LookupSampleUsers then responds",
+      "description": "The AI agent calls the LookupSampleUsers HTTP tool to fetch all users, then delivers its response. Tests the full AHSP tool-call lifecycle: agent job round 1 (tool activation) → LookupSampleUsers job completes → agent job round 2 (final response).",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -228,7 +229,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -248,7 +249,7 @@
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_001", "name": "ListUsers", "input": {}}
+                        {"type": "tool_use", "id": "LookupSampleUsers", "name": "LookupSampleUsers", "input": {}}
                       ]
                     }
                   ]
@@ -259,10 +260,10 @@
           "completionConditionFulfilled": false,
           "activateElements": [
             {
-              "elementId": "ListUsers",
+              "elementId": "LookupSampleUsers",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_001", "name": "ListUsers"}
+                  "_meta": {"id": "LookupSampleUsers", "name": "LookupSampleUsers"}
                 }
               }
             }
@@ -271,7 +272,7 @@
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
-            "elementId": "ListUsers"
+            "elementId": "LookupSampleUsers"
           },
           "variables": {
             "toolCallResult": [
@@ -284,7 +285,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -303,11 +304,11 @@
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_001", "name": "ListUsers", "input": {}}]
+                      "content": [{"type": "tool_use", "id": "LookupSampleUsers", "name": "LookupSampleUsers", "input": {}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_001", "content": "[{\"id\":1,\"name\":\"Leanne Graham\",\"username\":\"Bret\"},{\"id\":2,\"name\":\"Ervin Howell\",\"username\":\"Antonette\"},{\"id\":3,\"name\":\"Clementine Bauch\",\"username\":\"Samantha\"}]"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "LookupSampleUsers", "content": "[{\"id\":1,\"name\":\"Leanne Graham\",\"username\":\"Bret\"},{\"id\":2,\"name\":\"Ervin Howell\",\"username\":\"Antonette\"},{\"id\":3,\"name\":\"Clementine Bauch\",\"username\":\"Samantha\"}]"}]
                     },
                     {
                       "role": "assistant",
@@ -327,14 +328,14 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelectors": [
-            {"elementId": "User_Feedback"}
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": {
-            "elementId": "User_Feedback"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
             "userSatisfied": true
@@ -350,8 +351,8 @@
       ]
     },
     {
-      "name": "Search_Recipe tool — agent searches for a recipe",
-      "description": "The AI agent calls the Search_Recipe HTTP tool with a dynamic search query, receives recipe results, then responds. Tests the fromAi() searchQuery expression and recipe result mapping.",
+      "name": "SearchRecipes tool — agent searches for a recipe",
+      "description": "The AI agent calls the SearchRecipes HTTP tool with a dynamic search query, receives recipe results, then responds. Tests the fromAi() searchQuery expression and recipe result mapping.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -365,7 +366,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -385,7 +386,7 @@
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_003", "name": "Search_Recipe", "input": {"searchQuery": "pasta carbonara"}}
+                        {"type": "tool_use", "id": "SearchRecipes", "name": "SearchRecipes", "input": {"searchQuery": "pasta carbonara"}}
                       ]
                     }
                   ]
@@ -396,10 +397,10 @@
           "completionConditionFulfilled": false,
           "activateElements": [
             {
-              "elementId": "Search_Recipe",
+              "elementId": "SearchRecipes",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_003", "name": "Search_Recipe"},
+                  "_meta": {"id": "SearchRecipes", "name": "SearchRecipes"},
                   "searchQuery": "pasta carbonara"
                 }
               }
@@ -409,7 +410,7 @@
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
-            "elementId": "Search_Recipe"
+            "elementId": "SearchRecipes"
           },
           "variables": {
             "toolCallResult": [
@@ -427,7 +428,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -446,11 +447,11 @@
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_003", "name": "Search_Recipe", "input": {"searchQuery": "pasta carbonara"}}]
+                      "content": [{"type": "tool_use", "id": "SearchRecipes", "name": "SearchRecipes", "input": {"searchQuery": "pasta carbonara"}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_003", "content": "[{\"name\":\"Classic Spaghetti Carbonara\",\"prepTimeMinutes\":15,\"cookTimeMinutes\":20}]"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "SearchRecipes", "content": "[{\"name\":\"Classic Spaghetti Carbonara\",\"prepTimeMinutes\":15,\"cookTimeMinutes\":20}]"}]
                     },
                     {
                       "role": "assistant",
@@ -470,14 +471,14 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelectors": [
-            {"elementId": "User_Feedback"}
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": {
-            "elementId": "User_Feedback"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
             "userSatisfied": true
@@ -493,8 +494,8 @@
       ]
     },
     {
-      "name": "Jokes_API tool — agent fetches a random joke",
-      "description": "The AI agent calls the Jokes_API HTTP tool to fetch a random joke, then includes it in its response. Tests the tool activation and result mapping for a no-input HTTP connector.",
+      "name": "FetchSafeJoke tool — agent fetches a random joke",
+      "description": "The AI agent calls the FetchSafeJoke HTTP tool to fetch a random joke, then includes it in its response. Tests the tool activation and result mapping for a no-input HTTP connector.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -508,7 +509,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -528,7 +529,7 @@
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_004", "name": "Jokes_API", "input": {}}
+                        {"type": "tool_use", "id": "FetchSafeJoke", "name": "FetchSafeJoke", "input": {}}
                       ]
                     }
                   ]
@@ -539,10 +540,10 @@
           "completionConditionFulfilled": false,
           "activateElements": [
             {
-              "elementId": "Jokes_API",
+              "elementId": "FetchSafeJoke",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_004", "name": "Jokes_API"}
+                  "_meta": {"id": "FetchSafeJoke", "name": "FetchSafeJoke"}
                 }
               }
             }
@@ -551,7 +552,7 @@
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
-            "elementId": "Jokes_API"
+            "elementId": "FetchSafeJoke"
           },
           "variables": {
             "toolCallResult": "Why don't scientists trust atoms? Because they make up everything!"
@@ -560,7 +561,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -579,11 +580,11 @@
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_004", "name": "Jokes_API", "input": {}}]
+                      "content": [{"type": "tool_use", "id": "FetchSafeJoke", "name": "FetchSafeJoke", "input": {}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_004", "content": "Why don't scientists trust atoms? Because they make up everything!"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "FetchSafeJoke", "content": "Why don't scientists trust atoms? Because they make up everything!"}]
                     },
                     {
                       "role": "assistant",
@@ -603,14 +604,14 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelectors": [
-            {"elementId": "User_Feedback"}
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": {
-            "elementId": "User_Feedback"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
             "userSatisfied": true
@@ -626,7 +627,7 @@
       ]
     },
     {
-      "name": "Activity_0x3prgn tool — agent gets list of tech stuff",
+      "name": "ListSampleTechnologyProducts tool — agent gets list of tech stuff",
       "description": "The AI agent calls the Get list of Tech Stuff HTTP tool to fetch all tech objects, then delivers its response. Tests the full AHSP tool-call lifecycle for the static-URL tech stuff endpoint.",
       "instructions": [
         {
@@ -641,7 +642,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -661,7 +662,7 @@
                     {
                       "role": "assistant",
                       "content": [
-                        {"type": "tool_use", "id": "tool_005", "name": "Activity_0x3prgn", "input": {}}
+                        {"type": "tool_use", "id": "ListSampleTechnologyProducts", "name": "ListSampleTechnologyProducts", "input": {}}
                       ]
                     }
                   ]
@@ -672,10 +673,10 @@
           "completionConditionFulfilled": false,
           "activateElements": [
             {
-              "elementId": "Activity_0x3prgn",
+              "elementId": "ListSampleTechnologyProducts",
               "variables": {
                 "toolCall": {
-                  "_meta": {"id": "tool_005", "name": "Activity_0x3prgn"}
+                  "_meta": {"id": "ListSampleTechnologyProducts", "name": "ListSampleTechnologyProducts"}
                 }
               }
             }
@@ -684,7 +685,7 @@
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
-            "elementId": "Activity_0x3prgn"
+            "elementId": "ListSampleTechnologyProducts"
           },
           "variables": {
             "toolCallResult": [
@@ -696,7 +697,7 @@
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
-            "jobType": "io.camunda.agenticai:aiagent-job-worker:1"
+            "jobType": "io.camunda.agenticai:aiagent:subprocess:2"
           },
           "variables": {
             "agent": {
@@ -715,11 +716,11 @@
                     },
                     {
                       "role": "assistant",
-                      "content": [{"type": "tool_use", "id": "tool_005", "name": "Activity_0x3prgn", "input": {}}]
+                      "content": [{"type": "tool_use", "id": "ListSampleTechnologyProducts", "name": "ListSampleTechnologyProducts", "input": {}}]
                     },
                     {
                       "role": "tool",
-                      "content": [{"type": "tool_result", "tool_use_id": "tool_005", "content": "[{\"id\":\"1\",\"name\":\"Google Pixel 6 Pro\"},{\"id\":\"2\",\"name\":\"Apple iPhone 12 Mini\"}]"}]
+                      "content": [{"type": "tool_result", "tool_use_id": "ListSampleTechnologyProducts", "content": "[{\"id\":\"1\",\"name\":\"Google Pixel 6 Pro\"},{\"id\":\"2\",\"name\":\"Apple iPhone 12 Mini\"}]"}]
                     },
                     {
                       "role": "assistant",
@@ -739,14 +740,14 @@
             "processDefinitionId": "ai-agent-chat-with-tools"
           },
           "elementSelectors": [
-            {"elementId": "User_Feedback"}
+            {"elementId": "UserTask_ReviewAgentResponse"}
           ],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
           "userTaskSelector": {
-            "elementId": "User_Feedback"
+            "elementId": "UserTask_ReviewAgentResponse"
           },
           "variables": {
             "userSatisfied": true
@@ -762,5 +763,5 @@
       ]
     }
   ],
-  "_integrationTestNotes": "Process tests mock the AHSP by simulating agent behavior. Tool tests use activateElements to activate individual tool tasks and COMPLETE_JOB to mock their output. Available tools: ListUsers, Search_Recipe, Jokes_API, Activity_0x3prgn (Get list of Tech Stuff). Run integration tests with: env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test (requires AWS Bedrock credentials in ../.env)."
+  "_testNotes": "Run these scenarios with Maven only. They use a test-only agent job type. For Test Studio, import ai-agent-chat-with-tools.integration.test.json instead."
 }

@@ -1,4 +1,4 @@
-# Intelligent Routing
+# Intelligent Routing — Legacy Connector Example
 **Technical level:** Medium 
 <br>
 **Industry:** Any 
@@ -7,7 +7,9 @@
 
 ## Summary
 
-This process blueprint exemplifies the use of AI to intelligently route customer inquiries to the appropriate department. It utilizes the OpenAI, Azure OpenAI or Huggingface connectors for processing signals within a business context, ensuring that each task is assigned based on the optimal path for efficiency and resolution.
+These historical examples call OpenAI, Azure OpenAI, or Hugging Face APIs directly from connector tasks, then route the inquiry using the returned classification. They predate the AI Agent connector and ad-hoc subprocess pattern: they are connector-based routing examples, not AI agents or current agentic-orchestration blueprints.
+
+For a current AI Agent getting-started example, use the [AI Agent Chat With Tools quick start](../ai-agent-chat-with-tools/README.md).
 
 ---
 

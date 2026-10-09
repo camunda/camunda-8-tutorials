@@ -1,157 +1,115 @@
 # AI Agent Chat With Tools Example
 
-This example demonstrates how to deploy and run an AI-driven chat process in Camunda 8, where an AI agent can answer questions and use external tools (APIs, scripts, etc.) to provide more accurate responses. The process showcases tool integration, user feedback, and human-in-the-loop capabilities.
+Ask the agent a question, let it use tools, then review its answer or send a follow-up request.
 
----
+This example uses an [AI Agent Sub-process](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-subprocess/) and requires **Camunda 8.10.0+**. The tools need internet access.
 
 ## 🚀 Zero-config LLM on Camunda SaaS
 
-**Running on Camunda SaaS?** This blueprint is already pre-configured to use the **Camunda-provided LLM** — a fully managed model that works out of the box. The required secrets (`CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, and `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL`) are automatically available on Camunda SaaS — no AWS account, no external API keys, no extra setup.
+The example is set up for the **Camunda-provided LLM**. You do not need your own LLM credentials. Check [access and budget requirements](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/). If it is not available, follow [Use your own LLM provider](#use-your-own-llm-provider).
 
-👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
+1. Import the [AI Agent Chat Quick Start from Marketplace](https://marketplace.camunda.com/en-US/apps/587865/ai-agent-chat-quick-start) into Camunda Hub.
+2. Open the diagram, then open **Test mode**.
+3. Follow the Test mode instructions to deploy and start the process. Enter `Find me a recipe for pasta` in the start form's **How can I help you today?** field.
+4. Open **User Feedback** to read the answer.
+5. Approve the answer to end the process, or enter a follow-up request.
 
-Just deploy the process to your SaaS cluster and run — the AI is ready to go.
+You can also try `Tell me a joke`, `Which users are available?`, or `Which iPhones are available?`. The user and product APIs return sample data.
 
----
+### Run the low-code tests in Hub
 
-## Prerequisites
+The Marketplace import does not include the live test file. To run the low-code tests:
 
-- **Camunda 8.8+** (SaaS or Self-Managed)
-- Access to Camunda Connectors (Agentic AI, HTTP, etc.)
-- Outbound internet access for connectors (to reach APIs)
-- (Optional) Credentials for any external APIs/tools you want to use
+1. Download [`ai-agent-chat-with-tools.integration.test.json`](./ai-agent-chat-with-tools.integration.test.json).
+2. Use **Upload files** on the imported project's page to add it to that project.
+3. Open the diagram's **Test tab**.
+4. Run the suite.
+5. Review the results in the run history.
 
----
+These tests call the LLM and public APIs. They exercise direct answers, tool calls, and the feedback path. You need Camunda-provided LLM access, remaining budget, and internet access.
 
-## Secrets & Configuration
+The tests check that expected tools complete and result variables exist, not answer quality or extra tool calls. Review the answers and check the run history for unexpected calls.
 
-This example is pre-configured to use the **Camunda-provided LLM** via the `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, and `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` secrets, which are **automatically available on Camunda SaaS** — no additional secrets needed.
+Do not upload `ai-agent-chat-with-tools.test.json` to Hub. It uses CPT instructions to complete agent subprocess jobs with controlled results, which Test mode does not currently support. Run that deterministic suite with [Camunda Process Test (CPT)](https://docs.camunda.io/docs/apis-tools/testing/getting-started/).
 
-If you want to use a different LLM provider (e.g. AWS Bedrock), update the Agentic AI connector configuration in the process and set up the corresponding credentials:
+## Use your own LLM provider
 
-| Secret Name                  | Purpose                        |
-|------------------------------|--------------------------------|
-| `AWS_BEDROCK_ACCESS_KEY`     | AWS Bedrock access key         |
-| `AWS_BEDROCK_SECRET_KEY`     | AWS Bedrock secret key         |
-| ...                          | ...                            |
+Use this approach on SaaS without Camunda-provided secrets, or on Self-Managed.
 
-Configure the connectors in the Web Modeler or via environment variables as needed.
+1. Open **AI Agent** in the model.
+2. Select your provider, backend, and model. Follow the [provider setup guide](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-model-providers/).
+3. Add your provider credentials as secrets. On SaaS, use [cluster secrets](https://docs.camunda.io/docs/components/saas/clusters/manage-secrets/). On Self-Managed, [configure a secret store](https://docs.camunda.io/docs/self-managed/components/orchestration-cluster/core-settings/configuration/properties/#secrets) for the Orchestration Cluster.
+4. Replace the `CAMUNDA_PROVIDED_LLM_*` references in **AI Agent** with your provider settings and `camunda.secrets.<name>` references.
 
----
+Then follow the [SaaS run steps](#-zero-config-llm-on-camunda-saas). Without Hub, deploy the BPMN and both referenced forms to your cluster and start an instance in Tasklist. The start form collects the initial request; use **User Feedback** to approve the answer or send a follow-up.
 
-## How to Deploy & Run
+The HTTP tools need no credentials.
 
-1. **Import the BPMN Model**
-	- Open Camunda Web Modeler.
-	- Import `ai-agent-chat-with-tools.bpmn` and all the form files from this folder.
+## Run end to end with c8run
 
-2. **Configure Connectors**
-	- Configure any HTTP connectors or other tools you want the agent to use.
-    - Feel free to add your own tools by creating new activities in the `AI Agent` ad-hoc sub-process.
+This runs the real agent and tools locally. You need your own LLM provider, its credentials, and internet access.
 
-3. **Set Secrets**
-	- In Camunda Console, add any required secrets (see above).
-    - If you use c8run, set the secrets as environment variables and restart `c8run`
-    - If you use c8run with Docker, add the secrets in the `connector-secrets.txt` file and restart `c8run`
+1. [Install Camunda 8 Run](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/install-start/) 8.10.0+.
+2. Add your provider secrets to the [local secret store](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/configuration/#manage-local-secrets). For example, from the c8run directory:
 
-4. **Deploy the Process**
-	- Deploy the process to your Camunda 8 cluster.
+   ```bash
+   ./c8run secrets set OPENAI_API_KEY
+   ```
 
-5. **Start a New Instance**
-	- Use the Web Modeler to start an instance by filling out the form to start an instance.
-	- Use tasklist to fill out the form to start a new instance.
+   Enter the value at the hidden prompt. Do not put credentials in the BPMN.
+3. Configure **AI Agent** as described in [Use your own LLM provider](#use-your-own-llm-provider). Reference the local secret with `=camunda.secrets.OPENAI_API_KEY`.
+4. Start c8run using the instructions for your operating system.
+5. Open the BPMN in Camunda Desktop Modeler and deploy it with both forms to the local cluster.
+6. Open Tasklist at `http://localhost:8080/tasklist`. Start an instance and enter a request.
+7. Open **User Feedback**, send a follow-up, then approve the answer to complete the process.
 
-6. **Interact**
-	- The agent will respond, possibly using tools.
+Use Operate at `http://localhost:8080/operate` to inspect the process and any incidents.
 
----
+## Learn the pro-code tests with Java and Maven
 
-## BPMN Process Overview
+[Camunda Process Test (CPT)](https://docs.camunda.io/docs/apis-tools/testing/getting-started/) runs the process in a test environment. You do not need a running c8run instance.
 
-The process (`ai-agent-chat-with-tools.bpmn`) works as follows:
+The process tests supply agent and tool results to check approval, follow-up, and tool paths. The Java connector tests call the public APIs and check the returned data. Neither suite calls an LLM.
 
-1. **Start Event**: User submits an initial chat request via a form.
-2. **AI Agent Task**: The Agentic AI connector receives the request, context, and available tools. It generates a response and may request tool calls.
-3. **Tool Call Gateway**: If the agent wants to use tools, the process enters the `Agent Tools` ad-hoc sub-process.
-4. **Agent Tools Sub-Process**: For each tool call requested by the agent, the corresponding task is executed. Tools include:
-	- List users (HTTP API)
-	- Search recipe (HTTP API)
-	- Jokes API (HTTP API)
-	- Get list of Tech Stuff (HTTP API)
-5. **Loopback**: Tool results are returned to the agent, which may generate further tool calls or a final answer.
-6. **User Feedback**: The user is asked if they are satisfied with the answer.
-	- If not, the process loops for follow-up.
-	- If yes, the process ends.
+### Run locally
 
-**Key Features:**
-- Dynamic tool invocation by the agent
-- Extensible: add your own tools as new tasks in the sub-process
-
----
-
-## Example Usage
-
-Example inputs which can be entered in the initial form:
-
-- `Tell me a joke`: the agent will use the Jokes API tool to fetch a joke.
-- `Find me a recipe for pasta`: the agent will use the Search recipe tool.
-- `Which user have the longest name`: the agent will use the List users tool to retrieve user data.
-- `Which iPhones are available` will call the tech API for available gadgets and filter for iPhones.
-
----
-
-## Testing with Camunda Process Test (CPT)
-
-Tests live in `test/`. Two suites: **process tests** (fast, no credentials) and **integration tests** (real connectors + Bedrock).
-
-### Prerequisites
+You need:
 
 - Java 21+
-- Docker running (for process tests)
-- AWS Bedrock credentials in `.env` (for integration tests):
-  ```
-  AWS_BEDROCK_ACCESS_KEY=<your-access-key>
-  AWS_BEDROCK_SECRET_KEY=<your-secret-key>
-  ```
+- Maven
+- Docker
 
-### Process tests — fast, no credentials needed
-
-Mocks the AI agent job. Tests outer-process routing: happy path and the loop path.
+From this example's directory, run the deterministic process tests:
 
 ```bash
 cd test
-mvn test
+mvn clean test
 ```
 
-### Integration tests — real connectors + real Bedrock
-
-Runs 5 REST endpoint isolation tests (one per HTTP connector), 5 agent tool-routing tests (real Bedrock), and 2 E2E tests.
+To also run the four live HTTP connector tests, which require internet access, use the integration-test profile:
 
 ```bash
-cd test
-env $(cat ../.env | grep -v '^#' | xargs) mvn clean test -P integration-test
+mvn clean verify -Pintegration-test
 ```
 
-> **Always use `mvn clean`** when switching between process and integration profiles — stale `target/test-classes` from the previous run can cause both test sets to run together.
+Reports:
 
-### What's covered
+- Coverage: `target/coverage-report/report.html`
+- Coverage data: `target/coverage-report/report.json`
+- Test results: `target/surefire-reports/`
 
-| Suite | What runs | LLM calls |
-|-------|-----------|-----------|
-| `mvn test` | Outer-process routing (mocked agent) | None |
-| `mvn clean test -P integration-test` | REST connector isolation + agent tool-routing + E2E | Yes (Bedrock) |
+### Explore the tests
 
----
+Start with the scenarios in [`ai-agent-chat-with-tools.test.json`](./ai-agent-chat-with-tools.test.json) and their [Java runner](./test/src/test/java/io/camunda/tests/JsonProcessTest.java). For live HTTP connector checks, see [`LiveConnectorIntegrationIT.java`](./test/src/test/java/io/camunda/tests/LiveConnectorIntegrationIT.java).
 
-## EU AI Act Transparency Tagging Guidance (Article 50(2))
+## Customize the example
 
-Use a clear AI-generated label whenever users see model output.
+The agent can find users, search recipes, fetch a joke, and list technology products.
 
-- The form already demonstrates this in `ai-agent-chat-user-feedback.form`.
-- Keep the disclosure close to `responseText` (before or after is fine if it is clearly visible).
-- Keep it visible on each response turn, including follow-ups.
-- Example text: `AI-generated content: This response was generated by an AI system and may contain mistakes. Please review before relying on it.`
+To add a tool, create an activity inside **AI Agent**. Its documentation should explain what it does, when to use it, when not to use it, its inputs, and its results. See [Add a tool to an AI Agent](https://docs.camunda.io/docs/components/agentic-orchestration/add-tool-to-ai-agent/).
 
-Use the current form implementation as the recommended how-to example.
+The feedback form labels the response as AI-generated. Keep this disclosure visible on each response, including follow-ups, when you change the forms.
+
+Source and support: [camunda/camunda-8-tutorials](https://github.com/camunda/camunda-8-tutorials/tree/main/solutions/ai-agent-chat-with-tools).
 
 _Made with ❤️ by Camunda_
