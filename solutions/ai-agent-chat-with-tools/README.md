@@ -18,13 +18,19 @@ You can also try `Tell me a joke`, `Which users are available?`, or `Which iPhon
 
 ### Run the low-code tests in Hub
 
-The Marketplace import does not include the live test file. Download [`ai-agent-chat-with-tools.integration.test.json`](./ai-agent-chat-with-tools.integration.test.json), then use **Upload files** on the imported project's page to add it to that project. Open the diagram's **Test tab**, run the suite, and view the results in the run history.
+The Marketplace import does not include the live test file. To run the low-code tests:
+
+1. Download [`ai-agent-chat-with-tools.integration.test.json`](./ai-agent-chat-with-tools.integration.test.json).
+2. Use **Upload files** on the imported project's page to add it to that project.
+3. Open the diagram's **Test tab**.
+4. Run the suite.
+5. Review the results in the run history.
 
 These tests call the LLM and public APIs. They exercise direct answers, tool calls, and the feedback path. You need Camunda-provided LLM access, remaining budget, and internet access.
 
 The tests check that expected tools complete and result variables exist, not answer quality or extra tool calls. Review the answers and check the run history for unexpected calls.
 
-Do not upload `ai-agent-chat-with-tools.test.json` to Hub. It uses CPT instructions to complete agent subprocess jobs with controlled results, which Test mode does not currently support. Run that deterministic suite with Camunda Process Test (CPT).
+Do not upload `ai-agent-chat-with-tools.test.json` to Hub. It uses CPT instructions to complete agent subprocess jobs with controlled results, which Test mode does not currently support. Run that deterministic suite with [Camunda Process Test (CPT)](https://docs.camunda.io/docs/apis-tools/testing/getting-started/).
 
 ## Use your own LLM provider
 
@@ -67,7 +73,13 @@ The process tests supply agent and tool results to check approval, follow-up, an
 
 ### Run locally
 
-You need Java 21+, Maven, and Docker. From this example's directory, run the deterministic process tests:
+You need:
+
+- Java 21+
+- Maven
+- Docker
+
+From this example's directory, run the deterministic process tests:
 
 ```bash
 cd test
@@ -94,7 +106,7 @@ Start with the scenarios in [`ai-agent-chat-with-tools.test.json`](./ai-agent-ch
 
 The agent can find users, search recipes, fetch a joke, and list technology products.
 
-To add a tool, create an activity inside **AI Agent**. Its documentation should explain what it does, when to use it, when not to use it, its inputs, and its results. See [tool definitions](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-aiagent-tool-definitions/).
+To add a tool, create an activity inside **AI Agent**. Its documentation should explain what it does, when to use it, when not to use it, its inputs, and its results. See [Add a tool to an AI Agent](https://docs.camunda.io/docs/components/agentic-orchestration/add-tool-to-ai-agent/).
 
 The feedback form labels the response as AI-generated. Keep this disclosure visible on each response, including follow-ups, when you change the forms.
 
