@@ -27,7 +27,9 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Install xmllint
-        run: sudo apt-get install -y libxml2-utils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml2-utils
 
       - name: Find changed BPMN/DMN files
         id: changed
