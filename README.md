@@ -23,8 +23,6 @@ Legacy examples:
 
 Solutions:
  
-* Level Easy:
-	
 * Level Medium
    * [AI Agent Chat with Tools](solutions/ai-agent-chat-with-tools)
    * [AI Agent Chat with MCP](solutions/ai-agent-chat-with-mcp)
