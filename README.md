@@ -17,10 +17,13 @@ Quick Starts:
 * [API Orchestration](quick-start/api-orchestration)
 * [Task Listeners](quick-start/task-listeners)
 
+Legacy examples:
+
+* [Intelligent Routing (legacy connector-based example)](solutions/ai-intelligent-routing)
+
 Solutions:
  
 * Level Easy:
-   * [Intelligent Routing](solutions/ai-intelligent-routing) 
 	
 * Level Medium
    * [AI Agent Chat with Tools](solutions/ai-agent-chat-with-tools)
