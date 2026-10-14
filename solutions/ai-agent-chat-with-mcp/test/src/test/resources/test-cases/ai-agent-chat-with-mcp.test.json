@@ -1,5 +1,5 @@
 {
-  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
   "testCases": [
     {
       "name": "happy path - user satisfied after first agent response",
@@ -15,7 +15,7 @@
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "variables": {
             "agent": {
               "responseText": "I am unable to retrieve live weather data, but Berlin typically has mild weather in spring.",
@@ -37,12 +37,12 @@
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
-          "elementSelectors": [{ "elementId": "User_Feedback" }],
+          "elementSelectors": [{ "elementId": "UserTask_UserFeedback" }],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "User_Feedback" },
+          "userTaskSelector": { "elementId": "UserTask_UserFeedback" },
           "variables": { "userSatisfied": true }
         },
         {
@@ -66,7 +66,7 @@
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "variables": {
             "agent": {
               "responseText": "I attempted to list files but encountered an error.",
@@ -77,7 +77,7 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "User_Feedback" },
+          "userTaskSelector": { "elementId": "UserTask_UserFeedback" },
           "variables": {
             "userSatisfied": false,
             "followUpInput": "Try listing /home instead"
@@ -85,7 +85,7 @@
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "variables": {
             "agent": {
               "responseText": "Successfully listed /home: user1, user2",
@@ -96,7 +96,7 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "User_Feedback" },
+          "userTaskSelector": { "elementId": "UserTask_UserFeedback" },
           "variables": { "userSatisfied": true }
         },
         {
@@ -120,9 +120,9 @@
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "activateElements": [
-            { "elementId": "OpenMemory", "variables": { "toolCall": { "method": "tools/call", "params": { "name": "add_memory", "arguments": { "text": "User name is Eric" } }, "_meta": { "id": "tc-mem-1", "name": "openmemory" } } } },
+            { "elementId": "OpenMemory", "variables": { "toolCall": { "method": "tools/call", "params": { "name": "add_memory", "arguments": { "text": "User name is Eric" } }, "_meta": { "id": "tc-mem-1", "name": "OpenMemory" } } } },
             { "elementId": "Deepwiki", "variables": { "toolCall": { "method": "tools/call", "params": { "name": "read_wiki_structure", "arguments": { "repoName": "camunda/camunda" } }, "_meta": { "id": "tc-dw-1", "name": "deepwiki" } } } },
             { "elementId": "Time", "variables": { "toolCall": { "method": "tools/call", "params": { "name": "get_current_time", "arguments": { "timezone": "Europe/Berlin" } }, "_meta": { "id": "tc-time-1", "name": "time" } } } },
             { "elementId": "SuperfluxProduct", "variables": { "toolCall": { "a": 2, "b": 3, "_meta": { "id": "tc-sf-1", "name": "SuperfluxProduct" } } } }
@@ -156,7 +156,7 @@
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "variables": {
             "agent": {
               "responseText": "Done: stored your name, read the repo wiki, current time is noon, superflux of 2 and 3 is 15.",
@@ -167,7 +167,7 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "User_Feedback" },
+          "userTaskSelector": { "elementId": "UserTask_UserFeedback" },
           "variables": { "userSatisfied": true }
         },
         {
@@ -191,9 +191,9 @@
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "activateElements": [
-            { "elementId": "Filesystem_MCP_Flow", "variables": { "toolCall": { "method": "tools/list", "params": {}, "_meta": { "id": "tc-fs-list", "name": "filesystem" } } } }
+            { "elementId": "FilesystemTool", "variables": { "toolCall": { "method": "tools/list", "params": {}, "_meta": { "id": "tc-fs-list", "name": "FilesystemTool" } } } }
           ]
         },
         {
@@ -211,16 +211,16 @@
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
           "elementSelectors": [
-            { "elementId": "Filesystem_MCP_Flow" },
-            { "elementId": "Gateway_115zcj9" },
-            { "elementId": "Gateway_join_FS" },
+            { "elementId": "FilesystemTool" },
+            { "elementId": "Gateway_FilesystemConfirmation" },
+            { "elementId": "Gateway_JoinFilesystem" },
             { "elementId": "Filesystem" }
           ],
           "state": "IS_COMPLETED"
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "variables": {
             "agent": { "responseText": "Allowed directories: /home, /tmp", "context": { "state": "READY" } }
           },
@@ -228,7 +228,7 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "User_Feedback" },
+          "userTaskSelector": { "elementId": "UserTask_UserFeedback" },
           "variables": { "userSatisfied": true }
         },
         {
@@ -252,20 +252,20 @@
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "activateElements": [
-            { "elementId": "Filesystem_MCP_Flow", "variables": { "toolCall": { "method": "tools/call", "params": { "name": "write_file", "arguments": { "path": "/home/notes.txt", "content": "hello" } }, "_meta": { "id": "tc-fs-write", "name": "filesystem" } } } }
+            { "elementId": "FilesystemTool", "variables": { "toolCall": { "method": "tools/call", "params": { "name": "write_file", "arguments": { "path": "/home/notes.txt", "content": "hello" } }, "_meta": { "id": "tc-fs-write", "name": "FilesystemTool" } } } }
           ]
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
-          "elementSelectors": [{ "elementId": "Activity_0mdux6v" }],
+          "elementSelectors": [{ "elementId": "UserTask_ConfirmFilesystemAction" }],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_0mdux6v" },
+          "userTaskSelector": { "elementId": "UserTask_ConfirmFilesystemAction" },
           "variables": { "toolCallAllowed": true }
         },
         {
@@ -283,15 +283,15 @@
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
           "elementSelectors": [
-            { "elementId": "Activity_0mdux6v" },
-            { "elementId": "Gateway_0fgu5ui" },
+            { "elementId": "UserTask_ConfirmFilesystemAction" },
+            { "elementId": "Gateway_ConfirmationDecision" },
             { "elementId": "Filesystem" }
           ],
           "state": "IS_COMPLETED"
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "variables": {
             "agent": { "responseText": "File written to /home/notes.txt", "context": { "state": "READY" } }
           },
@@ -299,7 +299,7 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "User_Feedback" },
+          "userTaskSelector": { "elementId": "UserTask_UserFeedback" },
           "variables": { "userSatisfied": true }
         },
         {
@@ -323,31 +323,31 @@
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "activateElements": [
-            { "elementId": "Filesystem_MCP_Flow", "variables": { "toolCall": { "method": "tools/call", "params": { "name": "delete_file", "arguments": { "path": "/home/important.txt" } }, "_meta": { "id": "tc-fs-del", "name": "filesystem" } } } }
+            { "elementId": "FilesystemTool", "variables": { "toolCall": { "method": "tools/call", "params": { "name": "delete_file", "arguments": { "path": "/home/important.txt" } }, "_meta": { "id": "tc-fs-del", "name": "FilesystemTool" } } } }
           ]
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
-          "elementSelectors": [{ "elementId": "Activity_0mdux6v" }],
+          "elementSelectors": [{ "elementId": "UserTask_ConfirmFilesystemAction" }],
           "state": "IS_ACTIVE"
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "Activity_0mdux6v" },
+          "userTaskSelector": { "elementId": "UserTask_ConfirmFilesystemAction" },
           "variables": { "toolCallAllowed": false }
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": { "processDefinitionId": "ai-agent-chat-with-mcp" },
-          "elementSelectors": [{ "elementId": "Event_1e3tdvb" }],
+          "elementSelectors": [{ "elementId": "Event_ToolCallDenied" }],
           "state": "IS_COMPLETED"
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "variables": {
             "agent": { "responseText": "Tool call was not allowed by the user.", "context": { "state": "READY" } }
           },
@@ -355,7 +355,7 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "User_Feedback" },
+          "userTaskSelector": { "elementId": "UserTask_UserFeedback" },
           "variables": { "userSatisfied": true }
         },
         {
@@ -389,13 +389,13 @@
           "elementSelectors": [
             { "elementId": "On_Message" },
             { "elementId": "Handle_Message" },
-            { "elementId": "End_Event_Sub_Process_mcp" }
+            { "elementId": "End_EventSubprocess_McpMessage_mcp" }
           ],
           "state": "IS_COMPLETED"
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent-job-worker:1" },
+          "jobSelector": { "jobType": "io.camunda.agenticai:aiagent:subprocess:2" },
           "variables": {
             "agent": { "responseText": "Handled the request and the side message.", "context": { "state": "READY" } }
           },
@@ -403,7 +403,7 @@
         },
         {
           "type": "COMPLETE_USER_TASK",
-          "userTaskSelector": { "elementId": "User_Feedback" },
+          "userTaskSelector": { "elementId": "UserTask_UserFeedback" },
           "variables": { "userSatisfied": true }
         },
         {
