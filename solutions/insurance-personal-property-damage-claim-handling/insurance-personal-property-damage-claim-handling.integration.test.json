@@ -1,0 +1,386 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "Process_1goj4fl",
+  "testCases": [
+    {
+      "name": "Claim approved automatically and paid",
+      "description": "A first-time claim for a $150 item under a full policy passes the business rules, so it is approved without an adjuster and paid out.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "personal_property": "headphones",
+            "maker": "Sony",
+            "model": "WH-CH520",
+            "date_of_purchase": "2026-03-14T10:00:00Z",
+            "price_at_purchase": 150,
+            "incident_description": "Dropped on the pavement, the headband snapped."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
+          "variables": {
+            "receipt_details": {
+              "price_at_purchase": 150,
+              "date_of_purchase": "2026-03-14T10:00:00Z",
+              "merchant": "Electronics Store"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
+          "variables": {
+            "item": "headphones",
+            "damage": "broken headband"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": "TCK-50101"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
+          "variables": {
+            "customer_claim_frequency_last_three_years": 0,
+            "policy": "full"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0poax8d"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "banking_info_received",
+          "correlationKey": "TCK-50101"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0ankyj2"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "elementSelector": {
+            "elementId": "Event_088b3ko"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "isApproved": true,
+            "deductible": 30
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_1afcosf"
+            },
+            {
+              "elementId": "Event_0vn5a71"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Claim approved by adjuster and paid",
+      "description": "A $900 claim is too expensive for automatic approval, so an adjuster reviews and approves it with a deductible and the payout is triggered.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "personal_property": "laptop",
+            "maker": "Lenovo",
+            "model": "ThinkPad E14",
+            "date_of_purchase": "2025-11-02T09:30:00Z",
+            "price_at_purchase": 900,
+            "incident_description": "Coffee was spilled over the keyboard."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
+          "variables": {
+            "receipt_details": {
+              "price_at_purchase": 900,
+              "date_of_purchase": "2025-11-02T09:30:00Z",
+              "merchant": "Electronics Store"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
+          "variables": {
+            "item": "laptop",
+            "damage": "liquid damage"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": "TCK-50102"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
+          "variables": {
+            "customer_claim_frequency_last_three_years": 0,
+            "policy": "full"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_1afcosf"
+          },
+          "variables": {
+            "isApproved": true,
+            "deductible": 90
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0poax8d"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "banking_info_received",
+          "correlationKey": "TCK-50102"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0ankyj2"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "elementSelector": {
+            "elementId": "Event_088b3ko"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "elementSelector": {
+            "elementId": "Event_1any6lf"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "isApproved": true,
+            "deductible": 90
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Event_0vn5a71"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Claim declined by adjuster",
+      "description": "A customer with prior claims files a $650 claim that fails the automatic rules, the adjuster declines it and the customer gets a decline email.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "personal_property": "smartphone",
+            "maker": "Samsung",
+            "model": "Galaxy S23",
+            "date_of_purchase": "2024-06-20T15:45:00Z",
+            "price_at_purchase": 650,
+            "incident_description": "The screen cracked after the phone fell off a table."
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0mmcuzy"
+          },
+          "variables": {
+            "receipt_details": {
+              "price_at_purchase": 650,
+              "date_of_purchase": "2024-06-20T15:45:00Z",
+              "merchant": "Electronics Store"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_17krtpn"
+          },
+          "variables": {
+            "item": "smartphone",
+            "damage": "cracked screen"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1vdz63b"
+          },
+          "variables": {
+            "ticketId": "TCK-50103"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0etxz4e"
+          },
+          "variables": {
+            "customer_claim_frequency_last_three_years": 2,
+            "policy": "full"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_1afcosf"
+          },
+          "variables": {
+            "isApproved": false
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_02uhc17"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "elementSelector": {
+            "elementId": "Event_0vn5a71"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "variables": {
+            "isApproved": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_1goj4fl"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0poax8d"
+            },
+            {
+              "elementId": "Activity_0ankyj2"
+            },
+            {
+              "elementId": "Event_088b3ko"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    }
+  ]
+}

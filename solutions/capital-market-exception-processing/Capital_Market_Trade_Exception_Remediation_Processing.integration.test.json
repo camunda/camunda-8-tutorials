@@ -1,0 +1,441 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "Process_wctxyvg",
+  "testCases": [
+    {
+      "name": "Order executed and customer informed",
+      "description": "The limit price is within the threshold of the market price, so the order is registered, executed and the customer is informed.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "variables": {
+            "customerId": 123,
+            "customerMail": "jane.doe@example.com",
+            "orderId": 45601,
+            "orderDateAndTime": "2026-10-22T09:00:00Z",
+            "orderExpiryDate": "2099-01-01T00:00:00Z",
+            "orderType": "BUY_LIMIT",
+            "stockAmount": 10,
+            "stockSymbol": "AAPL",
+            "limitPricePerStock": {
+              "price": 240,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_18y2a76"
+          },
+          "variables": {
+            "marketPrice": {
+              "price": 240.84,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0s29l30"
+          },
+          "variables": {
+            "orderRegistered": true
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "order_executed",
+          "correlationKey": "45601",
+          "variables": {
+            "executionPrice": 240.5
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1ni426c"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelector": {
+            "elementId": "Event_19wbbuh"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_1w8rn3q"
+            },
+            {
+              "elementId": "Event_1sv9v55"
+            },
+            {
+              "elementId": "Activity_1ccl3v1"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Order expires before execution and customer is informed",
+      "description": "The order is registered but its expiry date has already passed, so the expiry timer fires, the order is aborted and the customer is informed.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "variables": {
+            "customerId": 123,
+            "customerMail": "jane.doe@example.com",
+            "orderId": 45602,
+            "orderDateAndTime": "2026-10-22T09:00:00Z",
+            "orderExpiryDate": "2020-01-01T00:00:00Z",
+            "orderType": "BUY_LIMIT",
+            "stockAmount": 10,
+            "stockSymbol": "AAPL",
+            "limitPricePerStock": {
+              "price": 240,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_18y2a76"
+          },
+          "variables": {
+            "marketPrice": {
+              "price": 240.84,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0s29l30"
+          },
+          "variables": {
+            "orderRegistered": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1ccl3v1"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelector": {
+            "elementId": "Event_1sv9v55"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelector": {
+            "elementId": "Event_0z57ju7"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Event_1srf2st"
+            },
+            {
+              "elementId": "Activity_1ni426c"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Price outside threshold and customer cancels the order",
+      "description": "The limit price is far below the market price, the broker is informed, the customer cancels, and the customer is notified that the order was aborted.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "variables": {
+            "customerId": 123,
+            "customerMail": "jane.doe@example.com",
+            "orderId": 45603,
+            "orderDateAndTime": "2026-10-22T09:00:00Z",
+            "orderExpiryDate": "2099-01-01T00:00:00Z",
+            "orderType": "BUY_LIMIT",
+            "stockAmount": 10,
+            "stockSymbol": "AAPL",
+            "limitPricePerStock": {
+              "price": 100,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_18y2a76"
+          },
+          "variables": {
+            "marketPrice": {
+              "price": 240.84,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1w8rn3q"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "order_cancellation_received",
+          "correlationKey": "45603",
+          "variables": {
+            "cancellationReason": "Customer withdrew order"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1ccl3v1"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelector": {
+            "elementId": "Event_1dogjg4"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelector": {
+            "elementId": "Event_0z57ju7"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0s29l30"
+            },
+            {
+              "elementId": "Activity_1ni426c"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Price outside threshold, updated order accepted and executed",
+      "description": "The first limit price fails the check, the broker sends an updated limit price that passes the second check, and the order is registered and executed.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "variables": {
+            "customerId": 123,
+            "customerMail": "jane.doe@example.com",
+            "orderId": 45604,
+            "orderDateAndTime": "2026-10-22T09:00:00Z",
+            "orderExpiryDate": "2099-01-01T00:00:00Z",
+            "orderType": "BUY_LIMIT",
+            "stockAmount": 10,
+            "stockSymbol": "AAPL",
+            "limitPricePerStock": {
+              "price": 100,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_18y2a76"
+          },
+          "variables": {
+            "marketPrice": {
+              "price": 240.84,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1w8rn3q"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "updated_order_received",
+          "correlationKey": "45604",
+          "variables": {
+            "limitPricePerStock": {
+              "price": 240,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_18y2a76"
+          },
+          "variables": {
+            "marketPrice": {
+              "price": 240.84,
+              "currency": "USD"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0s29l30"
+          },
+          "variables": {
+            "orderRegistered": true
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "order_executed",
+          "correlationKey": "45604",
+          "variables": {
+            "executionPrice": 240.5
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1ni426c"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelector": {
+            "elementId": "Event_15c6fg8"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelector": {
+            "elementId": "Event_19wbbuh"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Event_1dogjg4"
+            },
+            {
+              "elementId": "Activity_1ccl3v1"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "Process_wctxyvg"
+          },
+          "variables": {
+            "limitPricePerStock": {
+              "price": 240,
+              "currency": "USD"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

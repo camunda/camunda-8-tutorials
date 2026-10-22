@@ -1,0 +1,293 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "template-error-handling-1s16sgi",
+  "testCases": [
+    {
+      "name": "Customer data processed successfully",
+      "description": "Happy path: the data passes verification, the CMS record, support account and platform access are created, and the customer gets a success message.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "variables": {
+            "customerId": "CUST-1001",
+            "customerName": "Jane Doe",
+            "email": "jane.doe@example.com",
+            "platformPlan": "premium"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          },
+          "variables": {
+            "dataValid": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
+          "variables": {
+            "cmsRecordId": "CMS-7781"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
+          "variables": {
+            "supportAccountId": "SUP-3302"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13eovqu"
+          },
+          "variables": {
+            "platformAccessGranted": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_00ef2n2"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelector": {
+            "elementId": "Event_08k7n7c"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0kzg0nb"
+            },
+            {
+              "elementId": "Activity_0h20swu"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Data error corrected by user, then processed",
+      "description": "Verification finds a malformed email address, a user corrects it in the review task, and processing then completes successfully.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "variables": {
+            "customerId": "CUST-1002",
+            "customerName": "Jane Doe",
+            "email": "jane.doe@example",
+            "platformPlan": "premium"
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          },
+          "errorCode": "ErrorInData",
+          "errorMessage": "Email address is malformed"
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "Activity_0kzg0nb"
+          },
+          "variables": {
+            "email": "jane.doe@example.com"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
+          "variables": {
+            "cmsRecordId": "CMS-7781"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
+          "variables": {
+            "supportAccountId": "SUP-3302"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13eovqu"
+          },
+          "variables": {
+            "platformAccessGranted": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_00ef2n2"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelector": {
+            "elementId": "Activity_0kzg0nb"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelector": {
+            "elementId": "Event_08k7n7c"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "variables": {
+            "email": "jane.doe@example.com"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Record creation fails and user is informed",
+      "description": "Creating the support account fails, so the created records are removed and the user is told about the processing problem.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "variables": {
+            "customerId": "CUST-1003",
+            "customerName": "Jane Doe",
+            "email": "jane.doe@example.com",
+            "platformPlan": "premium"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1kpg3ok"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1v4xdzk"
+          },
+          "variables": {
+            "cmsRecordId": "CMS-7782"
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "Activity_084s4zz"
+          },
+          "errorCode": "FailedToCreateRecord",
+          "errorMessage": "Support system rejected the account"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0h20swu"
+          },
+          "variables": {
+            "recordsRemoved": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13kxvrs"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelector": {
+            "elementId": "Event_1o1e96e"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-error-handling-1s16sgi"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Event_08k7n7c"
+            },
+            {
+              "elementId": "Activity_13eovqu"
+            },
+            {
+              "elementId": "Activity_00ef2n2"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    }
+  ]
+}
