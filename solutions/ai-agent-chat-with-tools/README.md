@@ -18,19 +18,16 @@ You can also try `Tell me a joke`, `Which users are available?`, or `Which iPhon
 
 ### Run the low-code tests in Hub
 
-The Marketplace import does not include the live test file. To run the low-code tests:
+The project includes the live test file, `ai-agent-chat-with-tools.integration.test.json`. The Marketplace import adds it automatically. To run the low-code tests:
 
-1. Download [`ai-agent-chat-with-tools.integration.test.json`](./ai-agent-chat-with-tools.integration.test.json).
-2. Use **Upload files** on the imported project's page to add it to that project.
-3. Open the diagram's **Test tab**.
-4. Run the suite.
-5. Review the results in the run history.
+1. Open `ai-agent-chat-with-tools.integration.test.json` in Hub.
+2. Click **Open in Test mode**.
+3. Deploy and run the tests.
+4. Review the results in the run history.
 
 These tests call the LLM and public APIs. They exercise direct answers, tool calls, and the feedback path. You need Camunda-provided LLM access, remaining budget, and internet access.
 
 The tests check that expected tools complete and result variables exist, not answer quality or extra tool calls. Review the answers and check the run history for unexpected calls.
-
-Do not upload `ai-agent-chat-with-tools.test.json` to Hub. It uses CPT instructions to complete agent subprocess jobs with controlled results, which Test mode does not currently support. Run that deterministic suite with [Camunda Process Test (CPT)](https://docs.camunda.io/docs/apis-tools/testing/getting-started/).
 
 ## Use your own LLM provider
 
