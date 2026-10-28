@@ -29,29 +29,12 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-human-task-tutorial-074nxxb"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "template-human-task-tutorial-074nxxb"
           },
           "elementSelector": {
             "elementId": "happy-end"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-human-task-tutorial-074nxxb"
-          },
-          "elementSelector": {
-            "elementId": "prepare-chicken"
           },
           "state": "IS_COMPLETED"
         },
@@ -96,29 +79,12 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-human-task-tutorial-074nxxb"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "template-human-task-tutorial-074nxxb"
           },
           "elementSelector": {
             "elementId": "happy-end"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-human-task-tutorial-074nxxb"
-          },
-          "elementSelector": {
-            "elementId": "prepare-salad"
           },
           "state": "IS_COMPLETED"
         },

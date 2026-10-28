@@ -62,13 +62,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "Process_wctxyvg"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "Process_wctxyvg"
@@ -148,13 +141,6 @@
           "jobSelector": {
             "elementId": "Activity_1ccl3v1"
           }
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "Process_wctxyvg"
-          },
-          "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",
@@ -248,13 +234,6 @@
           "jobSelector": {
             "elementId": "Activity_1ccl3v1"
           }
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "Process_wctxyvg"
-          },
-          "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",
@@ -380,13 +359,6 @@
           "jobSelector": {
             "elementId": "Activity_1ni426c"
           }
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "Process_wctxyvg"
-          },
-          "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",

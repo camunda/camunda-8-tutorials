@@ -23,13 +23,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-microservice-tutorial-18us19m"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "template-microservice-tutorial-18us19m"

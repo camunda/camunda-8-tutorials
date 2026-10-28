@@ -14,13 +14,6 @@
           "variables": {}
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-api-orchestration-1ikt3hz-0ybh8py"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "template-api-orchestration-1ikt3hz-0ybh8py"

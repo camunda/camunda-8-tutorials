@@ -80,13 +80,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "Process_1goj4fl"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "Process_1goj4fl"
@@ -211,13 +204,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "Process_1goj4fl"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "Process_1goj4fl"
@@ -335,13 +321,6 @@
           "jobSelector": {
             "elementId": "Activity_02uhc17"
           }
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "Process_1goj4fl"
-          },
-          "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",

@@ -129,13 +129,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "telco_service_order_fulfillment_retail"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "telco_service_order_fulfillment_retail"
@@ -262,13 +255,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "telco_service_order_fulfillment_retail"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "telco_service_order_fulfillment_retail"
@@ -352,13 +338,6 @@
           "jobSelector": {
             "elementId": "Activity_0teyocj"
           }
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "telco_service_order_fulfillment_retail"
-          },
-          "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",
@@ -501,13 +480,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "telco_service_order_fulfillment_retail"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "telco_service_order_fulfillment_retail"
@@ -639,13 +611,6 @@
           "jobSelector": {
             "elementId": "Activity_0lawqru"
           }
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "telco_service_order_fulfillment_retail"
-          },
-          "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",

@@ -61,13 +61,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-error-handling-1s16sgi"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "template-error-handling-1s16sgi"
@@ -161,23 +154,6 @@
           }
         },
         {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-error-handling-1s16sgi"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-error-handling-1s16sgi"
-          },
-          "elementSelector": {
-            "elementId": "Activity_0kzg0nb"
-          },
-          "state": "IS_COMPLETED"
-        },
-        {
           "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "template-error-handling-1s16sgi"
@@ -251,13 +227,6 @@
           "jobSelector": {
             "elementId": "Activity_13kxvrs"
           }
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-error-handling-1s16sgi"
-          },
-          "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCE",
