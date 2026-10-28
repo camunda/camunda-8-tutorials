@@ -241,6 +241,9 @@
           "elementSelectors": [
             {
               "elementId": "Event_0vn5a71"
+            },
+            {
+              "elementId": "Event_0jg4ipd"
             }
           ],
           "state": "IS_NOT_ACTIVATED"
@@ -355,6 +358,9 @@
             },
             {
               "elementId": "Event_088b3ko"
+            },
+            {
+              "elementId": "Event_0jg4ipd"
             }
           ],
           "state": "IS_NOT_ACTIVATED"
