@@ -3,8 +3,8 @@
   "processId": "template-microservice-tutorial-18us19m",
   "testCases": [
     {
-      "name": "Microservice called successfully",
-      "description": "The test completes the microservice job in place of the tutorial's Java worker, with the same result (resultValue1 = 42), and the process reaches the end event. Stop worker-java before running this test, or the worker takes the job first.",
+      "name": "Process completes when the microservice job completes",
+      "description": "The test completes the microservice job in place of the tutorial's Java worker, so it checks the process flow, not the worker. Stop worker-java before running this test, or the worker takes the job first.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -31,15 +31,6 @@
             "elementId": "EndEvent"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-microservice-tutorial-18us19m"
-          },
-          "variables": {
-            "resultValue1": 42
-          }
         }
       ]
     }
