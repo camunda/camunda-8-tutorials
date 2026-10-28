@@ -3,15 +3,14 @@
   "processId": "template-microservice-tutorial-18us19m",
   "testCases": [
     {
-      "name": "Process completes when the microservice job completes",
+      "name": "Job completes and process ends",
       "description": "The test completes the microservice job in place of the tutorial's Java worker, so it checks the process flow, not the worker. Stop worker-java before running this test, or the worker takes the job first.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
             "processDefinitionId": "template-microservice-tutorial-18us19m"
-          },
-          "variables": {}
+          }
         },
         {
           "type": "COMPLETE_JOB",

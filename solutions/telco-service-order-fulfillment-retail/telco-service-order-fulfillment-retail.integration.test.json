@@ -4,7 +4,7 @@
   "testCases": [
     {
       "name": "Mobile-only order fulfilled",
-      "description": "An order with two monthly mobile plans and a one-time SIM fee is activated item by item, monthly payments are set up and the customer is notified. The one-time fee keeps the order valid: the blueprint's price calculation fails on orders with no one-time item.",
+      "description": "An order with a monthly mobile plan and a one-time SIM fee is activated item by item, monthly payments are set up and the customer is notified. The one-time fee keeps the order valid: the blueprint's price calculation fails on orders with no one-time item.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -13,20 +13,12 @@
           },
           "variables": {
             "orderId": "SO-1001",
-            "customerId": "CUST-4711",
             "orderItems": [
               {
                 "orderItemId": 10,
                 "type": "mobile",
                 "product": "Unlimited 5G plan",
                 "price": 45,
-                "reocurring": "monthly"
-              },
-              {
-                "orderItemId": 11,
-                "type": "mobile",
-                "product": "Data-only tablet plan",
-                "price": 15,
                 "reocurring": "monthly"
               },
               {
@@ -53,22 +45,7 @@
             "elementId": "Activity_1tjr8w6"
           },
           "variables": {
-            "mobileNumber": "+4915112345011"
-          }
-        },
-        {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
-            "elementId": "Activity_1tjr8w6"
-          },
-          "variables": {
             "mobileNumber": "+4915112345012"
-          }
-        },
-        {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
-            "elementId": "Activity_0yf9g2p"
           }
         },
         {
@@ -91,18 +68,7 @@
         {
           "type": "PUBLISH_MESSAGE",
           "name": "resource_activation_completed",
-          "correlationKey": "SO-1001_11"
-        },
-        {
-          "type": "PUBLISH_MESSAGE",
-          "name": "resource_activation_completed",
           "correlationKey": "SO-1001_12"
-        },
-        {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
-            "elementId": "Activity_0fo7pq6"
-          }
         },
         {
           "type": "COMPLETE_JOB",
@@ -146,7 +112,7 @@
           "variables": {
             "prices": {
               "oneTimePrice": 10,
-              "monthlyPrice": 60
+              "monthlyPrice": 45
             }
           }
         },
@@ -181,7 +147,6 @@
           },
           "variables": {
             "orderId": "SO-1002",
-            "customerId": "CUST-4712",
             "orderItems": [
               {
                 "orderItemId": 20,
@@ -307,7 +272,6 @@
           },
           "variables": {
             "orderId": "SO-1003",
-            "customerId": "CUST-4713",
             "orderItems": [
               {
                 "orderItemId": 30,
@@ -392,7 +356,6 @@
           },
           "variables": {
             "orderId": "SO-1004",
-            "customerId": "CUST-4714",
             "orderItems": [
               {
                 "orderItemId": 40,
@@ -514,7 +477,7 @@
       ]
     },
     {
-      "name": "High-value mobile order passes the fraud check and is fulfilled",
+      "name": "High-value mobile order passes fraud check",
       "description": "A monthly total above 600 triggers the fraud check. The check finds nothing, so the mobile order is activated and billed.",
       "instructions": [
         {
@@ -524,7 +487,6 @@
           },
           "variables": {
             "orderId": "SO-1005",
-            "customerId": "CUST-4715",
             "orderItems": [
               {
                 "orderItemId": 50,

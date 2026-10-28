@@ -16,9 +16,9 @@ This blueprint contains various events that represent certain milestones in the 
 
 ### Run the low-code tests in Hub
 
-The project includes the test file, `Capital_Market_Trade_Exception_Remediation_Processing.integration.test.json`. The Marketplace import adds it automatically. To run the low-code tests:
+The project includes the test file, `Capital Market Trade Exception Remediation Processing.integration.test`. The Marketplace import adds it automatically. To run the low-code tests:
 
-1. Open `Capital_Market_Trade_Exception_Remediation_Processing.integration.test.json` in Hub.
+1. Open `Capital Market Trade Exception Remediation Processing.integration.test` in Hub.
 2. Click **Open in Test mode**.
 3. Deploy and run the tests.
 4. Review the results in the run history.

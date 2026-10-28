@@ -12,9 +12,9 @@ This blueprint depicts the order management and fulfillment of a mixed service o
 
 ### Run the low-code tests in Hub
 
-The project includes the test file, `telco-service-order-fulfillment-retail.integration.test.json`. The Marketplace import adds it automatically. To run the low-code tests:
+The project includes the test file, `telco service order fulfillment retail.integration.test`. The Marketplace import adds it automatically. To run the low-code tests:
 
-1. Open `telco-service-order-fulfillment-retail.integration.test.json` in Hub.
+1. Open `telco service order fulfillment retail.integration.test` in Hub.
 2. Click **Open in Test mode**.
 3. Deploy and run the tests.
 4. Review the results in the run history.

@@ -92,7 +92,7 @@
       ]
     },
     {
-      "name": "Order expires before execution and customer is informed",
+      "name": "Order expires before execution",
       "description": "The order is registered but its expiry date has already passed, so the expiry timer fires, the order is aborted and the customer is informed.",
       "instructions": [
         {
@@ -180,7 +180,7 @@
       ]
     },
     {
-      "name": "Price outside threshold and customer cancels the order",
+      "name": "Customer cancels after price check fails",
       "description": "The limit price is far below the market price, the broker is informed, the customer cancels, and the customer is notified that the order was aborted.",
       "instructions": [
         {
@@ -273,7 +273,7 @@
       ]
     },
     {
-      "name": "Price outside threshold, updated order accepted and executed",
+      "name": "Updated price accepted and order executed",
       "description": "The first limit price fails the check, the broker sends an updated limit price that passes the second check, and the order is registered and executed.",
       "instructions": [
         {

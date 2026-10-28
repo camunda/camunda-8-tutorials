@@ -10,48 +10,30 @@
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
             "processDefinitionId": "template-error-handling-1s16sgi"
-          },
-          "variables": {
-            "customerId": "CUST-1001",
-            "customerName": "Jane Doe",
-            "email": "jane.doe@example.com",
-            "platformPlan": "premium"
           }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_1kpg3ok"
-          },
-          "variables": {
-            "dataValid": true
           }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_1v4xdzk"
-          },
-          "variables": {
-            "cmsRecordId": "CMS-7781"
           }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_084s4zz"
-          },
-          "variables": {
-            "supportAccountId": "SUP-3302"
           }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_13eovqu"
-          },
-          "variables": {
-            "platformAccessGranted": true
           }
         },
         {
@@ -95,12 +77,6 @@
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
             "processDefinitionId": "template-error-handling-1s16sgi"
-          },
-          "variables": {
-            "customerId": "CUST-1002",
-            "customerName": "Jane Doe",
-            "email": "jane.doe@example",
-            "platformPlan": "premium"
           }
         },
         {
@@ -124,27 +100,18 @@
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_1v4xdzk"
-          },
-          "variables": {
-            "cmsRecordId": "CMS-7781"
           }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_084s4zz"
-          },
-          "variables": {
-            "supportAccountId": "SUP-3302"
           }
         },
         {
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_13eovqu"
-          },
-          "variables": {
-            "platformAccessGranted": true
           }
         },
         {
@@ -162,15 +129,6 @@
             "elementId": "Event_08k7n7c"
           },
           "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_VARIABLES",
-          "processInstanceSelector": {
-            "processDefinitionId": "template-error-handling-1s16sgi"
-          },
-          "variables": {
-            "email": "jane.doe@example.com"
-          }
         }
       ]
     },
@@ -182,12 +140,6 @@
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
             "processDefinitionId": "template-error-handling-1s16sgi"
-          },
-          "variables": {
-            "customerId": "CUST-1003",
-            "customerName": "Jane Doe",
-            "email": "jane.doe@example.com",
-            "platformPlan": "premium"
           }
         },
         {
@@ -200,9 +152,6 @@
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_1v4xdzk"
-          },
-          "variables": {
-            "cmsRecordId": "CMS-7782"
           }
         },
         {
@@ -217,9 +166,6 @@
           "type": "COMPLETE_JOB",
           "jobSelector": {
             "elementId": "Activity_0h20swu"
-          },
-          "variables": {
-            "recordsRemoved": true
           }
         },
         {

@@ -11,9 +11,9 @@ This process shows a simple example on how to orchestrate one Microservice. The 
 
 ### Run the low-code tests in Hub
 
-The project includes the test file, `Quick Start_ Microservices.integration.test.json`. The Marketplace import adds it automatically. To run the low-code tests:
+The project includes the test file, `Quick Start Microservices.integration.test`. The Marketplace import adds it automatically. To run the low-code tests:
 
-1. Open `Quick Start_ Microservices.integration.test.json` in Hub.
+1. Open `Quick Start Microservices.integration.test` in Hub.
 2. Click **Open in Test mode**.
 3. Deploy and run the tests.
 4. Review the results in the run history.
