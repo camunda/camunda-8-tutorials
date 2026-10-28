@@ -16,14 +16,11 @@ This blueprint contains various events that represent certain milestones in the 
 
 ### Run the low-code tests in Hub
 
-The Marketplace import does not include the test file. To run the low-code tests:
+The project includes the test file, `Capital_Market_Trade_Exception_Remediation_Processing.integration.test.json`. The Marketplace import adds it automatically. To run the low-code tests:
 
-1. Download [`Capital_Market_Trade_Exception_Remediation_Processing.integration.test.json`](./Capital_Market_Trade_Exception_Remediation_Processing.integration.test.json).
-2. Use **Upload files** on the imported project's page to add it to that project.
-3. Open the diagram's **Test tab**.
-4. Run the suite.
-5. Review the results in the run history.
+1. Open `Capital_Market_Trade_Exception_Remediation_Processing.integration.test.json` in Hub.
+2. Click **Open in Test mode**.
+3. Deploy and run the tests.
+4. Review the results in the run history.
 
 The tests publish messages with fixed correlation keys. If a run stops halfway, cancel its leftover process instance before you run the suite again.
-
-Do not upload the CPT suite in `test/` to Hub. Run it with Maven.

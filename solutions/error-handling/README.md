@@ -11,12 +11,9 @@ When implementing microservices, taking into account how to respond when a servi
 
 ### Run the low-code tests in Hub
 
-The Marketplace import does not include the test file. To run the low-code tests:
+The project includes the test file, `Error Handling.integration.test.json`. The Marketplace import adds it automatically. To run the low-code tests:
 
-1. Download [`Error Handling.integration.test.json`](./Error%20Handling.integration.test.json).
-2. Use **Upload files** on the imported project's page to add it to that project.
-3. Open the diagram's **Test tab**.
-4. Run the suite.
-5. Review the results in the run history.
-
-Do not upload the CPT suite in `test/` to Hub. Run it with Maven.
+1. Open `Error Handling.integration.test.json` in Hub.
+2. Click **Open in Test mode**.
+3. Deploy and run the tests.
+4. Review the results in the run history.
