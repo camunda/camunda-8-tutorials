@@ -1,0 +1,624 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "telco_service_order_fulfillment_retail",
+  "testCases": [
+    {
+      "name": "Mobile-only order fulfilled",
+      "description": "An order with a monthly mobile plan and a one-time SIM fee is activated item by item, monthly payments are set up and the customer is notified. The one-time fee keeps the order valid: the blueprint's price calculation fails on orders with no one-time item.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "orderId": "SO-1001",
+            "orderItems": [
+              {
+                "orderItemId": 10,
+                "type": "mobile",
+                "product": "Unlimited 5G plan",
+                "price": 45,
+                "reocurring": "monthly"
+              },
+              {
+                "orderItemId": 12,
+                "type": "mobile",
+                "product": "SIM card activation fee",
+                "price": 10
+              }
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1tjr8w6"
+          },
+          "variables": {
+            "mobileNumber": "+4915112345010"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1tjr8w6"
+          },
+          "variables": {
+            "mobileNumber": "+4915112345012"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0yf9g2p"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0yf9g2p"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "resource_activation_completed",
+          "correlationKey": "SO-1001_10"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "resource_activation_completed",
+          "correlationKey": "SO-1001_12"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0fo7pq6"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0fo7pq6"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0dwooye"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0lawqru"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelector": {
+            "elementId": "Event_1hxtki3"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "prices": {
+              "oneTimePrice": 10,
+              "monthlyPrice": 45
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_0tiqi9e"
+            },
+            {
+              "elementId": "Activity_0fki99g"
+            },
+            {
+              "elementId": "Event_0mtz2ay"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Hardware order shipped from stock",
+      "description": "An order with an in-stock phone and a smartwatch paid monthly ships from stock, the payment is claimed and the customer receives tracking info. The monthly item keeps the order valid: the blueprint's price calculation fails on orders with no monthly item.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "orderId": "SO-1002",
+            "orderItems": [
+              {
+                "orderItemId": 20,
+                "type": "hardware",
+                "product": "Smartphone X12",
+                "price": 800
+              },
+              {
+                "orderItemId": 21,
+                "type": "hardware",
+                "product": "Smartwatch (24 monthly instalments)",
+                "price": 25,
+                "reocurring": "monthly"
+              }
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0tiqi9e"
+          },
+          "variables": {
+            "areAllHardwareItemsAvailable": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0k3m6zy"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13qigvi"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0k3m6zy"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13qigvi"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "tracking_information_received",
+          "correlationKey": "SO-1002_20"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "tracking_information_received",
+          "correlationKey": "SO-1002_21"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0d5nxde"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_00cb2gw"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelector": {
+            "elementId": "Event_0mtz2ay"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "prices": {
+              "oneTimePrice": 800,
+              "monthlyPrice": 25
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Event_182kkjw"
+            },
+            {
+              "elementId": "Activity_1ptwnyf"
+            },
+            {
+              "elementId": "Event_1hxtki3"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "High-value order aborted as fraud",
+      "description": "A one-time total above 3,000 triggers the fraud check, which detects fraud, so the attempt is recorded and the order is aborted.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "orderId": "SO-1003",
+            "orderItems": [
+              {
+                "orderItemId": 30,
+                "type": "hardware",
+                "product": "Smartphone Ultra Pro (x4)",
+                "price": 5200
+              },
+              {
+                "orderItemId": 31,
+                "type": "mobile",
+                "product": "Unlimited 5G plan",
+                "price": 45,
+                "reocurring": "monthly"
+              }
+            ]
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1rg0k6z"
+          },
+          "errorCode": "fraud_detected",
+          "errorMessage": "Order matches a known fraud pattern"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0teyocj"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelector": {
+            "elementId": "Event_0zyeh81"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "prices": {
+              "oneTimePrice": 5200,
+              "monthlyPrice": 45
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Activity_1jyklqs"
+            },
+            {
+              "elementId": "Event_0mtz2ay"
+            },
+            {
+              "elementId": "Event_1hxtki3"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Back-ordered hardware shipped after restock",
+      "description": "Inventory is insufficient at first, so the order waits for an inventory update, is re-checked, and then ships normally. The order includes a monthly rental item, because the blueprint's price calculation fails on orders with no monthly item.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "orderId": "SO-1004",
+            "orderItems": [
+              {
+                "orderItemId": 40,
+                "type": "hardware",
+                "product": "Smart home router",
+                "price": 250
+              },
+              {
+                "orderItemId": 41,
+                "type": "hardware",
+                "product": "Mesh Wi-Fi extender (monthly rental)",
+                "price": 9,
+                "reocurring": "monthly"
+              }
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0tiqi9e"
+          },
+          "variables": {
+            "areAllHardwareItemsAvailable": false
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "inventory_updated",
+          "correlationKey": "SO-1004"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0tiqi9e"
+          },
+          "variables": {
+            "areAllHardwareItemsAvailable": true
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0k3m6zy"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13qigvi"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0k3m6zy"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_13qigvi"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "tracking_information_received",
+          "correlationKey": "SO-1004_40"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "tracking_information_received",
+          "correlationKey": "SO-1004_41"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0d5nxde"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_00cb2gw"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelector": {
+            "elementId": "Event_0mtz2ay"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelector": {
+            "elementId": "Event_182kkjw"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "prices": {
+              "oneTimePrice": 250,
+              "monthlyPrice": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "High-value mobile order passes fraud check",
+      "description": "A monthly total above 600 triggers the fraud check. The check finds nothing, so the mobile order is activated and billed.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "orderId": "SO-1005",
+            "orderItems": [
+              {
+                "orderItemId": 50,
+                "type": "mobile",
+                "product": "Business fleet plan",
+                "price": 650,
+                "reocurring": "monthly"
+              },
+              {
+                "orderItemId": 51,
+                "type": "mobile",
+                "product": "SIM card activation fee",
+                "price": 10
+              }
+            ]
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1rg0k6z"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1tjr8w6"
+          },
+          "variables": {
+            "mobileNumber": "+4915112345050"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_1tjr8w6"
+          },
+          "variables": {
+            "mobileNumber": "+4915112345051"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0yf9g2p"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0yf9g2p"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "resource_activation_completed",
+          "correlationKey": "SO-1005_50"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "resource_activation_completed",
+          "correlationKey": "SO-1005_51"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0fo7pq6"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0fo7pq6"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0dwooye"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Activity_0lawqru"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelector": {
+            "elementId": "Event_198nlm3"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelector": {
+            "elementId": "Event_1hxtki3"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "variables": {
+            "prices": {
+              "oneTimePrice": 10,
+              "monthlyPrice": 650
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "telco_service_order_fulfillment_retail"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Event_0zyeh81"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    }
+  ]
+}

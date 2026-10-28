@@ -13,3 +13,14 @@ This process blueprint depicts the end-to-end lifecycle of limit orders. The exe
 If the limit order is rejected, the broker is informed. The broker analyst contacts the customer to remediate the order. There are two possible outcomes: the order is updated or cancelled. If the limit order is accepted, the order is registered with the stock exchange. Due to the nature of limit orders, the order can be either executed or it expires. In both, the successful and unsuccessful case, the customer is informed about the outcome.
 
 This blueprint contains various events that represent certain milestones in the process flow. These events can be used in Optimize to gain insights into the duration of certain steps, the ratio of first-yield passes, etc.
+
+### Run the low-code tests in Hub
+
+The project includes the test file, `Capital Market Trade Exception Remediation Processing.integration.test`. The Marketplace import adds it automatically. To run the low-code tests:
+
+1. Open `Capital Market Trade Exception Remediation Processing.integration.test` in Hub.
+2. Click **Open in Test mode**.
+3. Deploy and run the tests.
+4. Review the results in the run history.
+
+The tests publish messages with fixed correlation keys. If a run stops halfway, cancel its leftover process instance before you run the suite again.
