@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ns0:definitions xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:ns0="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:ns2="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:ns3="http://www.omg.org/spec/DMN/20180521/DC/" id="Definitions_a2a_validate" name="07 Server - Validate A2A Request" namespace="http://camunda.org/schema/1.0/dmn" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.10.0">
+  <ns0:decision id="a2a-validate" name="07 Server - Validate A2A Request">
+    <ns0:decisionTable id="a2a-validate_table" hitPolicy="FIRST">
+      <ns0:input id="In_0" label="A2A-Version accepted">
+        <ns0:inputExpression id="InExpr_0" typeRef="boolean"><ns0:text>ctx.versionOk</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:input id="In_1" label="Content-Type accepted">
+        <ns0:inputExpression id="InExpr_1" typeRef="boolean"><ns0:text>ctx.contentTypeOk</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:input id="In_2" label="JSON-RPC 2.0 request">
+        <ns0:inputExpression id="InExpr_2" typeRef="boolean"><ns0:text>ctx.jsonrpcOk</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:input id="In_3" label="Method">
+        <ns0:inputExpression id="InExpr_3" typeRef="string"><ns0:text>ctx.method</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:input id="In_4" label="Message valid">
+        <ns0:inputExpression id="InExpr_4" typeRef="boolean"><ns0:text>ctx.msgOk</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:input id="In_5" label="Media types supported">
+        <ns0:inputExpression id="InExpr_5" typeRef="boolean"><ns0:text>ctx.mediaOk</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:input id="In_6" label="Task id present">
+        <ns0:inputExpression id="InExpr_6" typeRef="boolean"><ns0:text>ctx.idOk</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:input id="In_7" label="Push notifications enabled">
+        <ns0:inputExpression id="InExpr_7" typeRef="boolean"><ns0:text>ctx.pushEnabled</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:input id="In_8" label="Inline push config supplied">
+        <ns0:inputExpression id="InExpr_8" typeRef="boolean"><ns0:text>ctx.taskPush != null</ns0:text></ns0:inputExpression>
+      </ns0:input>
+      <ns0:output id="Out_0" label="Route" name="route" typeRef="string" />
+      <ns0:output id="Out_1" label="Error code" name="code" typeRef="number" />
+      <ns0:output id="Out_2" label="Error reason" name="reason" typeRef="string" />
+      <ns0:output id="Out_3" label="Error message" name="message" typeRef="string" />
+      <ns0:rule id="Rule_1">
+        <ns0:description>Unsupported A2A-Version</ns0:description>
+        <ns0:inputEntry id="Rule_1_in_0"><ns0:text>false</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_1_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_1_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_1_in_3"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_1_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_1_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_1_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_1_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_1_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_1_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_1_out_1"><ns0:text>-32009</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_1_out_2"><ns0:text>"VERSION_NOT_SUPPORTED"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_1_out_3"><ns0:text>"Unsupported A2A-Version"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_2">
+        <ns0:description>Content-Type is not application/json</ns0:description>
+        <ns0:inputEntry id="Rule_2_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_2_in_1"><ns0:text>false</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_2_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_2_in_3"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_2_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_2_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_2_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_2_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_2_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_2_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_2_out_1"><ns0:text>-32005</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_2_out_2"><ns0:text>"CONTENT_TYPE_NOT_SUPPORTED"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_2_out_3"><ns0:text>"Content-Type must be application/json"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_3">
+        <ns0:description>Not a JSON-RPC 2.0 request</ns0:description>
+        <ns0:inputEntry id="Rule_3_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_3_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_3_in_2"><ns0:text>false</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_3_in_3"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_3_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_3_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_3_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_3_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_3_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_3_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_3_out_1"><ns0:text>-32600</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_3_out_2"><ns0:text>null</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_3_out_3"><ns0:text>"Invalid Request"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_4">
+        <ns0:description>Streaming is not supported</ns0:description>
+        <ns0:inputEntry id="Rule_4_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_4_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_4_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_4_in_3"><ns0:text>"SendStreamingMessage","SubscribeToTask"</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_4_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_4_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_4_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_4_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_4_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_4_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_4_out_1"><ns0:text>-32004</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_4_out_2"><ns0:text>"UNSUPPORTED_OPERATION"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_4_out_3"><ns0:text>"Streaming is not supported"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_5">
+        <ns0:description>Extended agent card is not supported</ns0:description>
+        <ns0:inputEntry id="Rule_5_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_5_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_5_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_5_in_3"><ns0:text>"GetExtendedAgentCard"</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_5_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_5_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_5_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_5_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_5_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_5_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_5_out_1"><ns0:text>-32004</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_5_out_2"><ns0:text>"UNSUPPORTED_OPERATION"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_5_out_3"><ns0:text>"Extended agent card is not supported"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_6">
+        <ns0:description>Standalone push config methods are unsupported</ns0:description>
+        <ns0:inputEntry id="Rule_6_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_6_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_6_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_6_in_3"><ns0:text>"CreateTaskPushNotificationConfig","GetTaskPushNotificationConfig","ListTaskPushNotificationConfigs","DeleteTaskPushNotificationConfig"</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_6_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_6_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_6_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_6_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_6_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_6_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_6_out_1"><ns0:text>-32004</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_6_out_2"><ns0:text>"UNSUPPORTED_OPERATION"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_6_out_3"><ns0:text>"Standalone push notification config methods are not supported; supply the config in SendMessage"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_7">
+        <ns0:description>Unknown method</ns0:description>
+        <ns0:inputEntry id="Rule_7_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_7_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_7_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_7_in_3"><ns0:text>not("SendMessage","GetTask","ListTasks","CancelTask","CreateTaskPushNotificationConfig","GetTaskPushNotificationConfig","ListTaskPushNotificationConfigs","DeleteTaskPushNotificationConfig")</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_7_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_7_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_7_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_7_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_7_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_7_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_7_out_1"><ns0:text>-32601</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_7_out_2"><ns0:text>null</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_7_out_3"><ns0:text>"Method not found"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_8">
+        <ns0:description>SendMessage without a valid message</ns0:description>
+        <ns0:inputEntry id="Rule_8_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_8_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_8_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_8_in_3"><ns0:text>"SendMessage"</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_8_in_4"><ns0:text>false</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_8_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_8_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_8_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_8_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_8_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_8_out_1"><ns0:text>-32602</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_8_out_2"><ns0:text>null</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_8_out_3"><ns0:text>"Invalid params: message with messageId, role and parts is required"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_9">
+        <ns0:description>SendMessage with an unsupported part media type</ns0:description>
+        <ns0:inputEntry id="Rule_9_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_9_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_9_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_9_in_3"><ns0:text>"SendMessage"</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_9_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_9_in_5"><ns0:text>false</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_9_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_9_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_9_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_9_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_9_out_1"><ns0:text>-32005</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_9_out_2"><ns0:text>"CONTENT_TYPE_NOT_SUPPORTED"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_9_out_3"><ns0:text>"Unsupported media type in message part"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_10">
+        <ns0:description>A task id is required</ns0:description>
+        <ns0:inputEntry id="Rule_10_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_10_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_10_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_10_in_3"><ns0:text>"GetTask","CancelTask","CreateTaskPushNotificationConfig","GetTaskPushNotificationConfig","ListTaskPushNotificationConfigs","DeleteTaskPushNotificationConfig"</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_10_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_10_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_10_in_6"><ns0:text>false</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_10_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_10_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_10_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_10_out_1"><ns0:text>-32602</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_10_out_2"><ns0:text>null</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_10_out_3"><ns0:text>"Invalid params: id is required"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_11">
+        <ns0:description>Inline push config supplied while push is disabled</ns0:description>
+        <ns0:inputEntry id="Rule_11_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_11_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_11_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_11_in_3"><ns0:text>"SendMessage"</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_11_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_11_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_11_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_11_in_7"><ns0:text>false</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_11_in_8"><ns0:text>true</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_11_out_0"><ns0:text>"error"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_11_out_1"><ns0:text>-32003</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_11_out_2"><ns0:text>"PUSH_NOTIFICATION_NOT_SUPPORTED"</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_11_out_3"><ns0:text>"Push notifications are not supported"</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+      <ns0:rule id="Rule_12">
+        <ns0:description>Valid request</ns0:description>
+        <ns0:inputEntry id="Rule_12_in_0"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_12_in_1"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_12_in_2"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_12_in_3"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_12_in_4"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_12_in_5"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_12_in_6"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_12_in_7"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:inputEntry id="Rule_12_in_8"><ns0:text>-</ns0:text></ns0:inputEntry>
+        <ns0:outputEntry id="Rule_12_out_0"><ns0:text>ctx.method</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_12_out_1"><ns0:text>null</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_12_out_2"><ns0:text>null</ns0:text></ns0:outputEntry>
+        <ns0:outputEntry id="Rule_12_out_3"><ns0:text>null</ns0:text></ns0:outputEntry>
+      </ns0:rule>
+    </ns0:decisionTable>
+  </ns0:decision>
+  <ns2:DMNDI>
+    <ns2:DMNDiagram id="DMNDiagram_1">
+      <ns2:DMNShape id="a2a-validate_di" dmnElementRef="a2a-validate">
+        <ns3:Bounds height="80" width="180" x="150" y="100" />
+      </ns2:DMNShape>
+    </ns2:DMNDiagram>
+  </ns2:DMNDI>
+</ns0:definitions>

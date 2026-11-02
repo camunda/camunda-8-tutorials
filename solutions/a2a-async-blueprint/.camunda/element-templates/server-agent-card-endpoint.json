@@ -1,0 +1,180 @@
+{
+  "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+  "name": "Server - Agent Card Endpoint",
+  "id": "dev.hansel.a2a.core.card.v1",
+  "description": "Direct stock-Connectors A2A 1.0 endpoint for a non-production blueprint. Targets engine and stock Connectors 8.9+; runtime verification pending for 8.9. The skeleton uses the legacy AI Agent Sub-process. Only combinations documented in the setup guide are verified.",
+  "documentationRef": "https://a2a-protocol.org/latest/specification/",
+  "version": 4,
+  "category": {
+    "id": "connectors",
+    "name": "Connectors"
+  },
+  "appliesTo": [
+    "bpmn:StartEvent"
+  ],
+  "elementType": {
+    "value": "bpmn:StartEvent"
+  },
+  "engines": {
+    "camunda": "^8.9"
+  },
+  "groups": [
+    {
+      "id": "endpoint",
+      "label": "Webhook"
+    },
+    {
+      "id": "card",
+      "label": "Agent Card"
+    },
+    {
+      "id": "output",
+      "label": "Output mapping"
+    }
+  ],
+  "properties": [
+    {
+      "value": "io.camunda:webhook:1",
+      "binding": {
+        "name": "inbound.type",
+        "type": "zeebe:property"
+      },
+      "type": "Hidden"
+    },
+    {
+      "id": "inbound.shouldValidateHmac",
+      "value": "disabled",
+      "binding": {
+        "name": "inbound.shouldValidateHmac",
+        "type": "zeebe:property"
+      },
+      "type": "Hidden"
+    },
+    {
+      "id": "inbound.auth.type",
+      "value": "NONE",
+      "binding": {
+        "name": "inbound.auth.type",
+        "type": "zeebe:property"
+      },
+      "type": "Hidden"
+    },
+    {
+      "id": "synchronousResponse",
+      "value": "false",
+      "binding": {
+        "name": "synchronousResponse",
+        "type": "zeebe:property"
+      },
+      "type": "Hidden"
+    },
+    {
+      "id": "consumeUnmatchedEvents",
+      "value": "true",
+      "binding": {
+        "name": "consumeUnmatchedEvents",
+        "type": "zeebe:property"
+      },
+      "type": "Hidden"
+    },
+    {
+      "id": "deduplicationModeManualFlag",
+      "value": "false",
+      "binding": {
+        "name": "deduplicationModeManualFlag",
+        "type": "zeebe:property"
+      },
+      "type": "Hidden"
+    },
+    {
+      "id": "deduplicationMode",
+      "value": "AUTO",
+      "binding": {
+        "name": "deduplicationMode",
+        "type": "zeebe:property"
+      },
+      "type": "Hidden"
+    },
+    {
+      "id": "inbound.method",
+      "value": "get",
+      "group": "endpoint",
+      "binding": {
+        "name": "inbound.method",
+        "type": "zeebe:property"
+      },
+      "type": "Hidden"
+    },
+    {
+      "id": "inbound.context",
+      "label": "Webhook ID",
+      "description": "Clients read the card from {connectors base}/inbound/{webhook ID}.",
+      "value": "a2a-card",
+      "constraints": {
+        "notEmpty": true
+      },
+      "feel": "optional",
+      "group": "endpoint",
+      "binding": {
+        "name": "inbound.context",
+        "type": "zeebe:property"
+      },
+      "type": "String"
+    },
+    {
+      "id": "inbound.publicRpcUrl",
+      "type": "String",
+      "label": "Public RPC URL",
+      "group": "card",
+      "value": "",
+      "description": "Required complete HTTPS A2A RPC webhook URL, including any cluster prefix. Must exactly match the client's A2A_RPC_URL secret. This URL is public, not a credential; webhook response expressions use local FEEL.",
+      "constraints": {
+        "notEmpty": true,
+        "pattern": {
+          "value": "^https://[^ /]+/[^ ]*$",
+          "message": "Enter the complete HTTPS public RPC URL, including the webhook path"
+        }
+      },
+      "binding": {
+        "type": "zeebe:property",
+        "name": "inbound.publicRpcUrl"
+      }
+    },
+    {
+      "id": "inbound.responseExpression",
+      "label": "Agent Card",
+      "description": "Describe the selected BPMN process truthfully. Keep the complete public RPC URL field, unauthenticated peer declaration and disabled capabilities.",
+      "value": "={rpcUrl: get value(correlation.activatedElement.properties, \"inbound.publicRpcUrl\"), response: if rpcUrl instance of string and matches(rpcUrl, \"^https://[^ /]+/[^ ]*$\") then {statusCode: 200, headers: {\"Content-Type\": \"application/json\"}, body: {name: \"BPMN A2A skeleton\", version: \"0.1.0\", description: \"Non-production BPMN A2A skeleton. Returns a placeholder tool artifact.\", provider: {organization: \"HanselIdes\", url: \"https://github.com/HanselIdes/camunda-a2a\"}, supportedInterfaces: [{url: rpcUrl, protocolBinding: \"JSONRPC\", protocolVersion: \"1.0\"}], capabilities: {streaming: false, pushNotifications: true, extendedAgentCard: false}, defaultInputModes: [\"text/plain\", \"application/json\"], defaultOutputModes: [\"text/plain\", \"application/json\"], securitySchemes: {}, securityRequirements: [], skills: [{id: \"echo_placeholder\", name: \"Echo placeholder\", description: \"Call once to return the process-owned placeholder value. Accepts no model arguments. Replace this tool with your own business logic.\", tags: [\"placeholder\"], examples: [\"Example input\"]}]}} else {statusCode: 500, body: {error: \"Configure the Agent Card HTTPS public RPC URL\"}}}.response",
+      "feel": "required",
+      "group": "card",
+      "binding": {
+        "name": "inbound.responseExpression",
+        "type": "zeebe:property"
+      },
+      "type": "Text"
+    },
+    {
+      "id": "resultVariable",
+      "label": "Result variable",
+      "description": "Name of variable to store the response in. Details in the <a href=\"https://docs.camunda.io/docs/components/connectors/use-connectors/#result-variable\" target=\"_blank\">documentation</a>.",
+      "group": "output",
+      "binding": {
+        "name": "resultVariable",
+        "type": "zeebe:property"
+      },
+      "type": "String"
+    },
+    {
+      "id": "resultExpression",
+      "label": "Result expression",
+      "description": "Maps the card request to process variables. Empty by default: serving the card needs none.",
+      "feel": "required",
+      "group": "output",
+      "binding": {
+        "name": "resultExpression",
+        "type": "zeebe:property"
+      },
+      "type": "Text"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-rpc",
+  "testCases": [
+    {
+      "name": "Invalid request - return a validation error",
+      "description": "Runs request parsing and the real validation decision without a webhook, engine HTTP calls or secrets.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "a2a-rpc" },
+          "startInstructions": [{ "elementId": "ParseRequest" }],
+          "variables": {
+            "rpc": { "jsonrpc": "1.0", "id": "invalid-request", "method": "GetTask", "params": { "id": "demo-task" } },
+            "hdr": { "content-type": "application/json", "a2a-version": "1.0" },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "a2a-rpc" },
+          "elementSelectors": [
+            { "elementId": "ParseRequest" },
+            { "elementId": "ValidateRequest" },
+            { "elementId": "RouteRequest" },
+            { "elementId": "ValidationErrorReady" }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "a2a-rpc" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Get task - return the supplied task view",
+      "description": "Starts after engine lookup with a supplied task snapshot and follows the GetTask branch without external calls.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "a2a-rpc" },
+          "startInstructions": [{ "elementId": "RouteMethod" }],
+          "variables": {
+            "ctx": { "id": "get-task", "method": "GetTask", "hl": 0 },
+            "task": {
+              "id": "demo-task", "contextId": "demo-context", "rev": 1,
+              "status": { "state": "TASK_STATE_WORKING", "timestamp": "2026-01-01T00:00:00Z" },
+              "history": [], "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "a2a-rpc" },
+          "elementSelectors": [{ "elementId": "RouteMethod" }, { "elementId": "TaskViewReady" }],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "a2a-rpc" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Cancel terminal task - reject cancellation",
+      "description": "Shows that a completed task takes the non-cancelable path without calling the engine or changing task state.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "a2a-rpc" },
+          "startInstructions": [{ "elementId": "RouteMethod" }],
+          "variables": {
+            "ctx": { "id": "cancel-task", "method": "CancelTask" },
+            "task": {
+              "id": "demo-task", "contextId": "demo-context", "rev": 2,
+              "status": { "state": "TASK_STATE_COMPLETED", "timestamp": "2026-01-01T00:00:00Z" },
+              "history": [], "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "a2a-rpc" },
+          "elementSelectors": [
+            { "elementId": "RouteMethod" },
+            { "elementId": "Cancelable" },
+            { "elementId": "NotCancelableJoin" },
+            { "elementId": "NotCancelableReady" }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "a2a-rpc" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Follow-up in another context - reject before correlation",
+      "description": "Shows the context guard rejecting a follow-up before any message is correlated.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "a2a-rpc" },
+          "startInstructions": [{ "elementId": "CheckFollowUp" }],
+          "variables": {
+            "ctx": { "id": "follow-up", "method": "SendMessage", "contextId": "another-context" },
+            "task": {
+              "id": "demo-task", "contextId": "demo-context", "rev": 1,
+              "status": { "state": "TASK_STATE_INPUT_REQUIRED", "timestamp": "2026-01-01T00:00:00Z" },
+              "history": [], "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "a2a-rpc" },
+          "elementSelectors": [
+            { "elementId": "CheckFollowUp" },
+            { "elementId": "FollowUpAccepted" },
+            { "elementId": "FollowUpErrorJoin" },
+            { "elementId": "FollowUpErrorReady" }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "a2a-rpc" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ]
+}

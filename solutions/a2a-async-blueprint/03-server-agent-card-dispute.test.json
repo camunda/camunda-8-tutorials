@@ -1,0 +1,152 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-card-dispute",
+  "testCases": [
+    {
+      "name": "Agent calls the tool - task outcome is published",
+      "description": "The agent runs the placeholder tool, finishes, and the A2A outcome is published.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "variables": {
+            "req": { "message": { "parts": [{ "data": { "demoInput": { "value": "Example input" } } }] } },
+            "task": {
+              "id": "task-1",
+              "contextId": "ctx-1",
+              "rev": 1,
+              "status": { "state": "TASK_STATE_WORKING" },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": { "elementId": "AgentTools" },
+          "activateElements": [
+            {
+              "elementId": "echo_placeholder",
+              "variables": { "toolCall": { "_meta": { "id": "call-1", "name": "echo_placeholder" } } }
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "elementSelectors": [{ "elementId": "echo_placeholder" }],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": { "elementId": "AgentTools" },
+          "completionConditionFulfilled": true,
+          "variables": {
+            "agent": {
+              "responseText": "Done.",
+              "context": {
+                "conversation": {
+                  "messages": [
+                    {
+                      "role": "tool_call_result",
+                      "results": [{ "id": "call-1", "name": "echo_placeholder", "content": { "value": "Example input" } }]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "elementSelectors": [{ "elementId": "OutcomeJoin" }, { "elementId": "TaskDone" }],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Agent fails - failed outcome is published",
+      "description": "When the agent job fails, the task still ends with a published outcome.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "variables": {
+            "req": { "message": { "parts": [] } },
+            "task": {
+              "id": "task-2",
+              "contextId": "ctx-2",
+              "rev": 1,
+              "status": { "state": "TASK_STATE_WORKING" },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": { "elementId": "AgentTools" },
+          "errorCode": "AGENT_FAILED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "elementSelectors": [{ "elementId": "AgentError" }, { "elementId": "OutcomeJoin" }, { "elementId": "TaskDone" }],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Caller cancels a running task - cancellation is settled",
+      "description": "A cancel request interrupts the agent and the task ends as canceled.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "variables": {
+            "req": { "message": { "parts": [] } },
+            "task": {
+              "id": "task-3",
+              "contextId": "ctx-3",
+              "rev": 1,
+              "status": { "state": "TASK_STATE_WORKING" },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-cancel",
+          "correlationKey": "task-3"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "elementSelectors": [
+            { "elementId": "A2ACancelRequested" },
+            { "elementId": "A2ASetCanceled" },
+            { "elementId": "TaskSettled" }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ]
+}

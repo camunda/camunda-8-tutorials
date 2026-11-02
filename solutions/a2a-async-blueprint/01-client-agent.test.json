@@ -1,0 +1,379 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-client",
+  "testCases": [
+    {
+      "name": "CORE-SEND-001 example: Send Example input - receive Task demo-task in working state",
+      "description": "Canned element-template I/O: supply {value: Example input}; a Task reply becomes a2aResult and acceptedTask. The peer reply is supplied, not a server compliance result.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "startInstructions": [
+            {
+              "elementId": "SendA2AMessage"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "SendA2AMessage"
+            }
+          ],
+          "variables": {
+            "requestData": {
+              "value": "Example input"
+            },
+            "acceptedTask": {},
+            "previousTask": {},
+            "agentContext": {
+              "conversation": {
+                "messages": []
+              }
+            },
+            "toolCall": {
+              "_meta": {
+                "id": "example-call",
+                "name": "SendA2AMessage"
+              }
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "processDefinitionId": "a2a-client",
+            "elementId": "SendA2AMessage"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "example-send",
+              "result": {
+                "task": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "status": {
+                    "state": "TASK_STATE_WORKING"
+                  }
+                }
+              }
+            },
+            "a2aResult": {
+              "task": {
+                "id": "demo-task",
+                "contextId": "demo-context",
+                "status": {
+                  "state": "TASK_STATE_WORKING"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "variables": {
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              }
+            },
+            "a2aResult": {
+              "task": {
+                "id": "demo-task",
+                "contextId": "demo-context",
+                "status": {
+                  "state": "TASK_STATE_WORKING"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CORE-SEND-001 example: Send Example input - receive the message Request received",
+      "description": "Canned element-template I/O: a Message reply is returned as a2aResult.message rather than task identity. The connector result is supplied; no server is contacted.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "startInstructions": [
+            {
+              "elementId": "SendA2AMessage"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "SendA2AMessage"
+            }
+          ],
+          "variables": {
+            "requestData": {
+              "value": "Example input"
+            },
+            "acceptedTask": {},
+            "previousTask": {},
+            "agentContext": {
+              "conversation": {
+                "messages": []
+              }
+            },
+            "toolCall": {
+              "_meta": {
+                "id": "example-call",
+                "name": "SendA2AMessage"
+              }
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "processDefinitionId": "a2a-client",
+            "elementId": "SendA2AMessage"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "example-send",
+              "result": {
+                "message": {
+                  "messageId": "reply-1",
+                  "role": "ROLE_AGENT",
+                  "parts": [
+                    {
+                      "text": "Request received"
+                    }
+                  ]
+                }
+              }
+            },
+            "a2aResult": {
+              "message": {
+                "messageId": "reply-1",
+                "role": "ROLE_AGENT",
+                "parts": [
+                  {
+                    "text": "Request received"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "variables": {
+            "acceptedTask": {},
+            "a2aResult": {
+              "message": {
+                "messageId": "reply-1",
+                "role": "ROLE_AGENT",
+                "parts": [
+                  {
+                    "text": "Request received"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CORE-PUSH-001 example: Wait for demo-task - the server pushes its completed state and Example input artifact",
+      "description": "Canned webhook payload: a push for the accepted task id updates acceptedTask and returns its artifact. The inbound connector's authentication is not exercised here.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "startInstructions": [
+            {
+              "elementId": "AwaitPush"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "AwaitPush"
+            }
+          ],
+          "variables": {
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              }
+            }
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-push",
+          "correlationKey": "demo-task",
+          "variables": {
+            "remoteResponse": {
+              "result": {
+                "task": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "status": {
+                    "state": "TASK_STATE_COMPLETED"
+                  },
+                  "artifacts": [
+                    {
+                      "artifactId": "placeholder",
+                      "parts": [
+                        {
+                          "data": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [
+                {
+                  "artifactId": "placeholder",
+                  "parts": [
+                    {
+                      "data": {
+                        "value": "Example input"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "variables": {
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [
+                {
+                  "artifactId": "placeholder",
+                  "parts": [
+                    {
+                      "data": {
+                        "value": "Example input"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CORE-PUSH-002 example: Wait for demo-task - a push for another task id is not delivered",
+      "description": "Canned webhook payload: a push with a different task id does not resume the waiting instance, so acceptedTask stays working.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "startInstructions": [
+            {
+              "elementId": "AwaitPush"
+            }
+          ],
+          "runtimeInstructions": [
+            {
+              "type": "TERMINATE_PROCESS_INSTANCE",
+              "afterElementId": "AwaitPush"
+            }
+          ],
+          "variables": {
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              }
+            }
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-push",
+          "correlationKey": "other-task",
+          "variables": {
+            "acceptedTask": {
+              "id": "other-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [
+                {
+                  "artifactId": "placeholder",
+                  "parts": [
+                    {
+                      "data": {
+                        "value": "Example input"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "variables": {
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
