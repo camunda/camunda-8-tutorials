@@ -50,7 +50,7 @@ public class FeelCasesTest {
                 new OutcomeCase("agent job failed (no agent result)", null, "TASK_STATE_FAILED", FAILED_TEXT, List.of()),
                 new OutcomeCase(
                         "tool result is an object",
-                        agent("Done.", toolResults(result("echo_placeholder", EVIDENCE))),
+                        agent("Done.", toolResults(result("upperCase", EVIDENCE))),
                         "TASK_STATE_COMPLETED",
                         "Placeholder tool completed.",
                         List.of("placeholder")),
@@ -58,7 +58,7 @@ public class FeelCasesTest {
                         "tool result is wrapped in a typed list",
                         agent(
                                 "Done.",
-                                toolResults(result("echo_placeholder", List.of(Map.of("type", "object", "content", EVIDENCE))))),
+                                toolResults(result("upperCase", List.of(Map.of("type", "object", "content", EVIDENCE))))),
                         "TASK_STATE_COMPLETED",
                         "Placeholder tool completed.",
                         List.of("placeholder")),
@@ -66,8 +66,8 @@ public class FeelCasesTest {
                         "latest of several tool results wins",
                         agent(
                                 "Done.",
-                                toolResults(result("echo_placeholder", Map.of("value", "old"))),
-                                toolResults(result("echo_placeholder", EVIDENCE))),
+                                toolResults(result("upperCase", Map.of("value", "old"))),
+                                toolResults(result("upperCase", EVIDENCE))),
                         "TASK_STATE_COMPLETED",
                         "Placeholder tool completed.",
                         List.of("placeholder")),
@@ -97,7 +97,7 @@ public class FeelCasesTest {
                         List.of()),
                 new OutcomeCase(
                         "tool returned null - not grounded",
-                        agent("Done.", toolResults(result("echo_placeholder", null))),
+                        agent("Done.", toolResults(result("upperCase", null))),
                         "TASK_STATE_FAILED",
                         "Done.",
                         List.of()));

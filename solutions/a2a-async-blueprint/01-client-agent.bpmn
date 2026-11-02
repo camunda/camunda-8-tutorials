@@ -109,6 +109,12 @@
           <dc:Bounds x="130" y="198" width="80" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ClientConversationFinished_di" bpmnElement="ClientConversationFinished">
+        <dc:Bounds x="632" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="621" y="198" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ClientAgent_di" bpmnElement="ClientAgent" isExpanded="true">
         <dc:Bounds x="250" y="80" width="320" height="200" />
       </bpmndi:BPMNShape>
@@ -125,19 +131,13 @@
         <di:waypoint x="390" y="180" />
         <di:waypoint x="472" y="180" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ClientConversationFinished_di" bpmnElement="ClientConversationFinished">
-        <dc:Bounds x="712" y="162" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="693" y="198" width="74" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_QuestionAsked_ClientAgent_di" bpmnElement="Flow_QuestionAsked_ClientAgent">
         <di:waypoint x="188" y="180" />
         <di:waypoint x="250" y="180" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_ClientAgent_ClientConversationFinished_di" bpmnElement="Flow_ClientAgent_ClientConversationFinished">
         <di:waypoint x="570" y="180" />
-        <di:waypoint x="712" y="180" />
+        <di:waypoint x="632" y="180" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -44,12 +44,12 @@
           },
           "activateElements": [
             {
-              "elementId": "echo_placeholder",
+              "elementId": "upperCase",
               "variables": {
                 "toolCall": {
                   "_meta": {
                     "id": "call-1",
-                    "name": "echo_placeholder"
+                    "name": "upperCase"
                   }
                 }
               }
@@ -73,7 +73,7 @@
                       "results": [
                         {
                           "id": "call-1",
-                          "name": "echo_placeholder",
+                          "name": "upperCase",
                           "content": {
                             "value": "Example input"
                           }

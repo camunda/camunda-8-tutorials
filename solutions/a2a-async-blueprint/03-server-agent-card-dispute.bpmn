@@ -13,8 +13,8 @@
           <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_API_KEY}}" target="provider.openaiCompatible.authentication.apiKey" />
           <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL}}" target="provider.openaiCompatible.model.model" />
           <zeebe:input source="=0" target="provider.openaiCompatible.model.parameters.temperature" />
-          <zeebe:input source="=&#34;You run a minimal BPMN A2A skeleton. Call echo_placeholder for the supplied request. Pass the demoInput object from the user prompt as the tool's requestData argument, exactly as given. Do not invent or alter its value. If the prompt does not carry a demoInput object with a non-blank string value, do not call the tool; briefly explain what is missing and finish. After the tool returns, briefly report the result and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
-          <zeebe:input source="=&#34;Handle this A2A request. Pass its demoInput to echo_placeholder unchanged. demoInput: &#34; + to json(&#10;  /* demoInput from the data part, else parsed from JSON text (e.g. clients that send text only). */&#10;  if req.message.parts instance of list&#10;    then (if count(req.message.parts[item instance of context and item.data != null]) &gt; 0&#10;      then req.message.parts[item instance of context and item.data != null][1].data.demoInput&#10;      else from json(req.message.parts[item instance of context and item.text != null][1].text))&#10;    else null&#10;)" target="data.userPrompt.prompt" />
+          <zeebe:input source="=&#34;You run a minimal BPMN A2A skeleton. Call upperCase for the supplied request. Pass the demoInput object from the user prompt as the tool&#39;s requestData argument, exactly as given. Do not invent or alter its value. If the prompt does not carry a demoInput object with a non-blank string value, do not call the tool; briefly explain what is missing and finish. After the tool returns, briefly report the result and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
+          <zeebe:input source="=&#34;Handle this A2A request. Pass its demoInput to upperCase unchanged. demoInput: &#34; + to json(&#10;  /* demoInput from the data part, else parsed from JSON text (e.g. clients that send text only). */&#10;  if req.message.parts instance of list&#10;    then (if count(req.message.parts[item instance of context and item.data != null]) &#62; 0&#10;      then req.message.parts[item instance of context and item.data != null][1].data.demoInput&#10;      else from json(req.message.parts[item instance of context and item.text != null][1].text))&#10;    else null&#10;)" target="data.userPrompt.prompt" />
           <zeebe:input source="=null" target="agentContext" />
           <zeebe:input source="in-process" target="data.memory.storage.type" />
           <zeebe:input source="=20" target="data.memory.contextWindowSize" />
@@ -36,7 +36,7 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_TaskReceived_AgentTools</bpmn:incoming>
       <bpmn:outgoing>Flow_AgentTools_AgentFinished</bpmn:outgoing>
-      <bpmn:scriptTask id="echo_placeholder" name="Share placeholder">
+      <bpmn:scriptTask id="upperCase" name="UpperCase the text">
         <bpmn:documentation>Call once with the request data; returns it together with an uppercased copy and its length. Takes the request data as a model-supplied argument. Replace this tool with your own business logic.</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:ioMapping>
@@ -67,8 +67,9 @@
       <bpmndi:BPMNShape id="AgentTools_di" bpmnElement="AgentTools" isExpanded="true">
         <dc:Bounds x="250" y="80" width="270" height="200" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="echo_placeholder_di" bpmnElement="echo_placeholder">
+      <bpmndi:BPMNShape id="upperCase_di" bpmnElement="upperCase">
         <dc:Bounds x="330" y="140" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AgentFinished_di" bpmnElement="AgentFinished">
         <dc:Bounds x="582" y="162" width="36" height="36" />

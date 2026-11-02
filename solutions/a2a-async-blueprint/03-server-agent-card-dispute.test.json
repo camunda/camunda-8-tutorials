@@ -34,12 +34,12 @@
           },
           "activateElements": [
             {
-              "elementId": "echo_placeholder",
+              "elementId": "upperCase",
               "variables": {
                 "toolCall": {
                   "_meta": {
                     "id": "call-1",
-                    "name": "echo_placeholder"
+                    "name": "upperCase"
                   },
                   "requestData": {
                     "value": "Example input"
@@ -56,7 +56,7 @@
           },
           "elementSelectors": [
             {
-              "elementId": "echo_placeholder"
+              "elementId": "upperCase"
             }
           ],
           "state": "IS_COMPLETED"
@@ -78,7 +78,7 @@
                       "results": [
                         {
                           "id": "call-1",
-                          "name": "echo_placeholder",
+                          "name": "upperCase",
                           "content": {
                             "value": "Example input"
                           }
@@ -140,12 +140,12 @@
           },
           "activateElements": [
             {
-              "elementId": "echo_placeholder",
+              "elementId": "upperCase",
               "variables": {
                 "toolCall": {
                   "_meta": {
                     "id": "call-1",
-                    "name": "echo_placeholder"
+                    "name": "upperCase"
                   },
                   "requestData": {
                     "value": "Example input"
@@ -162,7 +162,7 @@
           },
           "elementSelectors": [
             {
-              "elementId": "echo_placeholder"
+              "elementId": "upperCase"
             }
           ],
           "state": "IS_COMPLETED"

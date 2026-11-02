@@ -9,7 +9,7 @@ minimal; the protocol work lives in separate protocol processes.
 | Side | Business agent (minimal) | Protocol |
 | --- | --- | --- |
 | Client | `01` `a2a-client`: start, client AI agent with the native **A2A Client connector** as its tool (`Remote A2A agent`) plus the native polling catch event, end | The connector (Camunda 8.9+) |
-| Server | `03` `a2a-card-dispute`: start, server AI agent with `echo_placeholder`, end | `04` `a2a-task`: calls 03, cancel, Task revision, optional push, settled signal |
+| Server | `03` `a2a-card-dispute`: start, server AI agent with `upperCase`, end | `04` `a2a-task`: calls 03, cancel, Task revision, optional push, settled signal |
 | Server entry | | `02` `a2a-rpc`: the single executable RPC server |
 
 There is no native A2A server connector, so the server side (02, 04) is custom BPMN.
@@ -110,7 +110,7 @@ needs an LLM, so those parts were not run end to end here.
 | --- | --- |
 | `01-client-agent.bpmn` | Client agent using the native A2A Client connector |
 | `02-a2a-server.bpmn` | The single executable A2A server (`a2a-rpc`), Basic-auth platform calls |
-| `03-server-agent-card-dispute.bpmn` | Server agent with a placeholder script tool (`echo_placeholder`) |
+| `03-server-agent-card-dispute.bpmn` | Server agent with a placeholder script tool (`upperCase`) |
 | `04-a2a-task.bpmn` | Per-task server protocol (`a2a-task`) |
 | `adk/` | External A2A agent (Google ADK) used to check interoperability |
 | `server-request-validation.dmn` | Protocol request validation |
@@ -143,7 +143,7 @@ nonfunctional example HTTPS URL) with your reachable connector endpoint.
 
 ## Customization
 
-Edit `demoInput` in `QuestionAsked`, then replace `echo_placeholder`. 04 publishes its evidence as
+Edit `demoInput` in `QuestionAsked`, then replace `upperCase`. 04 publishes its evidence as
 the `placeholder` artifact; adjust it there if you change the tool result.
 
 ## Source and licensing
