@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
   "name": "Server - A2A RPC Endpoint",
   "id": "dev.hansel.a2a.core.rpc.v1",
-  "description": "Direct stock-Connectors A2A 1.0 endpoint for a non-production blueprint. Targets engine and stock Connectors 8.9+; runtime verification pending for 8.9. The skeleton uses the legacy AI Agent Sub-process. Only combinations documented in the setup guide are verified.",
+  "description": "Receives A2A requests (A2A 1.0 and 0.3) from other agents over JSON-RPC and starts the server process. Needs Camunda 8.9 or later with the standard connectors runtime. See the blueprint README for setup.",
   "documentationRef": "https://a2a-protocol.org/latest/specification/",
   "version": 3,
   "category": {
@@ -104,7 +104,7 @@
     {
       "id": "inbound.context",
       "label": "Webhook ID",
-      "description": "Clients POST JSON-RPC requests to {connectors base}/inbound/{webhook ID}.",
+      "description": "Clients send A2A requests to your connectors URL followed by /inbound/ and this ID.",
       "value": "a2a",
       "constraints": {
         "notEmpty": true
@@ -141,7 +141,7 @@
     {
       "id": "resultExpression",
       "label": "Result expression",
-      "description": "Persist the JSON-RPC body and only content-type/a2a-version headers. Never persist authorization, API keys or arbitrary request headers.",
+      "description": "Stores the request body and only the content-type and a2a-version headers. Do not store authorization headers, API keys, or other request headers.",
       "value": "={rpc: request.body, hdr: {\"content-type\": request.headers.`content-type`, \"a2a-version\": request.headers.`a2a-version`}, pushEnabled: true}",
       "feel": "required",
       "group": "output",

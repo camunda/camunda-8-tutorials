@@ -14,7 +14,7 @@ from google.adk.events import Event
 from google.genai import types
 
 INSTRUCTION = (
-    "You run a minimal A2A skeleton. Call upper_case once with the demoInput object from the "
+    "You are the server agent in an A2A blueprint. Call upper_case once with the demoInput object from the "
     "request and do not alter its value. Answer with one short sentence once the tool returned."
 )
 

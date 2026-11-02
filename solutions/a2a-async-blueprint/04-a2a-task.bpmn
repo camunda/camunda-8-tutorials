@@ -8,7 +8,7 @@
       <zeebe:subscription correlationKey="=task.id" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:process id="a2a-task" name="04 A2A Task - Protocol" isExecutable="true">
+  <bpmn:process id="a2a-task" name="04 A2A Task" isExecutable="true">
     <bpmn:startEvent id="TaskReceived" name="Task accepted">
       <bpmn:outgoing>Flow_TaskReceived_AgentTools</bpmn:outgoing>
     </bpmn:startEvent>
@@ -102,7 +102,7 @@
       <bpmn:incoming>Flow_PushFailed_PushJoin</bpmn:incoming>
       <bpmn:outgoing>Flow_PushJoin_PublishOutcome</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:intermediateThrowEvent id="PublishOutcome" name="Wake the A2A server">
+    <bpmn:intermediateThrowEvent id="PublishOutcome" name="Notify the A2A server">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
           <zeebe:input source="=task" target="settled" />

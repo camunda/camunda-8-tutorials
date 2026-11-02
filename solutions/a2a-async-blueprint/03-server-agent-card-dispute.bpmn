@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_a2a_card_dispute" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
-  <bpmn:process id="a2a-card-dispute" name="03 Server Agent - A2A Skeleton" isExecutable="true">
+  <bpmn:process id="a2a-card-dispute" name="03 A2A Server Agent" isExecutable="true">
     <bpmn:startEvent id="TaskReceived" name="Request received">
       <bpmn:outgoing>Flow_TaskReceived_AgentTools</bpmn:outgoing>
     </bpmn:startEvent>
@@ -13,7 +13,7 @@
           <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_API_KEY}}" target="provider.openaiCompatible.authentication.apiKey" />
           <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL}}" target="provider.openaiCompatible.model.model" />
           <zeebe:input source="=0" target="provider.openaiCompatible.model.parameters.temperature" />
-          <zeebe:input source="=&#34;You run a minimal BPMN A2A skeleton. Call upperCase for the supplied request. Pass the demoInput object from the user prompt as the tool&#39;s requestData argument, exactly as given. Do not invent or alter its value. If the prompt does not carry a demoInput object with a non-blank string value, do not call the tool; briefly explain what is missing and finish. After the tool returns, briefly report the result and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
+          <zeebe:input source="=&#34;You are the server agent in an A2A blueprint. Call upperCase for the supplied request. Pass the demoInput object from the user prompt as the tool&#39;s requestData argument, exactly as given. Do not invent or alter its value. If the prompt does not carry a demoInput object with a non-blank string value, do not call the tool; briefly explain what is missing and finish. After the tool returns, briefly report the result and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
           <zeebe:input source="=&#34;Handle this A2A request. Pass its demoInput to upperCase unchanged. demoInput: &#34; + to json(&#10;  /* demoInput from the data part, else parsed from JSON text (e.g. clients that send text only). */&#10;  if req.message.parts instance of list&#10;    then (if count(req.message.parts[item instance of context and item.data != null]) &#62; 0&#10;      then req.message.parts[item instance of context and item.data != null][1].data.demoInput&#10;      else from json(req.message.parts[item instance of context and item.text != null][1].text))&#10;    else null&#10;)" target="data.userPrompt.prompt" />
           <zeebe:input source="=null" target="agentContext" />
           <zeebe:input source="in-process" target="data.memory.storage.type" />
@@ -37,7 +37,7 @@
       <bpmn:incoming>Flow_TaskReceived_AgentTools</bpmn:incoming>
       <bpmn:outgoing>Flow_AgentTools_AgentFinished</bpmn:outgoing>
       <bpmn:scriptTask id="upperCase" name="UpperCase the text">
-        <bpmn:documentation>Call once with the request data; returns it together with an uppercased copy and its length. Takes the request data as a model-supplied argument. Replace this tool with your own business logic.</bpmn:documentation>
+        <bpmn:documentation>Returns the request data with an uppercased copy and its length. The agent supplies the request data when it calls the tool. Replace this tool with your own business logic.</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:ioMapping>
             <zeebe:input source="=fromAi(toolCall.requestData, &#34;The demoInput object from the request, passed through unchanged&#34;, &#34;object&#34;)" target="requestData" />

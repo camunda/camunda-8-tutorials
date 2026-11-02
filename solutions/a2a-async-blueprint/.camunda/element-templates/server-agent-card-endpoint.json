@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
   "name": "Server - Agent Card Endpoint",
   "id": "dev.hansel.a2a.core.card.v1",
-  "description": "Direct stock-Connectors A2A 1.0 endpoint for a non-production blueprint. Targets engine and stock Connectors 8.9+; runtime verification pending for 8.9. The skeleton uses the legacy AI Agent Sub-process. Only combinations documented in the setup guide are verified.",
+  "description": "Serves the Agent Card that tells other agents who you are and where to send A2A requests. Needs Camunda 8.9 or later with the standard connectors runtime. See the blueprint README for setup.",
   "documentationRef": "https://a2a-protocol.org/latest/specification/",
   "version": 4,
   "category": {
@@ -108,7 +108,7 @@
     {
       "id": "inbound.context",
       "label": "Webhook ID",
-      "description": "Clients read the card from {connectors base}/inbound/{webhook ID}.",
+      "description": "Clients read the Agent Card from your connectors URL followed by /inbound/ and this ID.",
       "value": "a2a-card",
       "constraints": {
         "notEmpty": true
@@ -127,12 +127,12 @@
       "label": "Public RPC URL",
       "group": "card",
       "value": "",
-      "description": "Required complete HTTPS A2A RPC webhook URL, including any cluster prefix. Must exactly match the client's A2A_RPC_URL secret. This URL is public, not a credential; webhook response expressions use local FEEL.",
+      "description": "The full HTTPS URL of the A2A webhook, including the path (for example, https://example.com/inbound/a2a). Clients use it to send requests, so it must be reachable from them. It is public, not a credential.",
       "constraints": {
         "notEmpty": true,
         "pattern": {
           "value": "^https://[^ /]+/[^ ]*$",
-          "message": "Enter the complete HTTPS public RPC URL, including the webhook path"
+          "message": "Enter the full HTTPS URL of the A2A webhook, including the path"
         }
       },
       "binding": {
@@ -143,8 +143,8 @@
     {
       "id": "inbound.responseExpression",
       "label": "Agent Card",
-      "description": "Describe the selected BPMN process truthfully. Keep the complete public RPC URL field, unauthenticated peer declaration and disabled capabilities.",
-      "value": "={rpcUrl: get value(correlation.activatedElement.properties, \"inbound.publicRpcUrl\"), response: if rpcUrl instance of string and matches(rpcUrl, \"^https://[^ /]+/[^ ]*$\") then {statusCode: 200, headers: {\"Content-Type\": \"application/json\"}, body: {name: \"BPMN A2A skeleton\", version: \"0.1.0\", description: \"Non-production BPMN A2A skeleton. Returns the transformed request data as a tool artifact.\", provider: {organization: \"HanselIdes\", url: \"https://github.com/HanselIdes/camunda-a2a\"}, supportedInterfaces: [{url: rpcUrl, protocolBinding: \"JSONRPC\", protocolVersion: \"1.0\"}], capabilities: {streaming: false, pushNotifications: true, extendedAgentCard: false}, defaultInputModes: [\"text/plain\", \"application/json\"], defaultOutputModes: [\"text/plain\", \"application/json\"], securitySchemes: {}, securityRequirements: [], skills: [{id: \"upperCase\", name: \"UpperCase the text\", description: \"Call once to return the process-owned placeholder value. Takes the request data as its argument. Replace this tool with your own business logic.\", tags: [\"placeholder\"], examples: [\"Example input\"]}]}} else {statusCode: 500, body: {error: \"Configure the Agent Card HTTPS public RPC URL\"}}}.response",
+      "description": "Describes your agent to other agents. Update the name, description, and skills to match your agent. Keep the public URL field and the disabled capabilities.",
+      "value": "={rpcUrl: get value(correlation.activatedElement.properties, \"inbound.publicRpcUrl\"), response: if rpcUrl instance of string and matches(rpcUrl, \"^https://[^ /]+/[^ ]*$\") then {statusCode: 200, headers: {\"Content-Type\": \"application/json\"}, body: {name: \"A2A blueprint agent\", version: \"0.1.0\", description: \"Example agent from the Camunda A2A blueprint. Returns your request data with an uppercased copy and its length.\", provider: {organization: \"Camunda\", url: \"https://github.com/camunda/camunda-8-tutorials/tree/main/solutions/a2a-async-blueprint\"}, supportedInterfaces: [{url: rpcUrl, protocolBinding: \"JSONRPC\", protocolVersion: \"1.0\"}], capabilities: {streaming: false, pushNotifications: true, extendedAgentCard: false}, defaultInputModes: [\"text/plain\", \"application/json\"], defaultOutputModes: [\"text/plain\", \"application/json\"], securitySchemes: {}, securityRequirements: [], skills: [{id: \"upperCase\", name: \"Uppercase text\", description: \"Returns the request data with an uppercased copy and its length. Replace this skill with your own business logic.\", tags: [\"example\"], examples: [\"Example input\"]}]}} else {statusCode: 500, body: {error: \"Set the Agent Card's public URL to your HTTPS webhook URL\"}}}.response",
       "feel": "required",
       "group": "card",
       "binding": {
@@ -167,7 +167,7 @@
     {
       "id": "resultExpression",
       "label": "Result expression",
-      "description": "Maps the card request to process variables. Empty by default: serving the card needs none.",
+      "description": "Variable that holds the request data. Leave empty to skip.",
       "feel": "required",
       "group": "output",
       "binding": {
