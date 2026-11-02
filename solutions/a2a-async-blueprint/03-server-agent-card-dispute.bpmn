@@ -166,116 +166,143 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-card-dispute">
     <bpmndi:BPMNPlane id="BPMNPlane_a2a-card-dispute" bpmnElement="a2a-card-dispute">
       <bpmndi:BPMNShape id="TaskReceived_di" bpmnElement="TaskReceived">
-        <dc:Bounds x="57" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="AgentTools_di" bpmnElement="AgentTools">
-        <dc:Bounds x="175" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="AgentError_di" bpmnElement="AgentError">
-        <dc:Bounds x="190.33333333333334" y="92" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="A2ACancelRequested_di" bpmnElement="A2ACancelRequested">
-        <dc:Bounds x="223.66666666666669" y="92" width="36" height="36" />
+        <dc:Bounds x="177" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="151" y="198" width="89" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="OutcomeJoin_di" bpmnElement="OutcomeJoin" isMarkerVisible="true">
-        <dc:Bounds x="350" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TaskDone_di" bpmnElement="TaskDone">
-        <dc:Bounds x="507" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PublishJoin_di" bpmnElement="PublishJoin" isMarkerVisible="true">
-        <dc:Bounds x="650" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PushConfigured_di" bpmnElement="PushConfigured" isMarkerVisible="true">
-        <dc:Bounds x="800" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NotifyClient_di" bpmnElement="NotifyClient">
-        <dc:Bounds x="925" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PushFailed_di" bpmnElement="PushFailed">
-        <dc:Bounds x="957" y="92" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PushJoin_di" bpmnElement="PushJoin" isMarkerVisible="true">
-        <dc:Bounds x="1100" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PublishOutcome_di" bpmnElement="PublishOutcome">
-        <dc:Bounds x="1257" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TaskSettled_di" bpmnElement="TaskSettled">
-        <dc:Bounds x="1407" y="52" width="36" height="36" />
+        <dc:Bounds x="545" y="155" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="A2ASetCanceled_di" bpmnElement="A2ASetCanceled">
-        <dc:Bounds x="325" y="170" width="100" height="80" />
+        <dc:Bounds x="550" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AgentTools_di" bpmnElement="AgentTools" isExpanded="true">
+        <dc:Bounds x="250" y="80" width="270" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="echo_placeholder_di" bpmnElement="echo_placeholder">
+        <dc:Bounds x="295" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskDone_di" bpmnElement="TaskDone">
+        <dc:Bounds x="627" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="611" y="198" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PublishJoin_di" bpmnElement="PublishJoin" isMarkerVisible="true">
+        <dc:Bounds x="770" y="155" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PushConfigured_di" bpmnElement="PushConfigured" isMarkerVisible="true">
+        <dc:Bounds x="920" y="155" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="902" y="131" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotifyClient_di" bpmnElement="NotifyClient">
+        <dc:Bounds x="1045" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PushJoin_di" bpmnElement="PushJoin" isMarkerVisible="true">
+        <dc:Bounds x="1220" y="155" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PublishOutcome_di" bpmnElement="PublishOutcome">
+        <dc:Bounds x="1377" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1360" y="198" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskSettled_di" bpmnElement="TaskSettled">
+        <dc:Bounds x="1527" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1516" y="198" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PushFailed_di" bpmnElement="PushFailed">
+        <dc:Bounds x="1077" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1065" y="238" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AgentError_di" bpmnElement="AgentError">
+        <dc:Bounds x="502" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="491" y="258" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A2ACancelRequested_di" bpmnElement="A2ACancelRequested">
+        <dc:Bounds x="422" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="410" y="298" width="61" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_TaskReceived_AgentTools_di" bpmnElement="Flow_TaskReceived_AgentTools">
-        <di:waypoint x="93" y="70" />
-        <di:waypoint x="175" y="70" />
+        <di:waypoint x="213" y="180" />
+        <di:waypoint x="250" y="180" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_AgentTools_UpdateTask_di" bpmnElement="Flow_AgentTools_UpdateTask">
-        <di:waypoint x="275" y="70" />
-        <di:waypoint x="350" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_AgentError_UpdateTask_di" bpmnElement="Flow_AgentError_UpdateTask">
-        <di:waypoint x="208.33333333333334" y="128" />
-        <di:waypoint x="208.33333333333334" y="280" />
-        <di:waypoint x="450" y="280" />
-        <di:waypoint x="450" y="70" />
-        <di:waypoint x="350" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CancelRequested_SetCanceled_di" bpmnElement="Flow_CancelRequested_SetCanceled">
-        <di:waypoint x="241.66666666666669" y="128" />
-        <di:waypoint x="241.66666666666669" y="210" />
-        <di:waypoint x="325" y="210" />
+        <di:waypoint x="520" y="180" />
+        <di:waypoint x="545" y="180" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_OutcomeJoin_TaskDone_di" bpmnElement="Flow_OutcomeJoin_TaskDone">
-        <di:waypoint x="400" y="70" />
-        <di:waypoint x="507" y="70" />
+        <di:waypoint x="595" y="180" />
+        <di:waypoint x="627" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AgentError_UpdateTask_di" bpmnElement="Flow_AgentError_UpdateTask">
+        <di:waypoint x="538" y="240" />
+        <di:waypoint x="570" y="240" />
+        <di:waypoint x="570" y="205" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_TaskDone_PublishJoin_di" bpmnElement="Flow_TaskDone_PublishJoin">
-        <di:waypoint x="543" y="70" />
-        <di:waypoint x="650" y="70" />
+        <di:waypoint x="663" y="180" />
+        <di:waypoint x="770" y="180" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PublishJoin_PushConfigured_di" bpmnElement="Flow_PublishJoin_PushConfigured">
-        <di:waypoint x="700" y="70" />
-        <di:waypoint x="800" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PushConfigured_NotifyClient_di" bpmnElement="Flow_PushConfigured_NotifyClient">
-        <di:waypoint x="850" y="70" />
-        <di:waypoint x="925" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PushConfigured_PushJoin_di" bpmnElement="Flow_PushConfigured_PushJoin">
-        <di:waypoint x="825" y="95" />
-        <di:waypoint x="825" y="140" />
-        <di:waypoint x="1125" y="140" />
-        <di:waypoint x="1125" y="95" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_NotifyClient_PushJoin_di" bpmnElement="Flow_NotifyClient_PushJoin">
-        <di:waypoint x="1025" y="70" />
-        <di:waypoint x="1100" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PushFailed_PushJoin_di" bpmnElement="Flow_PushFailed_PushJoin">
-        <di:waypoint x="975" y="128" />
-        <di:waypoint x="975" y="140" />
-        <di:waypoint x="1050" y="140" />
-        <di:waypoint x="1050" y="70" />
-        <di:waypoint x="1100" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PushJoin_PublishOutcome_di" bpmnElement="Flow_PushJoin_PublishOutcome">
-        <di:waypoint x="1150" y="70" />
-        <di:waypoint x="1257" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PublishOutcome_TaskSettled_di" bpmnElement="Flow_PublishOutcome_TaskSettled">
-        <di:waypoint x="1293" y="70" />
-        <di:waypoint x="1407" y="70" />
+      <bpmndi:BPMNEdge id="Flow_CancelRequested_SetCanceled_di" bpmnElement="Flow_CancelRequested_SetCanceled">
+        <di:waypoint x="440" y="298" />
+        <di:waypoint x="440" y="340" />
+        <di:waypoint x="550" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_SetCanceled_PublishJoin_di" bpmnElement="Flow_SetCanceled_PublishJoin">
-        <di:waypoint x="425" y="210" />
-        <di:waypoint x="675" y="210" />
-        <di:waypoint x="675" y="95" />
+        <di:waypoint x="650" y="340" />
+        <di:waypoint x="795" y="340" />
+        <di:waypoint x="795" y="205" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="echo_placeholder_di" bpmnElement="echo_placeholder">
-        <dc:Bounds x="25" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_PublishJoin_PushConfigured_di" bpmnElement="Flow_PublishJoin_PushConfigured">
+        <di:waypoint x="820" y="180" />
+        <di:waypoint x="920" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushConfigured_NotifyClient_di" bpmnElement="Flow_PushConfigured_NotifyClient">
+        <di:waypoint x="970" y="180" />
+        <di:waypoint x="1045" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="999" y="155" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushConfigured_PushJoin_di" bpmnElement="Flow_PushConfigured_PushJoin">
+        <di:waypoint x="945" y="205" />
+        <di:waypoint x="945" y="280" />
+        <di:waypoint x="1245" y="280" />
+        <di:waypoint x="1245" y="205" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1089" y="255" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotifyClient_PushJoin_di" bpmnElement="Flow_NotifyClient_PushJoin">
+        <di:waypoint x="1145" y="180" />
+        <di:waypoint x="1220" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushFailed_PushJoin_di" bpmnElement="Flow_PushFailed_PushJoin">
+        <di:waypoint x="1112" y="225" />
+        <di:waypoint x="1170" y="240" />
+        <di:waypoint x="1170" y="180" />
+        <di:waypoint x="1220" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushJoin_PublishOutcome_di" bpmnElement="Flow_PushJoin_PublishOutcome">
+        <di:waypoint x="1270" y="180" />
+        <di:waypoint x="1377" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PublishOutcome_TaskSettled_di" bpmnElement="Flow_PublishOutcome_TaskSettled">
+        <di:waypoint x="1413" y="180" />
+        <di:waypoint x="1527" y="180" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>
