@@ -499,7 +499,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ctx.method = "CancelTask"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_RouteOutcome_BuildFollowUpResponse" name="follow-up handed over" sourceRef="RouteOutcome" targetRef="FollowUpReady">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=correlated = true</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=correlated = true and ctx.method != "CancelTask"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_FindTask_ReadTask" sourceRef="FindTask" targetRef="ReadTask" />
     <bpmn:sequenceFlow id="Flow_ReadTask_TaskKnown" sourceRef="ReadTask" targetRef="TaskKnown" />

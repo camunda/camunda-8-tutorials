@@ -106,10 +106,24 @@ push-configuration methods are not supported.
 - `.camunda/element-templates/`: the two A2A element templates (server endpoint and Agent Card).
   Camunda Desktop Modeler loads them from this folder. The HTTP JSON v13 and AI Agent v5 templates
   are built in, so they are not included.
-- `*.test.json`: Test Studio scenarios, one file per process. `01` has the Example 1 end-to-end
-  scenario, and `02` has the Example 2 scenario.
-- `test/`: Maven project that runs the scenarios with Camunda Process Test.
+- `*.test.json`: Test Studio scenarios, one file per process (`01` to `04`). `01` has the Example 1
+  end-to-end scenario, and `02` has the Example 2 scenario.
+- `test/`: Maven project that runs the scenarios with Camunda Process Test, plus `FeelCasesTest` for
+  the FEEL outcome mapping in `04`.
 - `adk/`: an external A2A agent built with Google ADK, used to check interoperability.
+
+## Run the tests
+
+```bash
+mvn test -f test/pom.xml                      # Camunda Process Test: 46 tests, no cluster or LLM needed
+cd adk && .venv/bin/python -m pytest          # offline ADK interop tests (see adk/README.md)
+```
+
+The Maven suite runs in CI (`test-suites.yml`). The ADK tests do not. Camunda Process Test reports
+process coverage per class. The server (`a2a-rpc`) reaches about 97% in `ServerScenariosTest`. The
+uncovered elements are the webhook start events (`RpcReceived`, `CardRequested`), which Test Studio
+cannot use as start instructions. Test Studio scenarios cover the BPMN paths. The Java tests cover
+regression behavior.
 
 This solution has no forms. Deploy only one server profile.
 
@@ -131,4 +145,8 @@ update the name, description, and skills in the Agent Card on `02`.
   or out-of-order callbacks, or retries beyond the HTTP connector's three attempts.
 - The A2A Client connector can't run in Camunda Process Test. The Example 1 scenario completes its
   jobs with mocked results. The Example 2 scenario runs 02, 03, and 04 together.
+- Every agent and connector response is mocked or scripted in the Maven suite. No test checks real
+  LLM behavior, the real A2A Client or inbound connectors, or the Agent Card endpoint.
+- The ADK interop tests run only locally, not in CI, and the Camunda-server variant needs
+  `CAMUNDA_CARD_URL` pointing at a live deployment.
 - Process 01 can't resume a multi-turn conversation (a Task in the `input-required` state).
