@@ -74,7 +74,7 @@
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="POST" target="method" />
           <zeebe:input source="=push.url" target="url" />
-          <zeebe:input source="={&#34;Content-Type&#34;: &#34;application/json&#34;, &#34;A2A-Version&#34;: &#34;1.0&#34;, Authorization: push.authentication.scheme + &#34; &#34; + push.authentication.credentials, &#34;X-A2A-Notification-Token&#34;: push.token}" target="headers" />
+          <zeebe:input source="=context(get entries({&#34;Content-Type&#34;: &#34;application/json&#34;, &#34;A2A-Version&#34;: &#34;1.0&#34;, Authorization: if push.authentication.credentials != null then push.authentication.scheme + &#34; &#34; + push.authentication.credentials else null, &#34;X-A2A-Notification-Token&#34;: push.token})[item.value != null])" target="headers" />
           <zeebe:input source="={task: task}" target="body" />
           <zeebe:input source="=false" target="followRedirects" />
           <zeebe:input source="true" target="ignoreNullValues" />

@@ -1044,41 +1044,6 @@
         }
       ]
     },
-    "remoteResponse": {
-      "title": "Remote response",
-      "type": "object",
-      "description": "Raw JSON-RPC response from the remote A2A server, or the pushed Task wrapped as a result. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        {
-          "jsonrpc": "2.0",
-          "result": {
-            "task": {
-              "id": "task-1",
-              "contextId": "ctx-1",
-              "rev": 2,
-              "status": {
-                "state": "TASK_STATE_COMPLETED"
-              }
-            }
-          }
-        }
-      ]
-    },
-    "acceptedTask": {
-      "title": "Accepted task",
-      "type": "object",
-      "description": "Last A2A Task the client observed from the server; updated by SendMessage and by each push. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        {
-          "id": "task-1",
-          "contextId": "ctx-1",
-          "rev": 2,
-          "status": {
-            "state": "TASK_STATE_COMPLETED"
-          }
-        }
-      ]
-    },
     "rpcResponse": {
       "title": "RPC response",
       "type": "object",
@@ -1181,29 +1146,6 @@
           "status": {
             "state": "TASK_STATE_COMPLETED"
           }
-        }
-      ]
-    },
-    "pollCount": {
-      "title": "Poll count",
-      "type": "number",
-      "description": "Number of GetTask polls the client protocol has made for the current delegation; bounds the polling loop. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        0,
-        2
-      ]
-    },
-    "delegationResult": {
-      "title": "Delegation result",
-      "type": [
-        "string",
-        "object"
-      ],
-      "description": "Result extracted from a completed remote Task: the first artifact data part, otherwise all artifact text parts joined with newlines; null when the Task is not completed. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        "Hello world",
-        {
-          "value": "Example input"
         }
       ]
     }

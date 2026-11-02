@@ -3,61 +3,9 @@
   "processId": "a2a-client",
   "testCases": [
     {
-      "name": "Client agent delegates once - the protocol process runs as a tool",
-      "description": "The agent calls DelegateRequest; the client protocol process (05) is mocked and returns the settled task.",
+      "name": "Agent sends a message through the native A2A Client tool - polling delivers the result",
+      "description": "The A2A Client connector (tool mode, polling) returns a working task; the polling catch event correlates on pollingData.id and returns the completed task as the tool result.",
       "instructions": [
-        {
-          "type": "MOCK_CHILD_PROCESS",
-          "processDefinitionId": "a2a-client-protocol",
-          "variables": {
-            "remoteResponse": {
-              "jsonrpc": "2.0",
-              "id": "r",
-              "result": {
-                "task": {
-                  "id": "demo-task",
-                  "contextId": "demo-context",
-                  "status": {
-                    "state": "TASK_STATE_COMPLETED"
-                  },
-                  "artifacts": [
-                    {
-                      "artifactId": "a-1",
-                      "name": "placeholder",
-                      "parts": [
-                        {
-                          "data": {
-                            "value": "Example input"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              }
-            },
-            "acceptedTask": {
-              "id": "demo-task",
-              "contextId": "demo-context",
-              "status": {
-                "state": "TASK_STATE_COMPLETED"
-              },
-              "artifacts": [
-                {
-                  "artifactId": "a-1",
-                  "name": "placeholder",
-                  "parts": [
-                    {
-                      "data": {
-                        "value": "Example input"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          }
-        },
         {
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
@@ -71,12 +19,16 @@
           },
           "activateElements": [
             {
-              "elementId": "DelegateRequest",
+              "elementId": "A2AClient",
               "variables": {
                 "toolCall": {
                   "_meta": {
                     "id": "call-1",
-                    "name": "DelegateRequest"
+                    "name": "A2AClient"
+                  },
+                  "operation": "sendMessage",
+                  "params": {
+                    "text": "{\"value\":\"Example input\"}"
                   }
                 }
               }
@@ -84,15 +36,69 @@
           ]
         },
         {
-          "type": "ASSERT_ELEMENT_INSTANCES",
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "A2AClient"
+          },
+          "variables": {
+            "toolCallResult": {
+              "result": {
+                "kind": "task",
+                "id": "remote-task-1",
+                "contextId": "ctx-1",
+                "status": {
+                  "state": "submitted"
+                }
+              },
+              "pollingData": {
+                "id": "remote-task-1"
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "a2a-client"
           },
-          "elementSelectors": [
-            {
-              "elementId": "DelegateRequest"
+          "elementSelector": {
+            "elementId": "A2ATaskResult"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "cf4a9562-6ffe-4810-b082-db16822578ff",
+          "correlationKey": "remote-task-1",
+          "variables": {
+            "toolCallResult": {
+              "kind": "task",
+              "id": "remote-task-1",
+              "contextId": "ctx-1",
+              "status": {
+                "state": "completed"
+              },
+              "artifacts": [
+                {
+                  "artifactId": "a-1",
+                  "parts": [
+                    {
+                      "text": "Example input"
+                    }
+                  ]
+                }
+              ]
             }
-          ],
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "elementSelector": {
+            "elementId": "A2ATaskResult"
+          },
           "state": "IS_COMPLETED"
         },
         {
