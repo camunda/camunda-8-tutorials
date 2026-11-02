@@ -72,7 +72,14 @@
         "context": {
           "type": "object",
           "description": "Execution metrics and conversation state.",
-          "examples": [{"state": "READY", "metrics": {"modelCalls": 1}}],
+          "examples": [
+            {
+              "state": "READY",
+              "metrics": {
+                "modelCalls": 1
+              }
+            }
+          ],
           "properties": {
             "state": {
               "type": "string",
@@ -84,7 +91,15 @@
             "metrics": {
               "type": "object",
               "description": "Token usage counters.",
-              "examples": [{"modelCalls": 1, "tokenUsage": {"inputTokenCount": 100, "outputTokenCount": 50}}],
+              "examples": [
+                {
+                  "modelCalls": 1,
+                  "tokenUsage": {
+                    "inputTokenCount": 100,
+                    "outputTokenCount": 50
+                  }
+                }
+              ],
               "properties": {
                 "modelCalls": {
                   "type": "integer",
@@ -96,7 +111,12 @@
                 "tokenUsage": {
                   "type": "object",
                   "description": "Input and output token counts.",
-                  "examples": [{"inputTokenCount": 100, "outputTokenCount": 50}],
+                  "examples": [
+                    {
+                      "inputTokenCount": 100,
+                      "outputTokenCount": 50
+                    }
+                  ],
                   "properties": {
                     "inputTokenCount": {
                       "type": "integer",
@@ -1002,6 +1022,265 @@
       "description": "{TODO: business description} — used in: solutions/bank-loan-origination-and-processing (sources: form-key)",
       "examples": [
         "{TODO: example value}"
+      ]
+    },
+    "demoInput": {
+      "title": "Demo input",
+      "type": "object",
+      "description": "Placeholder business input the client delegates to the remote agent. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "value": "Example input"
+        }
+      ]
+    },
+    "clientAgent": {
+      "title": "Client agent state",
+      "type": "object",
+      "description": "AI Agent state (context and last response) of the client agent. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "context": {}
+        }
+      ]
+    },
+    "remoteResult": {
+      "title": "Remote result",
+      "type": "object",
+      "description": "Outcome of the delegation tool as seen by the client agent. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "response": {},
+          "task": {
+            "id": "task-1",
+            "contextId": "ctx-1",
+            "rev": 2,
+            "status": {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          }
+        }
+      ]
+    },
+    "remoteResponse": {
+      "title": "Remote response",
+      "type": "object",
+      "description": "Raw JSON-RPC response from the remote A2A server, or the pushed Task wrapped as a result. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "jsonrpc": "2.0",
+          "result": {
+            "task": {
+              "id": "task-1",
+              "contextId": "ctx-1",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "a2aResult": {
+      "title": "A2A result",
+      "type": "object",
+      "description": "The result member of the last JSON-RPC response. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "task": {
+            "id": "task-1",
+            "contextId": "ctx-1",
+            "rev": 2,
+            "status": {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          }
+        }
+      ]
+    },
+    "a2aError": {
+      "title": "A2A error",
+      "type": "object",
+      "description": "The error member of the last JSON-RPC response, if any. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "code": -32001,
+          "message": "Task not found"
+        }
+      ]
+    },
+    "acceptedTask": {
+      "title": "Accepted task",
+      "type": "object",
+      "description": "Last A2A Task the client observed from the server; updated by SendMessage and by each push. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "id": "task-1",
+          "contextId": "ctx-1",
+          "rev": 2,
+          "status": {
+            "state": "TASK_STATE_COMPLETED"
+          }
+        }
+      ]
+    },
+    "serverTask": {
+      "title": "Server task",
+      "type": "object",
+      "description": "Task the client exposes to the agent after delegation. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "id": "task-1",
+          "contextId": "ctx-1",
+          "rev": 2,
+          "status": {
+            "state": "TASK_STATE_COMPLETED"
+          }
+        }
+      ]
+    },
+    "a2aResponse": {
+      "title": "A2A response",
+      "type": "object",
+      "description": "Server-side JSON-RPC response assembled for the caller. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "jsonrpc": "2.0",
+          "id": "1",
+          "result": {
+            "task": {
+              "id": "task-1",
+              "contextId": "ctx-1",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "serverArtifact": {
+      "title": "Server artifact",
+      "type": "object",
+      "description": "Artifact returned by the server agent for the delegated request. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "artifactId": "placeholder",
+          "parts": [
+            {
+              "data": {
+                "value": "Example input"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "rpcResponse": {
+      "title": "RPC response",
+      "type": "object",
+      "description": "JSON-RPC response the A2A server returns to the HTTP caller. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "jsonrpc": "2.0",
+          "id": "1",
+          "result": {
+            "task": {
+              "id": "task-1",
+              "contextId": "ctx-1",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "seen": {
+      "title": "Task as seen",
+      "type": "object",
+      "description": "Task state observed after dispatch: the settled Task, or the stored Task when none settled in time. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "id": "task-1",
+          "contextId": "ctx-1",
+          "rev": 2,
+          "status": {
+            "state": "TASK_STATE_COMPLETED"
+          }
+        }
+      ]
+    },
+    "visible": {
+      "title": "Task visible",
+      "type": "boolean",
+      "description": "Whether the dispatched task settled before the wait limit. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        true
+      ]
+    },
+    "correlated": {
+      "title": "Task accepted the message",
+      "type": "boolean",
+      "description": "Whether the running task accepted the follow-up or cancel message. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        true
+      ]
+    },
+    "taskItems": {
+      "title": "Task items",
+      "type": "array",
+      "description": "Tasks collected for a ListTasks response. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        [
+          {
+            "id": "task-1",
+            "contextId": "ctx-1",
+            "rev": 2,
+            "status": {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          }
+        ]
+      ]
+    },
+    "listFailure": {
+      "title": "List failure",
+      "type": "object",
+      "description": "Failure reported while collecting tasks for ListTasks. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "code": -32603,
+          "message": "Internal error"
+        }
+      ]
+    },
+    "outcome": {
+      "title": "Agent outcome",
+      "type": "object",
+      "description": "Normalized result of the server agent run before it is applied to the Task. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "state": "TASK_STATE_COMPLETED"
+        }
+      ]
+    },
+    "task": {
+      "title": "A2A task",
+      "type": "object",
+      "description": "A2A Task owned by the server agent; rev increases on each state change. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "id": "task-1",
+          "contextId": "ctx-1",
+          "rev": 2,
+          "status": {
+            "state": "TASK_STATE_COMPLETED"
+          }
+        }
       ]
     }
   }

@@ -71,4 +71,4 @@ This solution follows the repository's license; no separate license is bundled. 
 
 - Duplicate or out-of-order push callbacks and push delivery retries beyond the HTTP connector's three tries are not modeled. Push is not yet run end to end against a live engine (only 03 is covered by the Maven tests).
 - Source Test Studio scenarios are canned examples; Java CPT tests (<20 s target) are not imported.
-- No `camunda-example.json`, `test/pom.xml`, or schema entries yet.
+- No `camunda-example.json`, `test/pom.xml` yet.
