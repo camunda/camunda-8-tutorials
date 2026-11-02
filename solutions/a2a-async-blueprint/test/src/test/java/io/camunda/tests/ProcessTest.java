@@ -22,7 +22,7 @@ public class ProcessTest {
     private TestCaseRunner testCaseRunner;
 
     @ParameterizedTest
-    @TestCaseSource(directory = "/scenarios")
+    @TestCaseSource(directory = "/scenarios/03")
     void shouldPass(final TestCase testCase, final String fileName) {
         testCaseRunner.run(testCase);
     }

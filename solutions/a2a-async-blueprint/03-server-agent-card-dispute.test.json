@@ -3,43 +3,66 @@
   "processId": "a2a-card-dispute",
   "testCases": [
     {
-      "name": "Agent calls the tool - task outcome is published",
-      "description": "The agent runs the placeholder tool, finishes, and the A2A outcome is published.",
+      "name": "Agent calls the tool - agent result is returned",
+      "description": "The agent runs the placeholder tool and finishes; the process ends with the agent result as its output.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-card-dispute"
+          },
           "variables": {
-            "req": { "message": { "parts": [{ "data": { "demoInput": { "value": "Example input" } } }] } },
-            "task": {
-              "id": "task-1",
-              "contextId": "ctx-1",
-              "rev": 1,
-              "status": { "state": "TASK_STATE_WORKING" },
-              "artifacts": [],
-              "history": []
+            "req": {
+              "message": {
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              }
             }
           }
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "elementId": "AgentTools" },
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
           "activateElements": [
             {
               "elementId": "echo_placeholder",
-              "variables": { "toolCall": { "_meta": { "id": "call-1", "name": "echo_placeholder" } } }
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "echo_placeholder"
+                  }
+                }
+              }
             }
           ]
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
-          "elementSelectors": [{ "elementId": "echo_placeholder" }],
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-card-dispute"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "echo_placeholder"
+            }
+          ],
           "state": "IS_COMPLETED"
         },
         {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
-          "jobSelector": { "elementId": "AgentTools" },
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
           "completionConditionFulfilled": true,
           "variables": {
             "agent": {
@@ -49,7 +72,15 @@
                   "messages": [
                     {
                       "role": "tool_call_result",
-                      "results": [{ "id": "call-1", "name": "echo_placeholder", "content": { "value": "Example input" } }]
+                      "results": [
+                        {
+                          "id": "call-1",
+                          "name": "echo_placeholder",
+                          "content": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
                     }
                   ]
                 }
@@ -59,92 +90,87 @@
         },
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
-          "elementSelectors": [{ "elementId": "OutcomeJoin" }, { "elementId": "TaskDone" }],
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
-          "state": "IS_COMPLETED"
-        }
-      ]
-    },
-    {
-      "name": "Agent fails - failed outcome is published",
-      "description": "When the agent job fails, the task still ends with a published outcome.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "a2a-card-dispute" },
-          "variables": {
-            "req": { "message": { "parts": [] } },
-            "task": {
-              "id": "task-2",
-              "contextId": "ctx-2",
-              "rev": 1,
-              "status": { "state": "TASK_STATE_WORKING" },
-              "artifacts": [],
-              "history": []
-            }
-          }
-        },
-        {
-          "type": "THROW_BPMN_ERROR_FROM_JOB",
-          "jobSelector": { "elementId": "AgentTools" },
-          "errorCode": "AGENT_FAILED"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
-          "elementSelectors": [{ "elementId": "AgentError" }, { "elementId": "OutcomeJoin" }, { "elementId": "TaskDone" }],
-          "state": "IS_COMPLETED"
-        },
-        {
-          "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
-          "state": "IS_COMPLETED"
-        }
-      ]
-    },
-    {
-      "name": "Caller cancels a running task - cancellation is settled",
-      "description": "A cancel request interrupts the agent and the task ends as canceled.",
-      "instructions": [
-        {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": { "processDefinitionId": "a2a-card-dispute" },
-          "variables": {
-            "req": { "message": { "parts": [] } },
-            "task": {
-              "id": "task-3",
-              "contextId": "ctx-3",
-              "rev": 1,
-              "status": { "state": "TASK_STATE_WORKING" },
-              "artifacts": [],
-              "history": []
-            }
-          }
-        },
-        {
-          "type": "PUBLISH_MESSAGE",
-          "name": "a2a-cancel",
-          "correlationKey": "task-3"
-        },
-        {
-          "type": "ASSERT_ELEMENT_INSTANCES",
-          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-card-dispute"
+          },
           "elementSelectors": [
-            { "elementId": "A2ACancelRequested" },
-            { "elementId": "A2ASetCanceled" },
-            { "elementId": "TaskSettled" }
+            {
+              "elementId": "AgentFinished"
+            }
           ],
           "state": "IS_COMPLETED"
         },
         {
           "type": "ASSERT_PROCESS_INSTANCE",
-          "processInstanceSelector": { "processDefinitionId": "a2a-card-dispute" },
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-card-dispute"
+          },
           "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Request as JSON text part - the tool still receives demoInput",
+      "description": "Clients that send only text (e.g. ADK-style) carry demoInput as JSON in a text part.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-card-dispute"
+          },
+          "variables": {
+            "req": {
+              "message": {
+                "parts": [
+                  {
+                    "text": "{\"value\":\"Example input\"}"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "activateElements": [
+            {
+              "elementId": "echo_placeholder",
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "echo_placeholder"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-card-dispute"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "echo_placeholder"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-card-dispute"
+          },
+          "variables": {
+            "toolCallResult": {
+              "value": "Example input"
+            }
+          }
         }
       ]
     }

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_a2a_client_protocol" targetNamespace="http://bpmn.io/schema/bpmn" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:process id="a2a-client-protocol" name="05 A2A Client - Protocol" isExecutable="true">
+    <bpmn:startEvent id="DelegationStarted" name="Delegation started">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=0" target="pollCount" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_DelegationStarted_DiscoverAgentCard</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="DiscoverAgentCard" name="Fetch remote agent card" zeebe:modelerTemplate="dev.hansel.a2a.client.v1" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMTguNSIgdmlld0JveD0iMyA5IDMwIDE4LjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTguNyAxNC43MjVDOC41MTY2NyAxNC45MDgzIDguMjgzMzMgMTUgOCAxNUM3LjcxNjY3IDE1IDcuNDc1IDE0LjkwODMgNy4yNzUgMTQuNzI1QzcuMDkxNjcgMTQuNTI1IDcgMTQuMjgzMyA3IDE0QzcgMTMuNzE2NyA3LjA5MTY3IDEzLjQ4MzMgNy4yNzUgMTMuM0M3LjQ3NSAxMy4xIDcuNzE2NjcgMTMgOCAxM0M4LjI4MzMzIDEzIDguNTE2NjcgMTMuMSA4LjcgMTMuM0M4LjkgMTMuNDgzMyA5IDEzLjcxNjcgOSAxNEM5IDE0LjI4MzMgOC45IDE0LjUyNSA4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMTQuNyAxNC43MjVDMTQuNTE2NyAxNC45MDgzIDE0LjI4MzMgMTUgMTQgMTVDMTMuNzE2NyAxNSAxMy40NzUgMTQuOTA4MyAxMy4yNzUgMTQuNzI1QzEzLjA5MTcgMTQuNTI1IDEzIDE0LjI4MzMgMTMgMTRDMTMgMTMuNzE2NyAxMy4wOTE3IDEzLjQ4MzMgMTMuMjc1IDEzLjNDMTMuNDc1IDEzLjEgMTMuNzE2NyAxMyAxNCAxM0MxNC4yODMzIDEzIDE0LjUxNjcgMTMuMSAxNC43IDEzLjNDMTQuOSAxMy40ODMzIDE1IDEzLjcxNjcgMTUgMTRDMTUgMTQuMjgzMyAxNC45IDE0LjUyNSAxNC43IDE0LjcyNVoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTIyLjcgMTQuNzI1QzIyLjUxNjcgMTQuOTA4MyAyMi4yODMzIDE1IDIyIDE1QzIxLjcxNjcgMTUgMjEuNDc1IDE0LjkwODMgMjEuMjc1IDE0LjcyNUMyMS4wOTE3IDE0LjUyNSAyMSAxNC4yODMzIDIxIDE0QzIxIDEzLjcxNjcgMjEuMDkxNyAxMy40ODMzIDIxLjI3NSAxMy4zQzIxLjQ3NSAxMy4xIDIxLjcxNjcgMTMgMjIgMTNDMjIuMjgzMyAxMyAyMi41MTY3IDEzLjEgMjIuNyAxMy4zQzIyLjkgMTMuNDgzMyAyMyAxMy43MTY3IDIzIDE0QzIzIDE0LjI4MzMgMjIuOSAxNC41MjUgMjIuNyAxNC43MjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0yOC43IDE0LjcyNUMyOC41MTY3IDE0LjkwODMgMjguMjgzMyAxNSAyOCAxNUMyNy43MTY3IDE1IDI3LjQ3NSAxNC45MDgzIDI3LjI3NSAxNC43MjVDMjcuMDkxNyAxNC41MjUgMjcgMTQuMjgzMyAyNyAxNEMyNyAxMy43MTY3IDI3LjA5MTcgMTMuNDgzMyAyNy4yNzUgMTMuM0MyNy40NzUgMTMuMSAyNy43MTY3IDEzIDI4IDEzQzI4LjI4MzMgMTMgMjguNTE2NyAxMy4xIDI4LjcgMTMuM0MyOC45IDEzLjQ4MzMgMjkgMTMuNzE2NyAyOSAxNEMyOSAxNC4yODMzIDI4LjkgMTQuNTI1IDI4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUgMTRDNSAxMi4zNDMxIDYuMzQzMTUgMTEgOCAxMUgxNEMxNC43NzYgMTEgMTUuMjg0IDExLjE1MzcgMTUuNjQgMTEuMzgxOEMxNS44NTg5IDEwLjc5NCAxNi4xNTE3IDEwLjE3MDkgMTYuNTU1IDkuNTk3OTVDMTUuODc5NyA5LjIxMTUzIDE1LjAzODYgOSAxNCA5SDhDNS4yMzg1OCA5IDMgMTEuMjM4NiAzIDE0QzMgMTYuNzYxMiA1LjIzNzU5IDE5IDcuOTk5MjYgMTlIMTRDMTUuNzYzNCAxOSAxNi45NTczIDE4LjM5MDIgMTcuNzM3NSAxNy4zNUMxOC40MjI4IDE2LjQzNjMgMTguNzE0OCAxNS4yNjYgMTguOTQ4MyAxNC4zMjk5TDE4Ljk3MDEgMTQuMjQyNUMxOS4yMzI3IDEzLjE5MjQgMTkuNDQ0MiAxMi40MDc3IDE5Ljg2MjUgMTEuODVDMjAuMjA3MyAxMS4zOTAyIDIwLjc2MzQgMTEgMjIgMTFIMjguMDAwNUMyOS42NTcyIDExIDMxIDEyLjM0MyAzMSAxNEMzMSAxNS42NTY5IDI5LjY1NjkgMTcgMjggMTdIMjJDMjEuMjI0IDE3IDIwLjcxNiAxNi44NDYzIDIwLjM2IDE2LjYxODJDMjAuMTQxMSAxNy4yMDYgMTkuODQ4MyAxNy44MjkxIDE5LjQ0NSAxOC40MDJDMjAuMTIwMyAxOC43ODg1IDIwLjk2MTQgMTkgMjIgMTlIMjhDMzAuNzYxNCAxOSAzMyAxNi43NjE0IDMzIDE0QzMzIDExLjIzODggMzAuNzYyMSA5IDI4LjAwMDUgOUgyMkMyMC4yMzY2IDkgMTkuMDQyNyA5LjYwOTc5IDE4LjI2MjUgMTAuNjVDMTcuNTc3MiAxMS41NjM3IDE3LjI4NTIgMTIuNzM0IDE3LjA1MTcgMTMuNjcwMUwxNy4wMjk5IDEzLjc1NzVDMTYuNzY3MyAxNC44MDc2IDE2LjU1NTggMTUuNTkyMyAxNi4xMzc1IDE2LjE1QzE1Ljc5MjcgMTYuNjA5OCAxNS4yMzY2IDE3IDE0IDE3SDcuOTk5MjZDNi4zNDI2NSAxNyA1IDE1LjY1NzEgNSAxNFoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTcgMjMuNUM2LjcxNjY3IDIzLjUgNi40NzUgMjMuNDA4MyA2LjI3NSAyMy4yMjVDNi4wOTE2NyAyMy4wMjUgNiAyMi43ODMzIDYgMjIuNUM2IDIyLjIxNjcgNi4wOTE2NyAyMS45ODMzIDYuMjc1IDIxLjhDNi40NzUgMjEuNiA2LjcxNjY3IDIxLjUgNyAyMS41SDEyQzEyLjI4MzMgMjEuNSAxMi41MTY3IDIxLjYgMTIuNyAyMS44QzEyLjkgMjEuOTgzMyAxMyAyMi4yMTY3IDEzIDIyLjVDMTMgMjIuNzgzMyAxMi45IDIzLjAyNSAxMi43IDIzLjIyNUMxMi41MTY3IDIzLjQwODMgMTIuMjgzMyAyMy41IDEyIDIzLjVIN1pNNSAyNy41QzQuNzE2NjcgMjcuNSA0LjQ3NSAyNy40MDgzIDQuMjc1IDI3LjIyNUM0LjA5MTY3IDI3LjAyNSA0IDI2Ljc4MzMgNCAyNi41QzQgMjYuMjE2NyA0LjA5MTY3IDI1Ljk4MzMgNC4yNzUgMjUuOEM0LjQ3NSAyNS42IDQuNzE2NjcgMjUuNSA1IDI1LjVIOEM4LjI4MzMzIDI1LjUgOC41MTY2NyAyNS42IDguNyAyNS44QzguOSAyNS45ODMzIDkgMjYuMjE2NyA5IDI2LjVDOSAyNi43ODMzIDguOSAyNy4wMjUgOC43IDI3LjIyNUM4LjUxNjY3IDI3LjQwODMgOC4yODMzMyAyNy41IDggMjcuNUg1Wk0xMiAyNy41QzExLjcxNjcgMjcuNSAxMS40NzUgMjcuNDA4MyAxMS4yNzUgMjcuMjI1QzExLjA5MTcgMjcuMDI1IDExIDI2Ljc4MzMgMTEgMjYuNUMxMSAyNi4yMTY3IDExLjA5MTcgMjUuOTgzMyAxMS4yNzUgMjUuOEMxMS40NzUgMjUuNiAxMS43MTY3IDI1LjUgMTIgMjUuNUgyMEMyMC4yODMzIDI1LjUgMjAuNTE2NyAyNS42IDIwLjcgMjUuOEMyMC45IDI1Ljk4MzMgMjEgMjYuMjE2NyAyMSAyNi41QzIxIDI2Ljc4MzMgMjAuOSAyNy4wMjUgMjAuNyAyNy4yMjVDMjAuNTE2NyAyNy40MDgzIDIwLjI4MzMgMjcuNSAyMCAyNy41SDEyWk0yOCAyNy41QzI3LjcxNjcgMjcuNSAyNy40NzUgMjcuNDA4MyAyNy4yNzUgMjcuMjI1QzI3LjA5MTcgMjcuMDI1IDI3IDI2Ljc4MzMgMjcgMjYuNUMyNyAyNi4yMTY3IDI3LjA5MTcgMjUuOTgzMyAyNy4yNzUgMjUuOEMyNy40NzUgMjUuNiAyNy43MTY3IDI1LjUgMjggMjUuNUgzMkMzMi4yODMzIDI1LjUgMzIuNTE2NyAyNS42IDMyLjcgMjUuOEMzMi45IDI1Ljk4MzMgMzMgMjYuMjE2NyAzMyAyNi41QzMzIDI2Ljc4MzMzMi45IDI3LjAyNSAzMi43IDI3LjIyNUMzMi41MTY3IDI3LjQwODMgMzIuMjgzMyAyNy41IDMyIDI3LjVIMjhaTTE2IDIzLjVDMTUuNzE2NyAyMy41IDE1LjQ3NSAyMy40MDgzIDE1LjI3NSAyMy4yMjVDMTUuMDkxNyAyMy4wMjUgMTUgMjIuNzgzMyAxNSAyMi41QzE1IDIyLjIxNjcgMTUuMDkxNyAyMS45ODMzIDE1LjI3NSAyMS44QzE1LjQ3NSAyMS42IDE1LjcxNjcgMjEuNSAxNiAyMS41QzE2LjI4MzMgMjEuNSAxNi41MTY3IDIxLjYgMTYuNyAyMS44QzE2LjkgMjEuOTgzMyAxNyAyMi4yMTY3IDE3IDIyLjVDMTcgMjIuNzgzMyAxNi45IDIzLjAyNSAxNi43IDIzLjIyNUMxNi41MTY3IDIzLjQwODMgMTYuMjgzMyAyMy41IDE2IDIzLjVaTTI0IDI3LjVDMjMuNzE2NyAyNy41IDIzLjQ3NSAyNy40MDgzIDIzLjI3NSAyNy4yMjVDMjMuMDkxNyAyNy4wMjUgMjMgMjYuNzgzMyAyMyAyNi41QzIzIDI2LjIxNjcgMjMuMDkxNyAyNS45ODMzIDIzLjI3NSAyNS44QzIzLjQ3NSAyNS42IDIzLjcxNjcgMjUuNSAyNCAyNS41QzI0LjI4MzMgMjUuNSAyNC41MTY3IDI1LjYgMjQuNyAyNS44QzI0LjkgMjUuOTgzMyAyNSAyNi4yMTY3IDI1IDI2LjVDMjUgMjYuNzgzMyAyNC45IDI3LjAyNSAyNC43IDI3LjIyNUMyNC41MTY3IDI3LjQwODMgMjQuMjgzMyAyNy41IDI0IDI3LjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0xOS4yNzUgMjMuMjI1QzE5LjQ3NSAyMy40MDgzIDE5LjcxNjcgMjMuNSAyMCAyMy41SDIzQzIzLjI4MzMgMjMuNSAyMy41MTY3IDIzLjQwODMgMjMuNyAyMy4yMjVDMjMuOSAyMy4wMjUgMjQgMjIuNzgzMyAyNCAyMi41QzI0IDIyLjIxNjcgMjMuOSAyMS45ODMzIDIzLjcgMjEuOEMyMy41MTY3IDIxLjYgMjMuMjgzMyAyMS41IDIzIDIxLjVIMjBDMTkuNzE2NyAyMS41IDE5LjQ3NSAyMS42IDE5LjI3NSAyMS44QzE5LjA5MTcgMjEuOTgzMyAxOSAyMi4yMTY3IDE5IDIyLjVDMTkgMjIuNzgzMyAxOS4wOTE3IDIzLjAyNSAxOS4yNzUgMjMuMjI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMjYuMjc1IDIzLjIyNUMyNi40NzUgMjMuNDA4MyAyNi43MTY3IDIzLjUgMjcgMjMuNUgzMEMzMC4yODMzIDIzLjUgMzAuNTE2NyAyMy40MDgzIDMwLjcgMjMuMjI1QzMwLjkgMjMuMDI1IDMxIDIyLjc4MzMgMzEgMjIuNUMzMSAyMi4yMTY3IDMwLjkgMjEuOTgzMyAzMC43IDIxLjhDMzAuNTE2NyAyMS42IDMwLjI4MzMgMjEuNSAzMCAyMS41SDI3QzI2LjcxNjcgMjEuNSAyNi40NzUgMjEuNiAyNi4yNzUgMjEuOEMyNi4wOTE3IDIxLjk4MzMgMjYgMjIuMjE2NyAyNiAyMi41QzI2IDIyLjc4MzMgMjYuMDkxNyAyMy4wMjUgMjYuMjc1IDIzLjIyNVoiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPg==">
+      <bpmn:documentation>Fetch the remote Agent Card to confirm the remote agent is reachable before sending.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="https://connectors.example.invalid" target="baseUrl" />
+          <zeebe:input source="noAuth" target="authType" />
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="fetchAgentCard" target="operationId" />
+          <zeebe:input source="inbound/a2a-card" target="agentCardLocation" />
+          <zeebe:input source="=&#34;/&#34;+agentCardLocation" target="operationPath" />
+          <zeebe:input source="={&#34;A2A-Version&#34;: &#34;1.0&#34;}" target="headers" />
+          <zeebe:input source="={}" target="queryParameters" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="=true" target="ignoreNullValues" />
+          <zeebe:input source="=if operationId != &#34;fetchAgentCard&#34; and rpcUrl != null then rpcUrl else baseUrl + operationPath" target="url" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={agentCard: response.body}" />
+          <zeebe:header key="retryBackoff" value="PT30S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_DelegationStarted_DiscoverAgentCard</bpmn:incoming>
+      <bpmn:outgoing>Flow_DiscoverAgentCard_SendA2AMessage</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="SendA2AMessage" name="Send A2A message (offer push)" zeebe:modelerTemplate="dev.hansel.a2a.client.v1" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMTguNSIgdmlld0JveD0iMyA5IDMwIDE4LjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTguNyAxNC43MjVDOC41MTY2NyAxNC45MDgzIDguMjgzMzMgMTUgOCAxNUM3LjcxNjY3IDE1IDcuNDc1IDE0LjkwODMgNy4yNzUgMTQuNzI1QzcuMDkxNjcgMTQuNTI1IDcgMTQuMjgzMyA3IDE0QzcgMTMuNzE2NyA3LjA5MTY3IDEzLjQ4MzMgNy4yNzUgMTMuM0M3LjQ3NSAxMy4xIDcuNzE2NjcgMTMgOCAxM0M4LjI4MzMzIDEzIDguNTE2NjcgMTMuMSA4LjcgMTMuM0M4LjkgMTMuNDgzMyA5IDEzLjcxNjcgOSAxNEM5IDE0LjI4MzMgOC45IDE0LjUyNSA4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMTQuNyAxNC43MjVDMTQuNTE2NyAxNC45MDgzIDE0LjI4MzMgMTUgMTQgMTVDMTMuNzE2NyAxNSAxMy40NzUgMTQuOTA4MyAxMy4yNzUgMTQuNzI1QzEzLjA5MTcgMTQuNTI1IDEzIDE0LjI4MzMgMTMgMTRDMTMgMTMuNzE2NyAxMy4wOTE3IDEzLjQ4MzMgMTMuMjc1IDEzLjNDMTMuNDc1IDEzLjEgMTMuNzE2NyAxMyAxNCAxM0MxNC4yODMzIDEzIDE0LjUxNjcgMTMuMSAxNC43IDEzLjNDMTQuOSAxMy40ODMzIDE1IDEzLjcxNjcgMTUgMTRDMTUgMTQuMjgzMyAxNC45IDE0LjUyNSAxNC43IDE0LjcyNVoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTIyLjcgMTQuNzI1QzIyLjUxNjcgMTQuOTA4MyAyMi4yODMzIDE1IDIyIDE1QzIxLjcxNjcgMTUgMjEuNDc1IDE0LjkwODMgMjEuMjc1IDE0LjcyNUMyMS4wOTE3IDE0LjUyNSAyMSAxNC4yODMzIDIxIDE0QzIxIDEzLjcxNjcgMjEuMDkxNyAxMy40ODMzIDIxLjI3NSAxMy4zQzIxLjQ3NSAxMy4xIDIxLjcxNjcgMTMgMjIgMTNDMjIuMjgzMyAxMyAyMi41MTY3IDEzLjEgMjIuNyAxMy4zQzIyLjkgMTMuNDgzMyAyMyAxMy43MTY3IDIzIDE0QzIzIDE0LjI4MzMgMjIuOSAxNC41MjUgMjIuNyAxNC43MjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0yOC43IDE0LjcyNUMyOC41MTY3IDE0LjkwODMgMjguMjgzMyAxNSAyOCAxNUMyNy43MTY3IDE1IDI3LjQ3NSAxNC45MDgzIDI3LjI3NSAxNC43MjVDMjcuMDkxNyAxNC41MjUgMjcgMTQuMjgzMyAyNyAxNEMyNyAxMy43MTY3IDI3LjA5MTcgMTMuNDgzMyAyNy4yNzUgMTMuM0MyNy40NzUgMTMuMSAyNy43MTY3IDEzIDI4IDEzQzI4LjI4MzMgMTMgMjguNTE2NyAxMy4xIDI4LjcgMTMuM0MyOC45IDEzLjQ4MzMgMjkgMTMuNzE2NyAyOSAxNEMyOSAxNC4yODMzIDI4LjkgMTQuNTI1IDI4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUgMTRDNSAxMi4zNDMxIDYuMzQzMTUgMTEgOCAxMUgxNEMxNC43NzYgMTEgMTUuMjg0IDExLjE1MzcgMTUuNjQgMTEuMzgxOEMxNS44NTg5IDEwLjc5NCAxNi4xNTE3IDEwLjE3MDkgMTYuNTU1IDkuNTk3OTVDMTUuODc5NyA5LjIxMTUzIDE1LjAzODYgOSAxNCA5SDhDNS4yMzg1OCA5IDMgMTEuMjM4NiAzIDE0QzMgMTYuNzYxMiA1LjIzNzU5IDE5IDcuOTk5MjYgMTlIMTRDMTUuNzYzNCAxOSAxNi45NTczIDE4LjM5MDIgMTcuNzM3NSAxNy4zNUMxOC40MjI4IDE2LjQzNjMgMTguNzE0OCAxNS4yNjYgMTguOTQ4MyAxNC4zMjk5TDE4Ljk3MDEgMTQuMjQyNUMxOS4yMzI3IDEzLjE5MjQgMTkuNDQ0MiAxMi40MDc3IDE5Ljg2MjUgMTEuODVDMjAuMjA3MyAxMS4zOTAyIDIwLjc2MzQgMTEgMjIgMTFIMjguMDAwNUMyOS42NTcyIDExIDMxIDEyLjM0MyAzMSAxNEMzMSAxNS42NTY5IDI5LjY1NjkgMTcgMjggMTdIMjJDMjEuMjI0IDE3IDIwLjcxNiAxNi44NDYzIDIwLjM2IDE2LjYxODJDMjAuMTQxMSAxNy4yMDYgMTkuODQ4MyAxNy44MjkxIDE5LjQ0NSAxOC40MDJDMjAuMTIwMyAxOC43ODg1IDIwLjk2MTQgMTkgMjIgMTlIMjhDMzAuNzYxNCAxOSAzMyAxNi43NjE0IDMzIDE0QzMzIDExLjIzODggMzAuNzYyMSA5IDI4LjAwMDUgOUgyMkMyMC4yMzY2IDkgMTkuMDQyNyA5LjYwOTc5IDE4LjI2MjUgMTAuNjVDMTcuNTc3MiAxMS41NjM3IDE3LjI4NTIgMTIuNzM0IDE3LjA1MTcgMTMuNjcwMUwxNy4wMjk5IDEzLjc1NzVDMTYuNzY3MyAxNC44MDc2IDE2LjU1NTggMTUuNTkyMyAxNi4xMzc1IDE2LjE1QzE1Ljc5MjcgMTYuNjA5OCAxNS4yMzY2IDE3IDE0IDE3SDcuOTk5MjZDNi4zNDI2NSAxNyA1IDE1LjY1NzEgNSAxNFoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTcgMjMuNUM2LjcxNjY3IDIzLjUgNi40NzUgMjMuNDA4MyA2LjI3NSAyMy4yMjVDNi4wOTE2NyAyMy4wMjUgNiAyMi43ODMzIDYgMjIuNUM2IDIyLjIxNjcgNi4wOTE2NyAyMS45ODMzIDYuMjc1IDIxLjhDNi40NzUgMjEuNiA2LjcxNjY3IDIxLjUgNyAyMS41SDEyQzEyLjI4MzMgMjEuNSAxMi41MTY3IDIxLjYgMTIuNyAyMS44QzEyLjkgMjEuOTgzMyAxMyAyMi4yMTY3IDEzIDIyLjVDMTMgMjIuNzgzMyAxMi45IDIzLjAyNSAxMi43IDIzLjIyNUMxMi41MTY3IDIzLjQwODMgMTIuMjgzMyAyMy41IDEyIDIzLjVIN1pNNSAyNy41QzQuNzE2NjcgMjcuNSA0LjQ3NSAyNy40MDgzIDQuMjc1IDI3LjIyNUM0LjA5MTY3IDI3LjAyNSA0IDI2Ljc4MzMgNCAyNi41QzQgMjYuMjE2NyA0LjA5MTY3IDI1Ljk4MzMgNC4yNzUgMjUuOEM0LjQ3NSAyNS42IDQuNzE2NjcgMjUuNSA1IDI1LjVIOEM4LjI4MzMzIDI1LjUgOC41MTY2NyAyNS42IDguNyAyNS44QzguOSAyNS45ODMzIDkgMjYuMjE2NyA5IDI2LjVDOSAyNi43ODMzIDguOSAyNy4wMjUgOC43IDI3LjIyNUM4LjUxNjY3IDI3LjQwODMgOC4yODMzMyAyNy41IDggMjcuNUg1Wk0xMiAyNy41QzExLjcxNjcgMjcuNSAxMS40NzUgMjcuNDA4MyAxMS4yNzUgMjcuMjI1QzExLjA5MTcgMjcuMDI1IDExIDI2Ljc4MzMgMTEgMjYuNUMxMSAyNi4yMTY3IDExLjA5MTcgMjUuOTgzMyAxMS4yNzUgMjUuOEMxMS40NzUgMjUuNiAxMS43MTY3IDI1LjUgMTIgMjUuNUgyMEMyMC4yODMzIDI1LjUgMjAuNTE2NyAyNS42IDIwLjcgMjUuOEMyMC45IDI1Ljk4MzMgMjEgMjYuMjE2NyAyMSAyNi41QzIxIDI2Ljc4MzMgMjAuOSAyNy4wMjUgMjAuNyAyNy4yMjVDMjAuNTE2NyAyNy40MDgzIDIwLjI4MzMgMjcuNSAyMCAyNy41SDEyWk0yOCAyNy41QzI3LjcxNjcgMjcuNSAyNy40NzUgMjcuNDA4MyAyNy4yNzUgMjcuMjI1QzI3LjA5MTcgMjcuMDI1IDI3IDI2Ljc4MzMgMjcgMjYuNUMyNyAyNi4yMTY3IDI3LjA5MTcgMjUuOTgzMyAyNy4yNzUgMjUuOEMyNy40NzUgMjUuNiAyNy43MTY3IDI1LjUgMjggMjUuNUgzMkMzMi4yODMzIDI1LjUgMzIuNTE2NyAyNS42IDMyLjcgMjUuOEMzMi45IDI1Ljk4MzMgMzMgMjYuMjE2NyAzMyAyNi41QzMzIDI2Ljc4MzMzMi45IDI3LjAyNSAzMi43IDI3LjIyNUMzMi41MTY3IDI3LjQwODMgMzIuMjgzMyAyNy41IDMyIDI3LjVIMjhaTTE2IDIzLjVDMTUuNzE2NyAyMy41IDE1LjQ3NSAyMy40MDgzIDE1LjI3NSAyMy4yMjVDMTUuMDkxNyAyMy4wMjUgMTUgMjIuNzgzMyAxNSAyMi41QzE1IDIyLjIxNjcgMTUuMDkxNyAyMS45ODMzIDE1LjI3NSAyMS44QzE1LjQ3NSAyMS42IDE1LjcxNjcgMjEuNSAxNiAyMS41QzE2LjI4MzMgMjEuNSAxNi41MTY3IDIxLjYgMTYuNyAyMS44QzE2LjkgMjEuOTgzMyAxNyAyMi4yMTY3IDE3IDIyLjVDMTcgMjIuNzgzMyAxNi45IDIzLjAyNSAxNi43IDIzLjIyNUMxNi41MTY3IDIzLjQwODMgMTYuMjgzMyAyMy41IDE2IDIzLjVaTTI0IDI3LjVDMjMuNzE2NyAyNy41IDIzLjQ3NSAyNy40MDgzIDIzLjI3NSAyNy4yMjVDMjMuMDkxNyAyNy4wMjUgMjMgMjYuNzgzMyAyMyAyNi41QzIzIDI2LjIxNjcgMjMuMDkxNyAyNS45ODMzIDIzLjI3NSAyNS44QzIzLjQ3NSAyNS42IDIzLjcxNjcgMjUuNSAyNCAyNS41QzI0LjI4MzMgMjUuNSAyNC41MTY3IDI1LjYgMjQuNyAyNS44QzI0LjkgMjUuOTgzMyAyNSAyNi4yMTY3IDI1IDI2LjVDMjUgMjYuNzgzMyAyNC45IDI3LjAyNSAyNC43IDI3LjIyNUMyNC41MTY3IDI3LjQwODMgMjQuMjgzMyAyNy41IDI0IDI3LjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0xOS4yNzUgMjMuMjI1QzE5LjQ3NSAyMy40MDgzIDE5LjcxNjcgMjMuNSAyMCAyMy41SDIzQzIzLjI4MzMgMjMuNSAyMy41MTY3IDIzLjQwODMgMjMuNyAyMy4yMjVDMjMuOSAyMy4wMjUgMjQgMjIuNzgzMyAyNCAyMi41QzI0IDIyLjIxNjcgMjMuOSAyMS45ODMzIDIzLjcgMjEuOEMyMy41MTY3IDIxLjYgMjMuMjgzMyAyMS41IDIzIDIxLjVIMjBDMTkuNzE2NyAyMS41IDE5LjQ3NSAyMS42IDE5LjI3NSAyMS44QzE5LjA5MTcgMjEuOTgzMyAxOSAyMi4yMTY3IDE5IDIyLjVDMTkgMjIuNzgzMyAxOS4wOTE3IDIzLjAyNSAxOS4yNzUgMjMuMjI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMjYuMjc1IDIzLjIyNUMyNi40NzUgMjMuNDA4MyAyNi43MTY3IDIzLjUgMjcgMjMuNUgzMEMzMC4yODMzIDIzLjUgMzAuNTE2NyAyMy40MDgzIDMwLjcgMjMuMjI1QzMwLjkgMjMuMDI1IDMxIDIyLjc4MzMgMzEgMjIuNUMzMSAyMi4yMTY3IDMwLjkgMjEuOTgzMyAzMC43IDIxLjhDMzAuNTE2NyAyMS42IDMwLjI4MzMgMjEuNSAzMCAyMS41SDI3QzI2LjcxNjcgMjEuNSAyNi40NzUgMjEuNiAyNi4yNzUgMjEuOEMyNi4wOTE3IDIxLjk4MzMgMjYgMjIuMjE2NyAyNiAyMi41QzI2IDIyLjc4MzMgMjYuMDkxNyAyMy4wMjUgMjYuMjc1IDIzLjIyNVoiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPg==">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
+            <zeebe:ioMapping>
+              <zeebe:input source="https://connectors.example.invalid/inbound/a2a" target="baseUrl" />
+              <zeebe:input source="noAuth" target="authType" />
+              <zeebe:input source="noAuth" target="authentication.type" />
+              <zeebe:input source="sendMessage" target="operationId" />
+              <zeebe:input source="a2a" target="rpcPath" />
+              <zeebe:input source="=&#34;/&#34;+rpcPath" target="operationPath" />
+              <zeebe:input source="={}" target="queryParameters" />
+              <zeebe:input source="POST" target="method" />
+              <zeebe:input source="=to json(requestData)" target="text" />
+              <zeebe:input source="=null" target="taskId" />
+              <zeebe:input source="=null" target="contextId" />
+              <zeebe:input source="=[{text: text}, {data: {demoInput: requestData}}]" target="messageParts" />
+              <zeebe:input source="=string(uuid())" target="pushToken" />
+              <zeebe:input source="{{secrets.A2A_CALLBACK_SECRET}}" target="pushCredentials" />
+              <zeebe:input source="=null" target="apiKey" />
+              <zeebe:input source="=null" target="rpcUrl" />
+              <zeebe:input source="=true" target="ignoreNullValues" />
+              <zeebe:input source="=true" target="returnImmediately" />
+              <zeebe:input source="https://connectors.example.invalid/inbound/a2a-push" target="webhookUrl" />
+              <zeebe:input source="={&#34;A2A-Version&#34;: &#34;1.0&#34;, &#34;Content-Type&#34;: &#34;application/json&#34;}" target="headers" />
+              <zeebe:input source="=if operationId != &#34;fetchAgentCard&#34; and rpcUrl != null then rpcUrl else baseUrl + operationPath" target="url" />
+              <zeebe:input source="={jsonrpc: &#34;2.0&#34;, id: string(uuid()), method: &#34;SendMessage&#34;, params: {message: {messageId: string(uuid()), role: &#34;ROLE_USER&#34;, parts: if messageParts != null then messageParts else [{text: text}], taskId: taskId, contextId: contextId}, configuration: {returnImmediately: if returnImmediately != null then returnImmediately else webhookUrl != null, taskPushNotificationConfig: if webhookUrl != null then {url: webhookUrl, token: pushToken, authentication: {scheme: &#34;Bearer&#34;, credentials: pushCredentials}} else null}}}" target="body" />
+              <zeebe:output source="=remoteResponse" target="remoteResponse" />
+              <zeebe:output source="=(for candidate in [if remoteResponse.result.task instance of context then remoteResponse.result.task else remoteResponse.result] return if candidate.id instance of string and candidate.contextId instance of string and candidate.status.state instance of string then candidate else null)[1]" target="acceptedTask" />
+            </zeebe:ioMapping>
+            <zeebe:taskHeaders>
+              <zeebe:header key="resultExpression" value="={remoteResponse: response.body}" />
+              <zeebe:header key="retryBackoff" value="PT0S" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+          <bpmn:incoming>Flow_DiscoverAgentCard_SendA2AMessage</bpmn:incoming>
+          <bpmn:outgoing>Flow_SendA2AMessage_UpdateJoin</bpmn:outgoing>
+        </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="TaskActive" name="Task still active?" default="Flow_TaskActive_ExtractResult">
+      <bpmn:incoming>Flow_UpdateJoin_TaskActive</bpmn:incoming>
+      <bpmn:outgoing>Flow_TaskActive_PushRace</bpmn:outgoing>
+      <bpmn:outgoing>Flow_TaskActive_ExtractResult</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateCatchEvent id="AwaitPush" name="Push received" zeebe:modelerTemplate="io.camunda.connectors.webhook.WebhookConnectorIntermediate.v1" zeebe:modelerTemplateVersion="10">
+          <bpmn:extensionElements>
+            <zeebe:properties>
+              <zeebe:property name="inbound.type" value="io.camunda:webhook:1" />
+              <zeebe:property name="inbound.method" value="post" />
+              <zeebe:property name="inbound.context" value="a2a-push" />
+              <zeebe:property name="inbound.shouldValidateHmac" value="disabled" />
+              <zeebe:property name="inbound.auth.type" value="APIKEY" />
+              <zeebe:property name="inbound.auth.apiKey" value="Bearer {{secrets.A2A_CALLBACK_SECRET}}" />
+              <zeebe:property name="inbound.auth.apiKeyLocator" value="=get value(request.headers, &#34;authorization&#34;)" />
+              <zeebe:property name="correlationKeyExpression" value="=request.body.task.id" />
+              <zeebe:property name="resultVariable" value="" />
+              <zeebe:property name="resultExpression" value="={remoteResponse: {result: {task: request.body.task}}, acceptedTask: request.body.task}" />
+            </zeebe:properties>
+          </bpmn:extensionElements>
+          <bpmn:incoming>Flow_PushRace_AwaitPush</bpmn:incoming>
+          <bpmn:outgoing>Flow_AwaitPush_UpdateJoin</bpmn:outgoing>
+          <bpmn:messageEventDefinition id="AwaitPush_def" messageRef="Message_A2APush" />
+        </bpmn:intermediateCatchEvent>
+    <bpmn:eventBasedGateway id="PushRace" name="Push or poll">
+      <bpmn:incoming>Flow_TaskActive_PushRace</bpmn:incoming>
+      <bpmn:outgoing>Flow_PushRace_AwaitPush</bpmn:outgoing>
+      <bpmn:outgoing>Flow_PushRace_PushTimeout</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="PushTimeout" name="No push in 30 s">
+      <bpmn:incoming>Flow_PushRace_PushTimeout</bpmn:incoming>
+      <bpmn:outgoing>Flow_PushTimeout_GetTask</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="PushTimeout_def">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT30S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:serviceTask id="GetTask" name="Poll task (GetTask)" zeebe:modelerTemplate="dev.hansel.a2a.client.v1" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMTguNSIgdmlld0JveD0iMyA5IDMwIDE4LjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTguNyAxNC43MjVDOC41MTY2NyAxNC45MDgzIDguMjgzMzMgMTUgOCAxNUM3LjcxNjY3IDE1IDcuNDc1IDE0LjkwODMgNy4yNzUgMTQuNzI1QzcuMDkxNjcgMTQuNTI1IDcgMTQuMjgzMyA3IDE0QzcgMTMuNzE2NyA3LjA5MTY3IDEzLjQ4MzMgNy4yNzUgMTMuM0M3LjQ3NSAxMy4xIDcuNzE2NjcgMTMgOCAxM0M4LjI4MzMzIDEzIDguNTE2NjcgMTMuMSA4LjcgMTMuM0M4LjkgMTMuNDgzMyA5IDEzLjcxNjcgOSAxNEM5IDE0LjI4MzMgOC45IDE0LjUyNSA4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMTQuNyAxNC43MjVDMTQuNTE2NyAxNC45MDgzIDE0LjI4MzMgMTUgMTQgMTVDMTMuNzE2NyAxNSAxMy40NzUgMTQuOTA4MyAxMy4yNzUgMTQuNzI1QzEzLjA5MTcgMTQuNTI1IDEzIDE0LjI4MzMgMTMgMTRDMTMgMTMuNzE2NyAxMy4wOTE3IDEzLjQ4MzMgMTMuMjc1IDEzLjNDMTMuNDc1IDEzLjEgMTMuNzE2NyAxMyAxNCAxM0MxNC4yODMzIDEzIDE0LjUxNjcgMTMuMSAxNC43IDEzLjNDMTQuOSAxMy40ODMzIDE1IDEzLjcxNjcgMTUgMTRDMTUgMTQuMjgzMyAxNC45IDE0LjUyNSAxNC43IDE0LjcyNVoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTIyLjcgMTQuNzI1QzIyLjUxNjcgMTQuOTA4MyAyMi4yODMzIDE1IDIyIDE1QzIxLjcxNjcgMTUgMjEuNDc1IDE0LjkwODMgMjEuMjc1IDE0LjcyNUMyMS4wOTE3IDE0LjUyNSAyMSAxNC4yODMzIDIxIDE0QzIxIDEzLjcxNjcgMjEuMDkxNyAxMy40ODMzIDIxLjI3NSAxMy4zQzIxLjQ3NSAxMy4xIDIxLjcxNjcgMTMgMjIgMTNDMjIuMjgzMyAxMyAyMi41MTY3IDEzLjEgMjIuNyAxMy4zQzIyLjkgMTMuNDgzMyAyMyAxMy43MTY3IDIzIDE0QzIzIDE0LjI4MzMgMjIuOSAxNC41MjUgMjIuNyAxNC43MjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0yOC43IDE0LjcyNUMyOC41MTY3IDE0LjkwODMgMjguMjgzMyAxNSAyOCAxNUMyNy43MTY3IDE1IDI3LjQ3NSAxNC45MDgzIDI3LjI3NSAxNC43MjVDMjcuMDkxNyAxNC41MjUgMjcgMTQuMjgzMyAyNyAxNEMyNyAxMy43MTY3IDI3LjA5MTcgMTMuNDgzMyAyNy4yNzUgMTMuM0MyNy40NzUgMTMuMSAyNy43MTY3IDEzIDI4IDEzQzI4LjI4MzMgMTMgMjguNTE2NyAxMy4xIDI4LjcgMTMuM0MyOC45IDEzLjQ4MzMgMjkgMTMuNzE2NyAyOSAxNEMyOSAxNC4yODMzIDI4LjkgMTQuNTI1IDI4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUgMTRDNSAxMi4zNDMxIDYuMzQzMTUgMTEgOCAxMUgxNEMxNC43NzYgMTEgMTUuMjg0IDExLjE1MzcgMTUuNjQgMTEuMzgxOEMxNS44NTg5IDEwLjc5NCAxNi4xNTE3IDEwLjE3MDkgMTYuNTU1IDkuNTk3OTVDMTUuODc5NyA5LjIxMTUzIDE1LjAzODYgOSAxNCA5SDhDNS4yMzg1OCA5IDMgMTEuMjM4NiAzIDE0QzMgMTYuNzYxMiA1LjIzNzU5IDE5IDcuOTk5MjYgMTlIMTRDMTUuNzYzNCAxOSAxNi45NTczIDE4LjM5MDIgMTcuNzM3NSAxNy4zNUMxOC40MjI4IDE2LjQzNjMgMTguNzE0OCAxNS4yNjYgMTguOTQ4MyAxNC4zMjk5TDE4Ljk3MDEgMTQuMjQyNUMxOS4yMzI3IDEzLjE5MjQgMTkuNDQ0MiAxMi40MDc3IDE5Ljg2MjUgMTEuODVDMjAuMjA3MyAxMS4zOTAyIDIwLjc2MzQgMTEgMjIgMTFIMjguMDAwNUMyOS42NTcyIDExIDMxIDEyLjM0MyAzMSAxNEMzMSAxNS42NTY5IDI5LjY1NjkgMTcgMjggMTdIMjJDMjEuMjI0IDE3IDIwLjcxNiAxNi44NDYzIDIwLjM2IDE2LjYxODJDMjAuMTQxMSAxNy4yMDYgMTkuODQ4MyAxNy44MjkxIDE5LjQ0NSAxOC40MDJDMjAuMTIwMyAxOC43ODg1IDIwLjk2MTQgMTkgMjIgMTlIMjhDMzAuNzYxNCAxOSAzMyAxNi43NjE0IDMzIDE0QzMzIDExLjIzODggMzAuNzYyMSA5IDI4LjAwMDUgOUgyMkMyMC4yMzY2IDkgMTkuMDQyNyA5LjYwOTc5IDE4LjI2MjUgMTAuNjVDMTcuNTc3MiAxMS41NjM3IDE3LjI4NTIgMTIuNzM0IDE3LjA1MTcgMTMuNjcwMUwxNy4wMjk5IDEzLjc1NzVDMTYuNzY3MyAxNC44MDc2IDE2LjU1NTggMTUuNTkyMyAxNi4xMzc1IDE2LjE1QzE1Ljc5MjcgMTYuNjA5OCAxNS4yMzY2IDE3IDE0IDE3SDcuOTk5MjZDNi4zNDI2NSAxNyA1IDE1LjY1NzEgNSAxNFoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTcgMjMuNUM2LjcxNjY3IDIzLjUgNi40NzUgMjMuNDA4MyA2LjI3NSAyMy4yMjVDNi4wOTE2NyAyMy4wMjUgNiAyMi43ODMzIDYgMjIuNUM2IDIyLjIxNjcgNi4wOTE2NyAyMS45ODMzIDYuMjc1IDIxLjhDNi40NzUgMjEuNiA2LjcxNjY3IDIxLjUgNyAyMS41SDEyQzEyLjI4MzMgMjEuNSAxMi41MTY3IDIxLjYgMTIuNyAyMS44QzEyLjkgMjEuOTgzMyAxMyAyMi4yMTY3IDEzIDIyLjVDMTMgMjIuNzgzMyAxMi45IDIzLjAyNSAxMi43IDIzLjIyNUMxMi41MTY3IDIzLjQwODMgMTIuMjgzMyAyMy41IDEyIDIzLjVIN1pNNSAyNy41QzQuNzE2NjcgMjcuNSA0LjQ3NSAyNy40MDgzIDQuMjc1IDI3LjIyNUM0LjA5MTY3IDI3LjAyNSA0IDI2Ljc4MzMgNCAyNi41QzQgMjYuMjE2NyA0LjA5MTY3IDI1Ljk4MzMgNC4yNzUgMjUuOEM0LjQ3NSAyNS42IDQuNzE2NjcgMjUuNSA1IDI1LjVIOEM4LjI4MzMzIDI1LjUgOC41MTY2NyAyNS42IDguNyAyNS44QzguOSAyNS45ODMzIDkgMjYuMjE2NyA5IDI2LjVDOSAyNi43ODMzIDguOSAyNy4wMjUgOC43IDI3LjIyNUM4LjUxNjY3IDI3LjQwODMgOC4yODMzMyAyNy41IDggMjcuNUg1Wk0xMiAyNy41QzExLjcxNjcgMjcuNSAxMS40NzUgMjcuNDA4MyAxMS4yNzUgMjcuMjI1QzExLjA5MTcgMjcuMDI1IDExIDI2Ljc4MzMgMTEgMjYuNUMxMSAyNi4yMTY3IDExLjA5MTcgMjUuOTgzMyAxMS4yNzUgMjUuOEMxMS40NzUgMjUuNiAxMS43MTY3IDI1LjUgMTIgMjUuNUgyMEMyMC4yODMzIDI1LjUgMjAuNTE2NyAyNS42IDIwLjcgMjUuOEMyMC45IDI1Ljk4MzMgMjEgMjYuMjE2NyAyMSAyNi41QzIxIDI2Ljc4MzMgMjAuOSAyNy4wMjUgMjAuNyAyNy4yMjVDMjAuNTE2NyAyNy40MDgzIDIwLjI4MzMgMjcuNSAyMCAyNy41SDEyWk0yOCAyNy41QzI3LjcxNjcgMjcuNSAyNy40NzUgMjcuNDA4MyAyNy4yNzUgMjcuMjI1QzI3LjA5MTcgMjcuMDI1IDI3IDI2Ljc4MzMgMjcgMjYuNUMyNyAyNi4yMTY3IDI3LjA5MTcgMjUuOTgzMyAyNy4yNzUgMjUuOEMyNy40NzUgMjUuNiAyNy43MTY3IDI1LjUgMjggMjUuNUgzMkMzMi4yODMzIDI1LjUgMzIuNTE2NyAyNS42IDMyLjcgMjUuOEMzMi45IDI1Ljk4MzMgMzMgMjYuMjE2NyAzMyAyNi41QzMzIDI2Ljc4MzMzMi45IDI3LjAyNSAzMi43IDI3LjIyNUMzMi41MTY3IDI3LjQwODMgMzIuMjgzMyAyNy41IDMyIDI3LjVIMjhaTTE2IDIzLjVDMTUuNzE2NyAyMy41IDE1LjQ3NSAyMy40MDgzIDE1LjI3NSAyMy4yMjVDMTUuMDkxNyAyMy4wMjUgMTUgMjIuNzgzMyAxNSAyMi41QzE1IDIyLjIxNjcgMTUuMDkxNyAyMS45ODMzIDE1LjI3NSAyMS44QzE1LjQ3NSAyMS42IDE1LjcxNjcgMjEuNSAxNiAyMS41QzE2LjI4MzMgMjEuNSAxNi41MTY3IDIxLjYgMTYuNyAyMS44QzE2LjkgMjEuOTgzMyAxNyAyMi4yMTY3IDE3IDIyLjVDMTcgMjIuNzgzMyAxNi45IDIzLjAyNSAxNi43IDIzLjIyNUMxNi41MTY3IDIzLjQwODMgMTYuMjgzMyAyMy41IDE2IDIzLjVaTTI0IDI3LjVDMjMuNzE2NyAyNy41IDIzLjQ3NSAyNy40MDgzIDIzLjI3NSAyNy4yMjVDMjMuMDkxNyAyNy4wMjUgMjMgMjYuNzgzMyAyMyAyNi41QzIzIDI2LjIxNjcgMjMuMDkxNyAyNS45ODMzIDIzLjI3NSAyNS44QzIzLjQ3NSAyNS42IDIzLjcxNjcgMjUuNSAyNCAyNS41QzI0LjI4MzMgMjUuNSAyNC41MTY3IDI1LjYgMjQuNyAyNS44QzI0LjkgMjUuOTgzMyAyNSAyNi4yMTY3IDI1IDI2LjVDMjUgMjYuNzgzMyAyNC45IDI3LjAyNSAyNC43IDI3LjIyNUMyNC41MTY3IDI3LjQwODMgMjQuMjgzMyAyNy41IDI0IDI3LjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0xOS4yNzUgMjMuMjI1QzE5LjQ3NSAyMy40MDgzIDE5LjcxNjcgMjMuNSAyMCAyMy41SDIzQzIzLjI4MzMgMjMuNSAyMy41MTY3IDIzLjQwODMgMjMuNyAyMy4yMjVDMjMuOSAyMy4wMjUgMjQgMjIuNzgzMyAyNCAyMi41QzI0IDIyLjIxNjcgMjMuOSAyMS45ODMzIDIzLjcgMjEuOEMyMy41MTY3IDIxLjYgMjMuMjgzMyAyMS41IDIzIDIxLjVIMjBDMTkuNzE2NyAyMS41IDE5LjQ3NSAyMS42IDE5LjI3NSAyMS44QzE5LjA5MTcgMjEuOTgzMyAxOSAyMi4yMTY3IDE5IDIyLjVDMTkgMjIuNzgzMyAxOS4wOTE3IDIzLjAyNSAxOS4yNzUgMjMuMjI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMjYuMjc1IDIzLjIyNUMyNi40NzUgMjMuNDA4MyAyNi43MTY3IDIzLjUgMjcgMjMuNUgzMEMzMC4yODMzIDIzLjUgMzAuNTE2NyAyMy40MDgzIDMwLjcgMjMuMjI1QzMwLjkgMjMuMDI1IDMxIDIyLjc4MzMgMzEgMjIuNUMzMSAyMi4yMTY3IDMwLjkgMjEuOTgzMyAzMC43IDIxLjhDMzAuNTE2NyAyMS42IDMwLjI4MzMgMjEuNSAzMCAyMS41SDI3QzI2LjcxNjcgMjEuNSAyNi40NzUgMjEuNiAyNi4yNzUgMjEuOEMyNi4wOTE3IDIxLjk4MzMgMjYgMjIuMjE2NyAyNiAyMi41QzI2IDIyLjc4MzMgMjYuMDkxNyAyMy4wMjUgMjYuMjc1IDIzLjIyNVoiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPg==">
+      <bpmn:documentation>Polling fallback: read the task when no push arrived, or when the server did not accept the push config.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="https://connectors.example.invalid/inbound/a2a" target="baseUrl" />
+          <zeebe:input source="noAuth" target="authType" />
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="getTask" target="operationId" />
+          <zeebe:input source="a2a" target="rpcPath" />
+          <zeebe:input source="=&#34;/&#34;+rpcPath" target="operationPath" />
+          <zeebe:input source="={}" target="queryParameters" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="=acceptedTask.id" target="taskId" />
+          <zeebe:input source="=null" target="historyLength" />
+          <zeebe:input source="=null" target="apiKey" />
+          <zeebe:input source="=null" target="rpcUrl" />
+          <zeebe:input source="=true" target="ignoreNullValues" />
+          <zeebe:input source="={&#34;A2A-Version&#34;: &#34;1.0&#34;, &#34;Content-Type&#34;: &#34;application/json&#34;}" target="headers" />
+          <zeebe:input source="=if operationId != &#34;fetchAgentCard&#34; and rpcUrl != null then rpcUrl else baseUrl + operationPath" target="url" />
+          <zeebe:input source="={jsonrpc: &#34;2.0&#34;, id: string(uuid()), method: &#34;GetTask&#34;, params: {id: taskId, historyLength: historyLength}}" target="body" />
+          <zeebe:output source="=remoteResponse" target="remoteResponse" />
+          <zeebe:output source="=(for candidate in [if remoteResponse.result.task instance of context then remoteResponse.result.task else remoteResponse.result] return if candidate.id = acceptedTask.id and candidate.status.state instance of string then candidate else acceptedTask)[1]" target="acceptedTask" />
+          <zeebe:output source="=pollCount + 1" target="pollCount" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="={remoteResponse: response.body}" />
+          <zeebe:header key="retryBackoff" value="PT5S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PushTimeout_GetTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_GetTask_UpdateJoin</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="UpdateJoin">
+      <bpmn:incoming>Flow_SendA2AMessage_UpdateJoin</bpmn:incoming>
+      <bpmn:incoming>Flow_AwaitPush_UpdateJoin</bpmn:incoming>
+      <bpmn:incoming>Flow_GetTask_UpdateJoin</bpmn:incoming>
+      <bpmn:outgoing>Flow_UpdateJoin_TaskActive</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:scriptTask id="ExtractResult" name="Extract result">
+      <bpmn:documentation>Works for any server: a completed Task yields its first artifact data part, otherwise all text parts joined.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:script expression="=if acceptedTask instance of context and acceptedTask.status.state = &#34;TASK_STATE_COMPLETED&#34; then (for parts in [flatten(for artifact in (if acceptedTask.artifacts instance of list then acceptedTask.artifacts else []) return artifact.parts)] return if count(parts[item.data != null]) &gt; 0 then parts[item.data != null][1].data else string join(for part in parts[item.text != null] return part.text, &#34;&#10;&#34;))[1] else null" resultVariable="delegationResult" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_TaskActive_ExtractResult</bpmn:incoming>
+      <bpmn:outgoing>Flow_ExtractResult_DelegationFinished</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:endEvent id="DelegationFinished" name="Remote agent replied">
+      <bpmn:incoming>Flow_ExtractResult_DelegationFinished</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_DelegationStarted_DiscoverAgentCard" sourceRef="DelegationStarted" targetRef="DiscoverAgentCard" />
+    <bpmn:sequenceFlow id="Flow_DiscoverAgentCard_SendA2AMessage" sourceRef="DiscoverAgentCard" targetRef="SendA2AMessage" />
+    <bpmn:sequenceFlow id="Flow_SendA2AMessage_UpdateJoin" sourceRef="SendA2AMessage" targetRef="UpdateJoin" />
+    <bpmn:sequenceFlow id="Flow_TaskActive_PushRace" name="yes" sourceRef="TaskActive" targetRef="PushRace">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=if acceptedTask instance of context then list contains(["TASK_STATE_SUBMITTED", "TASK_STATE_WORKING"], acceptedTask.status.state) and pollCount &lt; 20 else false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_TaskActive_ExtractResult" name="no" sourceRef="TaskActive" targetRef="ExtractResult" />
+    <bpmn:sequenceFlow id="Flow_ExtractResult_DelegationFinished" sourceRef="ExtractResult" targetRef="DelegationFinished" />
+    <bpmn:sequenceFlow id="Flow_PushRace_AwaitPush" sourceRef="PushRace" targetRef="AwaitPush" />
+    <bpmn:sequenceFlow id="Flow_PushRace_PushTimeout" sourceRef="PushRace" targetRef="PushTimeout" />
+    <bpmn:sequenceFlow id="Flow_AwaitPush_UpdateJoin" sourceRef="AwaitPush" targetRef="UpdateJoin" />
+    <bpmn:sequenceFlow id="Flow_PushTimeout_GetTask" sourceRef="PushTimeout" targetRef="GetTask" />
+    <bpmn:sequenceFlow id="Flow_GetTask_UpdateJoin" sourceRef="GetTask" targetRef="UpdateJoin" />
+    <bpmn:sequenceFlow id="Flow_UpdateJoin_TaskActive" sourceRef="UpdateJoin" targetRef="TaskActive" />
+  </bpmn:process>
+  <bpmn:message id="Message_A2APush" name="a2a-push" zeebe:modelerTemplate="io.camunda.connectors.webhook.WebhookConnectorIntermediate.v1">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=acceptedTask.id" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-client-protocol">
+    <bpmndi:BPMNPlane id="BPMNPlane_a2a-client-protocol" bpmnElement="a2a-client-protocol">
+      <bpmndi:BPMNShape id="DelegationStarted_di" bpmnElement="DelegationStarted">
+        <dc:Bounds x="152" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="130" y="198" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DiscoverAgentCard_di" bpmnElement="DiscoverAgentCard">
+        <dc:Bounds x="230" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SendA2AMessage_di" bpmnElement="SendA2AMessage">
+        <dc:Bounds x="380" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UpdateJoin_di" bpmnElement="UpdateJoin" isMarkerVisible="true">
+        <dc:Bounds x="520" y="155" width="50" height="50" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskActive_di" bpmnElement="TaskActive" isMarkerVisible="true">
+        <dc:Bounds x="620" y="155" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="600" y="128" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ExtractResult_di" bpmnElement="ExtractResult">
+        <dc:Bounds x="720" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DelegationFinished_di" bpmnElement="DelegationFinished">
+        <dc:Bounds x="870" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="852" y="198" width="72" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PushRace_di" bpmnElement="PushRace">
+        <dc:Bounds x="720" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="712" y="362" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AwaitPush_di" bpmnElement="AwaitPush">
+        <dc:Bounds x="820" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="800" y="225" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PushTimeout_di" bpmnElement="PushTimeout">
+        <dc:Bounds x="820" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="800" y="425" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GetTask_di" bpmnElement="GetTask">
+        <dc:Bounds x="900" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_DelegationStarted_DiscoverAgentCard_di" bpmnElement="Flow_DelegationStarted_DiscoverAgentCard">
+        <di:waypoint x="188" y="180" />
+        <di:waypoint x="230" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DiscoverAgentCard_SendA2AMessage_di" bpmnElement="Flow_DiscoverAgentCard_SendA2AMessage">
+        <di:waypoint x="330" y="180" />
+        <di:waypoint x="380" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SendA2AMessage_UpdateJoin_di" bpmnElement="Flow_SendA2AMessage_UpdateJoin">
+        <di:waypoint x="480" y="180" />
+        <di:waypoint x="520" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_UpdateJoin_TaskActive_di" bpmnElement="Flow_UpdateJoin_TaskActive">
+        <di:waypoint x="570" y="180" />
+        <di:waypoint x="620" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TaskActive_ExtractResult_di" bpmnElement="Flow_TaskActive_ExtractResult">
+        <di:waypoint x="670" y="180" />
+        <di:waypoint x="720" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="688" y="158" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ExtractResult_DelegationFinished_di" bpmnElement="Flow_ExtractResult_DelegationFinished">
+        <di:waypoint x="820" y="180" />
+        <di:waypoint x="870" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TaskActive_PushRace_di" bpmnElement="Flow_TaskActive_PushRace">
+        <di:waypoint x="645" y="205" />
+        <di:waypoint x="645" y="330" />
+        <di:waypoint x="720" y="330" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="615" y="250" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushRace_AwaitPush_di" bpmnElement="Flow_PushRace_AwaitPush">
+        <di:waypoint x="745" y="305" />
+        <di:waypoint x="745" y="280" />
+        <di:waypoint x="820" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushRace_PushTimeout_di" bpmnElement="Flow_PushRace_PushTimeout">
+        <di:waypoint x="745" y="355" />
+        <di:waypoint x="745" y="400" />
+        <di:waypoint x="820" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AwaitPush_UpdateJoin_di" bpmnElement="Flow_AwaitPush_UpdateJoin">
+        <di:waypoint x="856" y="280" />
+        <di:waypoint x="1040" y="280" />
+        <di:waypoint x="1040" y="100" />
+        <di:waypoint x="545" y="100" />
+        <di:waypoint x="545" y="155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushTimeout_GetTask_di" bpmnElement="Flow_PushTimeout_GetTask">
+        <di:waypoint x="856" y="400" />
+        <di:waypoint x="900" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_GetTask_UpdateJoin_di" bpmnElement="Flow_GetTask_UpdateJoin">
+        <di:waypoint x="950" y="440" />
+        <di:waypoint x="950" y="470" />
+        <di:waypoint x="545" y="470" />
+        <di:waypoint x="545" y="205" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,641 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-client-protocol",
+  "testCases": [
+    {
+      "name": "Server accepted push - the pushed task completes the delegation",
+      "description": "SendMessage returns a working task; the server pushes the completed task to the webhook before the poll timer fires.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "requestData": {
+              "value": "Example input"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "DiscoverAgentCard"
+          },
+          "variables": {
+            "agentCard": {
+              "name": "Remote agent"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "SendA2AMessage"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "result": {
+                "task": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "status": {
+                    "state": "TASK_STATE_WORKING"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "elementSelector": {
+            "elementId": "PushRace"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-push",
+          "correlationKey": "demo-task",
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "result": {
+                "task": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "status": {
+                    "state": "TASK_STATE_COMPLETED"
+                  },
+                  "artifacts": [
+                    {
+                      "artifactId": "a-1",
+                      "name": "placeholder",
+                      "parts": [
+                        {
+                          "data": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [
+                {
+                  "artifactId": "a-1",
+                  "name": "placeholder",
+                  "parts": [
+                    {
+                      "data": {
+                        "value": "Example input"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [
+                {
+                  "artifactId": "a-1",
+                  "name": "placeholder",
+                  "parts": [
+                    {
+                      "data": {
+                        "value": "Example input"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Server ignored push - polling GetTask completes the delegation",
+      "description": "No push arrives; after the timeout the client polls GetTask, sees the task still working, waits again, and polls until it is completed.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "requestData": {
+              "value": "Example input"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "DiscoverAgentCard"
+          },
+          "variables": {
+            "agentCard": {
+              "name": "Remote agent"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "SendA2AMessage"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "result": {
+                "task": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "status": {
+                    "state": "TASK_STATE_WORKING"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "elementSelector": {
+            "elementId": "PushRace"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT31S"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "GetTask"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "result": {
+                "id": "demo-task",
+                "contextId": "demo-context",
+                "status": {
+                  "state": "TASK_STATE_WORKING"
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "elementSelector": {
+            "elementId": "PushRace"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT31S"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "GetTask"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "result": {
+                "id": "demo-task",
+                "contextId": "demo-context",
+                "status": {
+                  "state": "TASK_STATE_COMPLETED"
+                },
+                "artifacts": [
+                  {
+                    "artifactId": "a-1",
+                    "name": "placeholder",
+                    "parts": [
+                      {
+                        "data": {
+                          "value": "Example input"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [
+                {
+                  "artifactId": "a-1",
+                  "name": "placeholder",
+                  "parts": [
+                    {
+                      "data": {
+                        "value": "Example input"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Send returns a final task - no waiting or polling",
+      "description": "A server that finishes inside SendMessage needs neither push nor polling.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "requestData": {
+              "value": "Example input"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "DiscoverAgentCard"
+          },
+          "variables": {
+            "agentCard": {
+              "name": "Remote agent"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "SendA2AMessage"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "result": {
+                "task": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "status": {
+                    "state": "TASK_STATE_COMPLETED"
+                  },
+                  "artifacts": [
+                    {
+                      "artifactId": "a-1",
+                      "name": "placeholder",
+                      "parts": [
+                        {
+                          "data": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "acceptedTask": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [
+                {
+                  "artifactId": "a-1",
+                  "name": "placeholder",
+                  "parts": [
+                    {
+                      "data": {
+                        "value": "Example input"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Send returns an error - the delegation ends with the error response",
+      "description": "A JSON-RPC error carries no task, so the client stops and hands the error response back.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "requestData": {
+              "value": "Example input"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "DiscoverAgentCard"
+          },
+          "variables": {
+            "agentCard": {
+              "name": "Remote agent"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "SendA2AMessage"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "error": {
+                "code": -32602,
+                "message": "Invalid params"
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "error": {
+                "code": -32602,
+                "message": "Invalid params"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "External server returns a completed task with an unnamed text artifact",
+      "description": "Terminal Task in the SendMessage response is final and the result is the joined text parts.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "requestData": {
+              "value": "Example input"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "DiscoverAgentCard"
+          },
+          "variables": {
+            "agentCard": {
+              "name": "Remote agent"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "SendA2AMessage"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "result": {
+                "task": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "status": {
+                    "state": "TASK_STATE_COMPLETED"
+                  },
+                  "artifacts": [
+                    {
+                      "artifactId": "a1",
+                      "parts": [
+                        {
+                          "text": "Hello"
+                        },
+                        {
+                          "text": "world"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "delegationResult": "Hello\nworld"
+          }
+        }
+      ]
+    },
+    {
+      "name": "External server returns an artifact with a data part",
+      "description": "The first artifact data part wins over text parts, whatever the artifact name.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "requestData": {
+              "value": "Example input"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "DiscoverAgentCard"
+          },
+          "variables": {
+            "agentCard": {
+              "name": "Remote agent"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "SendA2AMessage"
+          },
+          "variables": {
+            "remoteResponse": {
+              "jsonrpc": "2.0",
+              "id": "r",
+              "result": {
+                "task": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "status": {
+                    "state": "TASK_STATE_COMPLETED"
+                  },
+                  "artifacts": [
+                    {
+                      "artifactId": "a1",
+                      "name": "result",
+                      "parts": [
+                        {
+                          "text": "ignored"
+                        },
+                        {
+                          "data": {
+                            "answer": 42
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client-protocol"
+          },
+          "variables": {
+            "delegationResult": {
+              "answer": 42
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

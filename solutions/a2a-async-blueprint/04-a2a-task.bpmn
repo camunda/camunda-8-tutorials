@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_a2a_task" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:error id="AgentFailed" name="AgentFailed" errorCode="AGENT_FAILED" />
+  <bpmn:error id="PushFailedError" name="PushFailed" errorCode="PUSH_FAILED" />
+  <bpmn:signal id="Signal_Settled" name="=&#34;a2a-settled:&#34; + task.id + &#34;:&#34; + string(task.rev)" />
+  <bpmn:message id="A2ACancelMessage" name="a2a-cancel">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=task.id" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:process id="a2a-task" name="04 A2A Task - Protocol" isExecutable="true">
+    <bpmn:startEvent id="TaskReceived" name="Task accepted">
+      <bpmn:outgoing>Flow_TaskReceived_AgentTools</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:callActivity id="AgentTools" name="Run server agent">
+      <bpmn:extensionElements>
+        <zeebe:calledElement processId="a2a-card-dispute" propagateAllChildVariables="false" propagateAllParentVariables="false" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=req" target="req" />
+          <zeebe:output source="=agent" target="agent" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_TaskReceived_AgentTools</bpmn:incoming>
+      <bpmn:outgoing>Flow_AgentTools_UpdateTask</bpmn:outgoing>
+    </bpmn:callActivity>
+    <bpmn:boundaryEvent id="AgentError" name="Agent failed" attachedToRef="AgentTools">
+      <bpmn:outgoing>Flow_AgentError_UpdateTask</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="AgentError_def" errorRef="AgentFailed" />
+    </bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="A2ACancelRequested" name="Cancellation requested" attachedToRef="AgentTools">
+      <bpmn:outgoing>Flow_CancelRequested_SetCanceled</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="A2ACancelRequested_def" messageRef="A2ACancelMessage" />
+    </bpmn:boundaryEvent>
+    <bpmn:exclusiveGateway id="OutcomeJoin">
+      <bpmn:incoming>Flow_AgentTools_UpdateTask</bpmn:incoming>
+      <bpmn:incoming>Flow_AgentError_UpdateTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_OutcomeJoin_TaskDone</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateThrowEvent id="TaskDone" name="Commit agent outcome">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=/* Decide the task outcome from what the agent&#39;s tool actually returned. */&#10;if agent = null then&#10;  /* The agent job failed (AgentError boundary): there is no agent result. */&#10;  {state: &#34;TASK_STATE_FAILED&#34;, text: &#34;The agent could not complete the request.&#34;, artifacts: []}&#10;else (for&#10;  /* All results of echo_placeholder tool calls in the conversation. */&#10;  records in [&#10;    flatten(&#10;      for message in agent.context.conversation.messages[item.role = &#34;tool_call_result&#34;]&#10;      return message.results[item.name = &#34;echo_placeholder&#34;]&#10;    )&#10;  ]&#10;return for&#10;  /* Take the most recent result. */&#10;  content in [if count(records) &#62; 0 then records[count(records)].content else null]&#10;return for&#10;  /* Tool content may be wrapped in a list; unwrap the object part. */&#10;  evidence in [if content instance of list then content[item.type = &#34;object&#34;][1].content else content]&#10;return for&#10;  /* Grounded = the agent called the tool and it returned a result. */&#10;  grounded in [evidence != null]&#10;return {&#10;  state: if grounded then &#34;TASK_STATE_COMPLETED&#34; else &#34;TASK_STATE_FAILED&#34;,&#10;  text: if grounded&#10;    then &#34;Placeholder tool completed.&#34;&#10;    else if agent.responseText instance of string then trim(agent.responseText)&#10;    else &#34;The agent did not return the required placeholder tool result.&#34;,&#10;  /* Publish the evidence as the &#34;placeholder&#34; artifact only when grounded. */&#10;  artifacts: if grounded&#10;    then [{artifactId: uuid(), name: &#34;placeholder&#34;, parts: [{data: evidence}]}]&#10;    else []&#10;})[1][1][1][1]" target="outcome" />
+          <zeebe:output source="=/* Apply the outcome to the A2A task and return the updated task. */&#10;(for&#10;  /* Step 1: normalize the outcome. An agent result becomes {state, text, artifacts}; anything else is used as-is. */&#10;  o in [&#10;    if outcome.agent != null then&#10;      (for&#10;        /* Final answer text, or a fallback if the agent produced none. */&#10;        r in [&#10;          if outcome.agent.responseText instance of string&#10;            then trim(outcome.agent.responseText)&#10;            else &#34;The agent produced no answer.&#34;&#10;        ]&#10;      return for&#10;        /* The agent signals it needs more input by prefixing &#34;NEED_INPUT:&#34;. */&#10;        ask in [starts with(r, &#34;NEED_INPUT:&#34;)]&#10;      return for&#10;        /* Strip the 12-character prefix to get the question text. */&#10;        t in [if ask then trim(substring(r, 12)) else r]&#10;      return for&#10;        /* Optional &#34;tool-trace&#34; artifact listing every tool call the agent made. */&#10;        a in [&#10;          (for calls in [&#10;            flatten(&#10;              for m in outcome.agent.context.conversation.messages[item.role = &#34;assistant&#34; and item.toolCalls != null]&#10;              return for tc in m.toolCalls&#10;              return {name: tc.name, arguments: tc.arguments}&#10;            )&#10;          ]&#10;          return if count(calls) = 0&#10;            then null&#10;            else {artifactId: uuid(), name: &#34;tool-trace&#34;, parts: [{data: {toolCalls: calls}}]}&#10;          )[1]&#10;        ]&#10;      return {&#10;        state: if ask then &#34;TASK_STATE_INPUT_REQUIRED&#34; else &#34;TASK_STATE_COMPLETED&#34;,&#10;        text: t,&#10;        replaceAnswer: true,&#10;        artifacts: concatenate(&#10;          [{artifactId: uuid(), name: if ask then &#34;question&#34; else &#34;answer&#34;, parts: [{text: t}]}],&#10;          if a = null then [] else [a]&#10;        )&#10;      })[1][1][1][1]&#10;    else outcome&#10;  ]&#10;return for&#10;  /* Step 2: the agent-role message to append to the task history (none if there is no text). */&#10;  m in [&#10;    if o.text = null then null&#10;    else {messageId: uuid(), contextId: task.contextId, taskId: task.id, role: &#34;ROLE_AGENT&#34;, parts: [{text: o.text}]}&#10;  ]&#10;return&#10;  /* Step 3: build the next revision of the task. */&#10;  {&#10;    responseMode: if o.responseMode = &#34;message&#34; then &#34;message&#34; else &#34;task&#34;,&#10;    id: task.id,&#10;    contextId: task.contextId,&#10;    rev: task.rev + 1,&#10;    /* Status without null fields (a missing message is omitted). */&#10;    status: context(get entries({&#10;      state: o.state,&#10;      message: m,&#10;      timestamp: substring(string(now()), 1, 19) + &#34;Z&#34;&#10;    })[item.value != null]),&#10;    /* Replace earlier answer/question/trace artifacts when this outcome supersedes them; always add new ones. */&#10;    artifacts: concatenate(&#10;      if o.replaceAnswer = true&#10;        then task.artifacts[not(list contains([&#34;tool-trace&#34;, &#34;answer&#34;, &#34;question&#34;], item.name))]&#10;        else task.artifacts,&#10;      if o.artifacts = null then [] else o.artifacts&#10;    ),&#10;    history: if m = null then task.history else append(task.history, m)&#10;  }&#10;)[1][1]" target="task" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_OutcomeJoin_TaskDone</bpmn:incoming>
+      <bpmn:outgoing>Flow_TaskDone_PublishJoin</bpmn:outgoing>
+    </bpmn:intermediateThrowEvent>
+    <bpmn:sequenceFlow id="Flow_TaskReceived_AgentTools" sourceRef="TaskReceived" targetRef="AgentTools" />
+    <bpmn:sequenceFlow id="Flow_AgentTools_UpdateTask" sourceRef="AgentTools" targetRef="OutcomeJoin" />
+    <bpmn:sequenceFlow id="Flow_OutcomeJoin_TaskDone" sourceRef="OutcomeJoin" targetRef="TaskDone" />
+    <bpmn:sequenceFlow id="Flow_AgentError_UpdateTask" sourceRef="AgentError" targetRef="OutcomeJoin" />
+    <bpmn:scriptTask id="A2ASetCanceled" name="Commit terminal outcome">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=/* Cancel the task unless it already reached a final state. */&#10;if list contains(&#10;  [&#34;TASK_STATE_COMPLETED&#34;, &#34;TASK_STATE_CANCELED&#34;, &#34;TASK_STATE_FAILED&#34;, &#34;TASK_STATE_REJECTED&#34;],&#10;  task.status.state&#10;)&#10;then task&#10;else context merge([&#10;  task,&#10;  {&#10;    rev: task.rev + 1,&#10;    artifacts: [],&#10;    status: {state: &#34;TASK_STATE_CANCELED&#34;, timestamp: substring(string(now()), 1, 19) + &#34;Z&#34;}&#10;  }&#10;])" resultVariable="task" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_CancelRequested_SetCanceled</bpmn:incoming>
+      <bpmn:outgoing>Flow_SetCanceled_PublishJoin</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:exclusiveGateway id="PublishJoin">
+      <bpmn:incoming>Flow_TaskDone_PublishJoin</bpmn:incoming>
+      <bpmn:incoming>Flow_SetCanceled_PublishJoin</bpmn:incoming>
+      <bpmn:outgoing>Flow_PublishJoin_PushConfigured</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="PushConfigured" name="Push configured?" default="Flow_PushConfigured_PushJoin">
+      <bpmn:incoming>Flow_PublishJoin_PushConfigured</bpmn:incoming>
+      <bpmn:outgoing>Flow_PushConfigured_NotifyClient</bpmn:outgoing>
+      <bpmn:outgoing>Flow_PushConfigured_PushJoin</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="NotifyClient" name="Push task to client" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="=push.url" target="url" />
+          <zeebe:input source="={&#34;Content-Type&#34;: &#34;application/json&#34;, &#34;A2A-Version&#34;: &#34;1.0&#34;, Authorization: push.authentication.scheme + &#34; &#34; + push.authentication.credentials, &#34;X-A2A-Notification-Token&#34;: push.token}" target="headers" />
+          <zeebe:input source="={task: task}" target="body" />
+          <zeebe:input source="=false" target="followRedirects" />
+          <zeebe:input source="true" target="ignoreNullValues" />
+          <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="=20" target="readTimeoutInSeconds" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="elementTemplateVersion" value="13" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connectors.HttpJson.v2" />
+          <zeebe:header key="resultExpression" value="={}" />
+          <zeebe:header key="errorExpression" value="=if error != null then bpmnError(&#34;PUSH_FAILED&#34;, string(error.message)) else null" />
+          <zeebe:header key="retryBackoff" value="PT5S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PushConfigured_NotifyClient</bpmn:incoming>
+      <bpmn:outgoing>Flow_NotifyClient_PushJoin</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="PushFailed" name="Client unreachable" attachedToRef="NotifyClient">
+      <bpmn:outgoing>Flow_PushFailed_PushJoin</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="PushFailed_def" errorRef="PushFailedError" />
+    </bpmn:boundaryEvent>
+    <bpmn:exclusiveGateway id="PushJoin">
+      <bpmn:incoming>Flow_PushConfigured_PushJoin</bpmn:incoming>
+      <bpmn:incoming>Flow_NotifyClient_PushJoin</bpmn:incoming>
+      <bpmn:incoming>Flow_PushFailed_PushJoin</bpmn:incoming>
+      <bpmn:outgoing>Flow_PushJoin_PublishOutcome</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateThrowEvent id="PublishOutcome" name="Wake the A2A server">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="=task" target="settled" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PushJoin_PublishOutcome</bpmn:incoming>
+      <bpmn:outgoing>Flow_PublishOutcome_TaskSettled</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="PublishOutcome_def" signalRef="Signal_Settled" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:endEvent id="TaskSettled" name="Task settled">
+      <bpmn:incoming>Flow_PublishOutcome_TaskSettled</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_TaskDone_PublishJoin" sourceRef="TaskDone" targetRef="PublishJoin" />
+    <bpmn:sequenceFlow id="Flow_CancelRequested_SetCanceled" sourceRef="A2ACancelRequested" targetRef="A2ASetCanceled" />
+    <bpmn:sequenceFlow id="Flow_SetCanceled_PublishJoin" sourceRef="A2ASetCanceled" targetRef="PublishJoin" />
+    <bpmn:sequenceFlow id="Flow_PublishJoin_PushConfigured" sourceRef="PublishJoin" targetRef="PushConfigured" />
+    <bpmn:sequenceFlow id="Flow_PushConfigured_NotifyClient" name="yes" sourceRef="PushConfigured" targetRef="NotifyClient">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=push != null</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_PushConfigured_PushJoin" name="no" sourceRef="PushConfigured" targetRef="PushJoin" />
+    <bpmn:sequenceFlow id="Flow_NotifyClient_PushJoin" sourceRef="NotifyClient" targetRef="PushJoin" />
+    <bpmn:sequenceFlow id="Flow_PushFailed_PushJoin" sourceRef="PushFailed" targetRef="PushJoin" />
+    <bpmn:sequenceFlow id="Flow_PushJoin_PublishOutcome" sourceRef="PushJoin" targetRef="PublishOutcome" />
+    <bpmn:sequenceFlow id="Flow_PublishOutcome_TaskSettled" sourceRef="PublishOutcome" targetRef="TaskSettled" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-task">
+    <bpmndi:BPMNPlane id="BPMNPlane_a2a-task" bpmnElement="a2a-task">
+      <bpmndi:BPMNShape id="TaskReceived_di" bpmnElement="TaskReceived">
+        <dc:Bounds x="177" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="151" y="198" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AgentTools_di" bpmnElement="AgentTools">
+        <dc:Bounds x="250" y="140" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A2ACancelRequested_di" bpmnElement="A2ACancelRequested">
+        <dc:Bounds x="262" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="250" y="240" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AgentError_di" bpmnElement="AgentError">
+        <dc:Bounds x="322" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="311" y="240" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="OutcomeJoin_di" bpmnElement="OutcomeJoin" isMarkerVisible="true">
+        <dc:Bounds x="415" y="155" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A2ASetCanceled_di" bpmnElement="A2ASetCanceled">
+        <dc:Bounds x="420" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskDone_di" bpmnElement="TaskDone">
+        <dc:Bounds x="497" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="481" y="198" width="69" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PublishJoin_di" bpmnElement="PublishJoin" isMarkerVisible="true">
+        <dc:Bounds x="640" y="155" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PushConfigured_di" bpmnElement="PushConfigured" isMarkerVisible="true">
+        <dc:Bounds x="790" y="155" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="772" y="131" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotifyClient_di" bpmnElement="NotifyClient">
+        <dc:Bounds x="915" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PushJoin_di" bpmnElement="PushJoin" isMarkerVisible="true">
+        <dc:Bounds x="1090" y="155" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PublishOutcome_di" bpmnElement="PublishOutcome">
+        <dc:Bounds x="1247" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1230" y="198" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskSettled_di" bpmnElement="TaskSettled">
+        <dc:Bounds x="1397" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1386" y="198" width="59" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PushFailed_di" bpmnElement="PushFailed">
+        <dc:Bounds x="947" y="202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="935" y="238" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_TaskReceived_AgentTools_di" bpmnElement="Flow_TaskReceived_AgentTools">
+        <di:waypoint x="213" y="180" />
+        <di:waypoint x="250" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AgentTools_UpdateTask_di" bpmnElement="Flow_AgentTools_UpdateTask">
+        <di:waypoint x="370" y="180" />
+        <di:waypoint x="415" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AgentError_UpdateTask_di" bpmnElement="Flow_AgentError_UpdateTask">
+        <di:waypoint x="340" y="238" />
+        <di:waypoint x="340" y="270" />
+        <di:waypoint x="440" y="270" />
+        <di:waypoint x="440" y="205" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CancelRequested_SetCanceled_di" bpmnElement="Flow_CancelRequested_SetCanceled">
+        <di:waypoint x="280" y="238" />
+        <di:waypoint x="280" y="340" />
+        <di:waypoint x="420" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_OutcomeJoin_TaskDone_di" bpmnElement="Flow_OutcomeJoin_TaskDone">
+        <di:waypoint x="465" y="180" />
+        <di:waypoint x="497" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TaskDone_PublishJoin_di" bpmnElement="Flow_TaskDone_PublishJoin">
+        <di:waypoint x="533" y="180" />
+        <di:waypoint x="640" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SetCanceled_PublishJoin_di" bpmnElement="Flow_SetCanceled_PublishJoin">
+        <di:waypoint x="520" y="340" />
+        <di:waypoint x="665" y="340" />
+        <di:waypoint x="665" y="205" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PublishJoin_PushConfigured_di" bpmnElement="Flow_PublishJoin_PushConfigured">
+        <di:waypoint x="690" y="180" />
+        <di:waypoint x="790" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushConfigured_NotifyClient_di" bpmnElement="Flow_PushConfigured_NotifyClient">
+        <di:waypoint x="840" y="180" />
+        <di:waypoint x="915" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="869" y="155" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushConfigured_PushJoin_di" bpmnElement="Flow_PushConfigured_PushJoin">
+        <di:waypoint x="815" y="205" />
+        <di:waypoint x="815" y="280" />
+        <di:waypoint x="1115" y="280" />
+        <di:waypoint x="1115" y="205" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="959" y="255" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotifyClient_PushJoin_di" bpmnElement="Flow_NotifyClient_PushJoin">
+        <di:waypoint x="1015" y="180" />
+        <di:waypoint x="1090" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushFailed_PushJoin_di" bpmnElement="Flow_PushFailed_PushJoin">
+        <di:waypoint x="982" y="225" />
+        <di:waypoint x="1040" y="240" />
+        <di:waypoint x="1040" y="180" />
+        <di:waypoint x="1090" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PushJoin_PublishOutcome_di" bpmnElement="Flow_PushJoin_PublishOutcome">
+        <di:waypoint x="1140" y="180" />
+        <di:waypoint x="1247" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PublishOutcome_TaskSettled_di" bpmnElement="Flow_PublishOutcome_TaskSettled">
+        <di:waypoint x="1283" y="180" />
+        <di:waypoint x="1397" y="180" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

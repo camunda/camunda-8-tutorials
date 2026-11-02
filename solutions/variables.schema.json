@@ -1044,24 +1044,6 @@
         }
       ]
     },
-    "remoteResult": {
-      "title": "Remote result",
-      "type": "object",
-      "description": "Outcome of the delegation tool as seen by the client agent. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        {
-          "response": {},
-          "task": {
-            "id": "task-1",
-            "contextId": "ctx-1",
-            "rev": 2,
-            "status": {
-              "state": "TASK_STATE_COMPLETED"
-            }
-          }
-        }
-      ]
-    },
     "remoteResponse": {
       "title": "Remote response",
       "type": "object",
@@ -1082,34 +1064,6 @@
         }
       ]
     },
-    "a2aResult": {
-      "title": "A2A result",
-      "type": "object",
-      "description": "The result member of the last JSON-RPC response. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        {
-          "task": {
-            "id": "task-1",
-            "contextId": "ctx-1",
-            "rev": 2,
-            "status": {
-              "state": "TASK_STATE_COMPLETED"
-            }
-          }
-        }
-      ]
-    },
-    "a2aError": {
-      "title": "A2A error",
-      "type": "object",
-      "description": "The error member of the last JSON-RPC response, if any. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        {
-          "code": -32001,
-          "message": "Task not found"
-        }
-      ]
-    },
     "acceptedTask": {
       "title": "Accepted task",
       "type": "object",
@@ -1122,59 +1076,6 @@
           "status": {
             "state": "TASK_STATE_COMPLETED"
           }
-        }
-      ]
-    },
-    "serverTask": {
-      "title": "Server task",
-      "type": "object",
-      "description": "Task the client exposes to the agent after delegation. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        {
-          "id": "task-1",
-          "contextId": "ctx-1",
-          "rev": 2,
-          "status": {
-            "state": "TASK_STATE_COMPLETED"
-          }
-        }
-      ]
-    },
-    "a2aResponse": {
-      "title": "A2A response",
-      "type": "object",
-      "description": "Server-side JSON-RPC response assembled for the caller. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        {
-          "jsonrpc": "2.0",
-          "id": "1",
-          "result": {
-            "task": {
-              "id": "task-1",
-              "contextId": "ctx-1",
-              "rev": 2,
-              "status": {
-                "state": "TASK_STATE_COMPLETED"
-              }
-            }
-          }
-        }
-      ]
-    },
-    "serverArtifact": {
-      "title": "Server artifact",
-      "type": "object",
-      "description": "Artifact returned by the server agent for the delegated request. Used in: solutions/a2a-async-blueprint.",
-      "examples": [
-        {
-          "artifactId": "placeholder",
-          "parts": [
-            {
-              "data": {
-                "value": "Example input"
-              }
-            }
-          ]
         }
       ]
     },
@@ -1280,6 +1181,29 @@
           "status": {
             "state": "TASK_STATE_COMPLETED"
           }
+        }
+      ]
+    },
+    "pollCount": {
+      "title": "Poll count",
+      "type": "number",
+      "description": "Number of GetTask polls the client protocol has made for the current delegation; bounds the polling loop. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        0,
+        2
+      ]
+    },
+    "delegationResult": {
+      "title": "Delegation result",
+      "type": [
+        "string",
+        "object"
+      ],
+      "description": "Result extracted from a completed remote Task: the first artifact data part, otherwise all artifact text parts joined with newlines; null when the Task is not completed. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        "Hello world",
+        {
+          "value": "Example input"
         }
       ]
     }

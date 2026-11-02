@@ -1,0 +1,348 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-task",
+  "testCases": [
+    {
+      "name": "Agent calls the tool - task outcome is published",
+      "description": "The server agent (03) runs as a called process; its result becomes the task outcome and the settled signal is thrown.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "variables": {
+            "req": {
+              "message": {
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "task": {
+              "id": "task-1",
+              "contextId": "ctx-1",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "activateElements": [
+            {
+              "elementId": "echo_placeholder",
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "echo_placeholder"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "completionConditionFulfilled": true,
+          "variables": {
+            "agent": {
+              "responseText": "Done.",
+              "context": {
+                "conversation": {
+                  "messages": [
+                    {
+                      "role": "tool_call_result",
+                      "results": [
+                        {
+                          "id": "call-1",
+                          "name": "echo_placeholder",
+                          "content": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "OutcomeJoin"
+            },
+            {
+              "elementId": "TaskDone"
+            },
+            {
+              "elementId": "PublishOutcome"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Agent fails - failed outcome is published",
+      "description": "The AI Agent job raises AGENT_FAILED in 03; the error reaches the call activity boundary in 04 and the task still settles as failed.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "variables": {
+            "req": {
+              "message": {
+                "parts": []
+              }
+            },
+            "task": {
+              "id": "task-2",
+              "contextId": "ctx-2",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "errorCode": "AGENT_FAILED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "AgentError"
+            },
+            {
+              "elementId": "OutcomeJoin"
+            },
+            {
+              "elementId": "TaskDone"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Caller cancels a running task - cancellation is settled",
+      "description": "A cancel request interrupts the called agent process and the task ends as canceled.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "variables": {
+            "req": {
+              "message": {
+                "parts": []
+              }
+            },
+            "task": {
+              "id": "task-3",
+              "contextId": "ctx-3",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-cancel",
+          "correlationKey": "task-3"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "A2ACancelRequested"
+            },
+            {
+              "elementId": "A2ASetCanceled"
+            },
+            {
+              "elementId": "TaskSettled"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Client offered push - the task is pushed before it settles",
+      "description": "With a push config the outcome is POSTed to the client; the NotifyClient job is open until the connector completes it.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "startInstructions": [
+            {
+              "elementId": "PushConfigured"
+            }
+          ],
+          "variables": {
+            "task": {
+              "id": "task-4",
+              "contextId": "ctx-4",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [],
+              "history": []
+            },
+            "push": {
+              "url": "https://client.example.invalid/a2a-push",
+              "token": "t",
+              "authentication": {
+                "scheme": "Bearer",
+                "credentials": "c"
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelector": {
+            "elementId": "NotifyClient"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "NotifyClient"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Client did not offer push - the task settles without a push",
+      "description": "Without a push config the push step is skipped and the client polls GetTask.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "startInstructions": [
+            {
+              "elementId": "PushConfigured"
+            }
+          ],
+          "variables": {
+            "task": {
+              "id": "task-5",
+              "contextId": "ctx-5",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "PublishOutcome"
+            },
+            {
+              "elementId": "TaskSettled"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ]
+}

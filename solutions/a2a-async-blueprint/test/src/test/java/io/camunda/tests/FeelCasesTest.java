@@ -19,16 +19,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Headless-only coverage of the FEEL logic in 03-server-agent-card-dispute.bpmn:
+ * Headless-only coverage of the FEEL logic in 04-a2a-task.bpmn:
  * the outcome mapping on the TaskDone end event and the cancellation script.
  * BPMN element coverage is already reached by the Test Studio scenarios.
  */
 @SpringBootTest
 @CamundaSpringProcessTest
-@TestDeployment(resources = {"03-server-agent-card-dispute.bpmn"})
+@TestDeployment(resources = {"03-server-agent-card-dispute.bpmn", "04-a2a-task.bpmn"})
 public class FeelCasesTest {
 
-    private static final String PROCESS_ID = "a2a-card-dispute";
+    private static final String PROCESS_ID = "a2a-task";
     private static final String FAILED_TEXT = "The agent could not complete the request.";
     private static final String UNGROUNDED_TEXT = "The agent did not return the required placeholder tool result.";
     private static final Map<String, Object> EVIDENCE = Map.of("value", "Example input");
