@@ -37,12 +37,12 @@
       <bpmn:incoming>Flow_TaskReceived_AgentTools</bpmn:incoming>
       <bpmn:outgoing>Flow_AgentTools_AgentFinished</bpmn:outgoing>
       <bpmn:scriptTask id="echo_placeholder" name="Share placeholder">
-        <bpmn:documentation>Call once to return the process-owned placeholder value. Takes the request data as a model-supplied argument. Replace this tool with your own business logic.</bpmn:documentation>
+        <bpmn:documentation>Call once with the request data; returns it together with an uppercased copy and its length. Takes the request data as a model-supplied argument. Replace this tool with your own business logic.</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:ioMapping>
             <zeebe:input source="=fromAi(toolCall.requestData, &#34;The demoInput object from the request, passed through unchanged&#34;, &#34;object&#34;)" target="requestData" />
           </zeebe:ioMapping>
-          <zeebe:script expression="=requestData" resultVariable="toolCallResult" />
+          <zeebe:script expression="=/* Transform the input so the result proves the tool ran. */&#10;{&#10;  received: requestData,&#10;  uppercase: upper case(requestData.value),&#10;  length: string length(requestData.value)&#10;}" resultVariable="toolCallResult" />
           <zeebe:properties>
             <zeebe:property name="a2a:tags" value="placeholder" />
             <zeebe:property name="a2a:examples" value="Example input" />

@@ -174,7 +174,11 @@
           },
           "variables": {
             "toolCallResult": {
-              "value": "Example input"
+              "received": {
+                "value": "Example input"
+              },
+              "uppercase": "EXAMPLE INPUT",
+              "length": 13
             }
           }
         }

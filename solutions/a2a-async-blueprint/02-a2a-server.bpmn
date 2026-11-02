@@ -37,7 +37,7 @@
     </bpmn:scriptTask>
     <bpmn:scriptTask id="ParseRequest" name="Parse request">
       <bpmn:extensionElements>
-        <zeebe:script expression="={&#10;  r: if rpc instance of context then rpc else {},&#10;  p: if r.params instance of context then r.params else {},&#10;  m: if p.message instance of context then p.message else {},&#10;  cfg: if p.configuration instance of context then p.configuration else {},&#10;  ct: get value(hdr, &#34;content-type&#34;),&#10;  ver: get value(hdr, &#34;a2a-version&#34;),&#10;  supported: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;  method: if r.method instance of string then r.method else null,&#10;  id: r.id,&#10;  versionOk: if ver instance of string then matches(ver, &#34;^1[.]0([.][0-9]+)?$&#34;) else false,&#10;  contentTypeOk:&#10;    if ct instance of string&#10;    then (&#10;      starts with(lower case(ct), &#34;application/json&#34;)&#10;        or starts with(lower case(ct), &#34;application/a2a+json&#34;)&#10;    )&#10;    else false,&#10;  jsonrpcOk: r.jsonrpc = &#34;2.0&#34; and method != null,&#10;  msgOk: p.message instance of context&#10;    and m.messageId instance of string&#10;    and m.role instance of string&#10;    and m.parts instance of list,&#10;  mediaOk:&#10;    if m.parts instance of list&#10;    then not(&#10;      some part in m.parts satisfies&#10;        part instance of context&#10;          and part.mediaType != null&#10;          and not(list contains(supported, part.mediaType))&#10;    )&#10;    else true,&#10;  pushMethods: [&#10;    &#34;CreateTaskPushNotificationConfig&#34;,&#10;    &#34;GetTaskPushNotificationConfig&#34;,&#10;    &#34;ListTaskPushNotificationConfigs&#34;,&#10;    &#34;DeleteTaskPushNotificationConfig&#34;&#10;  ],&#10;  pushRef:&#10;    if p.task_id instance of string&#10;    then p.task_id&#10;    else if p.taskId instance of string then p.taskId else null,&#10;  ref:&#10;    if method != null and list contains(pushMethods, method)&#10;    then pushRef&#10;    else if p.id instance of string then p.id else null,&#10;  idOk: ref instance of string and ref != &#34;&#34;,&#10;  pushEnabled: pushEnabled = true,&#10;  pushCfg: context(&#10;    get entries(&#10;      {id: p.id, url: p.url, token: p.token, authentication: p.authentication}&#10;    )[item.value != null]&#10;  ),&#10;  taskPush:&#10;    if cfg.taskPushNotificationConfig instance of context&#10;    then cfg.taskPushNotificationConfig&#10;    else if cfg.pushNotificationConfig instance of context&#10;    then {&#10;      url: cfg.pushNotificationConfig.url,&#10;      token: cfg.pushNotificationConfig.token,&#10;      authentication: {&#10;        scheme:&#10;          if cfg.pushNotificationConfig.authentication.schemes instance of list&#10;            and count(cfg.pushNotificationConfig.authentication.schemes) &gt; 0&#10;          then cfg.pushNotificationConfig.authentication.schemes[1]&#10;          else &#34;Bearer&#34;,&#10;        credentials: cfg.pushNotificationConfig.authentication.credentials&#10;      }&#10;    }&#10;    else null,&#10;  taskId: if m.taskId instance of string and m.taskId != &#34;&#34; then m.taskId else null,&#10;  contextId: if m.contextId instance of string and m.contextId != &#34;&#34; then m.contextId else null,&#10;  messageId: if m.messageId instance of string then m.messageId else null,&#10;  blocking: cfg.returnImmediately != true,&#10;  hl:&#10;    if cfg.historyLength instance of number&#10;    then cfg.historyLength&#10;    else if p.historyLength instance of number&#10;    then p.historyLength&#10;    else if p.history_length instance of number then p.history_length else null,&#10;  pageSize:&#10;    if p.pageSize instance of number&#10;    then p.pageSize&#10;    else if p.page_size instance of number then p.page_size else 50,&#10;  listContextId:&#10;    if p.contextId instance of string and p.contextId != &#34;&#34;&#10;    then p.contextId&#10;    else if p.context_id instance of string and p.context_id != &#34;&#34; then p.context_id else null,&#10;  listStatus: if p.status instance of string and p.status != &#34;&#34; then p.status else null,&#10;  listAfter:&#10;    if p.statusTimestampAfter instance of string&#10;    then p.statusTimestampAfter&#10;    else if p.status_timestamp_after instance of string then p.status_timestamp_after else null,&#10;  pageToken:&#10;    if p.pageToken instance of string&#10;    then p.pageToken&#10;    else if p.page_token instance of string then p.page_token else null,&#10;  includeArtifacts: p.includeArtifacts = true or p.include_artifacts = true&#10;}" resultVariable="ctx" />
+        <zeebe:script expression="={&#10;  r: if rpc instance of context then rpc else {},&#10;  p: if r.params instance of context then r.params else {},&#10;  m: if p.message instance of context then p.message else {},&#10;  cfg: if p.configuration instance of context then p.configuration else {},&#10;  ct: get value(hdr, &#34;content-type&#34;),&#10;  ver: get value(hdr, &#34;a2a-version&#34;),&#10;  supported: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;  method: if r.method instance of string then r.method else null,&#10;  id: r.id,&#10;  versionOk: if ver instance of string then matches(ver, &#34;^1[.]0([.][0-9]+)?$&#34;) else false,&#10;  contentTypeOk:&#10;    if ct instance of string&#10;    then (&#10;      starts with(lower case(ct), &#34;application/json&#34;)&#10;        or starts with(lower case(ct), &#34;application/a2a+json&#34;)&#10;    )&#10;    else false,&#10;  jsonrpcOk: r.jsonrpc = &#34;2.0&#34; and method != null,&#10;  msgOk: p.message instance of context&#10;    and m.messageId instance of string&#10;    and m.role instance of string&#10;    and m.parts instance of list,&#10;  mediaOk:&#10;    if m.parts instance of list&#10;    then not(&#10;      some part in m.parts satisfies&#10;        part instance of context&#10;          and part.mediaType != null&#10;          and not(list contains(supported, part.mediaType))&#10;    )&#10;    else true,&#10;  pushMethods: [&#10;    &#34;CreateTaskPushNotificationConfig&#34;,&#10;    &#34;GetTaskPushNotificationConfig&#34;,&#10;    &#34;ListTaskPushNotificationConfigs&#34;,&#10;    &#34;DeleteTaskPushNotificationConfig&#34;&#10;  ],&#10;  pushRef:&#10;    if p.task_id instance of string&#10;    then p.task_id&#10;    else if p.taskId instance of string then p.taskId else null,&#10;  ref:&#10;    if method != null and list contains(pushMethods, method)&#10;    then pushRef&#10;    else if p.id instance of string then p.id else null,&#10;  idOk: ref instance of string and ref != &#34;&#34;,&#10;  pushEnabled: pushEnabled = true,&#10;  pushCfg: context(&#10;    get entries(&#10;      {id: p.id, url: p.url, token: p.token, authentication: p.authentication}&#10;    )[item.value != null]&#10;  ),&#10;  taskPush:&#10;    if cfg.taskPushNotificationConfig instance of context&#10;    then cfg.taskPushNotificationConfig&#10;    else if cfg.pushNotificationConfig instance of context&#10;    then {&#10;      url: cfg.pushNotificationConfig.url,&#10;      token: cfg.pushNotificationConfig.token,&#10;      authentication: {&#10;        scheme:&#10;          if cfg.pushNotificationConfig.authentication.schemes instance of list&#10;            and count(cfg.pushNotificationConfig.authentication.schemes) &#62; 0&#10;          then cfg.pushNotificationConfig.authentication.schemes[1]&#10;          else &#34;Bearer&#34;,&#10;        credentials: cfg.pushNotificationConfig.authentication.credentials&#10;      }&#10;    }&#10;    else null,&#10;  taskId: if m.taskId instance of string and m.taskId != &#34;&#34; then m.taskId else null,&#10;  contextId: if m.contextId instance of string and m.contextId != &#34;&#34; then m.contextId else null,&#10;  messageId: if m.messageId instance of string then m.messageId else null,&#10;  blocking: cfg.returnImmediately != true,&#10;  hl:&#10;    if cfg.historyLength instance of number&#10;    then cfg.historyLength&#10;    else if p.historyLength instance of number&#10;    then p.historyLength&#10;    else if p.history_length instance of number then p.history_length else null,&#10;  pageSize:&#10;    if p.pageSize instance of number&#10;    then p.pageSize&#10;    else if p.page_size instance of number then p.page_size else 50,&#10;  listContextId:&#10;    if p.contextId instance of string and p.contextId != &#34;&#34;&#10;    then p.contextId&#10;    else if p.context_id instance of string and p.context_id != &#34;&#34; then p.context_id else null,&#10;  listStatus: if p.status instance of string and p.status != &#34;&#34; then p.status else null,&#10;  listAfter:&#10;    if p.statusTimestampAfter instance of string&#10;    then p.statusTimestampAfter&#10;    else if p.status_timestamp_after instance of string then p.status_timestamp_after else null,&#10;  pageToken:&#10;    if p.pageToken instance of string&#10;    then p.pageToken&#10;    else if p.page_token instance of string then p.page_token else null,&#10;  includeArtifacts: p.includeArtifacts = true or p.include_artifacts = true&#10;}" resultVariable="ctx" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_NormalizeRequest_ParseRequest</bpmn:incoming>
       <bpmn:outgoing>Flow_ParseRequest_ValidateRequest</bpmn:outgoing>
@@ -66,7 +66,7 @@
     </bpmn:endEvent>
     <bpmn:scriptTask id="PrepareList" name="Prepare task list">
       <bpmn:extensionElements>
-        <zeebe:script expression="=(&#10;  for s in [&#10;    if ctx.listContextId != null then replace(ctx.listContextId, &#34;[^A-Za-z0-9_:.-]&#34;, &#34;_&#34;) else &#34;&#34;&#10;  ]&#10;  return {&#10;    ctxTag:&#10;      if ctx.listContextId != null&#10;      then &#34;ctx-&#34; + (if string length(s) &gt; 90 then substring(s, 1, 90) else s)&#10;      else null,&#10;    size: if ctx.pageSize &lt; 1 then 50 else if ctx.pageSize &gt; 100 then 100 else ctx.pageSize,&#10;    start:&#10;      if ctx.pageToken != null and number(ctx.pageToken) != null then number(ctx.pageToken) else 0&#10;  }&#10;)[1]" resultVariable="listReq" />
+        <zeebe:script expression="=(&#10;  for s in [&#10;    if ctx.listContextId != null then replace(ctx.listContextId, &#34;[^A-Za-z0-9_:.-]&#34;, &#34;_&#34;) else &#34;&#34;&#10;  ]&#10;  return {&#10;    ctxTag:&#10;      if ctx.listContextId != null&#10;      then &#34;ctx-&#34; + (if string length(s) &#62; 90 then substring(s, 1, 90) else s)&#10;      else null,&#10;    size: if ctx.pageSize &#60; 1 then 50 else if ctx.pageSize &#62; 100 then 100 else ctx.pageSize,&#10;    start:&#10;      if ctx.pageToken != null and number(ctx.pageToken) != null then number(ctx.pageToken) else 0&#10;  }&#10;)[1]" resultVariable="listReq" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_RouteRequest_PrepareList</bpmn:incoming>
       <bpmn:outgoing>Flow_PrepareList_CollectTaskList</bpmn:outgoing>
@@ -74,14 +74,14 @@
     <bpmn:endEvent id="TaskListReady" name="Task list ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:output source="=(&#10;  for taskViews in [&#10;    if is defined(taskItems) and taskItems != null&#10;    then&#10;      for i in taskItems&#10;      return (&#10;        for task in [i.value]&#10;        return (&#10;          for h in [&#10;            if ctx.hl = null or ctx.hl &gt;= count(task.history)&#10;            then task.history&#10;            else if ctx.hl &lt;= 0 then [] else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;          ]&#10;          return context(&#10;            get entries(&#10;              {&#10;                id: task.id,&#10;                contextId: task.contextId,&#10;                status: task.status,&#10;                artifacts: if count(task.artifacts) &gt; 0 then task.artifacts else null,&#10;                history: if count(h) &gt; 0 then h else null&#10;              }&#10;            )[item.value != null]&#10;          )&#10;        )[1]&#10;      )[1]&#10;    else []&#10;  ]&#10;  return (&#10;    for views in [&#10;      if is defined(taskViews) and taskViews != null then taskViews[item != null] else []&#10;    ]&#10;    return for found in [&#10;      sort(&#10;        views[&#10;          (ctx.listContextId = null or item.contextId = ctx.listContextId)&#10;            and (ctx.listStatus = null or item.status.state = ctx.listStatus)&#10;            and (ctx.listAfter = null or item.status.timestamp &gt; ctx.listAfter)&#10;        ],&#10;        function(a, b)&#10;          if a.status.timestamp = b.status.timestamp&#10;          then a.id &gt; b.id&#10;          else a.status.timestamp &gt; b.status.timestamp&#10;      )&#10;    ]&#10;    return for left in [count(found) - listReq.start]&#10;    return for page in [&#10;      if left &lt;= 0&#10;      then []&#10;      else sublist(found, listReq.start + 1, if left &lt; listReq.size then left else listReq.size)&#10;    ]&#10;    return {&#10;      jsonrpc: &#34;2.0&#34;,&#10;      id: ctx.id,&#10;      result: {&#10;        tasks:&#10;          for t in page&#10;          return&#10;            if ctx.includeArtifacts then t else context(get entries(t)[item.key != &#34;artifacts&#34;]),&#10;        nextPageToken:&#10;          if listReq.start + listReq.size &lt; count(found)&#10;          then string(listReq.start + listReq.size)&#10;          else &#34;&#34;,&#10;        pageSize: listReq.size,&#10;        totalSize: count(found)&#10;      }&#10;    }&#10;  )[1][1][1][1]&#10;)[1]" target="rpcResponse" />
+          <zeebe:output source="=(&#10;  for taskViews in [&#10;    if is defined(taskItems) and taskItems != null&#10;    then&#10;      for i in taskItems&#10;      return (&#10;        for task in [i.value]&#10;        return (&#10;          for h in [&#10;            if ctx.hl = null or ctx.hl &#62;= count(task.history)&#10;            then task.history&#10;            else if ctx.hl &#60;= 0 then [] else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;          ]&#10;          return context(&#10;            get entries(&#10;              {&#10;                id: task.id,&#10;                contextId: task.contextId,&#10;                status: task.status,&#10;                artifacts: if count(task.artifacts) &#62; 0 then task.artifacts else null,&#10;                history: if count(h) &#62; 0 then h else null&#10;              }&#10;            )[item.value != null]&#10;          )&#10;        )[1]&#10;      )[1]&#10;    else []&#10;  ]&#10;  return (&#10;    for views in [&#10;      if is defined(taskViews) and taskViews != null then taskViews[item != null] else []&#10;    ]&#10;    return for found in [&#10;      sort(&#10;        views[&#10;          (ctx.listContextId = null or item.contextId = ctx.listContextId)&#10;            and (ctx.listStatus = null or item.status.state = ctx.listStatus)&#10;            and (ctx.listAfter = null or item.status.timestamp &#62; ctx.listAfter)&#10;        ],&#10;        function(a, b)&#10;          if a.status.timestamp = b.status.timestamp&#10;          then a.id &#62; b.id&#10;          else a.status.timestamp &#62; b.status.timestamp&#10;      )&#10;    ]&#10;    return for left in [count(found) - listReq.start]&#10;    return for page in [&#10;      if left &#60;= 0&#10;      then []&#10;      else sublist(found, listReq.start + 1, if left &#60; listReq.size then left else listReq.size)&#10;    ]&#10;    return {&#10;      jsonrpc: &#34;2.0&#34;,&#10;      id: ctx.id,&#10;      result: {&#10;        tasks:&#10;          for t in page&#10;          return&#10;            if ctx.includeArtifacts then t else context(get entries(t)[item.key != &#34;artifacts&#34;]),&#10;        nextPageToken:&#10;          if listReq.start + listReq.size &#60; count(found)&#10;          then string(listReq.start + listReq.size)&#10;          else &#34;&#34;,&#10;        pageSize: listReq.size,&#10;        totalSize: count(found)&#10;      }&#10;    }&#10;  )[1][1][1][1]&#10;)[1]" target="rpcResponse" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_ListCollected_BuildTaskList</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:scriptTask id="PrepareNewTask" name="Prepare new task">
       <bpmn:extensionElements>
-        <zeebe:script expression="=(&#10;  for cid in [if ctx.contextId != null then ctx.contextId else uuid()]&#10;  return for s in [replace(cid, &#34;[^A-Za-z0-9_:.-]&#34;, &#34;_&#34;)]&#10;  return for tid in [uuid()]&#10;  return {&#10;    taskId: tid,&#10;    contextId: cid,&#10;    ctxTag: &#34;ctx-&#34; + (if string length(s) &gt; 90 then substring(s, 1, 90) else s),&#10;    task: {&#10;      id: tid,&#10;      contextId: cid,&#10;      rev: 1,&#10;      status: {state: &#34;TASK_STATE_WORKING&#34;, timestamp: substring(string(now()), 1, 19) + &#34;Z&#34;},&#10;      artifacts: [],&#10;      history: [put(put(ctx.m, &#34;taskId&#34;, tid), &#34;contextId&#34;, cid)]&#10;    },&#10;    push:&#10;      if ctx.pushEnabled and ctx.taskPush != null&#10;      then put(&#10;        put(put(ctx.taskPush, &#34;dialect&#34;, if dialect = &#34;0.3&#34; then &#34;0.3&#34; else &#34;1.0&#34;), &#34;taskId&#34;, tid),&#10;        &#34;id&#34;,&#10;        if ctx.taskPush.id instance of string then ctx.taskPush.id else uuid()&#10;      )&#10;      else null&#10;  }&#10;)[1][1][1]" resultVariable="lookup" />
+        <zeebe:script expression="=(&#10;  for cid in [if ctx.contextId != null then ctx.contextId else uuid()]&#10;  return for s in [replace(cid, &#34;[^A-Za-z0-9_:.-]&#34;, &#34;_&#34;)]&#10;  return for tid in [uuid()]&#10;  return {&#10;    taskId: tid,&#10;    contextId: cid,&#10;    ctxTag: &#34;ctx-&#34; + (if string length(s) &#62; 90 then substring(s, 1, 90) else s),&#10;    task: {&#10;      id: tid,&#10;      contextId: cid,&#10;      rev: 1,&#10;      status: {state: &#34;TASK_STATE_WORKING&#34;, timestamp: substring(string(now()), 1, 19) + &#34;Z&#34;},&#10;      artifacts: [],&#10;      history: [put(put(ctx.m, &#34;taskId&#34;, tid), &#34;contextId&#34;, cid)]&#10;    },&#10;    push:&#10;      if ctx.pushEnabled and ctx.taskPush != null&#10;      then put(&#10;        put(put(ctx.taskPush, &#34;dialect&#34;, if dialect = &#34;0.3&#34; then &#34;0.3&#34; else &#34;1.0&#34;), &#34;taskId&#34;, tid),&#10;        &#34;id&#34;,&#10;        if ctx.taskPush.id instance of string then ctx.taskPush.id else uuid()&#10;      )&#10;      else null&#10;  }&#10;)[1][1][1]" resultVariable="lookup" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_RouteRequest_PrepareNewTask</bpmn:incoming>
       <bpmn:outgoing>Flow_PrepareNewTask_DispatchJoin</bpmn:outgoing>
@@ -89,7 +89,7 @@
     <bpmn:endEvent id="NewTaskReady" name="Task response ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:output source="=(&#10;  for task in [if seen != null then seen else lookup.task]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    result:&#10;      if task.responseMode = &#34;message&#34;&#10;        and task.status.state = &#34;TASK_STATE_COMPLETED&#34;&#10;        and task.status.message != null&#10;        and count(task.artifacts) = 0&#10;      then {message: task.status.message}&#10;      else (&#10;        for v in [&#10;          (&#10;            for h in [&#10;              if ctx.hl = null or ctx.hl &gt;= count(task.history)&#10;              then task.history&#10;              else if ctx.hl &lt;= 0&#10;              then []&#10;              else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;            ]&#10;            return context(&#10;              get entries(&#10;                {&#10;                  id: task.id,&#10;                  contextId: task.contextId,&#10;                  status: task.status,&#10;                  artifacts: if count(task.artifacts) &gt; 0 then task.artifacts else null,&#10;                  history: if count(h) &gt; 0 then h else null&#10;                }&#10;              )[item.value != null]&#10;            )&#10;          )[1]&#10;        ]&#10;        return&#10;          if &#34;task&#34; = &#34;task&#34; then {task: v} else v&#10;      )[1]&#10;  }&#10;)[1]" target="rpcResponse" />
+          <zeebe:output source="=(&#10;  for task in [if seen != null then seen else lookup.task]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    result:&#10;      if task.responseMode = &#34;message&#34;&#10;        and task.status.state = &#34;TASK_STATE_COMPLETED&#34;&#10;        and task.status.message != null&#10;        and count(task.artifacts) = 0&#10;      then {message: task.status.message}&#10;      else (&#10;        for v in [&#10;          (&#10;            for h in [&#10;              if ctx.hl = null or ctx.hl &#62;= count(task.history)&#10;              then task.history&#10;              else if ctx.hl &#60;= 0&#10;              then []&#10;              else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;            ]&#10;            return context(&#10;              get entries(&#10;                {&#10;                  id: task.id,&#10;                  contextId: task.contextId,&#10;                  status: task.status,&#10;                  artifacts: if count(task.artifacts) &#62; 0 then task.artifacts else null,&#10;                  history: if count(h) &#62; 0 then h else null&#10;                }&#10;              )[item.value != null]&#10;            )&#10;          )[1]&#10;        ]&#10;        return&#10;          if &#34;task&#34; = &#34;task&#34; then {task: v} else v&#10;      )[1]&#10;  }&#10;)[1]" target="rpcResponse" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_RouteOutcome_BuildNewTaskResponse</bpmn:incoming>
@@ -408,7 +408,7 @@
     <bpmn:endEvent id="TaskViewReady" name="Task response ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:output source="={&#10;  jsonrpc: &#34;2.0&#34;,&#10;  id: ctx.id,&#10;  result: (&#10;    for h in [&#10;      if ctx.hl = null or ctx.hl &gt;= count(task.history)&#10;      then task.history&#10;      else if ctx.hl &lt;= 0 then [] else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;    ]&#10;    return context(&#10;      get entries(&#10;        {&#10;          id: task.id,&#10;          contextId: task.contextId,&#10;          status: task.status,&#10;          artifacts: if count(task.artifacts) &gt; 0 then task.artifacts else null,&#10;          history: if count(h) &gt; 0 then h else null&#10;        }&#10;      )[item.value != null]&#10;    )&#10;  )[1]&#10;}" target="rpcResponse" />
+          <zeebe:output source="={&#10;  jsonrpc: &#34;2.0&#34;,&#10;  id: ctx.id,&#10;  result: (&#10;    for h in [&#10;      if ctx.hl = null or ctx.hl &#62;= count(task.history)&#10;      then task.history&#10;      else if ctx.hl &#60;= 0 then [] else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;    ]&#10;    return context(&#10;      get entries(&#10;        {&#10;          id: task.id,&#10;          contextId: task.contextId,&#10;          status: task.status,&#10;          artifacts: if count(task.artifacts) &#62; 0 then task.artifacts else null,&#10;          history: if count(h) &#62; 0 then h else null&#10;        }&#10;      )[item.value != null]&#10;    )&#10;  )[1]&#10;}" target="rpcResponse" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_RouteMethod_BuildTaskView</bpmn:incoming>
@@ -421,7 +421,7 @@
     <bpmn:endEvent id="CanceledReady" name="Cancel response ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:output source="={&#10;  jsonrpc: &#34;2.0&#34;,&#10;  id: ctx.id,&#10;  result: (&#10;    for h in [&#10;      if null = null or null &gt;= count(seen.history)&#10;      then seen.history&#10;      else if null &lt;= 0 then [] else sublist(seen.history, count(seen.history) - null + 1)&#10;    ]&#10;    return context(&#10;      get entries(&#10;        {&#10;          id: seen.id,&#10;          contextId: seen.contextId,&#10;          status: seen.status,&#10;          artifacts: if count(seen.artifacts) &gt; 0 then seen.artifacts else null,&#10;          history: if count(h) &gt; 0 then h else null&#10;        }&#10;      )[item.value != null]&#10;    )&#10;  )[1]&#10;}" target="rpcResponse" />
+          <zeebe:output source="={&#10;  jsonrpc: &#34;2.0&#34;,&#10;  id: ctx.id,&#10;  result: (&#10;    for h in [&#10;      if null = null or null &#62;= count(seen.history)&#10;      then seen.history&#10;      else if null &#60;= 0 then [] else sublist(seen.history, count(seen.history) - null + 1)&#10;    ]&#10;    return context(&#10;      get entries(&#10;        {&#10;          id: seen.id,&#10;          contextId: seen.contextId,&#10;          status: seen.status,&#10;          artifacts: if count(seen.artifacts) &#62; 0 then seen.artifacts else null,&#10;          history: if count(h) &#62; 0 then h else null&#10;        }&#10;      )[item.value != null]&#10;    )&#10;  )[1]&#10;}" target="rpcResponse" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_CancellationOutcome_BuildCanceledView</bpmn:incoming>
@@ -456,7 +456,7 @@
     <bpmn:endEvent id="FollowUpReady" name="Task response ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:output source="=(&#10;  for task in [if seen != null then seen else task]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    result:&#10;      if task.responseMode = &#34;message&#34;&#10;        and task.status.state = &#34;TASK_STATE_COMPLETED&#34;&#10;        and task.status.message != null&#10;        and count(task.artifacts) = 0&#10;      then {message: task.status.message}&#10;      else (&#10;        for v in [&#10;          (&#10;            for h in [&#10;              if ctx.hl = null or ctx.hl &gt;= count(task.history)&#10;              then task.history&#10;              else if ctx.hl &lt;= 0&#10;              then []&#10;              else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;            ]&#10;            return context(&#10;              get entries(&#10;                {&#10;                  id: task.id,&#10;                  contextId: task.contextId,&#10;                  status: task.status,&#10;                  artifacts: if count(task.artifacts) &gt; 0 then task.artifacts else null,&#10;                  history: if count(h) &gt; 0 then h else null&#10;                }&#10;              )[item.value != null]&#10;            )&#10;          )[1]&#10;        ]&#10;        return&#10;          if &#34;task&#34; = &#34;task&#34; then {task: v} else v&#10;      )[1]&#10;  }&#10;)[1]" target="rpcResponse" />
+          <zeebe:output source="=(&#10;  for task in [if seen != null then seen else task]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    result:&#10;      if task.responseMode = &#34;message&#34;&#10;        and task.status.state = &#34;TASK_STATE_COMPLETED&#34;&#10;        and task.status.message != null&#10;        and count(task.artifacts) = 0&#10;      then {message: task.status.message}&#10;      else (&#10;        for v in [&#10;          (&#10;            for h in [&#10;              if ctx.hl = null or ctx.hl &#62;= count(task.history)&#10;              then task.history&#10;              else if ctx.hl &#60;= 0&#10;              then []&#10;              else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;            ]&#10;            return context(&#10;              get entries(&#10;                {&#10;                  id: task.id,&#10;                  contextId: task.contextId,&#10;                  status: task.status,&#10;                  artifacts: if count(task.artifacts) &#62; 0 then task.artifacts else null,&#10;                  history: if count(h) &#62; 0 then h else null&#10;                }&#10;              )[item.value != null]&#10;            )&#10;          )[1]&#10;        ]&#10;        return&#10;          if &#34;task&#34; = &#34;task&#34; then {task: v} else v&#10;      )[1]&#10;  }&#10;)[1]" target="rpcResponse" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_RouteOutcome_BuildFollowUpResponse</bpmn:incoming>
@@ -670,7 +670,7 @@
       </bpmn:exclusiveGateway>
       <bpmn:scriptTask id="CollectTaskList_CollectListBatch" name="Validate and collect batch">
         <bpmn:extensionElements>
-          <zeebe:script expression="=(&#10;  for ready in [&#10;    if count(taskKeys) = 0&#10;    then true&#10;    else taskBatch instance of list&#10;      and count(distinct values(taskKeys)) = count(taskKeys)&#10;      and count(taskBatch) = count(taskKeys)&#10;      and count(distinct values(taskBatch.scopeKey)) = count(taskKeys)&#10;      and (&#10;        every i in taskBatch satisfies&#10;          i.scopeKey = i.processInstanceKey&#10;            and list contains(taskKeys, i.scopeKey)&#10;            and i.value instance of context&#10;            and i.value.id instance of string&#10;            and i.value.contextId instance of string&#10;            and i.value.rev instance of number&#10;            and i.value.status instance of context&#10;            and i.value.status.state instance of string&#10;            and i.value.status.timestamp instance of string&#10;            and i.value.history instance of list&#10;            and i.value.artifacts instance of list&#10;      )&#10;  ]&#10;  return for overlap in [some k in taskKeys satisfies list contains(listScan.keys, k)]&#10;  return for nextOk in [&#10;    listPage.cursor instance of string&#10;      and listPage.cursor != &#34;&#34;&#10;      and not(list contains(listScan.cursors, listPage.cursor))&#10;  ]&#10;  return for action in [&#10;    if not(ready)&#10;    then (if now() &gt;= date and time(listScan.deadline) then &#34;deadline&#34; else &#34;variables&#34;)&#10;    else if overlap&#10;    then &#34;overlap&#34;&#10;    else if listPage.count &lt; 100&#10;    then &#34;done&#34;&#10;    else if listPage.count != 100 or not(nextOk)&#10;    then &#34;cursor&#34;&#10;    else if now() &gt;= date and time(listScan.deadline) then &#34;deadline&#34; else &#34;page&#34;&#10;  ]&#10;  return context merge(&#10;    [&#10;      listScan,&#10;      {&#10;        action: action,&#10;        items:&#10;          if ready and not(overlap) and count(taskKeys) &gt; 0&#10;          then concatenate(listScan.items, taskBatch)&#10;          else listScan.items,&#10;        keys: if ready then concatenate(listScan.keys, taskKeys) else listScan.keys,&#10;        cursor: if action = &#34;page&#34; then listPage.cursor else listScan.cursor,&#10;        cursors:&#10;          if action = &#34;page&#34; then append(listScan.cursors, listPage.cursor) else listScan.cursors&#10;      }&#10;    ]&#10;  )&#10;)[1][1][1][1]" resultVariable="listScan" />
+          <zeebe:script expression="=(&#10;  for ready in [&#10;    if count(taskKeys) = 0&#10;    then true&#10;    else taskBatch instance of list&#10;      and count(distinct values(taskKeys)) = count(taskKeys)&#10;      and count(taskBatch) = count(taskKeys)&#10;      and count(distinct values(taskBatch.scopeKey)) = count(taskKeys)&#10;      and (&#10;        every i in taskBatch satisfies&#10;          i.scopeKey = i.processInstanceKey&#10;            and list contains(taskKeys, i.scopeKey)&#10;            and i.value instance of context&#10;            and i.value.id instance of string&#10;            and i.value.contextId instance of string&#10;            and i.value.rev instance of number&#10;            and i.value.status instance of context&#10;            and i.value.status.state instance of string&#10;            and i.value.status.timestamp instance of string&#10;            and i.value.history instance of list&#10;            and i.value.artifacts instance of list&#10;      )&#10;  ]&#10;  return for overlap in [some k in taskKeys satisfies list contains(listScan.keys, k)]&#10;  return for nextOk in [&#10;    listPage.cursor instance of string&#10;      and listPage.cursor != &#34;&#34;&#10;      and not(list contains(listScan.cursors, listPage.cursor))&#10;  ]&#10;  return for action in [&#10;    if not(ready)&#10;    then (if now() &#62;= date and time(listScan.deadline) then &#34;deadline&#34; else &#34;variables&#34;)&#10;    else if overlap&#10;    then &#34;overlap&#34;&#10;    else if listPage.count &#60; 100&#10;    then &#34;done&#34;&#10;    else if listPage.count != 100 or not(nextOk)&#10;    then &#34;cursor&#34;&#10;    else if now() &#62;= date and time(listScan.deadline) then &#34;deadline&#34; else &#34;page&#34;&#10;  ]&#10;  return context merge(&#10;    [&#10;      listScan,&#10;      {&#10;        action: action,&#10;        items:&#10;          if ready and not(overlap) and count(taskKeys) &#62; 0&#10;          then concatenate(listScan.items, taskBatch)&#10;          else listScan.items,&#10;        keys: if ready then concatenate(listScan.keys, taskKeys) else listScan.keys,&#10;        cursor: if action = &#34;page&#34; then listPage.cursor else listScan.cursor,&#10;        cursors:&#10;          if action = &#34;page&#34; then append(listScan.cursors, listPage.cursor) else listScan.cursors&#10;      }&#10;    ]&#10;  )&#10;)[1][1][1][1]" resultVariable="listScan" />
         </bpmn:extensionElements>
         <bpmn:incoming>CollectTaskList_Flow_ListBatchJoin_CollectListBatch</bpmn:incoming>
         <bpmn:outgoing>CollectTaskList_Flow_CollectListBatch_ListScanDecision</bpmn:outgoing>
@@ -765,7 +765,7 @@
           <zeebe:property name="inbound.context" value="a2a-card" />
           <zeebe:property name="inbound.auth.type" value="NONE" />
           <zeebe:property name="inbound.method" value="get" />
-          <zeebe:property name="inbound.responseExpression" value="={&#10;  rpcUrl: get value(correlation.activatedElement.properties, &#34;inbound.publicRpcUrl&#34;),&#10;  response:&#10;    if rpcUrl instance of string and matches(rpcUrl, &#34;^https://[^ /]+/[^ ]*$&#34;)&#10;    then {&#10;      statusCode: 200,&#10;      headers: {&#34;Content-Type&#34;: &#34;application/json&#34;},&#10;      body: {&#10;        name: &#34;BPMN A2A skeleton&#34;,&#10;        url: rpcUrl,&#10;        protocolVersion: &#34;0.3.0&#34;,&#10;        preferredTransport: &#34;JSONRPC&#34;,&#10;        supportsAuthenticatedExtendedCard: false,&#10;        version: &#34;0.1.0&#34;,&#10;        description: &#34;Non-production BPMN A2A skeleton. Returns a placeholder tool artifact.&#34;,&#10;        provider: {organization: &#34;HanselIdes&#34;, url: &#34;https://github.com/HanselIdes/camunda-a2a&#34;},&#10;        supportedInterfaces: [{url: rpcUrl, protocolBinding: &#34;JSONRPC&#34;, protocolVersion: &#34;1.0&#34;}],&#10;        capabilities: {streaming: false, pushNotifications: true, extendedAgentCard: false},&#10;        defaultInputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        defaultOutputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        securitySchemes: {},&#10;        securityRequirements: [],&#10;        skills: [&#10;          {&#10;            id: &#34;echo_placeholder&#34;,&#10;            name: &#34;Echo placeholder&#34;,&#10;            description: &#34;Call once to return the process-owned placeholder value. Takes the request data as its argument. Replace this tool with your own business logic.&#34;,&#10;            tags: [&#34;placeholder&#34;],&#10;            examples: [&#34;Example input&#34;]&#10;          }&#10;        ]&#10;      }&#10;    }&#10;    else {statusCode: 500, body: {error: &#34;Configure the Agent Card HTTPS public RPC URL&#34;}}&#10;}.response" />
+          <zeebe:property name="inbound.responseExpression" value="={&#10;  rpcUrl: get value(correlation.activatedElement.properties, &#34;inbound.publicRpcUrl&#34;),&#10;  response:&#10;    if rpcUrl instance of string and matches(rpcUrl, &#34;^https://[^ /]+/[^ ]*$&#34;)&#10;    then {&#10;      statusCode: 200,&#10;      headers: {&#34;Content-Type&#34;: &#34;application/json&#34;},&#10;      body: {&#10;        name: &#34;BPMN A2A skeleton&#34;,&#10;        url: rpcUrl,&#10;        protocolVersion: &#34;0.3.0&#34;,&#10;        preferredTransport: &#34;JSONRPC&#34;,&#10;        supportsAuthenticatedExtendedCard: false,&#10;        version: &#34;0.1.0&#34;,&#10;        description: &#34;Non-production BPMN A2A skeleton. Returns the transformed request data as a tool artifact.&#34;,&#10;        provider: {organization: &#34;HanselIdes&#34;, url: &#34;https://github.com/HanselIdes/camunda-a2a&#34;},&#10;        supportedInterfaces: [{url: rpcUrl, protocolBinding: &#34;JSONRPC&#34;, protocolVersion: &#34;1.0&#34;}],&#10;        capabilities: {streaming: false, pushNotifications: true, extendedAgentCard: false},&#10;        defaultInputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        defaultOutputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        securitySchemes: {},&#10;        securityRequirements: [],&#10;        skills: [&#10;          {&#10;            id: &#34;echo_placeholder&#34;,&#10;            name: &#34;Echo placeholder&#34;,&#10;            description: &#34;Call once to return the process-owned placeholder value. Takes the request data as its argument. Replace this tool with your own business logic.&#34;,&#10;            tags: [&#34;placeholder&#34;],&#10;            examples: [&#34;Example input&#34;]&#10;          }&#10;        ]&#10;      }&#10;    }&#10;    else {statusCode: 500, body: {error: &#34;Configure the Agent Card HTTPS public RPC URL&#34;}}&#10;}.response" />
           <zeebe:property name="inbound.publicRpcUrl" value="https://camunda-a2a-demo.example.com/inbound/a2a" />
         </zeebe:properties>
       </bpmn:extensionElements>
@@ -830,769 +830,849 @@
   <bpmn:message id="AgentCardRequestMessage" name="Agent Card request" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-rpc">
     <bpmndi:BPMNPlane id="BPMNPlane_a2a-rpc" bpmnElement="a2a-rpc">
-      <bpmndi:BPMNShape id="CollectTaskList_ListScanRequested_di" bpmnElement="CollectTaskList_ListScanRequested">
-        <dc:Bounds x="57" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_StartListScan_di" bpmnElement="CollectTaskList_StartListScan">
-        <dc:Bounds x="325" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_ListProcessPageJoin_di" bpmnElement="CollectTaskList_ListProcessPageJoin" isMarkerVisible="true">
-        <dc:Bounds x="500" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_SearchTasks_di" bpmnElement="CollectTaskList_SearchTasks">
-        <dc:Bounds x="625" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_AnyTasks_di" bpmnElement="CollectTaskList_AnyTasks" isMarkerVisible="true">
-        <dc:Bounds x="800" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_ListVariablesJoin_di" bpmnElement="CollectTaskList_ListVariablesJoin" isMarkerVisible="true">
-        <dc:Bounds x="950" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_ReadTasks_di" bpmnElement="CollectTaskList_ReadTasks">
-        <dc:Bounds x="1075" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_ListBatchJoin_di" bpmnElement="CollectTaskList_ListBatchJoin" isMarkerVisible="true">
-        <dc:Bounds x="1250" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_CollectListBatch_di" bpmnElement="CollectTaskList_CollectListBatch">
-        <dc:Bounds x="1375" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_ListScanDecision_di" bpmnElement="CollectTaskList_ListScanDecision" isMarkerVisible="true">
-        <dc:Bounds x="1550" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_FinishListScan_di" bpmnElement="CollectTaskList_FinishListScan">
-        <dc:Bounds x="1675" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_ListResultJoin_di" bpmnElement="CollectTaskList_ListResultJoin" isMarkerVisible="true">
-        <dc:Bounds x="1850" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_ListScanReady_di" bpmnElement="CollectTaskList_ListScanReady">
-        <dc:Bounds x="2007" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_WaitListVariables_di" bpmnElement="CollectTaskList_WaitListVariables">
-        <dc:Bounds x="507" y="192" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_FailListScan_di" bpmnElement="CollectTaskList_FailListScan">
-        <dc:Bounds x="475" y="310" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanRequested_StartListScan_di" bpmnElement="CollectTaskList_Flow_ListScanRequested_StartListScan">
-        <di:waypoint x="93" y="70" />
-        <di:waypoint x="325" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_StartListScan_ListProcessPageJoin_di" bpmnElement="CollectTaskList_Flow_StartListScan_ListProcessPageJoin">
-        <di:waypoint x="425" y="70" />
-        <di:waypoint x="500" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListProcessPageJoin_SearchTasks_di" bpmnElement="CollectTaskList_Flow_ListProcessPageJoin_SearchTasks">
-        <di:waypoint x="550" y="70" />
-        <di:waypoint x="625" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_SearchTasks_AnyTasks_di" bpmnElement="CollectTaskList_Flow_SearchTasks_AnyTasks">
-        <di:waypoint x="725" y="70" />
-        <di:waypoint x="800" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_AnyTasks_ListVariablesJoin_di" bpmnElement="CollectTaskList_Flow_AnyTasks_ListVariablesJoin">
-        <di:waypoint x="850" y="70" />
-        <di:waypoint x="950" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_AnyTasks_ListBatchJoin_di" bpmnElement="CollectTaskList_Flow_AnyTasks_ListBatchJoin">
-        <di:waypoint x="825" y="95" />
-        <di:waypoint x="825" y="140" />
-        <di:waypoint x="1275" y="140" />
-        <di:waypoint x="1275" y="95" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListVariablesJoin_ReadTasks_di" bpmnElement="CollectTaskList_Flow_ListVariablesJoin_ReadTasks">
-        <di:waypoint x="1000" y="70" />
-        <di:waypoint x="1075" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ReadTasks_ListBatchJoin_di" bpmnElement="CollectTaskList_Flow_ReadTasks_ListBatchJoin">
-        <di:waypoint x="1175" y="70" />
-        <di:waypoint x="1250" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListBatchJoin_CollectListBatch_di" bpmnElement="CollectTaskList_Flow_ListBatchJoin_CollectListBatch">
-        <di:waypoint x="1300" y="70" />
-        <di:waypoint x="1375" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_CollectListBatch_ListScanDecision_di" bpmnElement="CollectTaskList_Flow_CollectListBatch_ListScanDecision">
-        <di:waypoint x="1475" y="70" />
-        <di:waypoint x="1550" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_FinishListScan_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_FinishListScan">
-        <di:waypoint x="1600" y="70" />
-        <di:waypoint x="1675" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin">
-        <di:waypoint x="1575" y="95" />
-        <di:waypoint x="1575" y="140" />
-        <di:waypoint x="525" y="140" />
-        <di:waypoint x="525" y="95" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_WaitListVariables_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_WaitListVariables">
-        <di:waypoint x="1575" y="45" />
-        <di:waypoint x="1575" y="0" />
-        <di:waypoint x="525" y="0" />
-        <di:waypoint x="525" y="192" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_FailListScan_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_FailListScan">
-        <di:waypoint x="1575" y="45" />
-        <di:waypoint x="1575" y="0" />
-        <di:waypoint x="525" y="0" />
-        <di:waypoint x="525" y="310" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_FinishListScan_ListResultJoin_di" bpmnElement="CollectTaskList_Flow_FinishListScan_ListResultJoin">
-        <di:waypoint x="1775" y="70" />
-        <di:waypoint x="1850" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListResultJoin_ListScanReady_di" bpmnElement="CollectTaskList_Flow_ListResultJoin_ListScanReady">
-        <di:waypoint x="1900" y="70" />
-        <di:waypoint x="2007" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_WaitListVariables_ListVariablesJoin_di" bpmnElement="CollectTaskList_Flow_WaitListVariables_ListVariablesJoin">
-        <di:waypoint x="543" y="210" />
-        <di:waypoint x="975" y="210" />
-        <di:waypoint x="975" y="95" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CollectTaskList_Flow_FailListScan_ListResultJoin_di" bpmnElement="CollectTaskList_Flow_FailListScan_ListResultJoin">
-        <di:waypoint x="575" y="350" />
-        <di:waypoint x="1875" y="350" />
-        <di:waypoint x="1875" y="95" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Dispatch_Requested_di" bpmnElement="Dispatch_Requested">
-        <dc:Bounds x="57" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_Fork_di" bpmnElement="Dispatch_Fork">
-        <dc:Bounds x="350" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_OutcomeFirst_di" bpmnElement="Dispatch_OutcomeFirst">
-        <dc:Bounds x="500" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_OutcomePublished_di" bpmnElement="Dispatch_OutcomePublished">
-        <dc:Bounds x="657" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_AwaitDone_di" bpmnElement="Dispatch_AwaitDone" isMarkerVisible="true">
-        <dc:Bounds x="800" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_Sync_di" bpmnElement="Dispatch_Sync">
-        <dc:Bounds x="1100" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_Done_di" bpmnElement="Dispatch_Done">
-        <dc:Bounds x="1257" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_IsNew_di" bpmnElement="Dispatch_IsNew" isMarkerVisible="true">
-        <dc:Bounds x="500" y="185" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CreateTask_di" bpmnElement="CreateTask">
-        <dc:Bounds x="625" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_TimeLimit_di" bpmnElement="Dispatch_TimeLimit">
-        <dc:Bounds x="807" y="192" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_TriggerDone_di" bpmnElement="Dispatch_TriggerDone" isMarkerVisible="true">
-        <dc:Bounds x="950" y="185" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_di" bpmnElement="CorrelateTask">
-        <dc:Bounds x="625" y="310" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_Correlated_di" bpmnElement="Dispatch_Correlated" isMarkerVisible="true">
-        <dc:Bounds x="800" y="325" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_NotHandled_di" bpmnElement="Dispatch_NotHandled">
-        <dc:Bounds x="957" y="472" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_Requested_Fork_di" bpmnElement="Dispatch_Flow_Requested_Fork">
-        <di:waypoint x="93" y="70" />
-        <di:waypoint x="350" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_Fork_OutcomeFirst_di" bpmnElement="Dispatch_Flow_Fork_OutcomeFirst">
-        <di:waypoint x="400" y="70" />
-        <di:waypoint x="500" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_Fork_IsNew_di" bpmnElement="Dispatch_Flow_Fork_IsNew">
-        <di:waypoint x="375" y="95" />
-        <di:waypoint x="375" y="210" />
-        <di:waypoint x="500" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomeFirst_OutcomePublished_di" bpmnElement="Dispatch_Flow_OutcomeFirst_OutcomePublished">
-        <di:waypoint x="550" y="70" />
-        <di:waypoint x="657" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomeFirst_TimeLimit_di" bpmnElement="Dispatch_Flow_OutcomeFirst_TimeLimit">
-        <di:waypoint x="550" y="70" />
-        <di:waypoint x="600" y="70" />
-        <di:waypoint x="600" y="140" />
-        <di:waypoint x="750" y="140" />
-        <di:waypoint x="750" y="210" />
-        <di:waypoint x="807" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomePublished_AwaitDone_di" bpmnElement="Dispatch_Flow_OutcomePublished_AwaitDone">
-        <di:waypoint x="693" y="70" />
-        <di:waypoint x="800" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_AwaitDone_Sync_di" bpmnElement="Dispatch_Flow_AwaitDone_Sync">
-        <di:waypoint x="850" y="70" />
-        <di:waypoint x="1100" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_Sync_Done_di" bpmnElement="Dispatch_Flow_Sync_Done">
-        <di:waypoint x="1150" y="70" />
-        <di:waypoint x="1257" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_IsNew_CreateTask_di" bpmnElement="Dispatch_Flow_IsNew_CreateTask">
-        <di:waypoint x="550" y="210" />
-        <di:waypoint x="625" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_IsNew_CorrelateTask_di" bpmnElement="Dispatch_Flow_IsNew_CorrelateTask">
-        <di:waypoint x="525" y="235" />
-        <di:waypoint x="525" y="350" />
-        <di:waypoint x="625" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_CreateTask_TriggerDone_di" bpmnElement="Dispatch_Flow_CreateTask_TriggerDone">
-        <di:waypoint x="675" y="250" />
-        <di:waypoint x="675" y="280" />
-        <di:waypoint x="975" y="280" />
-        <di:waypoint x="975" y="235" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_TimeLimit_AwaitDone_di" bpmnElement="Dispatch_Flow_TimeLimit_AwaitDone">
-        <di:waypoint x="825" y="192" />
-        <di:waypoint x="825" y="95" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_TriggerDone_Sync_di" bpmnElement="Dispatch_Flow_TriggerDone_Sync">
-        <di:waypoint x="1000" y="210" />
-        <di:waypoint x="1125" y="210" />
-        <di:waypoint x="1125" y="95" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_CorrelateTask_Correlated_di" bpmnElement="Dispatch_Flow_CorrelateTask_Correlated">
-        <di:waypoint x="725" y="350" />
-        <di:waypoint x="800" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_Correlated_TriggerDone_di" bpmnElement="Dispatch_Flow_Correlated_TriggerDone">
-        <di:waypoint x="850" y="350" />
-        <di:waypoint x="975" y="350" />
-        <di:waypoint x="975" y="235" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Dispatch_Flow_Correlated_NotHandled_di" bpmnElement="Dispatch_Flow_Correlated_NotHandled">
-        <di:waypoint x="825" y="375" />
-        <di:waypoint x="825" y="490" />
-        <di:waypoint x="957" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="CorrelateTask_CorrelateRequested_di" bpmnElement="CorrelateTask_CorrelateRequested">
-        <dc:Bounds x="57" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_ResetAttempts_di" bpmnElement="CorrelateTask_ResetAttempts">
-        <dc:Bounds x="325" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_TryJoin_di" bpmnElement="CorrelateTask_TryJoin" isMarkerVisible="true">
-        <dc:Bounds x="500" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_CorrelateMessage_di" bpmnElement="CorrelateTask_CorrelateMessage">
-        <dc:Bounds x="625" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_NoSubscription_di" bpmnElement="CorrelateTask_NoSubscription">
-        <dc:Bounds x="657" y="92" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_Correlated_di" bpmnElement="CorrelateTask_Correlated">
-        <dc:Bounds x="807" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_CountAttempt_di" bpmnElement="CorrelateTask_CountAttempt">
-        <dc:Bounds x="775" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_AttemptsLeft_di" bpmnElement="CorrelateTask_AttemptsLeft" isMarkerVisible="true">
-        <dc:Bounds x="950" y="185" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_WaitBeforeRetry_di" bpmnElement="CorrelateTask_WaitBeforeRetry">
-        <dc:Bounds x="1107" y="192" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CorrelateTask_NotCorrelated_di" bpmnElement="CorrelateTask_NotCorrelated">
-        <dc:Bounds x="1107" y="332" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CorrelateRequested_ResetAttempts_di" bpmnElement="CorrelateTask_Flow_CorrelateRequested_ResetAttempts">
-        <di:waypoint x="93" y="70" />
-        <di:waypoint x="325" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_ResetAttempts_TryJoin_di" bpmnElement="CorrelateTask_Flow_ResetAttempts_TryJoin">
-        <di:waypoint x="425" y="70" />
-        <di:waypoint x="500" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_TryJoin_CorrelateMessage_di" bpmnElement="CorrelateTask_Flow_TryJoin_CorrelateMessage">
-        <di:waypoint x="550" y="70" />
-        <di:waypoint x="625" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CorrelateMessage_MarkCorrelated_di" bpmnElement="CorrelateTask_Flow_CorrelateMessage_MarkCorrelated">
-        <di:waypoint x="725" y="70" />
-        <di:waypoint x="807" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_NoSubscription_CountAttempt_di" bpmnElement="CorrelateTask_Flow_NoSubscription_CountAttempt">
-        <di:waypoint x="675" y="128" />
-        <di:waypoint x="675" y="210" />
-        <di:waypoint x="775" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CountAttempt_AttemptsLeft_di" bpmnElement="CorrelateTask_Flow_CountAttempt_AttemptsLeft">
-        <di:waypoint x="875" y="210" />
-        <di:waypoint x="950" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry_di" bpmnElement="CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry">
-        <di:waypoint x="1000" y="210" />
-        <di:waypoint x="1107" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated_di" bpmnElement="CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated">
-        <di:waypoint x="975" y="235" />
-        <di:waypoint x="975" y="350" />
-        <di:waypoint x="1107" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="CorrelateTask_Flow_WaitBeforeRetry_TryJoin_di" bpmnElement="CorrelateTask_Flow_WaitBeforeRetry_TryJoin">
-        <di:waypoint x="1125" y="228" />
-        <di:waypoint x="1125" y="280" />
-        <di:waypoint x="525" y="280" />
-        <di:waypoint x="525" y="95" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="RpcReceived_di" bpmnElement="RpcReceived">
-        <dc:Bounds x="52" y="72" width="36" height="36" />
+        <dc:Bounds x="162" y="72" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="150" y="108" width="61" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="NormalizeRequest_di" bpmnElement="NormalizeRequest">
-        <dc:Bounds x="167" y="50" width="100" height="80" />
+        <dc:Bounds x="277" y="50" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ParseRequest_di" bpmnElement="ParseRequest">
-        <dc:Bounds x="384" y="50" width="100" height="80" />
+        <dc:Bounds x="494" y="50" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ValidateRequest_di" bpmnElement="ValidateRequest">
-        <dc:Bounds x="601" y="50" width="100" height="80" />
+        <dc:Bounds x="711" y="50" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="RouteRequest_di" bpmnElement="RouteRequest" isMarkerVisible="true">
-        <dc:Bounds x="843" y="65" width="50" height="50" />
+        <dc:Bounds x="953" y="65" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="818" y="35" width="100" height="27" />
+          <dc:Bounds x="943" y="35" width="70" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ValidationErrorReady_di" bpmnElement="ValidationErrorReady">
-        <dc:Bounds x="962" y="162" width="36" height="36" />
+        <dc:Bounds x="1072" y="72" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1054" y="108" width="73" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PrepareList_di" bpmnElement="PrepareList">
-        <dc:Bounds x="972" y="635" width="100" height="80" />
+        <dc:Bounds x="1082" y="535" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TaskListReady_di" bpmnElement="TaskListReady">
-        <dc:Bounds x="1578" y="657" width="36" height="36" />
+        <dc:Bounds x="1688" y="557" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1671" y="593" width="70" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PrepareNewTask_di" bpmnElement="PrepareNewTask">
-        <dc:Bounds x="972" y="305" width="100" height="80" />
+        <dc:Bounds x="1082" y="205" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="NewTaskReady_di" bpmnElement="NewTaskReady">
-        <dc:Bounds x="1606" y="177" width="36" height="36" />
+        <dc:Bounds x="1716" y="77" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1699" y="113" width="71" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="DispatchJoin_di" bpmnElement="DispatchJoin" isMarkerVisible="true">
-        <dc:Bounds x="1151" y="320" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_di" bpmnElement="Dispatch">
-        <dc:Bounds x="1294" y="305" width="100" height="80" />
+        <dc:Bounds x="1261" y="220" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PrepareLookup_di" bpmnElement="PrepareLookup">
-        <dc:Bounds x="972" y="830" width="100" height="80" />
+        <dc:Bounds x="1082" y="730" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="FindTask_di" bpmnElement="FindTask">
-        <dc:Bounds x="1238" y="830" width="100" height="80" />
+        <dc:Bounds x="1348" y="730" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TaskKnown_di" bpmnElement="TaskKnown" isMarkerVisible="true">
-        <dc:Bounds x="1585" y="845" width="50" height="50" />
+        <dc:Bounds x="1695" y="745" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1560" y="815" width="100" height="27" />
+          <dc:Bounds x="1688" y="715" width="64" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ReadTask_di" bpmnElement="ReadTask">
-        <dc:Bounds x="1406" y="830" width="100" height="80" />
+        <dc:Bounds x="1516" y="730" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="RouteMethod_di" bpmnElement="RouteMethod" isMarkerVisible="true">
-        <dc:Bounds x="1725" y="845" width="50" height="50" />
+        <dc:Bounds x="1835" y="745" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1670" y="815" width="100" height="27" />
+          <dc:Bounds x="1812" y="715" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="NotFoundReady_di" bpmnElement="NotFoundReady">
-        <dc:Bounds x="1214" y="1385" width="36" height="36" />
+        <dc:Bounds x="1324" y="1285" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1304" y="1321" width="76" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TaskViewReady_di" bpmnElement="TaskViewReady">
-        <dc:Bounds x="1858" y="852" width="36" height="36" />
+        <dc:Bounds x="1968" y="752" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1951" y="788" width="71" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Cancelable_di" bpmnElement="Cancelable" isMarkerVisible="true">
-        <dc:Bounds x="1865" y="995" width="50" height="50" />
+        <dc:Bounds x="1975" y="895" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1850" y="1047" width="80" height="27" />
+          <dc:Bounds x="1969" y="955" width="62" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CanceledReady_di" bpmnElement="CanceledReady">
-        <dc:Bounds x="1886" y="327" width="36" height="36" />
+        <dc:Bounds x="1996" y="227" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1973" y="263" width="83" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="NotCancelableReady_di" bpmnElement="NotCancelableReady">
-        <dc:Bounds x="1634" y="1385" width="36" height="36" />
+        <dc:Bounds x="1744" y="1285" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1724" y="1321" width="76" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CheckFollowUp_di" bpmnElement="CheckFollowUp">
-        <dc:Bounds x="1882" y="1130" width="100" height="80" />
+        <dc:Bounds x="1992" y="1030" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="FollowUpAccepted_di" bpmnElement="FollowUpAccepted" isMarkerVisible="true">
-        <dc:Bounds x="2061" y="1145" width="50" height="50" />
+        <dc:Bounds x="2171" y="1045" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2036" y="1115" width="100" height="27" />
+          <dc:Bounds x="2170" y="1015" width="52" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="RouteOutcome_di" bpmnElement="RouteOutcome" isMarkerVisible="true">
-        <dc:Bounds x="1515" y="320" width="50" height="50" />
+        <dc:Bounds x="1625" y="220" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1460" y="290" width="100" height="27" />
+          <dc:Bounds x="1598" y="190" width="45" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="FollowUpReady_di" bpmnElement="FollowUpReady">
-        <dc:Bounds x="1606" y="432" width="36" height="36" />
+        <dc:Bounds x="1716" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1699" y="368" width="71" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="FollowUpErrorReady_di" bpmnElement="FollowUpErrorReady">
-        <dc:Bounds x="2054" y="1385" width="36" height="36" />
+        <dc:Bounds x="2164" y="1285" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2146" y="1321" width="73" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="LookupTimeLeft_di" bpmnElement="LookupTimeLeft" isMarkerVisible="true">
-        <dc:Bounds x="1585" y="980" width="50" height="50" />
+        <dc:Bounds x="1695" y="880" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1643" y="992" width="100" height="27" />
+          <dc:Bounds x="1761" y="892" width="84" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="LookupJoin_di" bpmnElement="LookupJoin" isMarkerVisible="true">
-        <dc:Bounds x="1151" y="845" width="50" height="50" />
+        <dc:Bounds x="1261" y="745" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="WaitForIndex_di" bpmnElement="WaitForIndex">
-        <dc:Bounds x="1452" y="987" width="36" height="36" />
+        <dc:Bounds x="1562" y="887" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1540" y="923" width="80" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CancellationOutcome_di" bpmnElement="CancellationOutcome" isMarkerVisible="true">
-        <dc:Bounds x="1711" y="320" width="50" height="50" />
+        <dc:Bounds x="1821" y="220" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1601" y="372" width="100" height="27" />
+          <dc:Bounds x="1718" y="272" width="87" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CancellationErrorReady_di" bpmnElement="CancellationErrorReady">
-        <dc:Bounds x="1718" y="432" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_di" bpmnElement="CollectTaskList">
-        <dc:Bounds x="1210" y="635" width="100" height="80" />
+        <dc:Bounds x="1828" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1801" y="368" width="90" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ListCollected_di" bpmnElement="ListCollected" isMarkerVisible="true">
-        <dc:Bounds x="1431" y="650" width="50" height="50" />
+        <dc:Bounds x="1541" y="550" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1406" y="620" width="100" height="27" />
+          <dc:Bounds x="1531" y="520" width="71" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ListFailureReady_di" bpmnElement="ListFailureReady">
-        <dc:Bounds x="1438" y="747" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CardRequested_di" bpmnElement="CardRequested">
-        <dc:Bounds x="1242" y="27" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CardServed_di" bpmnElement="CardServed">
-        <dc:Bounds x="1452" y="27" width="36" height="36" />
+        <dc:Bounds x="1548" y="647" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1535" y="683" width="62" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_NotFound_Catch_di" bpmnElement="Link_NotFound_Catch" bioc:stroke="#e07b00" bioc:fill="#fff1de">
-        <dc:Bounds x="1046" y="1385" width="36" height="36" />
+        <dc:Bounds x="1156" y="1285" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1150" y="1321" width="48" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_NotFound_FromMethod_di" bpmnElement="Link_NotFound_FromMethod" bioc:stroke="#e07b00" bioc:fill="#fff1de">
-        <dc:Bounds x="1732" y="741" width="36" height="36" />
+        <dc:Bounds x="1842" y="641" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1700" y="711" width="100" height="27" />
+          <dc:Bounds x="1836" y="611" width="48" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_NotFound_FromLookup_di" bpmnElement="Link_NotFound_FromLookup" bioc:stroke="#e07b00" bioc:fill="#fff1de">
-        <dc:Bounds x="1592" y="1107" width="36" height="36" />
+        <dc:Bounds x="1702" y="1007" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1696" y="1043" width="48" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_NotCancelable_Catch_di" bpmnElement="Link_NotCancelable_Catch" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
-        <dc:Bounds x="1466" y="1385" width="36" height="36" />
+        <dc:Bounds x="1576" y="1285" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1558" y="1321" width="73" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_NotCancelable_FromCancelable_di" bpmnElement="Link_NotCancelable_FromCancelable" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
-        <dc:Bounds x="1872" y="942" width="36" height="36" />
+        <dc:Bounds x="1982" y="842" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1916" y="947" width="100" height="27" />
+          <dc:Bounds x="2040" y="847" width="73" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_NotCancelable_FromCancellation_di" bpmnElement="Link_NotCancelable_FromCancellation" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
-        <dc:Bounds x="1718" y="237" width="36" height="36" />
+        <dc:Bounds x="1828" y="137" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1686" y="207" width="100" height="27" />
+          <dc:Bounds x="1810" y="107" width="73" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_FollowUpError_Catch_di" bpmnElement="Link_FollowUpError_Catch" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
-        <dc:Bounds x="1886" y="1385" width="36" height="36" />
+        <dc:Bounds x="1996" y="1285" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1977" y="1321" width="74" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_FollowUpError_FromAccepted_di" bpmnElement="Link_FollowUpError_FromAccepted" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
-        <dc:Bounds x="2068" y="1242" width="36" height="36" />
+        <dc:Bounds x="2178" y="1142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2159" y="1178" width="74" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_FollowUpError_FromOutcome_di" bpmnElement="Link_FollowUpError_FromOutcome" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
-        <dc:Bounds x="1522" y="522" width="36" height="36" />
+        <dc:Bounds x="1632" y="422" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1613" y="458" width="74" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_Dispatch_In_di" bpmnElement="Link_Dispatch_In" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
-        <dc:Bounds x="1158" y="230" width="36" height="36" />
+        <dc:Bounds x="1268" y="130" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1053" y="235" width="95" height="27" />
+          <dc:Bounds x="1189" y="135" width="43" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_Dispatch_FromFollowUp_di" bpmnElement="Link_Dispatch_FromFollowUp" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
-        <dc:Bounds x="2194" y="1152" width="36" height="36" />
+        <dc:Bounds x="2304" y="1052" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2301" y="1088" width="43" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_Dispatch_FromCancel_di" bpmnElement="Link_Dispatch_FromCancel" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
-        <dc:Bounds x="2012" y="1002" width="36" height="36" />
+        <dc:Bounds x="2122" y="902" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2119" y="938" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CardRequested_di" bpmnElement="CardRequested">
+        <dc:Bounds x="162" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="152" y="228" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CardServed_di" bpmnElement="CardServed">
+        <dc:Bounds x="372" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="360" y="228" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_di" bpmnElement="Dispatch">
+        <dc:Bounds x="1404" y="205" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_di" bpmnElement="CollectTaskList">
+        <dc:Bounds x="1320" y="535" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_RpcReceived_NormalizeRequest_di" bpmnElement="Flow_RpcReceived_NormalizeRequest">
-        <di:waypoint x="88" y="90" />
-        <di:waypoint x="167" y="90" />
+        <di:waypoint x="198" y="90" />
+        <di:waypoint x="277" y="90" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_NormalizeRequest_ParseRequest_di" bpmnElement="Flow_NormalizeRequest_ParseRequest">
-        <di:waypoint x="267" y="90" />
-        <di:waypoint x="384" y="90" />
+        <di:waypoint x="377" y="90" />
+        <di:waypoint x="494" y="90" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_ParseRequest_ValidateRequest_di" bpmnElement="Flow_ParseRequest_ValidateRequest">
-        <di:waypoint x="484" y="90" />
-        <di:waypoint x="601" y="90" />
+        <di:waypoint x="594" y="90" />
+        <di:waypoint x="711" y="90" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_ValidateRequest_RouteRequest_di" bpmnElement="Flow_ValidateRequest_RouteRequest">
-        <di:waypoint x="701" y="90" />
-        <di:waypoint x="843" y="90" />
+        <di:waypoint x="811" y="90" />
+        <di:waypoint x="953" y="90" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteRequest_BuildValidationError_di" bpmnElement="Flow_RouteRequest_BuildValidationError">
-        <di:waypoint x="868" y="115" />
-        <di:waypoint x="868" y="180" />
-        <di:waypoint x="962" y="180" />
+        <di:waypoint x="1003" y="90" />
+        <di:waypoint x="1072" y="90" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="860" y="162" width="110" height="14" />
+          <dc:Bounds x="1022" y="72" width="32" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareList_di" bpmnElement="Flow_RouteRequest_PrepareList">
-        <di:waypoint x="868" y="115" />
-        <di:waypoint x="868" y="675" />
-        <di:waypoint x="972" y="675" />
+        <di:waypoint x="978" y="115" />
+        <di:waypoint x="978" y="575" />
+        <di:waypoint x="1082" y="575" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="865" y="657" width="110" height="14" />
+          <dc:Bounds x="1023" y="557" width="14" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareNewTask_di" bpmnElement="Flow_RouteRequest_PrepareNewTask">
-        <di:waypoint x="868" y="115" />
-        <di:waypoint x="868" y="345" />
-        <di:waypoint x="972" y="345" />
+        <di:waypoint x="978" y="115" />
+        <di:waypoint x="978" y="245" />
+        <di:waypoint x="1082" y="245" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="865" y="327" width="110" height="14" />
+          <dc:Bounds x="1008" y="227" width="44" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareLookup_di" bpmnElement="Flow_RouteRequest_PrepareLookup">
-        <di:waypoint x="868" y="115" />
-        <di:waypoint x="868" y="870" />
-        <di:waypoint x="972" y="870" />
+        <di:waypoint x="978" y="115" />
+        <di:waypoint x="978" y="770" />
+        <di:waypoint x="1082" y="770" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="865" y="852" width="110" height="14" />
+          <dc:Bounds x="1000" y="752" width="60" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PrepareNewTask_DispatchJoin_di" bpmnElement="Flow_PrepareNewTask_DispatchJoin">
-        <di:waypoint x="1072" y="345" />
-        <di:waypoint x="1151" y="345" />
+        <di:waypoint x="1182" y="245" />
+        <di:waypoint x="1261" y="245" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_FollowUpAccepted_DispatchJoin_di" bpmnElement="Flow_FollowUpAccepted_DispatchJoin">
-        <di:waypoint x="2111" y="1170" />
-        <di:waypoint x="2194" y="1170" />
+        <di:waypoint x="2221" y="1070" />
+        <di:waypoint x="2304" y="1070" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2098" y="1152" width="110" height="14" />
+          <dc:Bounds x="2254" y="1052" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Cancelable_DispatchJoin_di" bpmnElement="Flow_Cancelable_DispatchJoin">
-        <di:waypoint x="1915" y="1020" />
-        <di:waypoint x="2012" y="1020" />
+        <di:waypoint x="2025" y="920" />
+        <di:waypoint x="2122" y="920" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1909" y="1002" width="110" height="14" />
+          <dc:Bounds x="2060" y="902" width="29" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_DispatchJoin_Dispatch_di" bpmnElement="Flow_DispatchJoin_Dispatch">
-        <di:waypoint x="1201" y="345" />
-        <di:waypoint x="1294" y="345" />
+        <di:waypoint x="1311" y="245" />
+        <di:waypoint x="1404" y="245" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Dispatch_RouteOutcome_di" bpmnElement="Flow_Dispatch_RouteOutcome">
-        <di:waypoint x="1394" y="345" />
-        <di:waypoint x="1515" y="345" />
+        <di:waypoint x="1504" y="245" />
+        <di:waypoint x="1625" y="245" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteOutcome_BuildNewTaskResponse_di" bpmnElement="Flow_RouteOutcome_BuildNewTaskResponse">
-        <di:waypoint x="1540" y="320" />
-        <di:waypoint x="1540" y="195" />
-        <di:waypoint x="1606" y="195" />
+        <di:waypoint x="1650" y="220" />
+        <di:waypoint x="1650" y="95" />
+        <di:waypoint x="1716" y="95" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1518" y="177" width="110" height="14" />
+          <dc:Bounds x="1661" y="77" width="44" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteOutcome_CancellationOutcome_di" bpmnElement="Flow_RouteOutcome_CancellationOutcome">
-        <di:waypoint x="1565" y="345" />
-        <di:waypoint x="1711" y="345" />
+        <di:waypoint x="1675" y="245" />
+        <di:waypoint x="1821" y="245" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1583" y="327" width="110" height="14" />
+          <dc:Bounds x="1732" y="227" width="32" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteOutcome_BuildFollowUpResponse_di" bpmnElement="Flow_RouteOutcome_BuildFollowUpResponse">
-        <di:waypoint x="1540" y="370" />
-        <di:waypoint x="1540" y="450" />
-        <di:waypoint x="1606" y="450" />
+        <di:waypoint x="1650" y="270" />
+        <di:waypoint x="1650" y="350" />
+        <di:waypoint x="1716" y="350" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1518" y="432" width="110" height="14" />
+          <dc:Bounds x="1629" y="332" width="109" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_FindTask_ReadTask_di" bpmnElement="Flow_FindTask_ReadTask">
-        <di:waypoint x="1338" y="870" />
-        <di:waypoint x="1406" y="870" />
+        <di:waypoint x="1448" y="770" />
+        <di:waypoint x="1516" y="770" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_ReadTask_TaskKnown_di" bpmnElement="Flow_ReadTask_TaskKnown">
-        <di:waypoint x="1506" y="870" />
-        <di:waypoint x="1585" y="870" />
+        <di:waypoint x="1616" y="770" />
+        <di:waypoint x="1695" y="770" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_TaskKnown_RouteMethod_di" bpmnElement="Flow_TaskKnown_RouteMethod">
-        <di:waypoint x="1635" y="870" />
-        <di:waypoint x="1725" y="870" />
+        <di:waypoint x="1745" y="770" />
+        <di:waypoint x="1835" y="770" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1625" y="852" width="110" height="14" />
+          <dc:Bounds x="1781" y="752" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteMethod_NotFoundJoin_di" bpmnElement="Flow_RouteMethod_NotFoundJoin">
-        <di:waypoint x="1750" y="845" />
-        <di:waypoint x="1750" y="777" />
+        <di:waypoint x="1860" y="745" />
+        <di:waypoint x="1860" y="677" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1756" y="780" width="70" height="14" />
+          <dc:Bounds x="1870" y="680" width="62" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteMethod_BuildTaskView_di" bpmnElement="Flow_RouteMethod_BuildTaskView">
-        <di:waypoint x="1775" y="870" />
-        <di:waypoint x="1858" y="870" />
+        <di:waypoint x="1885" y="770" />
+        <di:waypoint x="1968" y="770" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1762" y="852" width="110" height="14" />
+          <dc:Bounds x="1907" y="752" width="41" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteMethod_Cancelable_di" bpmnElement="Flow_RouteMethod_Cancelable">
-        <di:waypoint x="1750" y="895" />
-        <di:waypoint x="1750" y="1020" />
-        <di:waypoint x="1865" y="1020" />
+        <di:waypoint x="1860" y="795" />
+        <di:waypoint x="1860" y="920" />
+        <di:waypoint x="1975" y="920" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1753" y="1002" width="110" height="14" />
+          <dc:Bounds x="1890" y="902" width="57" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteMethod_CheckFollowUp_di" bpmnElement="Flow_RouteMethod_CheckFollowUp">
-        <di:waypoint x="1750" y="895" />
-        <di:waypoint x="1750" y="1170" />
-        <di:waypoint x="1882" y="1170" />
+        <di:waypoint x="1860" y="795" />
+        <di:waypoint x="1860" y="1070" />
+        <di:waypoint x="1992" y="1070" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1761" y="1152" width="110" height="14" />
+          <dc:Bounds x="1891" y="1052" width="71" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_NotFoundJoin_BuildNotFound_di" bpmnElement="Flow_NotFoundJoin_BuildNotFound">
-        <di:waypoint x="1082" y="1403" />
-        <di:waypoint x="1214" y="1403" />
+        <di:waypoint x="1192" y="1303" />
+        <di:waypoint x="1324" y="1303" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Cancelable_NotCancelableJoin_di" bpmnElement="Flow_Cancelable_NotCancelableJoin">
-        <di:waypoint x="1890" y="995" />
-        <di:waypoint x="1890" y="978" />
+        <di:waypoint x="2000" y="895" />
+        <di:waypoint x="2000" y="878" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1896" y="974" width="70" height="14" />
+          <dc:Bounds x="2035" y="874" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_NotCancelableJoin_BuildNotCancelable_di" bpmnElement="Flow_NotCancelableJoin_BuildNotCancelable">
-        <di:waypoint x="1502" y="1403" />
-        <di:waypoint x="1634" y="1403" />
+        <di:waypoint x="1612" y="1303" />
+        <di:waypoint x="1744" y="1303" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CheckFollowUp_FollowUpAccepted_di" bpmnElement="Flow_CheckFollowUp_FollowUpAccepted">
-        <di:waypoint x="1982" y="1170" />
-        <di:waypoint x="2061" y="1170" />
+        <di:waypoint x="2092" y="1070" />
+        <di:waypoint x="2171" y="1070" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_FollowUpAccepted_FollowUpErrorJoin_di" bpmnElement="Flow_FollowUpAccepted_FollowUpErrorJoin">
-        <di:waypoint x="2086" y="1195" />
-        <di:waypoint x="2086" y="1242" />
+        <di:waypoint x="2196" y="1095" />
+        <di:waypoint x="2196" y="1142" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2092" y="1228" width="70" height="14" />
+          <dc:Bounds x="2231" y="1128" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RouteOutcome_FollowUpErrorJoin_di" bpmnElement="Flow_RouteOutcome_FollowUpErrorJoin">
-        <di:waypoint x="1540" y="370" />
-        <di:waypoint x="1540" y="522" />
+        <di:waypoint x="1650" y="270" />
+        <di:waypoint x="1650" y="422" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1546" y="492" width="70" height="14" />
+          <dc:Bounds x="1685" y="392" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_FollowUpErrorJoin_BuildFollowUpError_di" bpmnElement="Flow_FollowUpErrorJoin_BuildFollowUpError">
-        <di:waypoint x="1922" y="1403" />
-        <di:waypoint x="2054" y="1403" />
+        <di:waypoint x="2032" y="1303" />
+        <di:waypoint x="2164" y="1303" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PrepareLookup_LookupJoin_di" bpmnElement="Flow_PrepareLookup_LookupJoin">
-        <di:waypoint x="1072" y="870" />
-        <di:waypoint x="1151" y="870" />
+        <di:waypoint x="1182" y="770" />
+        <di:waypoint x="1261" y="770" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_LookupJoin_FindTask_di" bpmnElement="Flow_LookupJoin_FindTask">
-        <di:waypoint x="1201" y="870" />
-        <di:waypoint x="1238" y="870" />
+        <di:waypoint x="1311" y="770" />
+        <di:waypoint x="1348" y="770" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_TaskKnown_LookupTimeLeft_di" bpmnElement="Flow_TaskKnown_LookupTimeLeft">
-        <di:waypoint x="1610" y="895" />
-        <di:waypoint x="1610" y="980" />
+        <di:waypoint x="1720" y="795" />
+        <di:waypoint x="1720" y="880" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1616" y="960" width="70" height="14" />
+          <dc:Bounds x="1722" y="860" width="79" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_LookupTimeLeft_WaitForIndex_di" bpmnElement="Flow_LookupTimeLeft_WaitForIndex">
-        <di:waypoint x="1585" y="1005" />
-        <di:waypoint x="1488" y="1005" />
+        <di:waypoint x="1695" y="905" />
+        <di:waypoint x="1598" y="905" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1482" y="987" width="110" height="14" />
+          <dc:Bounds x="1636" y="887" width="22" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_LookupTimeLeft_NotFoundJoin_di" bpmnElement="Flow_LookupTimeLeft_NotFoundJoin">
-        <di:waypoint x="1610" y="1030" />
-        <di:waypoint x="1610" y="1107" />
+        <di:waypoint x="1720" y="930" />
+        <di:waypoint x="1720" y="1007" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1616" y="1088" width="70" height="14" />
+          <dc:Bounds x="1743" y="988" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_WaitForIndex_LookupJoin_di" bpmnElement="Flow_WaitForIndex_LookupJoin">
-        <di:waypoint x="1452" y="1005" />
-        <di:waypoint x="1176" y="1005" />
-        <di:waypoint x="1176" y="895" />
+        <di:waypoint x="1562" y="905" />
+        <di:waypoint x="1286" y="905" />
+        <di:waypoint x="1286" y="795" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CancellationOutcome_BuildCanceledView_di" bpmnElement="Flow_CancellationOutcome_BuildCanceledView">
-        <di:waypoint x="1761" y="345" />
-        <di:waypoint x="1886" y="345" />
+        <di:waypoint x="1871" y="245" />
+        <di:waypoint x="1996" y="245" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1769" y="327" width="110" height="14" />
+          <dc:Bounds x="1912" y="227" width="45" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CancellationOutcome_NotCancelableJoin_di" bpmnElement="Flow_CancellationOutcome_NotCancelableJoin">
-        <di:waypoint x="1736" y="320" />
-        <di:waypoint x="1736" y="273" />
+        <di:waypoint x="1846" y="220" />
+        <di:waypoint x="1846" y="173" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1742" y="273" width="70" height="14" />
+          <dc:Bounds x="1856" y="173" width="63" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CancellationOutcome_CancellationTimeout_di" bpmnElement="Flow_CancellationOutcome_CancellationTimeout">
-        <di:waypoint x="1736" y="370" />
-        <di:waypoint x="1736" y="432" />
+        <di:waypoint x="1846" y="270" />
+        <di:waypoint x="1846" y="332" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1742" y="416" width="70" height="14" />
+          <dc:Bounds x="1863" y="316" width="49" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PrepareList_CollectTaskList_di" bpmnElement="Flow_PrepareList_CollectTaskList">
-        <di:waypoint x="1072" y="675" />
-        <di:waypoint x="1210" y="675" />
+        <di:waypoint x="1182" y="575" />
+        <di:waypoint x="1320" y="575" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CollectTaskList_ListCollected_di" bpmnElement="Flow_CollectTaskList_ListCollected">
-        <di:waypoint x="1310" y="675" />
-        <di:waypoint x="1431" y="675" />
+        <di:waypoint x="1420" y="575" />
+        <di:waypoint x="1541" y="575" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_ListCollected_BuildTaskList_di" bpmnElement="Flow_ListCollected_BuildTaskList">
-        <di:waypoint x="1481" y="675" />
-        <di:waypoint x="1578" y="675" />
+        <di:waypoint x="1591" y="575" />
+        <di:waypoint x="1688" y="575" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1475" y="657" width="110" height="14" />
+          <dc:Bounds x="1618" y="557" width="45" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_ListCollected_BuildListFailure_di" bpmnElement="Flow_ListCollected_BuildListFailure">
-        <di:waypoint x="1456" y="700" />
-        <di:waypoint x="1456" y="747" />
+        <di:waypoint x="1566" y="600" />
+        <di:waypoint x="1566" y="647" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1462" y="733" width="70" height="14" />
+          <dc:Bounds x="1580" y="633" width="54" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CardRequested_CardServed_di" bpmnElement="Flow_CardRequested_CardServed">
-        <di:waypoint x="1278" y="45" />
-        <di:waypoint x="1452" y="45" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_LinkDispatch_DispatchJoin_di" bpmnElement="Flow_LinkDispatch_DispatchJoin">
-        <di:waypoint x="1176" y="266" />
-        <di:waypoint x="1176" y="320" />
+        <di:waypoint x="1286" y="166" />
+        <di:waypoint x="1286" y="220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CardRequested_CardServed_di" bpmnElement="Flow_CardRequested_CardServed">
+        <di:waypoint x="198" y="210" />
+        <di:waypoint x="372" y="210" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="CorrelateTask">
+      <bpmndi:BPMNShape id="CorrelateTask_CorrelateRequested_di" bpmnElement="CorrelateTask_CorrelateRequested">
+        <dc:Bounds x="180" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_ResetAttempts_di" bpmnElement="CorrelateTask_ResetAttempts">
+        <dc:Bounds x="448" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_TryJoin_di" bpmnElement="CorrelateTask_TryJoin" isMarkerVisible="true">
+        <dc:Bounds x="623" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_CorrelateMessage_di" bpmnElement="CorrelateTask_CorrelateMessage">
+        <dc:Bounds x="748" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_Correlated_di" bpmnElement="CorrelateTask_Correlated">
+        <dc:Bounds x="930" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_CountAttempt_di" bpmnElement="CorrelateTask_CountAttempt">
+        <dc:Bounds x="898" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_AttemptsLeft_di" bpmnElement="CorrelateTask_AttemptsLeft" isMarkerVisible="true">
+        <dc:Bounds x="1073" y="315" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_WaitBeforeRetry_di" bpmnElement="CorrelateTask_WaitBeforeRetry">
+        <dc:Bounds x="1230" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_NotCorrelated_di" bpmnElement="CorrelateTask_NotCorrelated">
+        <dc:Bounds x="1230" y="462" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_NoSubscription_di" bpmnElement="CorrelateTask_NoSubscription">
+        <dc:Bounds x="780" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CorrelateRequested_ResetAttempts_di" bpmnElement="CorrelateTask_Flow_CorrelateRequested_ResetAttempts">
+        <di:waypoint x="216" y="200" />
+        <di:waypoint x="448" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_ResetAttempts_TryJoin_di" bpmnElement="CorrelateTask_Flow_ResetAttempts_TryJoin">
+        <di:waypoint x="548" y="200" />
+        <di:waypoint x="623" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_WaitBeforeRetry_TryJoin_di" bpmnElement="CorrelateTask_Flow_WaitBeforeRetry_TryJoin">
+        <di:waypoint x="1248" y="358" />
+        <di:waypoint x="1248" y="410" />
+        <di:waypoint x="648" y="410" />
+        <di:waypoint x="648" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_TryJoin_CorrelateMessage_di" bpmnElement="CorrelateTask_Flow_TryJoin_CorrelateMessage">
+        <di:waypoint x="673" y="200" />
+        <di:waypoint x="748" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CorrelateMessage_MarkCorrelated_di" bpmnElement="CorrelateTask_Flow_CorrelateMessage_MarkCorrelated">
+        <di:waypoint x="848" y="200" />
+        <di:waypoint x="930" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_NoSubscription_CountAttempt_di" bpmnElement="CorrelateTask_Flow_NoSubscription_CountAttempt">
+        <di:waypoint x="798" y="258" />
+        <di:waypoint x="798" y="340" />
+        <di:waypoint x="898" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CountAttempt_AttemptsLeft_di" bpmnElement="CorrelateTask_Flow_CountAttempt_AttemptsLeft">
+        <di:waypoint x="998" y="340" />
+        <di:waypoint x="1073" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry_di" bpmnElement="CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry">
+        <di:waypoint x="1123" y="340" />
+        <di:waypoint x="1230" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated_di" bpmnElement="CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated">
+        <di:waypoint x="1098" y="365" />
+        <di:waypoint x="1098" y="480" />
+        <di:waypoint x="1230" y="480" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="Dispatch">
+      <bpmndi:BPMNShape id="Dispatch_Requested_di" bpmnElement="Dispatch_Requested">
+        <dc:Bounds x="180" y="167" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_Fork_di" bpmnElement="Dispatch_Fork">
+        <dc:Bounds x="473" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_OutcomeFirst_di" bpmnElement="Dispatch_OutcomeFirst">
+        <dc:Bounds x="623" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_OutcomePublished_di" bpmnElement="Dispatch_OutcomePublished">
+        <dc:Bounds x="780" y="167" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_TimeLimit_di" bpmnElement="Dispatch_TimeLimit">
+        <dc:Bounds x="930" y="307" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_AwaitDone_di" bpmnElement="Dispatch_AwaitDone" isMarkerVisible="true">
+        <dc:Bounds x="923" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_IsNew_di" bpmnElement="Dispatch_IsNew" isMarkerVisible="true">
+        <dc:Bounds x="623" y="300" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CreateTask_di" bpmnElement="CreateTask">
+        <dc:Bounds x="748" y="285" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_di" bpmnElement="CorrelateTask">
+        <dc:Bounds x="748" y="425" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_Correlated_di" bpmnElement="Dispatch_Correlated" isMarkerVisible="true">
+        <dc:Bounds x="923" y="440" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_NotHandled_di" bpmnElement="Dispatch_NotHandled">
+        <dc:Bounds x="1080" y="587" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_TriggerDone_di" bpmnElement="Dispatch_TriggerDone" isMarkerVisible="true">
+        <dc:Bounds x="1073" y="300" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_Sync_di" bpmnElement="Dispatch_Sync">
+        <dc:Bounds x="1223" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_Done_di" bpmnElement="Dispatch_Done">
+        <dc:Bounds x="1380" y="167" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Requested_Fork_di" bpmnElement="Dispatch_Flow_Requested_Fork">
+        <di:waypoint x="216" y="185" />
+        <di:waypoint x="473" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Fork_OutcomeFirst_di" bpmnElement="Dispatch_Flow_Fork_OutcomeFirst">
+        <di:waypoint x="523" y="185" />
+        <di:waypoint x="623" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Fork_IsNew_di" bpmnElement="Dispatch_Flow_Fork_IsNew">
+        <di:waypoint x="498" y="210" />
+        <di:waypoint x="498" y="325" />
+        <di:waypoint x="623" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomeFirst_OutcomePublished_di" bpmnElement="Dispatch_Flow_OutcomeFirst_OutcomePublished">
+        <di:waypoint x="673" y="185" />
+        <di:waypoint x="780" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomeFirst_TimeLimit_di" bpmnElement="Dispatch_Flow_OutcomeFirst_TimeLimit">
+        <di:waypoint x="673" y="185" />
+        <di:waypoint x="723" y="185" />
+        <di:waypoint x="723" y="255" />
+        <di:waypoint x="873" y="255" />
+        <di:waypoint x="873" y="325" />
+        <di:waypoint x="930" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomePublished_AwaitDone_di" bpmnElement="Dispatch_Flow_OutcomePublished_AwaitDone">
+        <di:waypoint x="816" y="185" />
+        <di:waypoint x="923" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_TimeLimit_AwaitDone_di" bpmnElement="Dispatch_Flow_TimeLimit_AwaitDone">
+        <di:waypoint x="948" y="307" />
+        <di:waypoint x="948" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_AwaitDone_Sync_di" bpmnElement="Dispatch_Flow_AwaitDone_Sync">
+        <di:waypoint x="973" y="185" />
+        <di:waypoint x="1223" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_IsNew_CreateTask_di" bpmnElement="Dispatch_Flow_IsNew_CreateTask">
+        <di:waypoint x="673" y="325" />
+        <di:waypoint x="748" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_IsNew_CorrelateTask_di" bpmnElement="Dispatch_Flow_IsNew_CorrelateTask">
+        <di:waypoint x="648" y="350" />
+        <di:waypoint x="648" y="465" />
+        <di:waypoint x="748" y="465" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_CreateTask_TriggerDone_di" bpmnElement="Dispatch_Flow_CreateTask_TriggerDone">
+        <di:waypoint x="798" y="365" />
+        <di:waypoint x="798" y="395" />
+        <di:waypoint x="1098" y="395" />
+        <di:waypoint x="1098" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_CorrelateTask_Correlated_di" bpmnElement="Dispatch_Flow_CorrelateTask_Correlated">
+        <di:waypoint x="848" y="465" />
+        <di:waypoint x="923" y="465" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Correlated_TriggerDone_di" bpmnElement="Dispatch_Flow_Correlated_TriggerDone">
+        <di:waypoint x="973" y="465" />
+        <di:waypoint x="1098" y="465" />
+        <di:waypoint x="1098" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Correlated_NotHandled_di" bpmnElement="Dispatch_Flow_Correlated_NotHandled">
+        <di:waypoint x="948" y="490" />
+        <di:waypoint x="948" y="605" />
+        <di:waypoint x="1080" y="605" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_TriggerDone_Sync_di" bpmnElement="Dispatch_Flow_TriggerDone_Sync">
+        <di:waypoint x="1123" y="325" />
+        <di:waypoint x="1248" y="325" />
+        <di:waypoint x="1248" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Sync_Done_di" bpmnElement="Dispatch_Flow_Sync_Done">
+        <di:waypoint x="1273" y="185" />
+        <di:waypoint x="1380" y="185" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="CollectTaskList">
+      <bpmndi:BPMNShape id="CollectTaskList_ListScanRequested_di" bpmnElement="CollectTaskList_ListScanRequested">
+        <dc:Bounds x="180" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_StartListScan_di" bpmnElement="CollectTaskList_StartListScan">
+        <dc:Bounds x="448" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListProcessPageJoin_di" bpmnElement="CollectTaskList_ListProcessPageJoin" isMarkerVisible="true">
+        <dc:Bounds x="623" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_SearchTasks_di" bpmnElement="CollectTaskList_SearchTasks">
+        <dc:Bounds x="748" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_AnyTasks_di" bpmnElement="CollectTaskList_AnyTasks" isMarkerVisible="true">
+        <dc:Bounds x="923" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListVariablesJoin_di" bpmnElement="CollectTaskList_ListVariablesJoin" isMarkerVisible="true">
+        <dc:Bounds x="1073" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ReadTasks_di" bpmnElement="CollectTaskList_ReadTasks">
+        <dc:Bounds x="1198" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListBatchJoin_di" bpmnElement="CollectTaskList_ListBatchJoin" isMarkerVisible="true">
+        <dc:Bounds x="1373" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_CollectListBatch_di" bpmnElement="CollectTaskList_CollectListBatch">
+        <dc:Bounds x="1498" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListScanDecision_di" bpmnElement="CollectTaskList_ListScanDecision" isMarkerVisible="true">
+        <dc:Bounds x="1673" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_FinishListScan_di" bpmnElement="CollectTaskList_FinishListScan">
+        <dc:Bounds x="1798" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListResultJoin_di" bpmnElement="CollectTaskList_ListResultJoin" isMarkerVisible="true">
+        <dc:Bounds x="1973" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListScanReady_di" bpmnElement="CollectTaskList_ListScanReady">
+        <dc:Bounds x="2130" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_WaitListVariables_di" bpmnElement="CollectTaskList_WaitListVariables">
+        <dc:Bounds x="630" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_FailListScan_di" bpmnElement="CollectTaskList_FailListScan">
+        <dc:Bounds x="598" y="440" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanRequested_StartListScan_di" bpmnElement="CollectTaskList_Flow_ListScanRequested_StartListScan">
+        <di:waypoint x="216" y="200" />
+        <di:waypoint x="448" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_StartListScan_ListProcessPageJoin_di" bpmnElement="CollectTaskList_Flow_StartListScan_ListProcessPageJoin">
+        <di:waypoint x="548" y="200" />
+        <di:waypoint x="623" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListProcessPageJoin_SearchTasks_di" bpmnElement="CollectTaskList_Flow_ListProcessPageJoin_SearchTasks">
+        <di:waypoint x="673" y="200" />
+        <di:waypoint x="748" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_SearchTasks_AnyTasks_di" bpmnElement="CollectTaskList_Flow_SearchTasks_AnyTasks">
+        <di:waypoint x="848" y="200" />
+        <di:waypoint x="923" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_AnyTasks_ListVariablesJoin_di" bpmnElement="CollectTaskList_Flow_AnyTasks_ListVariablesJoin">
+        <di:waypoint x="973" y="200" />
+        <di:waypoint x="1073" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListVariablesJoin_ReadTasks_di" bpmnElement="CollectTaskList_Flow_ListVariablesJoin_ReadTasks">
+        <di:waypoint x="1123" y="200" />
+        <di:waypoint x="1198" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_AnyTasks_ListBatchJoin_di" bpmnElement="CollectTaskList_Flow_AnyTasks_ListBatchJoin">
+        <di:waypoint x="948" y="225" />
+        <di:waypoint x="948" y="270" />
+        <di:waypoint x="1398" y="270" />
+        <di:waypoint x="1398" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ReadTasks_ListBatchJoin_di" bpmnElement="CollectTaskList_Flow_ReadTasks_ListBatchJoin">
+        <di:waypoint x="1298" y="200" />
+        <di:waypoint x="1373" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListBatchJoin_CollectListBatch_di" bpmnElement="CollectTaskList_Flow_ListBatchJoin_CollectListBatch">
+        <di:waypoint x="1423" y="200" />
+        <di:waypoint x="1498" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_CollectListBatch_ListScanDecision_di" bpmnElement="CollectTaskList_Flow_CollectListBatch_ListScanDecision">
+        <di:waypoint x="1598" y="200" />
+        <di:waypoint x="1673" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_FinishListScan_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_FinishListScan">
+        <di:waypoint x="1723" y="200" />
+        <di:waypoint x="1798" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin">
+        <di:waypoint x="1698" y="225" />
+        <di:waypoint x="1698" y="270" />
+        <di:waypoint x="648" y="270" />
+        <di:waypoint x="648" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_WaitListVariables_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_WaitListVariables">
+        <di:waypoint x="1698" y="175" />
+        <di:waypoint x="1698" y="130" />
+        <di:waypoint x="648" y="130" />
+        <di:waypoint x="648" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_WaitListVariables_ListVariablesJoin_di" bpmnElement="CollectTaskList_Flow_WaitListVariables_ListVariablesJoin">
+        <di:waypoint x="666" y="340" />
+        <di:waypoint x="1098" y="340" />
+        <di:waypoint x="1098" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_FailListScan_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_FailListScan">
+        <di:waypoint x="1698" y="175" />
+        <di:waypoint x="1698" y="130" />
+        <di:waypoint x="648" y="130" />
+        <di:waypoint x="648" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_FinishListScan_ListResultJoin_di" bpmnElement="CollectTaskList_Flow_FinishListScan_ListResultJoin">
+        <di:waypoint x="1898" y="200" />
+        <di:waypoint x="1973" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_FailListScan_ListResultJoin_di" bpmnElement="CollectTaskList_Flow_FailListScan_ListResultJoin">
+        <di:waypoint x="698" y="480" />
+        <di:waypoint x="1998" y="480" />
+        <di:waypoint x="1998" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListResultJoin_ListScanReady_di" bpmnElement="CollectTaskList_Flow_ListResultJoin_ListScanReady">
+        <di:waypoint x="2023" y="200" />
+        <di:waypoint x="2130" y="200" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
