@@ -87,7 +87,7 @@
           "elementSelectors": [
             { "elementId": "RouteMethod" },
             { "elementId": "Cancelable" },
-            { "elementId": "NotCancelableJoin" },
+            { "elementId": "Link_NotCancelable_FromCancelable" },
             { "elementId": "NotCancelableReady" }
           ],
           "state": "IS_COMPLETED_IN_ORDER"
@@ -122,7 +122,7 @@
           "elementSelectors": [
             { "elementId": "CheckFollowUp" },
             { "elementId": "FollowUpAccepted" },
-            { "elementId": "FollowUpErrorJoin" },
+            { "elementId": "Link_FollowUpError_FromAccepted" },
             { "elementId": "FollowUpErrorReady" }
           ],
           "state": "IS_COMPLETED_IN_ORDER"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_Collaboration_a2a_protocol" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Collaboration_a2a_protocol" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
   <bpmn:error id="NotFound" name="NotFound" errorCode="NOT_FOUND" />
   <bpmn:process id="a2a-rpc" name="02 A2A Server - Protocol and Discovery" isExecutable="true">
     <bpmn:documentation>The A2A JSON-RPC binding (A2A 1.0 and A2A 0.3 dialects on one endpoint), deployed unchanged next to an agent diagram. The endpoint starts the process named by the secret A2A_AGENT_PROCESS for each new task and answers every other method from engine state. Not meant to be edited.</bpmn:documentation>
@@ -37,7 +37,7 @@
     </bpmn:scriptTask>
     <bpmn:scriptTask id="ParseRequest" name="Parse request">
       <bpmn:extensionElements>
-        <zeebe:script expression="={ r: if rpc instance of context then rpc else {}, p: if r.params instance of context then r.params else {}, m: if p.message instance of context then p.message else {}, cfg: if p.configuration instance of context then p.configuration else {}, ct: get value(hdr, &#34;content-type&#34;), ver: get value(hdr, &#34;a2a-version&#34;), supported: [&#34;text/plain&#34;, &#34;application/json&#34;], method: if r.method instance of string then r.method else null, id: r.id, versionOk: if ver instance of string then matches(ver, &#34;^1[.]0([.][0-9]+)?$&#34;) else false, contentTypeOk: if ct instance of string then (starts with(lower case(ct), &#34;application/json&#34;) or starts with(lower case(ct), &#34;application/a2a+json&#34;)) else false, jsonrpcOk: r.jsonrpc = &#34;2.0&#34; and method != null, msgOk: p.message instance of context and m.messageId instance of string and m.role instance of string and m.parts instance of list, mediaOk: if m.parts instance of list then not(some part in m.parts satisfies part instance of context and part.mediaType != null and not(list contains(supported, part.mediaType))) else true, pushMethods: [&#34;CreateTaskPushNotificationConfig&#34;, &#34;GetTaskPushNotificationConfig&#34;, &#34;ListTaskPushNotificationConfigs&#34;, &#34;DeleteTaskPushNotificationConfig&#34;], pushRef: if p.task_id instance of string then p.task_id else if p.taskId instance of string then p.taskId else null, ref: if method != null and list contains(pushMethods, method) then pushRef else if p.id instance of string then p.id else null, idOk: ref instance of string and ref != &#34;&#34;, pushEnabled: pushEnabled = true, pushCfg: context(get entries({id: p.id, url: p.url, token: p.token, authentication: p.authentication})[item.value != null]), taskPush: if cfg.taskPushNotificationConfig instance of context then cfg.taskPushNotificationConfig else if cfg.pushNotificationConfig instance of context then {url: cfg.pushNotificationConfig.url, token: cfg.pushNotificationConfig.token, authentication: {scheme: if cfg.pushNotificationConfig.authentication.schemes instance of list and count(cfg.pushNotificationConfig.authentication.schemes) &gt; 0 then cfg.pushNotificationConfig.authentication.schemes[1] else &#34;Bearer&#34;, credentials: cfg.pushNotificationConfig.authentication.credentials}} else null, taskId: if m.taskId instance of string and m.taskId != &#34;&#34; then m.taskId else null, contextId: if m.contextId instance of string and m.contextId != &#34;&#34; then m.contextId else null, messageId: if m.messageId instance of string then m.messageId else null, blocking: cfg.returnImmediately != true, hl: if cfg.historyLength instance of number then cfg.historyLength else if p.historyLength instance of number then p.historyLength else if p.history_length instance of number then p.history_length else null, pageSize: if p.pageSize instance of number then p.pageSize else if p.page_size instance of number then p.page_size else 50, listContextId: if p.contextId instance of string and p.contextId != &#34;&#34; then p.contextId else if p.context_id instance of string and p.context_id != &#34;&#34; then p.context_id else null, listStatus: if p.status instance of string and p.status != &#34;&#34; then p.status else null, listAfter: if p.statusTimestampAfter instance of string then p.statusTimestampAfter else if p.status_timestamp_after instance of string then p.status_timestamp_after else null, pageToken: if p.pageToken instance of string then p.pageToken else if p.page_token instance of string then p.page_token else null, includeArtifacts: p.includeArtifacts = true or p.include_artifacts = true }" resultVariable="ctx" />
+        <zeebe:script expression="={ r: if rpc instance of context then rpc else {}, p: if r.params instance of context then r.params else {}, m: if p.message instance of context then p.message else {}, cfg: if p.configuration instance of context then p.configuration else {}, ct: get value(hdr, &#34;content-type&#34;), ver: get value(hdr, &#34;a2a-version&#34;), supported: [&#34;text/plain&#34;, &#34;application/json&#34;], method: if r.method instance of string then r.method else null, id: r.id, versionOk: if ver instance of string then matches(ver, &#34;^1[.]0([.][0-9]+)?$&#34;) else false, contentTypeOk: if ct instance of string then (starts with(lower case(ct), &#34;application/json&#34;) or starts with(lower case(ct), &#34;application/a2a+json&#34;)) else false, jsonrpcOk: r.jsonrpc = &#34;2.0&#34; and method != null, msgOk: p.message instance of context and m.messageId instance of string and m.role instance of string and m.parts instance of list, mediaOk: if m.parts instance of list then not(some part in m.parts satisfies part instance of context and part.mediaType != null and not(list contains(supported, part.mediaType))) else true, pushMethods: [&#34;CreateTaskPushNotificationConfig&#34;, &#34;GetTaskPushNotificationConfig&#34;, &#34;ListTaskPushNotificationConfigs&#34;, &#34;DeleteTaskPushNotificationConfig&#34;], pushRef: if p.task_id instance of string then p.task_id else if p.taskId instance of string then p.taskId else null, ref: if method != null and list contains(pushMethods, method) then pushRef else if p.id instance of string then p.id else null, idOk: ref instance of string and ref != &#34;&#34;, pushEnabled: pushEnabled = true, pushCfg: context(get entries({id: p.id, url: p.url, token: p.token, authentication: p.authentication})[item.value != null]), taskPush: if cfg.taskPushNotificationConfig instance of context then cfg.taskPushNotificationConfig else if cfg.pushNotificationConfig instance of context then {url: cfg.pushNotificationConfig.url, token: cfg.pushNotificationConfig.token, authentication: {scheme: if cfg.pushNotificationConfig.authentication.schemes instance of list and count(cfg.pushNotificationConfig.authentication.schemes) &#62; 0 then cfg.pushNotificationConfig.authentication.schemes[1] else &#34;Bearer&#34;, credentials: cfg.pushNotificationConfig.authentication.credentials}} else null, taskId: if m.taskId instance of string and m.taskId != &#34;&#34; then m.taskId else null, contextId: if m.contextId instance of string and m.contextId != &#34;&#34; then m.contextId else null, messageId: if m.messageId instance of string then m.messageId else null, blocking: cfg.returnImmediately != true, hl: if cfg.historyLength instance of number then cfg.historyLength else if p.historyLength instance of number then p.historyLength else if p.history_length instance of number then p.history_length else null, pageSize: if p.pageSize instance of number then p.pageSize else if p.page_size instance of number then p.page_size else 50, listContextId: if p.contextId instance of string and p.contextId != &#34;&#34; then p.contextId else if p.context_id instance of string and p.context_id != &#34;&#34; then p.context_id else null, listStatus: if p.status instance of string and p.status != &#34;&#34; then p.status else null, listAfter: if p.statusTimestampAfter instance of string then p.statusTimestampAfter else if p.status_timestamp_after instance of string then p.status_timestamp_after else null, pageToken: if p.pageToken instance of string then p.pageToken else if p.page_token instance of string then p.page_token else null, includeArtifacts: p.includeArtifacts = true or p.include_artifacts = true }" resultVariable="ctx" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_NormalizeRequest_ParseRequest</bpmn:incoming>
       <bpmn:outgoing>Flow_ParseRequest_ValidateRequest</bpmn:outgoing>
@@ -96,8 +96,7 @@
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="DispatchJoin">
       <bpmn:incoming>Flow_PrepareNewTask_DispatchJoin</bpmn:incoming>
-      <bpmn:incoming>Flow_FollowUpAccepted_DispatchJoin</bpmn:incoming>
-      <bpmn:incoming>Flow_Cancelable_DispatchJoin</bpmn:incoming>
+      <bpmn:incoming>Flow_LinkDispatch_DispatchJoin</bpmn:incoming>
       <bpmn:outgoing>Flow_DispatchJoin_Dispatch</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:subProcess id="Dispatch" name="Hand to the task and await its outcome">
@@ -398,11 +397,6 @@
       <bpmn:outgoing>Flow_RouteMethod_Cancelable</bpmn:outgoing>
       <bpmn:outgoing>Flow_RouteMethod_CheckFollowUp</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="NotFoundJoin">
-      <bpmn:incoming>Flow_RouteMethod_NotFoundJoin</bpmn:incoming>
-      <bpmn:incoming>Flow_LookupTimeLeft_NotFoundJoin</bpmn:incoming>
-      <bpmn:outgoing>Flow_NotFoundJoin_BuildNotFound</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
     <bpmn:endEvent id="NotFoundReady" name="Not found response ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
@@ -432,11 +426,6 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_CancellationOutcome_BuildCanceledView</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="NotCancelableJoin">
-      <bpmn:incoming>Flow_Cancelable_NotCancelableJoin</bpmn:incoming>
-      <bpmn:incoming>Flow_CancellationOutcome_NotCancelableJoin</bpmn:incoming>
-      <bpmn:outgoing>Flow_NotCancelableJoin_BuildNotCancelable</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
     <bpmn:endEvent id="NotCancelableReady" name="Not cancelable response ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
@@ -472,11 +461,6 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_RouteOutcome_BuildFollowUpResponse</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="FollowUpErrorJoin">
-      <bpmn:incoming>Flow_FollowUpAccepted_FollowUpErrorJoin</bpmn:incoming>
-      <bpmn:incoming>Flow_RouteOutcome_FollowUpErrorJoin</bpmn:incoming>
-      <bpmn:outgoing>Flow_FollowUpErrorJoin_BuildFollowUpError</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
     <bpmn:endEvent id="FollowUpErrorReady" name="Error response ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
@@ -500,10 +484,10 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_RouteRequest_PrepareLookup" name="task method" sourceRef="RouteRequest" targetRef="PrepareLookup" />
     <bpmn:sequenceFlow id="Flow_PrepareNewTask_DispatchJoin" sourceRef="PrepareNewTask" targetRef="DispatchJoin" />
-    <bpmn:sequenceFlow id="Flow_FollowUpAccepted_DispatchJoin" name="yes" sourceRef="FollowUpAccepted" targetRef="DispatchJoin">
+    <bpmn:sequenceFlow id="Flow_FollowUpAccepted_DispatchJoin" name="yes" sourceRef="FollowUpAccepted" targetRef="Link_Dispatch_FromFollowUp">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=followError = null</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_Cancelable_DispatchJoin" name="active" sourceRef="Cancelable" targetRef="DispatchJoin">
+    <bpmn:sequenceFlow id="Flow_Cancelable_DispatchJoin" name="active" sourceRef="Cancelable" targetRef="Link_Dispatch_FromCancel">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(list contains(["TASK_STATE_COMPLETED", "TASK_STATE_CANCELED", "TASK_STATE_FAILED", "TASK_STATE_REJECTED"], task.status.state))</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_DispatchJoin_Dispatch" sourceRef="DispatchJoin" targetRef="Dispatch" />
@@ -522,7 +506,7 @@
     <bpmn:sequenceFlow id="Flow_TaskKnown_RouteMethod" name="yes" sourceRef="TaskKnown" targetRef="RouteMethod">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=task != null</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_RouteMethod_NotFoundJoin" name="unsupported method" sourceRef="RouteMethod" targetRef="NotFoundJoin" />
+    <bpmn:sequenceFlow id="Flow_RouteMethod_NotFoundJoin" name="unsupported method" sourceRef="RouteMethod" targetRef="Link_NotFound_FromMethod" />
     <bpmn:sequenceFlow id="Flow_RouteMethod_BuildTaskView" name="GetTask" sourceRef="RouteMethod" targetRef="TaskViewReady">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=task != null and ctx.method = "GetTask"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -532,13 +516,13 @@
     <bpmn:sequenceFlow id="Flow_RouteMethod_CheckFollowUp" name="SendMessage" sourceRef="RouteMethod" targetRef="CheckFollowUp">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=task != null and ctx.method = "SendMessage"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_NotFoundJoin_BuildNotFound" sourceRef="NotFoundJoin" targetRef="NotFoundReady" />
-    <bpmn:sequenceFlow id="Flow_Cancelable_NotCancelableJoin" name="no" sourceRef="Cancelable" targetRef="NotCancelableJoin" />
-    <bpmn:sequenceFlow id="Flow_NotCancelableJoin_BuildNotCancelable" sourceRef="NotCancelableJoin" targetRef="NotCancelableReady" />
+    <bpmn:sequenceFlow id="Flow_NotFoundJoin_BuildNotFound" sourceRef="Link_NotFound_Catch" targetRef="NotFoundReady" />
+    <bpmn:sequenceFlow id="Flow_Cancelable_NotCancelableJoin" name="no" sourceRef="Cancelable" targetRef="Link_NotCancelable_FromCancelable" />
+    <bpmn:sequenceFlow id="Flow_NotCancelableJoin_BuildNotCancelable" sourceRef="Link_NotCancelable_Catch" targetRef="NotCancelableReady" />
     <bpmn:sequenceFlow id="Flow_CheckFollowUp_FollowUpAccepted" sourceRef="CheckFollowUp" targetRef="FollowUpAccepted" />
-    <bpmn:sequenceFlow id="Flow_FollowUpAccepted_FollowUpErrorJoin" name="no" sourceRef="FollowUpAccepted" targetRef="FollowUpErrorJoin" />
-    <bpmn:sequenceFlow id="Flow_RouteOutcome_FollowUpErrorJoin" name="no" sourceRef="RouteOutcome" targetRef="FollowUpErrorJoin" />
-    <bpmn:sequenceFlow id="Flow_FollowUpErrorJoin_BuildFollowUpError" sourceRef="FollowUpErrorJoin" targetRef="FollowUpErrorReady" />
+    <bpmn:sequenceFlow id="Flow_FollowUpAccepted_FollowUpErrorJoin" name="no" sourceRef="FollowUpAccepted" targetRef="Link_FollowUpError_FromAccepted" />
+    <bpmn:sequenceFlow id="Flow_RouteOutcome_FollowUpErrorJoin" name="no" sourceRef="RouteOutcome" targetRef="Link_FollowUpError_FromOutcome" />
+    <bpmn:sequenceFlow id="Flow_FollowUpErrorJoin_BuildFollowUpError" sourceRef="Link_FollowUpError_Catch" targetRef="FollowUpErrorReady" />
     <bpmn:exclusiveGateway id="LookupTimeLeft" name="Lookup time left?" default="Flow_LookupTimeLeft_NotFoundJoin">
       <bpmn:incoming>Flow_TaskKnown_LookupTimeLeft</bpmn:incoming>
       <bpmn:outgoing>Flow_LookupTimeLeft_WaitForIndex</bpmn:outgoing>
@@ -562,7 +546,7 @@
     <bpmn:sequenceFlow id="Flow_LookupTimeLeft_WaitForIndex" name="retry" sourceRef="LookupTimeLeft" targetRef="WaitForIndex">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=now() &lt; date and time(lookup.indexDeadline)</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_LookupTimeLeft_NotFoundJoin" name="expired" sourceRef="LookupTimeLeft" targetRef="NotFoundJoin" />
+    <bpmn:sequenceFlow id="Flow_LookupTimeLeft_NotFoundJoin" name="expired" sourceRef="LookupTimeLeft" targetRef="Link_NotFound_FromLookup" />
     <bpmn:sequenceFlow id="Flow_WaitForIndex_LookupJoin" sourceRef="WaitForIndex" targetRef="LookupJoin" />
     <bpmn:exclusiveGateway id="CancellationOutcome" name="Terminal outcome visible?" default="Flow_CancellationOutcome_CancellationTimeout">
       <bpmn:incoming>Flow_RouteOutcome_CancellationOutcome</bpmn:incoming>
@@ -581,7 +565,7 @@
     <bpmn:sequenceFlow id="Flow_CancellationOutcome_BuildCanceledView" name="canceled" sourceRef="CancellationOutcome" targetRef="CanceledReady">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=visible and seen.status.state = "TASK_STATE_CANCELED"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_CancellationOutcome_NotCancelableJoin" name="not canceled" sourceRef="CancellationOutcome" targetRef="NotCancelableJoin">
+    <bpmn:sequenceFlow id="Flow_CancellationOutcome_NotCancelableJoin" name="not canceled" sourceRef="CancellationOutcome" targetRef="Link_NotCancelable_FromCancellation">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=seen != null and seen.status.state != "TASK_STATE_CANCELED" and ((visible and list contains(["TASK_STATE_COMPLETED", "TASK_STATE_CANCELED", "TASK_STATE_FAILED", "TASK_STATE_REJECTED"], seen.status.state)) or not(correlated))</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_CancellationOutcome_CancellationTimeout" name="not visible" sourceRef="CancellationOutcome" targetRef="CancellationErrorReady" />
@@ -792,353 +776,60 @@
       <bpmn:incoming>Flow_CardRequested_CardServed</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_CardRequested_CardServed" sourceRef="CardRequested" targetRef="CardServed" />
+    <bpmn:intermediateCatchEvent id="Link_NotFound_Catch" name="Not found">
+      <bpmn:outgoing>Flow_NotFoundJoin_BuildNotFound</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="Link_NotFound_Catch_def" name="NotFound" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateThrowEvent id="Link_NotFound_FromMethod" name="Not found">
+      <bpmn:incoming>Flow_RouteMethod_NotFoundJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_NotFound_FromMethod_def" name="NotFound" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Link_NotFound_FromLookup" name="Not found">
+      <bpmn:incoming>Flow_LookupTimeLeft_NotFoundJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_NotFound_FromLookup_def" name="NotFound" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="Link_NotCancelable_Catch" name="Not cancelable">
+      <bpmn:outgoing>Flow_NotCancelableJoin_BuildNotCancelable</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="Link_NotCancelable_Catch_def" name="NotCancelable" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateThrowEvent id="Link_NotCancelable_FromCancelable" name="Not cancelable">
+      <bpmn:incoming>Flow_Cancelable_NotCancelableJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_NotCancelable_FromCancelable_def" name="NotCancelable" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Link_NotCancelable_FromCancellation" name="Not cancelable">
+      <bpmn:incoming>Flow_CancellationOutcome_NotCancelableJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_NotCancelable_FromCancellation_def" name="NotCancelable" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="Link_FollowUpError_Catch" name="Follow-up error">
+      <bpmn:outgoing>Flow_FollowUpErrorJoin_BuildFollowUpError</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="Link_FollowUpError_Catch_def" name="FollowUpError" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateThrowEvent id="Link_FollowUpError_FromAccepted" name="Follow-up error">
+      <bpmn:incoming>Flow_FollowUpAccepted_FollowUpErrorJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_FollowUpError_FromAccepted_def" name="FollowUpError" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Link_FollowUpError_FromOutcome" name="Follow-up error">
+      <bpmn:incoming>Flow_RouteOutcome_FollowUpErrorJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_FollowUpError_FromOutcome_def" name="FollowUpError" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="Link_Dispatch_In" name="Dispatch">
+      <bpmn:outgoing>Flow_LinkDispatch_DispatchJoin</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="Link_Dispatch_In_def" name="Dispatch" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_LinkDispatch_DispatchJoin" sourceRef="Link_Dispatch_In" targetRef="DispatchJoin" />
+    <bpmn:intermediateThrowEvent id="Link_Dispatch_FromFollowUp" name="Dispatch">
+      <bpmn:incoming>Flow_FollowUpAccepted_DispatchJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_Dispatch_FromFollowUp_def" name="Dispatch" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Link_Dispatch_FromCancel" name="Dispatch">
+      <bpmn:incoming>Flow_Cancelable_DispatchJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_Dispatch_FromCancel_def" name="Dispatch" />
+    </bpmn:intermediateThrowEvent>
   </bpmn:process>
   <bpmn:signal id="Signal_Settled" name="=&#34;a2a-settled:&#34; + awaitKey" />
   <bpmn:message id="AgentCardRequestMessage" name="Agent Card request" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-rpc">
     <bpmndi:BPMNPlane id="BPMNPlane_a2a-rpc" bpmnElement="a2a-rpc">
-      <bpmndi:BPMNShape id="RpcReceived_di" bpmnElement="RpcReceived">
-        <dc:Bounds x="57" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NormalizeRequest_di" bpmnElement="NormalizeRequest">
-        <dc:Bounds x="175" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ParseRequest_di" bpmnElement="ParseRequest">
-        <dc:Bounds x="325" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ValidateRequest_di" bpmnElement="ValidateRequest">
-        <dc:Bounds x="475" y="30" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="RouteRequest_di" bpmnElement="RouteRequest" isMarkerVisible="true">
-        <dc:Bounds x="650" y="45" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ValidationErrorReady_di" bpmnElement="ValidationErrorReady">
-        <dc:Bounds x="807" y="52" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CardRequested_di" bpmnElement="CardRequested">
-        <dc:Bounds x="57" y="192" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CardServed_di" bpmnElement="CardServed">
-        <dc:Bounds x="357" y="192" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PrepareList_di" bpmnElement="PrepareList">
-        <dc:Bounds x="775" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_di" bpmnElement="CollectTaskList">
-        <dc:Bounds x="925" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ListCollected_di" bpmnElement="ListCollected" isMarkerVisible="true">
-        <dc:Bounds x="1100" y="185" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TaskListReady_di" bpmnElement="TaskListReady">
-        <dc:Bounds x="1257" y="192" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PrepareNewTask_di" bpmnElement="PrepareNewTask">
-        <dc:Bounds x="775" y="310" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ListFailureReady_di" bpmnElement="ListFailureReady">
-        <dc:Bounds x="1257" y="332" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="DispatchJoin_di" bpmnElement="DispatchJoin" isMarkerVisible="true">
-        <dc:Bounds x="2150" y="325" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_di" bpmnElement="Dispatch">
-        <dc:Bounds x="2275" y="310" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="RouteOutcome_di" bpmnElement="RouteOutcome" isMarkerVisible="true">
-        <dc:Bounds x="2450" y="325" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NewTaskReady_di" bpmnElement="NewTaskReady">
-        <dc:Bounds x="2607" y="332" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CancellationOutcome_di" bpmnElement="CancellationOutcome" isMarkerVisible="true">
-        <dc:Bounds x="2750" y="325" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CanceledReady_di" bpmnElement="CanceledReady">
-        <dc:Bounds x="2907" y="332" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NotCancelableJoin_di" bpmnElement="NotCancelableJoin" isMarkerVisible="true">
-        <dc:Bounds x="3050" y="325" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NotCancelableReady_di" bpmnElement="NotCancelableReady">
-        <dc:Bounds x="3207" y="332" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="PrepareLookup_di" bpmnElement="PrepareLookup">
-        <dc:Bounds x="775" y="450" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="LookupJoin_di" bpmnElement="LookupJoin" isMarkerVisible="true">
-        <dc:Bounds x="950" y="465" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="FindTask_di" bpmnElement="FindTask">
-        <dc:Bounds x="1075" y="450" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ReadTask_di" bpmnElement="ReadTask">
-        <dc:Bounds x="1225" y="450" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TaskKnown_di" bpmnElement="TaskKnown" isMarkerVisible="true">
-        <dc:Bounds x="1400" y="465" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="RouteMethod_di" bpmnElement="RouteMethod" isMarkerVisible="true">
-        <dc:Bounds x="1550" y="465" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="LookupTimeLeft_di" bpmnElement="LookupTimeLeft" isMarkerVisible="true">
-        <dc:Bounds x="1850" y="465" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="WaitForIndex_di" bpmnElement="WaitForIndex">
-        <dc:Bounds x="2007" y="472" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NotFoundJoin_di" bpmnElement="NotFoundJoin" isMarkerVisible="true">
-        <dc:Bounds x="2150" y="465" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NotFoundReady_di" bpmnElement="NotFoundReady">
-        <dc:Bounds x="2307" y="472" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="FollowUpReady_di" bpmnElement="FollowUpReady">
-        <dc:Bounds x="3057" y="472" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="FollowUpErrorJoin_di" bpmnElement="FollowUpErrorJoin" isMarkerVisible="true">
-        <dc:Bounds x="3200" y="465" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="FollowUpErrorReady_di" bpmnElement="FollowUpErrorReady">
-        <dc:Bounds x="3357" y="472" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CancellationErrorReady_di" bpmnElement="CancellationErrorReady">
-        <dc:Bounds x="3507" y="472" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TaskViewReady_di" bpmnElement="TaskViewReady">
-        <dc:Bounds x="1707" y="612" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Cancelable_di" bpmnElement="Cancelable" isMarkerVisible="true">
-        <dc:Bounds x="1850" y="605" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CheckFollowUp_di" bpmnElement="CheckFollowUp">
-        <dc:Bounds x="1825" y="730" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="FollowUpAccepted_di" bpmnElement="FollowUpAccepted" isMarkerVisible="true">
-        <dc:Bounds x="2000" y="745" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_RpcReceived_NormalizeRequest_di" bpmnElement="Flow_RpcReceived_NormalizeRequest">
-        <di:waypoint x="93" y="70" />
-        <di:waypoint x="175" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_NormalizeRequest_ParseRequest_di" bpmnElement="Flow_NormalizeRequest_ParseRequest">
-        <di:waypoint x="275" y="70" />
-        <di:waypoint x="325" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_ParseRequest_ValidateRequest_di" bpmnElement="Flow_ParseRequest_ValidateRequest">
-        <di:waypoint x="425" y="70" />
-        <di:waypoint x="475" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_ValidateRequest_RouteRequest_di" bpmnElement="Flow_ValidateRequest_RouteRequest">
-        <di:waypoint x="575" y="70" />
-        <di:waypoint x="650" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteRequest_BuildValidationError_di" bpmnElement="Flow_RouteRequest_BuildValidationError">
-        <di:waypoint x="700" y="70" />
-        <di:waypoint x="807" y="70" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareList_di" bpmnElement="Flow_RouteRequest_PrepareList">
-        <di:waypoint x="675" y="95" />
-        <di:waypoint x="675" y="210" />
-        <di:waypoint x="775" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareNewTask_di" bpmnElement="Flow_RouteRequest_PrepareNewTask">
-        <di:waypoint x="675" y="95" />
-        <di:waypoint x="675" y="350" />
-        <di:waypoint x="775" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareLookup_di" bpmnElement="Flow_RouteRequest_PrepareLookup">
-        <di:waypoint x="675" y="95" />
-        <di:waypoint x="675" y="490" />
-        <di:waypoint x="775" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CardRequested_CardServed_di" bpmnElement="Flow_CardRequested_CardServed">
-        <di:waypoint x="93" y="210" />
-        <di:waypoint x="357" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PrepareList_CollectTaskList_di" bpmnElement="Flow_PrepareList_CollectTaskList">
-        <di:waypoint x="875" y="210" />
-        <di:waypoint x="925" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CollectTaskList_ListCollected_di" bpmnElement="Flow_CollectTaskList_ListCollected">
-        <di:waypoint x="1025" y="210" />
-        <di:waypoint x="1100" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_ListCollected_BuildTaskList_di" bpmnElement="Flow_ListCollected_BuildTaskList">
-        <di:waypoint x="1150" y="210" />
-        <di:waypoint x="1257" y="210" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_ListCollected_BuildListFailure_di" bpmnElement="Flow_ListCollected_BuildListFailure">
-        <di:waypoint x="1125" y="235" />
-        <di:waypoint x="1125" y="350" />
-        <di:waypoint x="1257" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PrepareNewTask_DispatchJoin_di" bpmnElement="Flow_PrepareNewTask_DispatchJoin">
-        <di:waypoint x="825" y="390" />
-        <di:waypoint x="825" y="420" />
-        <di:waypoint x="2175" y="420" />
-        <di:waypoint x="2175" y="375" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_DispatchJoin_Dispatch_di" bpmnElement="Flow_DispatchJoin_Dispatch">
-        <di:waypoint x="2200" y="350" />
-        <di:waypoint x="2275" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Dispatch_RouteOutcome_di" bpmnElement="Flow_Dispatch_RouteOutcome">
-        <di:waypoint x="2375" y="350" />
-        <di:waypoint x="2450" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteOutcome_BuildNewTaskResponse_di" bpmnElement="Flow_RouteOutcome_BuildNewTaskResponse">
-        <di:waypoint x="2500" y="350" />
-        <di:waypoint x="2607" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteOutcome_CancellationOutcome_di" bpmnElement="Flow_RouteOutcome_CancellationOutcome">
-        <di:waypoint x="2475" y="375" />
-        <di:waypoint x="2475" y="420" />
-        <di:waypoint x="2775" y="420" />
-        <di:waypoint x="2775" y="375" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteOutcome_BuildFollowUpResponse_di" bpmnElement="Flow_RouteOutcome_BuildFollowUpResponse">
-        <di:waypoint x="2475" y="375" />
-        <di:waypoint x="2475" y="490" />
-        <di:waypoint x="3057" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteOutcome_FollowUpErrorJoin_di" bpmnElement="Flow_RouteOutcome_FollowUpErrorJoin">
-        <di:waypoint x="2500" y="350" />
-        <di:waypoint x="2550" y="350" />
-        <di:waypoint x="2550" y="420" />
-        <di:waypoint x="3150" y="420" />
-        <di:waypoint x="3150" y="490" />
-        <di:waypoint x="3200" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_BuildCanceledView_di" bpmnElement="Flow_CancellationOutcome_BuildCanceledView">
-        <di:waypoint x="2800" y="350" />
-        <di:waypoint x="2907" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_NotCancelableJoin_di" bpmnElement="Flow_CancellationOutcome_NotCancelableJoin">
-        <di:waypoint x="2775" y="375" />
-        <di:waypoint x="2775" y="420" />
-        <di:waypoint x="3075" y="420" />
-        <di:waypoint x="3075" y="375" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_CancellationTimeout_di" bpmnElement="Flow_CancellationOutcome_CancellationTimeout">
-        <di:waypoint x="2800" y="350" />
-        <di:waypoint x="2850" y="350" />
-        <di:waypoint x="2850" y="420" />
-        <di:waypoint x="3450" y="420" />
-        <di:waypoint x="3450" y="490" />
-        <di:waypoint x="3507" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_NotCancelableJoin_BuildNotCancelable_di" bpmnElement="Flow_NotCancelableJoin_BuildNotCancelable">
-        <di:waypoint x="3100" y="350" />
-        <di:waypoint x="3207" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_PrepareLookup_LookupJoin_di" bpmnElement="Flow_PrepareLookup_LookupJoin">
-        <di:waypoint x="875" y="490" />
-        <di:waypoint x="950" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_LookupJoin_FindTask_di" bpmnElement="Flow_LookupJoin_FindTask">
-        <di:waypoint x="1000" y="490" />
-        <di:waypoint x="1075" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_FindTask_ReadTask_di" bpmnElement="Flow_FindTask_ReadTask">
-        <di:waypoint x="1175" y="490" />
-        <di:waypoint x="1225" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_ReadTask_TaskKnown_di" bpmnElement="Flow_ReadTask_TaskKnown">
-        <di:waypoint x="1325" y="490" />
-        <di:waypoint x="1400" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_TaskKnown_RouteMethod_di" bpmnElement="Flow_TaskKnown_RouteMethod">
-        <di:waypoint x="1450" y="490" />
-        <di:waypoint x="1550" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_TaskKnown_LookupTimeLeft_di" bpmnElement="Flow_TaskKnown_LookupTimeLeft">
-        <di:waypoint x="1425" y="515" />
-        <di:waypoint x="1425" y="560" />
-        <di:waypoint x="1875" y="560" />
-        <di:waypoint x="1875" y="515" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteMethod_NotFoundJoin_di" bpmnElement="Flow_RouteMethod_NotFoundJoin">
-        <di:waypoint x="1575" y="515" />
-        <di:waypoint x="1575" y="560" />
-        <di:waypoint x="2175" y="560" />
-        <di:waypoint x="2175" y="515" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteMethod_BuildTaskView_di" bpmnElement="Flow_RouteMethod_BuildTaskView">
-        <di:waypoint x="1575" y="515" />
-        <di:waypoint x="1575" y="630" />
-        <di:waypoint x="1707" y="630" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteMethod_Cancelable_di" bpmnElement="Flow_RouteMethod_Cancelable">
-        <di:waypoint x="1600" y="490" />
-        <di:waypoint x="1650" y="490" />
-        <di:waypoint x="1650" y="560" />
-        <di:waypoint x="1800" y="560" />
-        <di:waypoint x="1800" y="630" />
-        <di:waypoint x="1850" y="630" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_RouteMethod_CheckFollowUp_di" bpmnElement="Flow_RouteMethod_CheckFollowUp">
-        <di:waypoint x="1575" y="515" />
-        <di:waypoint x="1575" y="770" />
-        <di:waypoint x="1825" y="770" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_LookupTimeLeft_WaitForIndex_di" bpmnElement="Flow_LookupTimeLeft_WaitForIndex">
-        <di:waypoint x="1900" y="490" />
-        <di:waypoint x="2007" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_LookupTimeLeft_NotFoundJoin_di" bpmnElement="Flow_LookupTimeLeft_NotFoundJoin">
-        <di:waypoint x="1875" y="515" />
-        <di:waypoint x="1875" y="560" />
-        <di:waypoint x="2175" y="560" />
-        <di:waypoint x="2175" y="515" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_WaitForIndex_LookupJoin_di" bpmnElement="Flow_WaitForIndex_LookupJoin">
-        <di:waypoint x="2025" y="508" />
-        <di:waypoint x="2025" y="560" />
-        <di:waypoint x="975" y="560" />
-        <di:waypoint x="975" y="515" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_NotFoundJoin_BuildNotFound_di" bpmnElement="Flow_NotFoundJoin_BuildNotFound">
-        <di:waypoint x="2200" y="490" />
-        <di:waypoint x="2307" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_FollowUpErrorJoin_BuildFollowUpError_di" bpmnElement="Flow_FollowUpErrorJoin_BuildFollowUpError">
-        <di:waypoint x="3250" y="490" />
-        <di:waypoint x="3357" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Cancelable_NotCancelableJoin_di" bpmnElement="Flow_Cancelable_NotCancelableJoin">
-        <di:waypoint x="1900" y="630" />
-        <di:waypoint x="1950" y="630" />
-        <di:waypoint x="1950" y="420" />
-        <di:waypoint x="3000" y="420" />
-        <di:waypoint x="3000" y="350" />
-        <di:waypoint x="3050" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Cancelable_DispatchJoin_di" bpmnElement="Flow_Cancelable_DispatchJoin">
-        <di:waypoint x="1900" y="630" />
-        <di:waypoint x="1950" y="630" />
-        <di:waypoint x="1950" y="420" />
-        <di:waypoint x="2100" y="420" />
-        <di:waypoint x="2100" y="350" />
-        <di:waypoint x="2150" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CheckFollowUp_FollowUpAccepted_di" bpmnElement="Flow_CheckFollowUp_FollowUpAccepted">
-        <di:waypoint x="1925" y="770" />
-        <di:waypoint x="2000" y="770" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_FollowUpAccepted_DispatchJoin_di" bpmnElement="Flow_FollowUpAccepted_DispatchJoin">
-        <di:waypoint x="2050" y="770" />
-        <di:waypoint x="2100" y="770" />
-        <di:waypoint x="2100" y="420" />
-        <di:waypoint x="2100" y="420" />
-        <di:waypoint x="2100" y="350" />
-        <di:waypoint x="2150" y="350" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_FollowUpAccepted_FollowUpErrorJoin_di" bpmnElement="Flow_FollowUpAccepted_FollowUpErrorJoin">
-        <di:waypoint x="2050" y="770" />
-        <di:waypoint x="3225" y="770" />
-        <di:waypoint x="3225" y="515" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="CollectTaskList_ListScanRequested_di" bpmnElement="CollectTaskList_ListScanRequested">
         <dc:Bounds x="57" y="52" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -1452,6 +1143,456 @@
         <di:waypoint x="1125" y="280" />
         <di:waypoint x="525" y="280" />
         <di:waypoint x="525" y="95" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="RpcReceived_di" bpmnElement="RpcReceived">
+        <dc:Bounds x="52" y="72" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NormalizeRequest_di" bpmnElement="NormalizeRequest">
+        <dc:Bounds x="167" y="50" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ParseRequest_di" bpmnElement="ParseRequest">
+        <dc:Bounds x="384" y="50" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ValidateRequest_di" bpmnElement="ValidateRequest">
+        <dc:Bounds x="601" y="50" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RouteRequest_di" bpmnElement="RouteRequest" isMarkerVisible="true">
+        <dc:Bounds x="843" y="65" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="818" y="35" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ValidationErrorReady_di" bpmnElement="ValidationErrorReady">
+        <dc:Bounds x="962" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PrepareList_di" bpmnElement="PrepareList">
+        <dc:Bounds x="972" y="635" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskListReady_di" bpmnElement="TaskListReady">
+        <dc:Bounds x="1578" y="657" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PrepareNewTask_di" bpmnElement="PrepareNewTask">
+        <dc:Bounds x="972" y="305" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NewTaskReady_di" bpmnElement="NewTaskReady">
+        <dc:Bounds x="1606" y="177" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DispatchJoin_di" bpmnElement="DispatchJoin" isMarkerVisible="true">
+        <dc:Bounds x="1151" y="320" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_di" bpmnElement="Dispatch">
+        <dc:Bounds x="1294" y="305" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PrepareLookup_di" bpmnElement="PrepareLookup">
+        <dc:Bounds x="972" y="830" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FindTask_di" bpmnElement="FindTask">
+        <dc:Bounds x="1238" y="830" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskKnown_di" bpmnElement="TaskKnown" isMarkerVisible="true">
+        <dc:Bounds x="1585" y="845" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1560" y="815" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReadTask_di" bpmnElement="ReadTask">
+        <dc:Bounds x="1406" y="830" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RouteMethod_di" bpmnElement="RouteMethod" isMarkerVisible="true">
+        <dc:Bounds x="1725" y="845" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1670" y="815" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotFoundReady_di" bpmnElement="NotFoundReady">
+        <dc:Bounds x="1214" y="1385" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskViewReady_di" bpmnElement="TaskViewReady">
+        <dc:Bounds x="1858" y="852" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Cancelable_di" bpmnElement="Cancelable" isMarkerVisible="true">
+        <dc:Bounds x="1865" y="995" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1850" y="1047" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CanceledReady_di" bpmnElement="CanceledReady">
+        <dc:Bounds x="1886" y="327" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotCancelableReady_di" bpmnElement="NotCancelableReady">
+        <dc:Bounds x="1634" y="1385" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckFollowUp_di" bpmnElement="CheckFollowUp">
+        <dc:Bounds x="1882" y="1130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FollowUpAccepted_di" bpmnElement="FollowUpAccepted" isMarkerVisible="true">
+        <dc:Bounds x="2061" y="1145" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2036" y="1115" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RouteOutcome_di" bpmnElement="RouteOutcome" isMarkerVisible="true">
+        <dc:Bounds x="1515" y="320" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1460" y="290" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FollowUpReady_di" bpmnElement="FollowUpReady">
+        <dc:Bounds x="1606" y="432" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FollowUpErrorReady_di" bpmnElement="FollowUpErrorReady">
+        <dc:Bounds x="2054" y="1385" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LookupTimeLeft_di" bpmnElement="LookupTimeLeft" isMarkerVisible="true">
+        <dc:Bounds x="1585" y="980" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1643" y="992" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LookupJoin_di" bpmnElement="LookupJoin" isMarkerVisible="true">
+        <dc:Bounds x="1151" y="845" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="WaitForIndex_di" bpmnElement="WaitForIndex">
+        <dc:Bounds x="1452" y="987" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CancellationOutcome_di" bpmnElement="CancellationOutcome" isMarkerVisible="true">
+        <dc:Bounds x="1711" y="320" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1601" y="372" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CancellationErrorReady_di" bpmnElement="CancellationErrorReady">
+        <dc:Bounds x="1718" y="432" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_di" bpmnElement="CollectTaskList">
+        <dc:Bounds x="1210" y="635" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ListCollected_di" bpmnElement="ListCollected" isMarkerVisible="true">
+        <dc:Bounds x="1431" y="650" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1406" y="620" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ListFailureReady_di" bpmnElement="ListFailureReady">
+        <dc:Bounds x="1438" y="747" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CardRequested_di" bpmnElement="CardRequested">
+        <dc:Bounds x="1242" y="27" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CardServed_di" bpmnElement="CardServed">
+        <dc:Bounds x="1452" y="27" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotFound_Catch_di" bpmnElement="Link_NotFound_Catch" bioc:stroke="#e07b00" bioc:fill="#fff1de">
+        <dc:Bounds x="1046" y="1385" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotFound_FromMethod_di" bpmnElement="Link_NotFound_FromMethod" bioc:stroke="#e07b00" bioc:fill="#fff1de">
+        <dc:Bounds x="1732" y="741" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1700" y="711" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotFound_FromLookup_di" bpmnElement="Link_NotFound_FromLookup" bioc:stroke="#e07b00" bioc:fill="#fff1de">
+        <dc:Bounds x="1592" y="1107" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotCancelable_Catch_di" bpmnElement="Link_NotCancelable_Catch" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
+        <dc:Bounds x="1466" y="1385" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotCancelable_FromCancelable_di" bpmnElement="Link_NotCancelable_FromCancelable" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
+        <dc:Bounds x="1872" y="942" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1916" y="947" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotCancelable_FromCancellation_di" bpmnElement="Link_NotCancelable_FromCancellation" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
+        <dc:Bounds x="1718" y="237" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1686" y="207" width="100" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_FollowUpError_Catch_di" bpmnElement="Link_FollowUpError_Catch" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
+        <dc:Bounds x="1886" y="1385" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_FollowUpError_FromAccepted_di" bpmnElement="Link_FollowUpError_FromAccepted" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
+        <dc:Bounds x="2068" y="1242" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_FollowUpError_FromOutcome_di" bpmnElement="Link_FollowUpError_FromOutcome" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
+        <dc:Bounds x="1522" y="522" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_Dispatch_In_di" bpmnElement="Link_Dispatch_In" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
+        <dc:Bounds x="1158" y="230" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1053" y="235" width="95" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_Dispatch_FromFollowUp_di" bpmnElement="Link_Dispatch_FromFollowUp" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
+        <dc:Bounds x="2194" y="1152" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_Dispatch_FromCancel_di" bpmnElement="Link_Dispatch_FromCancel" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
+        <dc:Bounds x="2012" y="1002" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_RpcReceived_NormalizeRequest_di" bpmnElement="Flow_RpcReceived_NormalizeRequest">
+        <di:waypoint x="88" y="90" />
+        <di:waypoint x="167" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NormalizeRequest_ParseRequest_di" bpmnElement="Flow_NormalizeRequest_ParseRequest">
+        <di:waypoint x="267" y="90" />
+        <di:waypoint x="384" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ParseRequest_ValidateRequest_di" bpmnElement="Flow_ParseRequest_ValidateRequest">
+        <di:waypoint x="484" y="90" />
+        <di:waypoint x="601" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ValidateRequest_RouteRequest_di" bpmnElement="Flow_ValidateRequest_RouteRequest">
+        <di:waypoint x="701" y="90" />
+        <di:waypoint x="843" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteRequest_BuildValidationError_di" bpmnElement="Flow_RouteRequest_BuildValidationError">
+        <di:waypoint x="868" y="115" />
+        <di:waypoint x="868" y="180" />
+        <di:waypoint x="962" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="860" y="162" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareList_di" bpmnElement="Flow_RouteRequest_PrepareList">
+        <di:waypoint x="868" y="115" />
+        <di:waypoint x="868" y="675" />
+        <di:waypoint x="972" y="675" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="865" y="657" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareNewTask_di" bpmnElement="Flow_RouteRequest_PrepareNewTask">
+        <di:waypoint x="868" y="115" />
+        <di:waypoint x="868" y="345" />
+        <di:waypoint x="972" y="345" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="865" y="327" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareLookup_di" bpmnElement="Flow_RouteRequest_PrepareLookup">
+        <di:waypoint x="868" y="115" />
+        <di:waypoint x="868" y="870" />
+        <di:waypoint x="972" y="870" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="865" y="852" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PrepareNewTask_DispatchJoin_di" bpmnElement="Flow_PrepareNewTask_DispatchJoin">
+        <di:waypoint x="1072" y="345" />
+        <di:waypoint x="1151" y="345" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FollowUpAccepted_DispatchJoin_di" bpmnElement="Flow_FollowUpAccepted_DispatchJoin">
+        <di:waypoint x="2111" y="1170" />
+        <di:waypoint x="2194" y="1170" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2098" y="1152" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Cancelable_DispatchJoin_di" bpmnElement="Flow_Cancelable_DispatchJoin">
+        <di:waypoint x="1915" y="1020" />
+        <di:waypoint x="2012" y="1020" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1909" y="1002" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DispatchJoin_Dispatch_di" bpmnElement="Flow_DispatchJoin_Dispatch">
+        <di:waypoint x="1201" y="345" />
+        <di:waypoint x="1294" y="345" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Dispatch_RouteOutcome_di" bpmnElement="Flow_Dispatch_RouteOutcome">
+        <di:waypoint x="1394" y="345" />
+        <di:waypoint x="1515" y="345" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteOutcome_BuildNewTaskResponse_di" bpmnElement="Flow_RouteOutcome_BuildNewTaskResponse">
+        <di:waypoint x="1540" y="320" />
+        <di:waypoint x="1540" y="195" />
+        <di:waypoint x="1606" y="195" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1518" y="177" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteOutcome_CancellationOutcome_di" bpmnElement="Flow_RouteOutcome_CancellationOutcome">
+        <di:waypoint x="1565" y="345" />
+        <di:waypoint x="1711" y="345" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1583" y="327" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteOutcome_BuildFollowUpResponse_di" bpmnElement="Flow_RouteOutcome_BuildFollowUpResponse">
+        <di:waypoint x="1540" y="370" />
+        <di:waypoint x="1540" y="450" />
+        <di:waypoint x="1606" y="450" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1518" y="432" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FindTask_ReadTask_di" bpmnElement="Flow_FindTask_ReadTask">
+        <di:waypoint x="1338" y="870" />
+        <di:waypoint x="1406" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ReadTask_TaskKnown_di" bpmnElement="Flow_ReadTask_TaskKnown">
+        <di:waypoint x="1506" y="870" />
+        <di:waypoint x="1585" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TaskKnown_RouteMethod_di" bpmnElement="Flow_TaskKnown_RouteMethod">
+        <di:waypoint x="1635" y="870" />
+        <di:waypoint x="1725" y="870" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1625" y="852" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteMethod_NotFoundJoin_di" bpmnElement="Flow_RouteMethod_NotFoundJoin">
+        <di:waypoint x="1750" y="845" />
+        <di:waypoint x="1750" y="777" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1756" y="780" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteMethod_BuildTaskView_di" bpmnElement="Flow_RouteMethod_BuildTaskView">
+        <di:waypoint x="1775" y="870" />
+        <di:waypoint x="1858" y="870" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1762" y="852" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteMethod_Cancelable_di" bpmnElement="Flow_RouteMethod_Cancelable">
+        <di:waypoint x="1750" y="895" />
+        <di:waypoint x="1750" y="1020" />
+        <di:waypoint x="1865" y="1020" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1753" y="1002" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteMethod_CheckFollowUp_di" bpmnElement="Flow_RouteMethod_CheckFollowUp">
+        <di:waypoint x="1750" y="895" />
+        <di:waypoint x="1750" y="1170" />
+        <di:waypoint x="1882" y="1170" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1761" y="1152" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotFoundJoin_BuildNotFound_di" bpmnElement="Flow_NotFoundJoin_BuildNotFound">
+        <di:waypoint x="1082" y="1403" />
+        <di:waypoint x="1214" y="1403" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Cancelable_NotCancelableJoin_di" bpmnElement="Flow_Cancelable_NotCancelableJoin">
+        <di:waypoint x="1890" y="995" />
+        <di:waypoint x="1890" y="978" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1896" y="974" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotCancelableJoin_BuildNotCancelable_di" bpmnElement="Flow_NotCancelableJoin_BuildNotCancelable">
+        <di:waypoint x="1502" y="1403" />
+        <di:waypoint x="1634" y="1403" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CheckFollowUp_FollowUpAccepted_di" bpmnElement="Flow_CheckFollowUp_FollowUpAccepted">
+        <di:waypoint x="1982" y="1170" />
+        <di:waypoint x="2061" y="1170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FollowUpAccepted_FollowUpErrorJoin_di" bpmnElement="Flow_FollowUpAccepted_FollowUpErrorJoin">
+        <di:waypoint x="2086" y="1195" />
+        <di:waypoint x="2086" y="1242" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2092" y="1228" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteOutcome_FollowUpErrorJoin_di" bpmnElement="Flow_RouteOutcome_FollowUpErrorJoin">
+        <di:waypoint x="1540" y="370" />
+        <di:waypoint x="1540" y="522" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1546" y="492" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FollowUpErrorJoin_BuildFollowUpError_di" bpmnElement="Flow_FollowUpErrorJoin_BuildFollowUpError">
+        <di:waypoint x="1922" y="1403" />
+        <di:waypoint x="2054" y="1403" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PrepareLookup_LookupJoin_di" bpmnElement="Flow_PrepareLookup_LookupJoin">
+        <di:waypoint x="1072" y="870" />
+        <di:waypoint x="1151" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LookupJoin_FindTask_di" bpmnElement="Flow_LookupJoin_FindTask">
+        <di:waypoint x="1201" y="870" />
+        <di:waypoint x="1238" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TaskKnown_LookupTimeLeft_di" bpmnElement="Flow_TaskKnown_LookupTimeLeft">
+        <di:waypoint x="1610" y="895" />
+        <di:waypoint x="1610" y="980" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1616" y="960" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LookupTimeLeft_WaitForIndex_di" bpmnElement="Flow_LookupTimeLeft_WaitForIndex">
+        <di:waypoint x="1585" y="1005" />
+        <di:waypoint x="1488" y="1005" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1482" y="987" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LookupTimeLeft_NotFoundJoin_di" bpmnElement="Flow_LookupTimeLeft_NotFoundJoin">
+        <di:waypoint x="1610" y="1030" />
+        <di:waypoint x="1610" y="1107" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1616" y="1088" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_WaitForIndex_LookupJoin_di" bpmnElement="Flow_WaitForIndex_LookupJoin">
+        <di:waypoint x="1452" y="1005" />
+        <di:waypoint x="1176" y="1005" />
+        <di:waypoint x="1176" y="895" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_BuildCanceledView_di" bpmnElement="Flow_CancellationOutcome_BuildCanceledView">
+        <di:waypoint x="1761" y="345" />
+        <di:waypoint x="1886" y="345" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1769" y="327" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_NotCancelableJoin_di" bpmnElement="Flow_CancellationOutcome_NotCancelableJoin">
+        <di:waypoint x="1736" y="320" />
+        <di:waypoint x="1736" y="273" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1742" y="273" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_CancellationTimeout_di" bpmnElement="Flow_CancellationOutcome_CancellationTimeout">
+        <di:waypoint x="1736" y="370" />
+        <di:waypoint x="1736" y="432" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1742" y="416" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PrepareList_CollectTaskList_di" bpmnElement="Flow_PrepareList_CollectTaskList">
+        <di:waypoint x="1072" y="675" />
+        <di:waypoint x="1210" y="675" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CollectTaskList_ListCollected_di" bpmnElement="Flow_CollectTaskList_ListCollected">
+        <di:waypoint x="1310" y="675" />
+        <di:waypoint x="1431" y="675" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ListCollected_BuildTaskList_di" bpmnElement="Flow_ListCollected_BuildTaskList">
+        <di:waypoint x="1481" y="675" />
+        <di:waypoint x="1578" y="675" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1475" y="657" width="110" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ListCollected_BuildListFailure_di" bpmnElement="Flow_ListCollected_BuildListFailure">
+        <di:waypoint x="1456" y="700" />
+        <di:waypoint x="1456" y="747" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1462" y="733" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CardRequested_CardServed_di" bpmnElement="Flow_CardRequested_CardServed">
+        <di:waypoint x="1278" y="45" />
+        <di:waypoint x="1452" y="45" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LinkDispatch_DispatchJoin_di" bpmnElement="Flow_LinkDispatch_DispatchJoin">
+        <di:waypoint x="1176" y="266" />
+        <di:waypoint x="1176" y="320" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
