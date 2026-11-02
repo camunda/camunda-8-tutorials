@@ -878,6 +878,45 @@
       <bpmndi:BPMNShape id="DispatchJoin_di" bpmnElement="DispatchJoin" isMarkerVisible="true">
         <dc:Bounds x="1261" y="220" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotCancelableReady_di" bpmnElement="NotCancelableReady">
+        <dc:Bounds x="2292" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2272" y="368" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotCancelable_Catch_di" bpmnElement="Link_NotCancelable_Catch" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
+        <dc:Bounds x="2124" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2106" y="368" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotFoundReady_di" bpmnElement="NotFoundReady">
+        <dc:Bounds x="2292" y="482" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2272" y="518" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotFound_Catch_di" bpmnElement="Link_NotFound_Catch" bioc:stroke="#e07b00" bioc:fill="#fff1de">
+        <dc:Bounds x="2124" y="482" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2118" y="518" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FollowUpErrorReady_di" bpmnElement="FollowUpErrorReady">
+        <dc:Bounds x="2292" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2274" y="658" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_FollowUpError_Catch_di" bpmnElement="Link_FollowUpError_Catch" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
+        <dc:Bounds x="2124" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2105" y="658" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_di" bpmnElement="Dispatch">
+        <dc:Bounds x="1404" y="205" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PrepareLookup_di" bpmnElement="PrepareLookup">
         <dc:Bounds x="1082" y="730" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -899,12 +938,6 @@
           <dc:Bounds x="1812" y="715" width="37" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NotFoundReady_di" bpmnElement="NotFoundReady">
-        <dc:Bounds x="1324" y="1285" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1304" y="1321" width="76" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TaskViewReady_di" bpmnElement="TaskViewReady">
         <dc:Bounds x="1968" y="752" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -921,12 +954,6 @@
         <dc:Bounds x="1996" y="227" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1973" y="263" width="83" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="NotCancelableReady_di" bpmnElement="NotCancelableReady">
-        <dc:Bounds x="1744" y="1285" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1724" y="1321" width="76" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CheckFollowUp_di" bpmnElement="CheckFollowUp">
@@ -948,12 +975,6 @@
         <dc:Bounds x="1716" y="332" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1699" y="368" width="71" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="FollowUpErrorReady_di" bpmnElement="FollowUpErrorReady">
-        <dc:Bounds x="2164" y="1285" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="2146" y="1321" width="73" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="LookupTimeLeft_di" bpmnElement="LookupTimeLeft" isMarkerVisible="true">
@@ -983,6 +1004,9 @@
           <dc:Bounds x="1801" y="368" width="90" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_di" bpmnElement="CollectTaskList">
+        <dc:Bounds x="1320" y="535" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ListCollected_di" bpmnElement="ListCollected" isMarkerVisible="true">
         <dc:Bounds x="1541" y="550" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -995,10 +1019,16 @@
           <dc:Bounds x="1535" y="683" width="62" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Link_NotFound_Catch_di" bpmnElement="Link_NotFound_Catch" bioc:stroke="#e07b00" bioc:fill="#fff1de">
-        <dc:Bounds x="1156" y="1285" width="36" height="36" />
+      <bpmndi:BPMNShape id="CardRequested_di" bpmnElement="CardRequested">
+        <dc:Bounds x="162" y="192" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1150" y="1321" width="48" height="14" />
+          <dc:Bounds x="152" y="228" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CardServed_di" bpmnElement="CardServed">
+        <dc:Bounds x="372" y="192" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="360" y="228" width="60" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_NotFound_FromMethod_di" bpmnElement="Link_NotFound_FromMethod" bioc:stroke="#e07b00" bioc:fill="#fff1de">
@@ -1013,12 +1043,6 @@
           <dc:Bounds x="1696" y="1043" width="48" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Link_NotCancelable_Catch_di" bpmnElement="Link_NotCancelable_Catch" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
-        <dc:Bounds x="1576" y="1285" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1558" y="1321" width="73" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_NotCancelable_FromCancelable_di" bpmnElement="Link_NotCancelable_FromCancelable" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
         <dc:Bounds x="1982" y="842" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -1029,12 +1053,6 @@
         <dc:Bounds x="1828" y="137" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1810" y="107" width="73" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Link_FollowUpError_Catch_di" bpmnElement="Link_FollowUpError_Catch" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
-        <dc:Bounds x="1996" y="1285" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1977" y="1321" width="74" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Link_FollowUpError_FromAccepted_di" bpmnElement="Link_FollowUpError_FromAccepted" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
@@ -1066,24 +1084,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="2119" y="938" width="43" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CardRequested_di" bpmnElement="CardRequested">
-        <dc:Bounds x="162" y="192" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="152" y="228" width="56" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CardServed_di" bpmnElement="CardServed">
-        <dc:Bounds x="372" y="192" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="360" y="228" width="60" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Dispatch_di" bpmnElement="Dispatch">
-        <dc:Bounds x="1404" y="205" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="CollectTaskList_di" bpmnElement="CollectTaskList">
-        <dc:Bounds x="1320" y="535" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_RpcReceived_NormalizeRequest_di" bpmnElement="Flow_RpcReceived_NormalizeRequest">
         <di:waypoint x="198" y="90" />
@@ -1226,20 +1226,12 @@
           <dc:Bounds x="1891" y="1052" width="71" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_NotFoundJoin_BuildNotFound_di" bpmnElement="Flow_NotFoundJoin_BuildNotFound">
-        <di:waypoint x="1192" y="1303" />
-        <di:waypoint x="1324" y="1303" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Cancelable_NotCancelableJoin_di" bpmnElement="Flow_Cancelable_NotCancelableJoin">
         <di:waypoint x="2000" y="895" />
         <di:waypoint x="2000" y="878" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="2035" y="874" width="13" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_NotCancelableJoin_BuildNotCancelable_di" bpmnElement="Flow_NotCancelableJoin_BuildNotCancelable">
-        <di:waypoint x="1612" y="1303" />
-        <di:waypoint x="1744" y="1303" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CheckFollowUp_FollowUpAccepted_di" bpmnElement="Flow_CheckFollowUp_FollowUpAccepted">
         <di:waypoint x="2092" y="1070" />
@@ -1258,10 +1250,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1685" y="392" width="13" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_FollowUpErrorJoin_BuildFollowUpError_di" bpmnElement="Flow_FollowUpErrorJoin_BuildFollowUpError">
-        <di:waypoint x="2032" y="1303" />
-        <di:waypoint x="2164" y="1303" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PrepareLookup_LookupJoin_di" bpmnElement="Flow_PrepareLookup_LookupJoin">
         <di:waypoint x="1182" y="770" />
@@ -1340,13 +1328,25 @@
           <dc:Bounds x="1580" y="633" width="54" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CardRequested_CardServed_di" bpmnElement="Flow_CardRequested_CardServed">
+        <di:waypoint x="198" y="210" />
+        <di:waypoint x="372" y="210" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_LinkDispatch_DispatchJoin_di" bpmnElement="Flow_LinkDispatch_DispatchJoin">
         <di:waypoint x="1286" y="166" />
         <di:waypoint x="1286" y="220" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CardRequested_CardServed_di" bpmnElement="Flow_CardRequested_CardServed">
-        <di:waypoint x="198" y="210" />
-        <di:waypoint x="372" y="210" />
+      <bpmndi:BPMNEdge id="Flow_NotCancelableJoin_BuildNotCancelable_di" bpmnElement="Flow_NotCancelableJoin_BuildNotCancelable">
+        <di:waypoint x="2160" y="350" />
+        <di:waypoint x="2292" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotFoundJoin_BuildNotFound_di" bpmnElement="Flow_NotFoundJoin_BuildNotFound">
+        <di:waypoint x="2160" y="500" />
+        <di:waypoint x="2292" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FollowUpErrorJoin_BuildFollowUpError_di" bpmnElement="Flow_FollowUpErrorJoin_BuildFollowUpError">
+        <di:waypoint x="2160" y="640" />
+        <di:waypoint x="2292" y="640" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

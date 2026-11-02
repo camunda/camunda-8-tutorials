@@ -1,7 +1,7 @@
 """ADK counterpart of 03-server-agent-card-dispute.bpmn.
 
-One skill, one tool: ``echo_placeholder`` returns the caller's ``demoInput`` object, exactly as the
-BPMN script task does. ``ADK_OFFLINE=1`` swaps the Gemini model for a deterministic agent that
+One skill, one tool: ``upper_case`` returns the caller's ``demoInput`` object together with an
+uppercased copy of its value and the value's length, like the BPMN script task does. ``ADK_OFFLINE=1`` swaps the Gemini model for a deterministic agent that
 calls the same tool, so the interop tests run without an API key.
 """
 import json
@@ -14,18 +14,20 @@ from google.adk.events import Event
 from google.genai import types
 
 INSTRUCTION = (
-    "You run a minimal A2A skeleton. Call echo_placeholder once with the demoInput object from the "
+    "You run a minimal A2A skeleton. Call upper_case once with the demoInput object from the "
     "request and do not alter its value. Answer with one short sentence once the tool returned."
 )
 
 
-def echo_placeholder(demo_input: dict) -> dict:
-    """Return the process-owned placeholder value. Replace this tool with your own business logic.
+def upper_case(demo_input: dict) -> dict:
+    """Return the request data with an uppercased copy of its value and the value's length.
+    Replace this tool with your own business logic.
 
     Args:
         demo_input: The demoInput object from the request, passed through unchanged.
     """
-    return demo_input
+    value = str(demo_input.get("value", ""))
+    return {"received": demo_input, "uppercase": value.upper(), "length": len(value)}
 
 
 def _request_text(ctx: InvocationContext) -> str:
@@ -50,7 +52,7 @@ class OfflinePlaceholderAgent(BaseAgent):
         print("REQ", repr(_request_text(ctx)), flush=True)
         demo_input = extract_demo_input(_request_text(ctx))
         text = "Placeholder tool completed." if demo_input else "No demoInput supplied."
-        result = echo_placeholder(demo_input) if demo_input else None
+        result = upper_case(demo_input) if demo_input else None
         yield Event(
             author=self.name,
             invocation_id=ctx.invocation_id,
@@ -66,7 +68,7 @@ def build_agent():
         name="placeholder_agent",
         description="Shares a placeholder value (counterpart of the Camunda server agent).",
         instruction=INSTRUCTION,
-        tools=[echo_placeholder],
+        tools=[upper_case],
     )
 
 

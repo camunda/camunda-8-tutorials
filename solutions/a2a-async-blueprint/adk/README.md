@@ -7,7 +7,7 @@ the [Google Agent Development Kit](https://adk.dev) (`google-adk`, `a2a-sdk` 1.x
 
 | Camunda | ADK counterpart | Behaviour |
 | --- | --- | --- |
-| `03-server-agent-card-dispute.bpmn` | `server_agent/` | One skill, one tool `echo_placeholder`; served with `to_a2a()` |
+| `03-server-agent-card-dispute.bpmn` | `server_agent/` | One skill, one tool `upper_case`; served with `to_a2a()` |
 | `01-client-agent.bpmn` | `client_agent/` | Root agent that delegates to a `RemoteA2aAgent` |
 
 Any pairing works: Camunda client to ADK server, ADK client to Camunda server, and ADK to ADK.

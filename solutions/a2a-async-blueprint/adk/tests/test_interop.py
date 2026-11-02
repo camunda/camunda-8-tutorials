@@ -12,6 +12,7 @@ import httpx
 import pytest
 
 PLACEHOLDER = {"value": "Example input"}
+TRANSFORMED = {"received": PLACEHOLDER, "uppercase": "EXAMPLE INPUT", "length": 13}
 HEADERS = {"A2A-Version": "1.0", "Content-Type": "application/json"}
 
 
@@ -39,7 +40,7 @@ def test_send_message_returns_completed_task_with_placeholder(adk_server_url):
     task = rpc(adk_server_url, "SendMessage", {"message": message(text)})["result"]["task"]
     assert task["status"]["state"] == "TASK_STATE_COMPLETED"
     artifact_text = "".join(p.get("text", "") for a in task["artifacts"] for p in a["parts"])
-    assert json.loads(artifact_text) == {"placeholder": PLACEHOLDER}
+    assert json.loads(artifact_text) == {"placeholder": TRANSFORMED}
 
 
 def test_get_task_returns_the_settled_task(adk_server_url):

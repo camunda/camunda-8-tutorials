@@ -5,6 +5,7 @@ import uuid
 import httpx
 
 PLACEHOLDER = {"value": "Example input"}
+TRANSFORMED = {"received": PLACEHOLDER, "uppercase": "EXAMPLE INPUT", "length": 13}
 
 
 def rpc03(url: str, method: str, params: dict) -> dict:
@@ -24,7 +25,7 @@ def test_message_send_returns_completed_task_with_placeholder(adk_server_url):
     assert result["kind"] == "task"
     assert result["status"]["state"] == "completed"
     artifact_text = "".join(p.get("text", "") for a in result["artifacts"] for p in a["parts"])
-    assert json.loads(artifact_text) == {"placeholder": PLACEHOLDER}
+    assert json.loads(artifact_text) == {"placeholder": TRANSFORMED}
 
 
 def test_tasks_get_returns_the_settled_task(adk_server_url):
