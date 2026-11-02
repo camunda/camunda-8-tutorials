@@ -2,7 +2,7 @@
   "$schema": "https://camunda.com/schemas/runnable-example/v1.json",
   "title": "A2A server and client blueprint",
   "subtitle": "Expose a BPMN agent over the Agent2Agent protocol",
-  "description": "A Camunda client agent calls a Camunda server agent over A2A, and any external A2A client can call the same server. The server validates each request, tracks the task, and runs a business agent that you replace with your own logic.",
+  "description": "A Camunda client agent calls a Camunda server agent over A2A, and any external A2A client can call the same server. Built from A2A element templates that run on the released 8.9 connectors runtime, the server validates each request, tracks the task, and runs a business agent that you replace with your own logic.",
   "creator": "Camunda",
   "camundaVersion": "8.9+",
   "resources": [

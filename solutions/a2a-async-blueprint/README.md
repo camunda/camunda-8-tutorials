@@ -4,6 +4,10 @@ An [Agent2Agent (A2A)](https://a2a-protocol.org) example for Camunda 8.9+. A cli
 server agent to run a tool (`upperCase`), which returns the request data plus an uppercased copy
 and its length.
 
+The server side is built from A2A element templates (`.camunda/element-templates/`) on the inbound
+webhook, so it runs on the released Camunda 8.9 connectors runtime. No custom connector or worker is
+needed.
+
 | Process                 | What it is                                                                      |
 | ----------------------- | ------------------------------------------------------------------------------- |
 | `01` `a2a-client`       | Client agent. An AI agent with the native **A2A Client connector** as its tool. |
