@@ -13,8 +13,8 @@
           <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_API_KEY}}" target="provider.openaiCompatible.authentication.apiKey" />
           <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL}}" target="provider.openaiCompatible.model.model" />
           <zeebe:input source="=0" target="provider.openaiCompatible.model.parameters.temperature" />
-          <zeebe:input source="=&#34;You run a minimal BPMN A2A skeleton. Call echo_placeholder for the supplied request. The tool reads demoInput from the request (a data part or JSON text) and accepts no model-provided arguments. Do not invent or alter its value. If the request does not carry a demoInput object with a non-blank string value, do not call the tool; briefly explain what is missing and finish. After the tool returns, briefly report the result and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
-          <zeebe:input source="=&#34;Handle this A2A request. Message parts: &#34; + string(req.message.parts)" target="data.userPrompt.prompt" />
+          <zeebe:input source="=&#34;You run a minimal BPMN A2A skeleton. Call echo_placeholder for the supplied request. Pass the demoInput object from the user prompt as the tool's requestData argument, exactly as given. Do not invent or alter its value. If the prompt does not carry a demoInput object with a non-blank string value, do not call the tool; briefly explain what is missing and finish. After the tool returns, briefly report the result and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
+          <zeebe:input source="=&#34;Handle this A2A request. Pass its demoInput to echo_placeholder unchanged. demoInput: &#34; + to json(&#10;  /* demoInput from the data part, else parsed from JSON text (e.g. clients that send text only). */&#10;  if req.message.parts instance of list&#10;    then (if count(req.message.parts[item instance of context and item.data != null]) &gt; 0&#10;      then req.message.parts[item instance of context and item.data != null][1].data.demoInput&#10;      else from json(req.message.parts[item instance of context and item.text != null][1].text))&#10;    else null&#10;)" target="data.userPrompt.prompt" />
           <zeebe:input source="=null" target="agentContext" />
           <zeebe:input source="in-process" target="data.memory.storage.type" />
           <zeebe:input source="=20" target="data.memory.contextWindowSize" />
@@ -37,10 +37,10 @@
       <bpmn:incoming>Flow_TaskReceived_AgentTools</bpmn:incoming>
       <bpmn:outgoing>Flow_AgentTools_AgentFinished</bpmn:outgoing>
       <bpmn:scriptTask id="echo_placeholder" name="Share placeholder">
-        <bpmn:documentation>Call once to return the process-owned placeholder value. Accepts no model arguments. Replace this tool with your own business logic.</bpmn:documentation>
+        <bpmn:documentation>Call once to return the process-owned placeholder value. Takes the request data as a model-supplied argument. Replace this tool with your own business logic.</bpmn:documentation>
         <bpmn:extensionElements>
           <zeebe:ioMapping>
-            <zeebe:input source="=/* demoInput from the data part, else parsed from JSON text (e.g. clients that send text only). */&#10;if req.message.parts instance of list&#10;  then (if count(req.message.parts[item instance of context and item.data != null]) &gt; 0&#10;    then req.message.parts[item instance of context and item.data != null][1].data.demoInput&#10;    else from json(req.message.parts[item instance of context and item.text != null][1].text))&#10;  else null" target="requestData" />
+            <zeebe:input source="=fromAi(toolCall.requestData, &#34;The demoInput object from the request, passed through unchanged&#34;, &#34;object&#34;)" target="requestData" />
           </zeebe:ioMapping>
           <zeebe:script expression="=requestData" resultVariable="toolCallResult" />
           <zeebe:properties>

@@ -40,6 +40,9 @@
                   "_meta": {
                     "id": "call-1",
                     "name": "echo_placeholder"
+                  },
+                  "requestData": {
+                    "value": "Example input"
                   }
                 }
               }
@@ -143,6 +146,9 @@
                   "_meta": {
                     "id": "call-1",
                     "name": "echo_placeholder"
+                  },
+                  "requestData": {
+                    "value": "Example input"
                   }
                 }
               }
