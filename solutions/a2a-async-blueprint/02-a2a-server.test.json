@@ -133,6 +133,146 @@
           "state": "IS_COMPLETED"
         }
       ]
+    },
+    {
+      "name": "A2A 0.3 request - detect the dialect and return a validation error",
+      "description": "The 0.3 method message/send without a message is rewritten to SendMessage, tagged dialect 0.3 and rejected by the same validation as A2A 1.0.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "NormalizeRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "2.0",
+              "id": "legacy-invalid",
+              "method": "message/send",
+              "params": {}
+            },
+            "hdr": {
+              "content-type": "application/json"
+            },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "NormalizeRequest"
+            },
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "ValidationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "variables": {
+            "dialect": "0.3"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "A2A 1.0 request - keep the dialect",
+      "description": "A 1.0 method passes the normalization step unchanged.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "NormalizeRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "1.0",
+              "id": "v1-invalid",
+              "method": "GetTask",
+              "params": {
+                "id": "demo-task"
+              }
+            },
+            "hdr": {
+              "content-type": "application/json"
+            },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "NormalizeRequest"
+            },
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "ValidationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "variables": {
+            "dialect": "1.0"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
     }
   ]
 }

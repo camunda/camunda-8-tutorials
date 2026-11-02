@@ -1132,6 +1132,41 @@
           }
         }
       ]
+    },
+    "rpc": {
+      "title": "A2A JSON-RPC request",
+      "type": "object",
+      "description": "JSON-RPC request body of the A2A server. A2A 0.3 requests are rewritten into the internal A2A 1.0 model before parsing. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "jsonrpc": "2.0",
+          "id": "1",
+          "method": "GetTask",
+          "params": {
+            "id": "task-1"
+          }
+        }
+      ]
+    },
+    "hdr": {
+      "title": "A2A request headers",
+      "type": "object",
+      "description": "Lower-cased HTTP headers of the A2A request; a 0.3 request gets an internal 1.0 version header after normalization. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "content-type": "application/json",
+          "a2a-version": "1.0"
+        }
+      ]
+    },
+    "dialect": {
+      "title": "A2A dialect",
+      "type": "string",
+      "description": "A2A dialect of the caller, detected from the JSON-RPC method name: 0.3 (message/send) or 1.0 (SendMessage). Responses and push callbacks are formatted in this dialect. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        "0.3",
+        "1.0"
+      ]
     }
   }
 }
