@@ -1,15 +1,15 @@
 {
   "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
-  "processId": "a2a-card-dispute",
+  "processId": "a2a-server-agent",
   "testCases": [
     {
       "name": "Agent calls the tool - agent result is returned",
-      "description": "The agent runs the placeholder tool and finishes; the process ends with the agent result as its output.",
+      "description": "The agent calls its text tool and finishes. The agent's answer is the result of the process.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
-            "processDefinitionId": "a2a-card-dispute"
+            "processDefinitionId": "a2a-server-agent"
           },
           "variables": {
             "req": {
@@ -52,7 +52,7 @@
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
-            "processDefinitionId": "a2a-card-dispute"
+            "processDefinitionId": "a2a-server-agent"
           },
           "elementSelectors": [
             {
@@ -94,7 +94,7 @@
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
-            "processDefinitionId": "a2a-card-dispute"
+            "processDefinitionId": "a2a-server-agent"
           },
           "elementSelectors": [
             {
@@ -106,7 +106,7 @@
         {
           "type": "ASSERT_PROCESS_INSTANCE",
           "processInstanceSelector": {
-            "processDefinitionId": "a2a-card-dispute"
+            "processDefinitionId": "a2a-server-agent"
           },
           "state": "IS_COMPLETED"
         }
@@ -114,12 +114,12 @@
     },
     {
       "name": "Request as JSON text part - the tool still receives demoInput",
-      "description": "Clients that send only text (e.g. ADK-style) carry demoInput as JSON in a text part.",
+      "description": "A client that sends only text, such as an ADK client, passes its input as JSON inside a text part.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
-            "processDefinitionId": "a2a-card-dispute"
+            "processDefinitionId": "a2a-server-agent"
           },
           "variables": {
             "req": {
@@ -158,7 +158,7 @@
         {
           "type": "ASSERT_ELEMENT_INSTANCES",
           "processInstanceSelector": {
-            "processDefinitionId": "a2a-card-dispute"
+            "processDefinitionId": "a2a-server-agent"
           },
           "elementSelectors": [
             {
@@ -170,7 +170,7 @@
         {
           "type": "ASSERT_VARIABLES",
           "processInstanceSelector": {
-            "processDefinitionId": "a2a-card-dispute"
+            "processDefinitionId": "a2a-server-agent"
           },
           "variables": {
             "toolCallResult": {

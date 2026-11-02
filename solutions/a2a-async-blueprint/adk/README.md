@@ -2,12 +2,12 @@
 
 The Camunda blueprint is only useful if its A2A client and server also work with agents that are not
 built on Camunda. Camunda 8.9's native A2A Client connector uses the A2A Java SDK 0.3.3, so it speaks
-A2A 0.3 only. The ADK server therefore answers both dialects on one endpoint. This folder holds the logical equivalents of the two business agents, written with
+A2A 0.3 only. The ADK server therefore answers both versions on one endpoint. This folder holds equivalents of the two Camunda agents, written with
 the [Google Agent Development Kit](https://adk.dev) (`google-adk`, `a2a-sdk` 1.x, A2A 1.0 and 0.3 JSON-RPC):
 
 | Camunda | ADK counterpart | Behaviour |
 | --- | --- | --- |
-| `03-server-agent-card-dispute.bpmn` | `server_agent/` | One skill, one tool `upper_case`; served with `to_a2a()` |
+| `03-server-agent.bpmn` | `server_agent/` | One skill, one tool `upper_case`; served with `to_a2a()` |
 | `01-client-agent.bpmn` | `client_agent/` | Root agent that delegates to a `RemoteA2aAgent` |
 
 Any pairing works: Camunda client to ADK server, ADK client to Camunda server, and ADK to ADK.
@@ -36,7 +36,9 @@ The offline tests check the Agent Card (1.0 `supportedInterfaces` plus the 0.3 `
 `protocolVersion`), A2A 1.0 `SendMessage` and `GetTask`, A2A 0.3 `message/send` and `tasks/get`, an
 inline push config, and an ADK client delegating to the ADK server.
 
-## What this showed about external agents
+## Interoperability notes
+
+What the interop tests showed about agents not built on Camunda:
 
 - a2a-sdk 1.x serves both dialects on the JSON-RPC route when its v0.3 compatibility is on (the
   default in `google.adk.a2a._compat.attach_a2a_routes_to_app`). A request is handled as 0.3 when

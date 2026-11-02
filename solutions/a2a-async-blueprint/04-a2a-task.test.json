@@ -4,7 +4,7 @@
   "testCases": [
     {
       "name": "Agent calls the tool - task outcome is published",
-      "description": "The server agent (03) runs as a called process; its result becomes the task outcome and the settled signal is thrown.",
+      "description": "The task runs the server agent. The agent's answer becomes the task result and the task is marked as finished.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -115,7 +115,7 @@
     },
     {
       "name": "Agent fails - failed outcome is published",
-      "description": "The AI Agent job raises AGENT_FAILED in 03; the error reaches the call activity boundary in 04 and the task still settles as failed.",
+      "description": "The agent fails. The task still finishes and is reported as failed.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -176,7 +176,7 @@
     },
     {
       "name": "Caller cancels a running task - cancellation is settled",
-      "description": "A cancel request interrupts the called agent process and the task ends as canceled.",
+      "description": "A cancel request stops the agent and the task ends as canceled.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -235,7 +235,7 @@
     },
     {
       "name": "Client offered push - the task is pushed before it settles",
-      "description": "With a push config the outcome is POSTed to the client; the NotifyClient job is open until the connector completes it.",
+      "description": "When the client asked for push notifications, the task sends its result to the client and waits for the notification to be delivered.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -295,7 +295,7 @@
     },
     {
       "name": "Client did not offer push - the task settles without a push",
-      "description": "Without a push config the push step is skipped and the client polls GetTask.",
+      "description": "When the client did not ask for push notifications, nothing is sent and the client reads the result with GetTask.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",

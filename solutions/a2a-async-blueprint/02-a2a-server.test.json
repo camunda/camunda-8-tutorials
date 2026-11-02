@@ -4,7 +4,7 @@
   "testCases": [
     {
       "name": "Invalid request - return a validation error",
-      "description": "Runs request parsing and the real validation decision without a webhook, engine HTTP calls or secrets.",
+      "description": "Checks that a valid request is parsed and accepted, without needing a live webhook or secrets.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -36,7 +36,7 @@
     },
     {
       "name": "Get task - return the supplied task view",
-      "description": "Starts after engine lookup with a supplied task snapshot and follows the GetTask branch without external calls.",
+      "description": "Returns the details of an existing task when a client asks for it with GetTask.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -66,7 +66,7 @@
     },
     {
       "name": "Cancel terminal task - reject cancellation",
-      "description": "Shows that a completed task takes the non-cancelable path without calling the engine or changing task state.",
+      "description": "Rejects a cancel request for a task that has already completed, and leaves the task unchanged.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -101,7 +101,7 @@
     },
     {
       "name": "Follow-up in another context - reject before correlation",
-      "description": "Shows the context guard rejecting a follow-up before any message is correlated.",
+      "description": "Rejects a follow-up message whose context ID does not match the task.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -136,7 +136,7 @@
     },
     {
       "name": "A2A 0.3 request - detect the dialect and return a validation error",
-      "description": "The 0.3 method message/send without a message is rewritten to SendMessage, tagged dialect 0.3 and rejected by the same validation as A2A 1.0.",
+      "description": "An A2A 0.3 request without a message is rejected with the same error as an A2A 1.0 request.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -205,7 +205,7 @@
     },
     {
       "name": "A2A 1.0 request - keep the dialect",
-      "description": "A 1.0 method passes the normalization step unchanged.",
+      "description": "An A2A 1.0 request is processed as sent, with no conversion.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -276,7 +276,7 @@
     },
     {
       "name": "End to end: external client sends a message - server agent settles the task",
-      "description": "Example 2. A blocking SendMessage reaches the server, which starts the task process (a2a-task) and waits for it. The real task process calls the real server agent (a2a-card-dispute); the signal it throws releases the server, which returns the settled Task. The REST call that starts the task is replaced by creating the instance directly.",
+      "description": "Example 2. An external client sends a message and waits for the answer. The server starts a task, the task runs the server agent, and the server returns the finished task to the client.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",

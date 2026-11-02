@@ -59,7 +59,7 @@
                     <include>01-client-agent.bpmn</include>
                     <include>02-a2a-server.bpmn</include>
                     <include>server-request-validation.dmn</include>
-                    <include>03-server-agent-card-dispute.bpmn</include>
+                    <include>03-server-agent.bpmn</include>
                     <include>04-a2a-task.bpmn</include>
                 </includes>
             </testResource>
@@ -82,7 +82,7 @@
                 <directory>../</directory>
                 <targetPath>scenarios/03</targetPath>
                 <includes>
-                    <include>03-server-agent-card-dispute.test.json</include>
+                    <include>03-server-agent.test.json</include>
                 </includes>
             </testResource>
             <testResource>

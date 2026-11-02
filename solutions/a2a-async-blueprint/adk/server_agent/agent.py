@@ -1,4 +1,4 @@
-"""ADK counterpart of 03-server-agent-card-dispute.bpmn.
+"""ADK counterpart of 03-server-agent.bpmn.
 
 One skill, one tool: ``upper_case`` returns the caller's ``demoInput`` object together with an
 uppercased copy of its value and the value's length, like the BPMN script task does. ``ADK_OFFLINE=1`` swaps the Gemini model for a deterministic agent that

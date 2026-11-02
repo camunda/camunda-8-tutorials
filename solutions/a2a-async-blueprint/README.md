@@ -15,7 +15,7 @@ need a custom connector or job worker.
 | ----------------------- | ------------------------------------------------------------------------------- |
 | `01` `a2a-client`       | Client agent. An AI agent that uses the **A2A Client connector** as its tool.   |
 | `02` `a2a-rpc`          | A2A server endpoint. Camunda has no native A2A server connector, so this is BPMN. |
-| `03` `a2a-card-dispute` | Server agent. An AI agent with one tool, `upperCase`.                           |
+| `03` `a2a-server-agent` | Server agent. An AI agent with one tool, `upperCase`.                           |
 | `04` `a2a-task`         | Tracks each task: its state, cancellation, and optional push notification.      |
 
 ```mermaid
@@ -36,7 +36,7 @@ Camunda Process Test 8.9.8.
 | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
 | `ENGINE_URL`                                                                                              | Camunda REST URL as the connector runtime reaches it, without `/v2` |
 | `ENGINE_USERNAME`, `ENGINE_PASSWORD`                                                                      | Basic auth credentials for Camunda API calls                                    |
-| `A2A_AGENT_PROCESS`                                                                                       | `a2a-card-dispute` (the process the server runs for each task)    |
+| `A2A_AGENT_PROCESS`                                                                                       | `a2a-server-agent` (the process the server runs for each task)    |
 | `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` | LLM access for the AI agents                                            |
 
 3. In `02-a2a-server.bpmn`, select the `Agent Card requested` start event and set **Public RPC URL**
@@ -52,7 +52,7 @@ Camunda Process Test 8.9.8.
    `{"value": "Example input"}`.
 3. In Operate, check that:
    - the client AI agent calls `fetchAgentCard`, then `sendMessage`;
-   - the server side runs one `a2a-task` instance and one `a2a-card-dispute` instance;
+   - the server side runs one `a2a-task` instance and one `a2a-server-agent` instance;
    - `Remote task settled` completes, and the client reports
      `{"received": {"value": "Example input"}, "uppercase": "EXAMPLE INPUT", "length": 13}`.
 
@@ -100,7 +100,7 @@ push-configuration methods are not supported.
 
 - `01-client-agent.bpmn`: client agent that uses the A2A Client connector.
 - `02-a2a-server.bpmn`: the A2A server (`a2a-rpc`). It uses Basic auth for Camunda API calls.
-- `03-server-agent-card-dispute.bpmn`: server agent with a placeholder script tool, `upperCase`.
+- `03-server-agent.bpmn`: server agent with a placeholder script tool, `upperCase`.
 - `04-a2a-task.bpmn`: per-task logic for the server (`a2a-task`).
 - `server-request-validation.dmn`: checks that incoming requests are valid A2A requests.
 - `.camunda/element-templates/`: the two A2A element templates (server endpoint and Agent Card).
@@ -115,7 +115,7 @@ This solution has no forms. Deploy only one server profile.
 
 ## Import into Camunda SaaS
 
-[Import all resources into Web Modeler](https://modeler.cloud.camunda.io/import/resources?source=https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/01-client-agent.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/02-a2a-server.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/03-server-agent-card-dispute.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/04-a2a-task.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/server-request-validation.dmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/.camunda/element-templates/server-a2a-rpc-endpoint.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/.camunda/element-templates/server-agent-card-endpoint.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/01-client-agent.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/02-a2a-server.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/03-server-agent-card-dispute.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/04-a2a-task.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/README.md&title=A2A%20Async%20Blueprint)
+[Import all resources into Web Modeler](https://modeler.cloud.camunda.io/import/resources?source=https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/01-client-agent.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/02-a2a-server.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/03-server-agent.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/04-a2a-task.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/server-request-validation.dmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/.camunda/element-templates/server-a2a-rpc-endpoint.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/.camunda/element-templates/server-agent-card-endpoint.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/01-client-agent.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/02-a2a-server.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/03-server-agent.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/04-a2a-task.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/README.md&title=A2A%20Async%20Blueprint)
 
 The link loads the files from `main`, so it works only after this solution is merged there. It imports the BPMN and DMN files, the two element templates, the tests, and this README.
 

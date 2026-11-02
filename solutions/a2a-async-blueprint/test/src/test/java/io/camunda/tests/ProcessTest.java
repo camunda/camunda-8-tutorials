@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Runs the Test Studio scenarios (03-server-agent-card-dispute.test.json) against an embedded engine.
+ * Runs the Test Studio scenarios (03-server-agent.test.json) against an embedded engine.
  * The FEEL-level cases live in {@link FeelCasesTest}.
  */
 @SpringBootTest
 @CamundaSpringProcessTest
-@TestDeployment(resources = {"03-server-agent-card-dispute.bpmn"})
+@TestDeployment(resources = {"03-server-agent.bpmn"})
 public class ProcessTest {
 
     @Autowired

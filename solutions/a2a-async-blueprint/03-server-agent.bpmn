@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_a2a_card_dispute" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
-  <bpmn:process id="a2a-card-dispute" name="03 A2A Server Agent" isExecutable="true">
+  <bpmn:process id="a2a-server-agent" name="03 A2A Server Agent" isExecutable="true">
     <bpmn:startEvent id="TaskReceived" name="Request received">
       <bpmn:outgoing>Flow_TaskReceived_AgentTools</bpmn:outgoing>
     </bpmn:startEvent>
@@ -56,8 +56,8 @@
     <bpmn:sequenceFlow id="Flow_TaskReceived_AgentTools" sourceRef="TaskReceived" targetRef="AgentTools" />
     <bpmn:sequenceFlow id="Flow_AgentTools_AgentFinished" sourceRef="AgentTools" targetRef="AgentFinished" />
   </bpmn:process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-card-dispute">
-    <bpmndi:BPMNPlane id="BPMNPlane_a2a-card-dispute" bpmnElement="a2a-card-dispute">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-server-agent">
+    <bpmndi:BPMNPlane id="BPMNPlane_a2a-server-agent" bpmnElement="a2a-server-agent">
       <bpmndi:BPMNShape id="TaskReceived_di" bpmnElement="TaskReceived">
         <dc:Bounds x="177" y="162" width="36" height="36" />
         <bpmndi:BPMNLabel>

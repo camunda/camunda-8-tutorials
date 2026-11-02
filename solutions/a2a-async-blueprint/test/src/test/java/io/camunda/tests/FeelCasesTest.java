@@ -25,7 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @CamundaSpringProcessTest
-@TestDeployment(resources = {"03-server-agent-card-dispute.bpmn", "04-a2a-task.bpmn"})
+@TestDeployment(resources = {"03-server-agent.bpmn", "04-a2a-task.bpmn"})
 public class FeelCasesTest {
 
     private static final String PROCESS_ID = "a2a-task";

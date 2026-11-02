@@ -429,7 +429,7 @@
     <bpmn:endEvent id="NotCancelableReady" name="Not cancelable response ready">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:output source="=(&#10;  for e in [&#10;    {&#10;      code: -32002,&#10;      message: &#34;Task is terminal or its process did not accept the required a2a-cancel message&#34;,&#10;      reason: &#34;TASK_NOT_CANCELABLE&#34;&#10;    }&#10;  ]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
+          <zeebe:output source="=(&#10;  for e in [&#10;    {&#10;      code: -32002,&#10;      message: &#34;The task has already finished or cannot be canceled&#34;,&#10;      reason: &#34;TASK_NOT_CANCELABLE&#34;&#10;    }&#10;  ]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_NotCancelableJoin_BuildNotCancelable</bpmn:incoming>
@@ -523,7 +523,7 @@
     <bpmn:sequenceFlow id="Flow_FollowUpAccepted_FollowUpErrorJoin" name="no" sourceRef="FollowUpAccepted" targetRef="Link_FollowUpError_FromAccepted" />
     <bpmn:sequenceFlow id="Flow_RouteOutcome_FollowUpErrorJoin" name="no" sourceRef="RouteOutcome" targetRef="Link_FollowUpError_FromOutcome" />
     <bpmn:sequenceFlow id="Flow_FollowUpErrorJoin_BuildFollowUpError" sourceRef="Link_FollowUpError_Catch" targetRef="FollowUpErrorReady" />
-    <bpmn:exclusiveGateway id="LookupTimeLeft" name="Lookup time left?" default="Flow_LookupTimeLeft_NotFoundJoin">
+    <bpmn:exclusiveGateway id="LookupTimeLeft" name="Time left for lookup?" default="Flow_LookupTimeLeft_NotFoundJoin">
       <bpmn:incoming>Flow_TaskKnown_LookupTimeLeft</bpmn:incoming>
       <bpmn:outgoing>Flow_LookupTimeLeft_WaitForIndex</bpmn:outgoing>
       <bpmn:outgoing>Flow_LookupTimeLeft_NotFoundJoin</bpmn:outgoing>
@@ -557,7 +557,7 @@
     <bpmn:endEvent id="CancellationErrorReady" name="Cancellation failed">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
-          <zeebe:output source="=(&#10;  for e in [&#10;    {&#10;      code: -32603,&#10;      message: &#34;Cancellation outcome was not visible before the deadline&#34;,&#10;      reason: &#34;DEADLINE_EXCEEDED&#34;&#10;    }&#10;  ]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
+          <zeebe:output source="=(&#10;  for e in [&#10;    {&#10;      code: -32603,&#10;      message: &#34;The cancellation result was not available in time&#34;,&#10;      reason: &#34;DEADLINE_EXCEEDED&#34;&#10;    }&#10;  ]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_CancellationOutcome_CancellationTimeout</bpmn:incoming>
@@ -569,7 +569,7 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=seen != null and seen.status.state != "TASK_STATE_CANCELED" and ((visible and list contains(["TASK_STATE_COMPLETED", "TASK_STATE_CANCELED", "TASK_STATE_FAILED", "TASK_STATE_REJECTED"], seen.status.state)) or not(correlated))</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_CancellationOutcome_CancellationTimeout" name="not visible" sourceRef="CancellationOutcome" targetRef="CancellationErrorReady" />
-    <bpmn:subProcess id="CollectTaskList" name="Collect all task pages">
+    <bpmn:subProcess id="CollectTaskList" name="List all tasks">
       <bpmn:extensionElements>
         <zeebe:ioMapping>
           <zeebe:input source="=listReq" target="listReq" />
@@ -587,7 +587,7 @@
       <bpmn:startEvent id="CollectTaskList_ListScanRequested" name="Collect tasks">
         <bpmn:outgoing>CollectTaskList_Flow_ListScanRequested_StartListScan</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:scriptTask id="CollectTaskList_StartListScan" name="Start bounded scan">
+      <bpmn:scriptTask id="CollectTaskList_StartListScan" name="Start listing">
         <bpmn:extensionElements>
           <zeebe:script expression="={items: [], keys: [], cursor: null, cursors: [], deadline: string(now() + duration(&#34;PT10S&#34;))}" resultVariable="listScan" />
         </bpmn:extensionElements>
@@ -636,7 +636,7 @@
         <bpmn:incoming>CollectTaskList_Flow_WaitListVariables_ListVariablesJoin</bpmn:incoming>
         <bpmn:outgoing>CollectTaskList_Flow_ListVariablesJoin_ReadTasks</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:serviceTask id="CollectTaskList_ReadTasks" name="Read complete root-state batch" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13">
+      <bpmn:serviceTask id="CollectTaskList_ReadTasks" name="Read batch of task data" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13">
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
           <zeebe:ioMapping>
@@ -675,7 +675,7 @@
         <bpmn:incoming>CollectTaskList_Flow_ListBatchJoin_CollectListBatch</bpmn:incoming>
         <bpmn:outgoing>CollectTaskList_Flow_CollectListBatch_ListScanDecision</bpmn:outgoing>
       </bpmn:scriptTask>
-      <bpmn:exclusiveGateway id="CollectTaskList_ListScanDecision" name="Scan outcome?" default="CollectTaskList_Flow_ListScanDecision_FailListScan">
+      <bpmn:exclusiveGateway id="CollectTaskList_ListScanDecision" name="Listing finished?" default="CollectTaskList_Flow_ListScanDecision_FailListScan">
         <bpmn:incoming>CollectTaskList_Flow_CollectListBatch_ListScanDecision</bpmn:incoming>
         <bpmn:outgoing>CollectTaskList_Flow_ListScanDecision_FinishListScan</bpmn:outgoing>
         <bpmn:outgoing>CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin</bpmn:outgoing>
@@ -704,9 +704,9 @@
           <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">="PT0.25S"</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:intermediateCatchEvent>
-      <bpmn:scriptTask id="CollectTaskList_FailListScan" name="Reject incomplete collection">
+      <bpmn:scriptTask id="CollectTaskList_FailListScan" name="Fail incomplete list">
         <bpmn:extensionElements>
-          <zeebe:script expression="={&#10;  items: [],&#10;  failure:&#10;    if listScan.action = &#34;deadline&#34;&#10;    then {&#10;      code: -32603,&#10;      message: &#34;Task listing did not become complete before the deadline&#34;,&#10;      reason: &#34;DEADLINE_EXCEEDED&#34;&#10;    }&#10;    else {&#10;      code: -32603,&#10;      message: &#34;Task search pagination did not make progress&#34;,&#10;      reason: &#34;DATA_LOSS&#34;&#10;    }&#10;}" resultVariable="listing" />
+          <zeebe:script expression="={&#10;  items: [],&#10;  failure:&#10;    if listScan.action = &#34;deadline&#34;&#10;    then {&#10;      code: -32603,&#10;      message: &#34;The task list was not ready in time&#34;,&#10;      reason: &#34;DEADLINE_EXCEEDED&#34;&#10;    }&#10;    else {&#10;      code: -32603,&#10;      message: &#34;The task list could not be read completely&#34;,&#10;      reason: &#34;DATA_LOSS&#34;&#10;    }&#10;}" resultVariable="listing" />
         </bpmn:extensionElements>
         <bpmn:incoming>CollectTaskList_Flow_ListScanDecision_FailListScan</bpmn:incoming>
         <bpmn:outgoing>CollectTaskList_Flow_FailListScan_ListResultJoin</bpmn:outgoing>

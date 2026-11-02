@@ -8,7 +8,7 @@
   "resources": [
     "01-client-agent.bpmn",
     "02-a2a-server.bpmn",
-    "03-server-agent-card-dispute.bpmn",
+    "03-server-agent.bpmn",
     "04-a2a-task.bpmn",
     "server-request-validation.dmn",
     ".camunda/element-templates/server-a2a-rpc-endpoint.json",

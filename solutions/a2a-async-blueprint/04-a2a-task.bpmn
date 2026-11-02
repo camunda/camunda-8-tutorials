@@ -14,7 +14,7 @@
     </bpmn:startEvent>
     <bpmn:callActivity id="AgentTools" name="Run server agent">
       <bpmn:extensionElements>
-        <zeebe:calledElement processId="a2a-card-dispute" propagateAllChildVariables="false" propagateAllParentVariables="false" />
+        <zeebe:calledElement processId="a2a-server-agent" propagateAllChildVariables="false" propagateAllParentVariables="false" />
         <zeebe:ioMapping>
           <zeebe:input source="=req" target="req" />
           <zeebe:output source="=agent" target="agent" />

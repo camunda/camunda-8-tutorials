@@ -26,6 +26,7 @@ Solutions:
 * Level Medium
    * [AI Agent Chat with Tools](solutions/ai-agent-chat-with-tools)
    * [AI Agent Chat with MCP](solutions/ai-agent-chat-with-mcp)
+   * [A2A Async Blueprint](solutions/a2a-async-blueprint)
    * [AI Bank Agent for Loan Approval](solutions/bank-ai-loan-approval)
    * [Absence Request](solutions/absence-request)
    * [Enforcing SLA](solutions/enforcing-sla)

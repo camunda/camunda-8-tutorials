@@ -1052,7 +1052,7 @@
     "seen": {
       "title": "Task as seen",
       "type": "object",
-      "description": "Task state observed after dispatch: the settled Task, or the stored Task when none settled in time. Used in: solutions/a2a-async-blueprint.",
+      "description": "The task as seen after it was started: the finished task, or the last stored version if it did not finish in time. Used in: solutions/a2a-async-blueprint.",
       "examples": [
         {
           "id": "task-1",
@@ -1067,7 +1067,7 @@
     "visible": {
       "title": "Task visible",
       "type": "boolean",
-      "description": "Whether the dispatched task settled before the wait limit. Used in: solutions/a2a-async-blueprint.",
+      "description": "Whether the task finished before the wait time ran out. Used in: solutions/a2a-async-blueprint.",
       "examples": [
         true
       ]
@@ -1075,7 +1075,7 @@
     "correlated": {
       "title": "Task accepted the message",
       "type": "boolean",
-      "description": "Whether the running task accepted the follow-up or cancel message. Used in: solutions/a2a-async-blueprint.",
+      "description": "Whether the running task accepted the follow-up or cancel request. Used in: solutions/a2a-async-blueprint.",
       "examples": [
         true
       ]
@@ -1111,7 +1111,7 @@
     "outcome": {
       "title": "Agent outcome",
       "type": "object",
-      "description": "Normalized result of the server agent run before it is applied to the Task. Used in: solutions/a2a-async-blueprint.",
+      "description": "The outcome of the server agent's run, before it is stored on the task. Used in: solutions/a2a-async-blueprint.",
       "examples": [
         {
           "state": "TASK_STATE_COMPLETED"
@@ -1121,7 +1121,7 @@
     "task": {
       "title": "A2A task",
       "type": "object",
-      "description": "A2A Task owned by the server agent; rev increases on each state change. Used in: solutions/a2a-async-blueprint.",
+      "description": "The A2A task handled by the server agent. Its revision number increases each time the task changes. Used in: solutions/a2a-async-blueprint.",
       "examples": [
         {
           "id": "task-1",
@@ -1136,7 +1136,7 @@
     "rpc": {
       "title": "A2A JSON-RPC request",
       "type": "object",
-      "description": "JSON-RPC request body of the A2A server. A2A 0.3 requests are rewritten into the internal A2A 1.0 model before parsing. Used in: solutions/a2a-async-blueprint.",
+      "description": "The JSON-RPC request body received by the A2A server. A2A 0.3 requests are converted to the A2A 1.0 format first. Used in: solutions/a2a-async-blueprint.",
       "examples": [
         {
           "jsonrpc": "2.0",
@@ -1151,7 +1151,7 @@
     "hdr": {
       "title": "A2A request headers",
       "type": "object",
-      "description": "Lower-cased HTTP headers of the A2A request; a 0.3 request gets an internal 1.0 version header after normalization. Used in: solutions/a2a-async-blueprint.",
+      "description": "The HTTP headers of the A2A request, with lower-case names. Used in: solutions/a2a-async-blueprint.",
       "examples": [
         {
           "content-type": "application/json",
@@ -1162,7 +1162,7 @@
     "dialect": {
       "title": "A2A dialect",
       "type": "string",
-      "description": "A2A dialect of the caller, detected from the JSON-RPC method name: 0.3 (message/send) or 1.0 (SendMessage). Responses and push callbacks are formatted in this dialect. Used in: solutions/a2a-async-blueprint.",
+      "description": "The A2A version the caller uses, taken from the method name: 0.3 (message/send) or 1.0 (SendMessage). Responses and push notifications use the same version. Used in: solutions/a2a-async-blueprint.",
       "examples": [
         "0.3",
         "1.0"
