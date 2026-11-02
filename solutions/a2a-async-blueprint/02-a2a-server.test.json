@@ -1834,5 +1834,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) RpcReceived accepts a real JSON-RPC webhook call with headers content-type and a2a-version, and CardRequested serves the Agent Card; (2) FindTask, ReadTask, SearchTasks, ReadTasks and CreateTask call the real Camunda REST API with the Basic auth secrets and return the task variables read by the process; (3) CorrelateTask publishes the a2a-cancel message (or the follow-up message) and the task process correlates it, including the NOT_FOUND retry; (4) Dispatch receives the real a2a-settled signal for awaitKey taskId:rev+1. Note: webhook start events cannot be started from Test Studio, and all HTTP connector calls are mocked."
 }

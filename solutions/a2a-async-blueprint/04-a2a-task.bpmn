@@ -127,6 +127,10 @@
     <bpmn:sequenceFlow id="Flow_PushFailed_PushJoin" sourceRef="PushFailed" targetRef="PushJoin" />
     <bpmn:sequenceFlow id="Flow_PushJoin_PublishOutcome" sourceRef="PushJoin" targetRef="PublishOutcome" />
     <bpmn:sequenceFlow id="Flow_PublishOutcome_TaskSettled" sourceRef="PublishOutcome" targetRef="TaskSettled" />
+      <bpmn:textAnnotation id="TextAnnotation_Purpose">
+      <bpmn:text>One A2A task. Runs the server agent, publishes each state change, and serves cancellation and follow-up messages until the task reaches a terminal state.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="TaskReceived" targetRef="TextAnnotation_Purpose" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-task">
     <bpmndi:BPMNPlane id="BPMNPlane_a2a-task" bpmnElement="a2a-task">
@@ -265,6 +269,13 @@
       <bpmndi:BPMNEdge id="Flow_PublishOutcome_TaskSettled_di" bpmnElement="Flow_PublishOutcome_TaskSettled">
         <di:waypoint x="1283" y="180" />
         <di:waypoint x="1397" y="180" />
+      </bpmndi:BPMNEdge>
+          <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="157" y="12" width="300" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
+        <di:waypoint x="195" y="162" />
+        <di:waypoint x="197" y="112" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

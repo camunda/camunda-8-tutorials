@@ -1012,6 +1012,16 @@
       "title": "Demo input",
       "type": "object",
       "description": "Placeholder business input the client delegates to the remote agent. Used in: solutions/a2a-async-blueprint.",
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "string",
+          "description": "Free-text request the client delegates.",
+          "examples": [
+            "Example input"
+          ]
+        }
+      },
       "examples": [
         {
           "value": "Example input"
@@ -1026,7 +1036,18 @@
         {
           "context": {}
         }
-      ]
+      ],
+      "properties": {
+        "context": {
+          "title": "Context",
+          "type": "object",
+          "description": "context of clientAgent.",
+          "examples": [
+            {}
+          ],
+          "properties": {}
+        }
+      }
     },
     "rpcResponse": {
       "title": "RPC response",
@@ -1047,7 +1068,105 @@
             }
           }
         }
-      ]
+      ],
+      "properties": {
+        "jsonrpc": {
+          "title": "Jsonrpc",
+          "type": "string",
+          "description": "jsonrpc of rpcResponse.",
+          "examples": [
+            "2.0"
+          ]
+        },
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "description": "id of rpcResponse.",
+          "examples": [
+            "1"
+          ]
+        },
+        "result": {
+          "title": "Result",
+          "type": "object",
+          "description": "result of rpcResponse.",
+          "examples": [
+            {
+              "task": {
+                "id": "task-1",
+                "contextId": "ctx-1",
+                "rev": 2,
+                "status": {
+                  "state": "TASK_STATE_COMPLETED"
+                }
+              }
+            }
+          ],
+          "properties": {
+            "task": {
+              "title": "Task",
+              "type": "object",
+              "description": "task of result.",
+              "examples": [
+                {
+                  "id": "task-1",
+                  "contextId": "ctx-1",
+                  "rev": 2,
+                  "status": {
+                    "state": "TASK_STATE_COMPLETED"
+                  }
+                }
+              ],
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "string",
+                  "description": "id of task.",
+                  "examples": [
+                    "task-1"
+                  ]
+                },
+                "contextId": {
+                  "title": "Contextid",
+                  "type": "string",
+                  "description": "contextId of task.",
+                  "examples": [
+                    "ctx-1"
+                  ]
+                },
+                "rev": {
+                  "title": "Rev",
+                  "type": "integer",
+                  "description": "rev of task.",
+                  "examples": [
+                    2
+                  ]
+                },
+                "status": {
+                  "title": "Status",
+                  "type": "object",
+                  "description": "status of task.",
+                  "examples": [
+                    {
+                      "state": "TASK_STATE_COMPLETED"
+                    }
+                  ],
+                  "properties": {
+                    "state": {
+                      "title": "State",
+                      "type": "string",
+                      "description": "state of status.",
+                      "examples": [
+                        "TASK_STATE_COMPLETED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "seen": {
       "title": "Task as seen",
@@ -1062,7 +1181,53 @@
             "state": "TASK_STATE_COMPLETED"
           }
         }
-      ]
+      ],
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "description": "id of seen.",
+          "examples": [
+            "task-1"
+          ]
+        },
+        "contextId": {
+          "title": "Contextid",
+          "type": "string",
+          "description": "contextId of seen.",
+          "examples": [
+            "ctx-1"
+          ]
+        },
+        "rev": {
+          "title": "Rev",
+          "type": "integer",
+          "description": "rev of seen.",
+          "examples": [
+            2
+          ]
+        },
+        "status": {
+          "title": "Status",
+          "type": "object",
+          "description": "status of seen.",
+          "examples": [
+            {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          ],
+          "properties": {
+            "state": {
+              "title": "State",
+              "type": "string",
+              "description": "state of status.",
+              "examples": [
+                "TASK_STATE_COMPLETED"
+              ]
+            }
+          }
+        }
+      }
     },
     "visible": {
       "title": "Task visible",
@@ -1095,7 +1260,62 @@
             }
           }
         ]
-      ]
+      ],
+      "items": {
+        "type": "object",
+        "description": "Element of the list.",
+        "examples": [
+          {
+            "id": "task-1",
+            "contextId": "ctx-1",
+            "rev": 2,
+            "status": {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          }
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id of item.",
+            "examples": [
+              "task-1"
+            ]
+          },
+          "contextId": {
+            "type": "string",
+            "description": "contextId of item.",
+            "examples": [
+              "ctx-1"
+            ]
+          },
+          "rev": {
+            "type": "integer",
+            "description": "rev of item.",
+            "examples": [
+              2
+            ]
+          },
+          "status": {
+            "type": "object",
+            "description": "status of item.",
+            "examples": [
+              {
+                "state": "TASK_STATE_COMPLETED"
+              }
+            ],
+            "properties": {
+              "state": {
+                "type": "string",
+                "description": "state of status.",
+                "examples": [
+                  "TASK_STATE_COMPLETED"
+                ]
+              }
+            }
+          }
+        }
+      }
     },
     "listFailure": {
       "title": "List failure",
@@ -1106,7 +1326,25 @@
           "code": -32603,
           "message": "Internal error"
         }
-      ]
+      ],
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "integer",
+          "description": "code of listFailure.",
+          "examples": [
+            -32603
+          ]
+        },
+        "message": {
+          "title": "Message",
+          "type": "string",
+          "description": "message of listFailure.",
+          "examples": [
+            "Internal error"
+          ]
+        }
+      }
     },
     "outcome": {
       "title": "Agent outcome",
@@ -1116,7 +1354,17 @@
         {
           "state": "TASK_STATE_COMPLETED"
         }
-      ]
+      ],
+      "properties": {
+        "state": {
+          "title": "State",
+          "type": "string",
+          "description": "state of outcome.",
+          "examples": [
+            "TASK_STATE_COMPLETED"
+          ]
+        }
+      }
     },
     "task": {
       "title": "A2A task",
@@ -1131,7 +1379,53 @@
             "state": "TASK_STATE_COMPLETED"
           }
         }
-      ]
+      ],
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "description": "id of task.",
+          "examples": [
+            "task-1"
+          ]
+        },
+        "contextId": {
+          "title": "Contextid",
+          "type": "string",
+          "description": "contextId of task.",
+          "examples": [
+            "ctx-1"
+          ]
+        },
+        "rev": {
+          "title": "Rev",
+          "type": "integer",
+          "description": "rev of task.",
+          "examples": [
+            2
+          ]
+        },
+        "status": {
+          "title": "Status",
+          "type": "object",
+          "description": "status of task.",
+          "examples": [
+            {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          ],
+          "properties": {
+            "state": {
+              "title": "State",
+              "type": "string",
+              "description": "state of status.",
+              "examples": [
+                "TASK_STATE_COMPLETED"
+              ]
+            }
+          }
+        }
+      }
     },
     "rpc": {
       "title": "A2A JSON-RPC request",
@@ -1146,7 +1440,53 @@
             "id": "task-1"
           }
         }
-      ]
+      ],
+      "properties": {
+        "jsonrpc": {
+          "title": "Jsonrpc",
+          "type": "string",
+          "description": "jsonrpc of rpc.",
+          "examples": [
+            "2.0"
+          ]
+        },
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "description": "id of rpc.",
+          "examples": [
+            "1"
+          ]
+        },
+        "method": {
+          "title": "Method",
+          "type": "string",
+          "description": "method of rpc.",
+          "examples": [
+            "GetTask"
+          ]
+        },
+        "params": {
+          "title": "Params",
+          "type": "object",
+          "description": "params of rpc.",
+          "examples": [
+            {
+              "id": "task-1"
+            }
+          ],
+          "properties": {
+            "id": {
+              "title": "Id",
+              "type": "string",
+              "description": "id of params.",
+              "examples": [
+                "task-1"
+              ]
+            }
+          }
+        }
+      }
     },
     "hdr": {
       "title": "A2A request headers",
@@ -1157,7 +1497,25 @@
           "content-type": "application/json",
           "a2a-version": "1.0"
         }
-      ]
+      ],
+      "properties": {
+        "content-type": {
+          "title": "Content type",
+          "type": "string",
+          "description": "content-type of hdr.",
+          "examples": [
+            "application/json"
+          ]
+        },
+        "a2a-version": {
+          "title": "A2a version",
+          "type": "string",
+          "description": "a2a-version of hdr.",
+          "examples": [
+            "1.0"
+          ]
+        }
+      }
     },
     "dialect": {
       "title": "A2A dialect",

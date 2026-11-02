@@ -356,5 +356,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) the task process starts from a real SendMessage hand-over and publishes the a2a-settled signal after every revision; (2) NotifyClient (Push task to client) posts to the real push notification URL registered by the client with its token; (3) A2ASetCanceled commits the canceled state once a2a-cancel is correlated; (4) follow-up messages reach a task waiting for input. Note: the push callback and the server agent are mocked in Test Studio."
 }

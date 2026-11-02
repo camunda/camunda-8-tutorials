@@ -184,5 +184,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) the AI agent connector (a2a-server-agent) calls the configured LLM through the CAMUNDA_PROVIDED_LLM_* secrets; (2) the upperCase script task returns the upper-cased text; (3) the agent returns a final answer in the agent variable for the task process. Note: the LLM response is mocked in Test Studio."
 }

@@ -825,6 +825,10 @@
       <bpmn:incoming>Flow_Cancelable_DispatchJoin</bpmn:incoming>
       <bpmn:linkEventDefinition id="Link_Dispatch_FromCancel_def" name="Dispatch" />
     </bpmn:intermediateThrowEvent>
+      <bpmn:textAnnotation id="TextAnnotation_Purpose">
+      <bpmn:text>Example 2. Receives A2A JSON-RPC requests, validates them, and answers SendMessage, GetTask, ListTasks and CancelTask by handing work to a task process and waiting for its outcome.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="RpcReceived" targetRef="TextAnnotation_Purpose" />
   </bpmn:process>
   <bpmn:signal id="Signal_Settled" name="=&#34;a2a-settled:&#34; + awaitKey" />
   <bpmn:message id="AgentCardRequestMessage" name="Agent Card request" />
@@ -1347,6 +1351,13 @@
       <bpmndi:BPMNEdge id="Flow_FollowUpErrorJoin_BuildFollowUpError_di" bpmnElement="Flow_FollowUpErrorJoin_BuildFollowUpError">
         <di:waypoint x="2160" y="640" />
         <di:waypoint x="2292" y="640" />
+      </bpmndi:BPMNEdge>
+          <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="142" y="-78" width="300" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
+        <di:waypoint x="180" y="72" />
+        <di:waypoint x="182" y="22" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

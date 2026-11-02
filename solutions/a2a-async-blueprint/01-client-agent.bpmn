@@ -95,6 +95,10 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_QuestionAsked_ClientAgent" sourceRef="QuestionAsked" targetRef="ClientAgent" />
     <bpmn:sequenceFlow id="Flow_ClientAgent_ClientConversationFinished" sourceRef="ClientAgent" targetRef="ClientConversationFinished" />
+      <bpmn:textAnnotation id="TextAnnotation_Purpose">
+      <bpmn:text>Example 1. A client agent delegates a request to a remote A2A agent through the native A2A Client connector and returns the agent result once the task finishes.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="QuestionAsked" targetRef="TextAnnotation_Purpose" />
   </bpmn:process>
   <bpmn:message id="Message_1jg1r6d" name="cf4a9562-6ffe-4810-b082-db16822578ff" zeebe:modelerTemplate="io.camunda.connectors.agenticai.a2a.client.polling.intermediate.v0">
     <bpmn:extensionElements>
@@ -138,6 +142,13 @@
       <bpmndi:BPMNEdge id="Flow_ClientAgent_ClientConversationFinished_di" bpmnElement="Flow_ClientAgent_ClientConversationFinished">
         <di:waypoint x="570" y="180" />
         <di:waypoint x="632" y="180" />
+      </bpmndi:BPMNEdge>
+          <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="132" y="12" width="300" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
+        <di:waypoint x="170" y="162" />
+        <di:waypoint x="172" y="112" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

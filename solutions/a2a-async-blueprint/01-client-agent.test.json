@@ -128,5 +128,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_integrationTestNotes": "Integration tests should verify: (1) A2AClient (Remote A2A agent) sends a real SendMessage to the server URL set in data.connection.url; (2) the polling catch event correlates on pollingData.id and returns the server task result into the clientAgent variable; (3) the client AI agent connector reaches the configured LLM through the CAMUNDA_PROVIDED_LLM_* secrets. Note: the connector, the LLM and the remote server are mocked in Test Studio."
 }

@@ -55,6 +55,10 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_TaskReceived_AgentTools" sourceRef="TaskReceived" targetRef="AgentTools" />
     <bpmn:sequenceFlow id="Flow_AgentTools_AgentFinished" sourceRef="AgentTools" targetRef="AgentFinished" />
+      <bpmn:textAnnotation id="TextAnnotation_Purpose">
+      <bpmn:text>Server-side AI agent. Receives the request text of an A2A task, works on it with its tools, and returns the answer to the task process.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="TaskReceived" targetRef="TextAnnotation_Purpose" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-server-agent">
     <bpmndi:BPMNPlane id="BPMNPlane_a2a-server-agent" bpmnElement="a2a-server-agent">
@@ -84,6 +88,13 @@
       <bpmndi:BPMNEdge id="Flow_AgentTools_AgentFinished_di" bpmnElement="Flow_AgentTools_AgentFinished">
         <di:waypoint x="520" y="180" />
         <di:waypoint x="582" y="180" />
+      </bpmndi:BPMNEdge>
+          <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="157" y="12" width="300" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
+        <di:waypoint x="195" y="162" />
+        <di:waypoint x="197" y="112" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
