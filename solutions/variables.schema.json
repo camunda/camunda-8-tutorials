@@ -372,14 +372,6 @@
         "{TODO: example value}"
       ]
     },
-    "emailOk": {
-      "title": "Email Ok",
-      "type": "string",
-      "description": "{TODO: business description} — used in: solutions/ai-agent-chat-with-tools (sources: form-key)",
-      "examples": [
-        "{TODO: example value}"
-      ]
-    },
     "employeeName": {
       "title": "Employee name",
       "type": "string",
@@ -772,14 +764,6 @@
       "title": "News source alternative",
       "type": "string",
       "description": "{TODO: business description} — used in: solutions/event-registration (sources: form-key)",
-      "examples": [
-        "{TODO: example value}"
-      ]
-    },
-    "operatorFeedback": {
-      "title": "Operator Feedback",
-      "type": "string",
-      "description": "{TODO: business description} — used in: solutions/ai-agent-chat-with-tools (sources: form-key)",
       "examples": [
         "{TODO: example value}"
       ]
