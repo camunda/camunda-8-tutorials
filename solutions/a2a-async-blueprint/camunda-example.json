@@ -1,0 +1,20 @@
+{
+  "$schema": "https://camunda.com/schemas/runnable-example/v1.json",
+  "title": "A2A server and client blueprint",
+  "subtitle": "Expose a BPMN agent over the Agent2Agent protocol",
+  "description": "A Camunda client agent calls a Camunda server agent over A2A, and any external A2A client can call the same server. The server validates each request, tracks the task, and runs a business agent that you replace with your own logic.",
+  "creator": "Camunda",
+  "camundaVersion": "8.9+",
+  "resources": [
+    "01-client-agent.bpmn",
+    "02-a2a-server.bpmn",
+    "03-server-agent-card-dispute.bpmn",
+    "04-a2a-task.bpmn",
+    "server-request-validation.dmn",
+    ".camunda/element-templates/server-a2a-rpc-endpoint.json",
+    ".camunda/element-templates/server-agent-card-endpoint.json"
+  ],
+  "importTitle": "A2A Async Blueprint",
+  "documentation": "https://github.com/camunda/camunda-8-tutorials/tree/main/solutions/a2a-async-blueprint",
+  "support": "https://forum.camunda.io/"
+}
