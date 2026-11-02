@@ -273,6 +273,197 @@
           "state": "IS_COMPLETED"
         }
       ]
+    },
+    {
+      "name": "End to end: external client sends a message - server agent settles the task",
+      "description": "Example 2. A blocking SendMessage reaches the server, which starts the task process (a2a-task) and waits for it. The real task process calls the real server agent (a2a-card-dispute); the signal it throws releases the server, which returns the settled Task. The REST call that starts the task is replaced by creating the instance directly.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "DispatchJoin"
+            }
+          ],
+          "variables": {
+            "dialect": "1.0",
+            "ctx": {
+              "id": "e2e-1",
+              "method": "SendMessage",
+              "blocking": true,
+              "hl": 0,
+              "m": {
+                "messageId": "m1",
+                "role": "ROLE_USER",
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              },
+              "pushEnabled": false
+            },
+            "lookup": {
+              "taskId": "e2e-task",
+              "contextId": "e2e-context",
+              "ctxTag": "ctx-e2e-context",
+              "task": {
+                "id": "e2e-task",
+                "contextId": "e2e-context",
+                "rev": 1,
+                "status": {
+                  "state": "TASK_STATE_WORKING",
+                  "timestamp": "2026-01-01T00:00:00Z"
+                },
+                "history": [],
+                "artifacts": []
+              },
+              "push": null
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CreateTask"
+          },
+          "variables": {
+            "created": "1"
+          }
+        },
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "variables": {
+            "req": {
+              "message": {
+                "messageId": "m1",
+                "role": "ROLE_USER",
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              },
+              "blocking": true,
+              "hl": 0
+            },
+            "task": {
+              "id": "e2e-task",
+              "contextId": "e2e-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "activateElements": [
+            {
+              "elementId": "upperCase",
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "upperCase"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "completionConditionFulfilled": true,
+          "variables": {
+            "agent": {
+              "responseText": "Done.",
+              "context": {
+                "conversation": {
+                  "messages": [
+                    {
+                      "role": "tool_call_result",
+                      "results": [
+                        {
+                          "id": "call-1",
+                          "name": "upperCase",
+                          "content": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "TaskDone"
+            },
+            {
+              "elementId": "PublishOutcome"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CreateTask"
+            },
+            {
+              "elementId": "Dispatch_OutcomePublished"
+            },
+            {
+              "elementId": "NewTaskReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
     }
   ]
 }

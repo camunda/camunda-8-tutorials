@@ -3,8 +3,8 @@
   "processId": "a2a-client",
   "testCases": [
     {
-      "name": "Agent sends a message through the native A2A Client tool - polling delivers the result",
-      "description": "The A2A Client connector (tool mode, polling) returns a working task; the polling catch event correlates on pollingData.id and returns the completed task as the tool result.",
+      "name": "End to end: client agent sends a message and polling delivers the server result",
+      "description": "Example 1. The A2A Client connector (tool mode, polling) returns a working task; the polling catch event correlates on pollingData.id and returns the completed task as the tool result.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",
@@ -83,7 +83,13 @@
                   "artifactId": "a-1",
                   "parts": [
                     {
-                      "text": "Example input"
+                      "data": {
+                        "received": {
+                          "value": "Example input"
+                        },
+                        "uppercase": "EXAMPLE INPUT",
+                        "length": 13
+                      }
                     }
                   ]
                 }

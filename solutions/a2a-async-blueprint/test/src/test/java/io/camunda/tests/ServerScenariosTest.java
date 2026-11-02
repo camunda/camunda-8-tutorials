@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 @CamundaSpringProcessTest
-@TestDeployment(resources = {"02-a2a-server.bpmn", "server-request-validation.dmn"})
+@TestDeployment(resources = {"02-a2a-server.bpmn", "03-server-agent-card-dispute.bpmn", "04-a2a-task.bpmn", "server-request-validation.dmn"})
 public class ServerScenariosTest {
 
     @Autowired
