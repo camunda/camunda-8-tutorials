@@ -19,7 +19,8 @@ flowchart LR
 
 ## Before you start
 
-Tested with Camunda 8.9.26, Connectors 8.9.17, Java 21.
+Run end to end on Camunda 8.9.26 with Connectors 8.9.17 and Java 21. The Maven scenarios in
+`test/` run on Camunda Process Test 8.9.8.
 
 1. Run Camunda 8.9+ with the connector runtime (for example `c8ctl cluster start`).
 2. Set these connector secrets, then restart the connector runtime:

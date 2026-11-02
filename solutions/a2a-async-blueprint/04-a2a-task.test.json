@@ -336,6 +336,18 @@
           "state": "IS_COMPLETED"
         },
         {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "NotifyClient"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
           "type": "ASSERT_PROCESS_INSTANCE",
           "processInstanceSelector": {
             "processDefinitionId": "a2a-task"
