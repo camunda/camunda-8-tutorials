@@ -42,17 +42,67 @@ Push is optional for the remote client; the client side works either way.
 Per task there is one `a2a-task` instance and one `a2a-card-dispute` instance. Per delegation on
 the client side there is one `a2a-client` instance.
 
+## Supported A2A dialects
+
+0.3 is the primary dialect on Camunda 8.9 because the native client connector speaks it. 1.0 stays
+available for newer clients.
+
+| | A2A 0.3 | A2A 1.0 |
+| --- | --- | --- |
+| Methods | `message/send`, `tasks/get`, `tasks/cancel` | `SendMessage`, `GetTask`, `CancelTask`, `ListTasks` |
+| Parts | `kind`: `text`, `data`, `file` | member `text`, `data`, `url`/`raw` |
+| Roles and states | `user`/`agent`; `submitted`, `working`, `input-required`, `completed`, `canceled`, `failed`, `rejected` | `ROLE_USER`/`ROLE_AGENT`; `TASK_STATE_*` |
+| Push config | `configuration.pushNotificationConfig` `{url, token, authentication: {schemes, credentials}}` | `taskPushNotificationConfig` |
+
+One endpoint and one Agent Card serve both:
+
+- **Request (02).** The step `Normalize request dialect` detects 0.3 by the method name (it
+  contains `/`), rewrites the request into the internal 1.0 model and stores `dialect`. Parsing,
+  validation, 03 and 04 only see the 1.0 model.
+- **Response and push.** The endpoint answers in the caller's dialect. 02 stores the dialect with
+  the push config, so 04 POSTs the Task to the client as a 0.3 Task (bare, without `A2A-Version`) or
+  as a 1.0 `{task}` object.
+- **Agent Card.** The card carries the 0.3 fields (`url`, `protocolVersion: 0.3.0`,
+  `preferredTransport`) next to the 1.0 `supportedInterfaces`. The 0.3.3 SDK ignores the unknown 1.0
+  members and parsed it; a 1.0 client reads `supportedInterfaces`. No content negotiation is needed.
+- Not covered in 0.3: `tasks/list`, streaming, and the standalone push-config methods.
+
 ## Working with external agents
 
-- The native client connector handles the A2A protocol version, message construction and result
-  retrieval itself. It speaks A2A 0.3.x according to its documentation, while the custom server
-  (02) accepts A2A 1.0 requests only. The connector therefore targets external agents such as
-  the ADK agent in `adk/`; talking to 02 needs a 0.3 translation that is not part of this
-  blueprint. This wire compatibility was not verified.
+- The native client connector (Camunda 8.9) is built on the A2A Java SDK 0.3.3, so it speaks A2A 0.3
+  only. A server that only understood A2A 1.0 would reject its `message/send` requests. 02 therefore
+  serves both dialects, and the ADK agent in `adk/` does too (see *Supported A2A dialects*).
 - 01's prompt makes the agent send the request as message text (JSON of `demoInput`), because ADK
   passes only text parts to the model.
 - 03 reads the request from the data part, or from JSON in a text part. `from json` and `to json`
   need Camunda 8.9, so the repository `.bpmnlintrc` targets 8.9.
+
+## Run end to end
+
+Checked against a local Docker Compose cluster (Camunda 8.9.26, Connectors 8.9.17) with the real
+A2A Java SDK 0.3.3 client: it fetched the 02 Agent Card, `message/send` to 02 returned a Task and
+`tasks/get` returned it in the 0.3 shape; it also fetched the card of the ADK agent and
+completed `message/send` against it (`ADK_OFFLINE=1`, port 8001). The AI Agent step in 03 and 01
+needs an LLM, so those parts were not run end to end here.
+
+1. Start a cluster with the connector runtime (for example `c8ctl cluster start`, or a Docker
+   Compose setup) and set the connector secrets `ENGINE_URL` (the engine REST URL as seen from the
+   connector runtime, without `/v2`), `ENGINE_USERNAME`, `ENGINE_PASSWORD`,
+   `A2A_AGENT_PROCESS=a2a-card-dispute`, the `CAMUNDA_PROVIDED_LLM_*` secrets and
+   `A2A_REMOTE_SERVER_URL`. Restart the connector runtime after changing secrets.
+2. In `02-a2a-server.bpmn` set the `inbound.publicRpcUrl` of `CardRequested` to the public URL of
+   the `a2a` webhook (`<connectors-url>/inbound/a2a`). The card endpoint requires HTTPS; for a local
+   HTTP check, change the check in its response expression temporarily.
+3. Deploy `02`, `03`, `04` and `server-request-validation.dmn`; deploy `01`.
+4. Fetch the card at `<connectors-url>/inbound/a2a-card` and expect `url`, `protocolVersion` and
+   `supportedInterfaces`.
+5. Against the ADK agent: `cd adk && ADK_OFFLINE=1 .venv/bin/uvicorn server_agent.app:a2a_app --port 8001`, set
+   `A2A_REMOTE_SERVER_URL=http://localhost:8001` (reachable from the connector runtime, for example
+   `http://host.docker.internal:8001`), and start `a2a-client`. In Operate expect the AI Agent to
+   call `fetchAgentCard` and `sendMessage`, and `Remote task settled` to finish.
+6. Against Camunda: set `A2A_REMOTE_SERVER_URL` to the 02 card base and start `a2a-client`. In
+   Operate expect an `a2a-task` instance and an `a2a-card-dispute` instance per `sendMessage`, and the
+   client's polling event to end when the Task reaches a final state.
 
 ## Contents
 
@@ -104,6 +154,6 @@ This solution follows the repository's license; no separate license is bundled. 
 
 ## Known gaps
 
-- Duplicate or out-of-order push callbacks and push delivery retries beyond the HTTP connector's three tries are not modeled. Push is not yet run end to end against a live engine; the Maven tests cover 01, 03 and 04 with mocked jobs and child processes; the native connector itself cannot run in Camunda Process Test, so its jobs are completed with mocked results. Multi-turn follow-up (resuming an input-required Task) is not part of 01.
+- Duplicate or out-of-order push callbacks and push delivery retries beyond the HTTP connector's three tries are not modeled. Push callbacks are not yet run end to end against a live engine; the Maven tests cover 01, 03 and 04 with mocked jobs and child processes; the native connector itself cannot run in Camunda Process Test, so its jobs are completed with mocked results. Multi-turn follow-up (resuming an input-required Task) is not part of 01.
 - Source Test Studio scenarios are canned examples; Java CPT tests (<20 s target) are not imported.
 - No `camunda-example.json` yet.

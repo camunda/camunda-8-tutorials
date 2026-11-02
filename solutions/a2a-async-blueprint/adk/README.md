@@ -1,8 +1,9 @@
 # Google ADK counterparts (interop testing)
 
 The Camunda blueprint is only useful if its A2A client and server also work with agents that are not
-built on Camunda. This folder holds the logical equivalents of the two business agents, written with
-the [Google Agent Development Kit](https://adk.dev) (`google-adk`, `a2a-sdk` 1.x, A2A 1.0 JSON-RPC):
+built on Camunda. Camunda 8.9's native A2A Client connector uses the A2A Java SDK 0.3.3, so it speaks
+A2A 0.3 only. The ADK server therefore answers both dialects on one endpoint. This folder holds the logical equivalents of the two business agents, written with
+the [Google Agent Development Kit](https://adk.dev) (`google-adk`, `a2a-sdk` 1.x, A2A 1.0 and 0.3 JSON-RPC):
 
 | Camunda | ADK counterpart | Behaviour |
 | --- | --- | --- |
@@ -31,12 +32,17 @@ the ADK client against Camunda, set `REMOTE_AGENT_CARD_URL` to the Camunda Agent
 CAMUNDA_CARD_URL=https://<connector-host>/.../agent-card.json .venv/bin/python -m pytest   # adds ADK client -> Camunda server
 ```
 
-The offline tests check the Agent Card (A2A 1.0, JSON-RPC), `SendMessage`, `GetTask`, an inline push
-config, and an ADK client delegating to the ADK server.
+The offline tests check the Agent Card (1.0 `supportedInterfaces` plus the 0.3 `url` and
+`protocolVersion`), A2A 1.0 `SendMessage` and `GetTask`, A2A 0.3 `message/send` and `tasks/get`, an
+inline push config, and an ADK client delegating to the ADK server.
 
 ## What this showed about external agents
 
-- ADK requires the `A2A-Version: 1.0` header. Without it the server answers as protocol 0.3.
+- a2a-sdk 1.x serves both dialects on the JSON-RPC route when its v0.3 compatibility is on (the
+  default in `google.adk.a2a._compat.attach_a2a_routes_to_app`). A request is handled as 0.3 when
+  its method is `message/send`, `tasks/get` and so on, and as 1.0 when it is `SendMessage` and so on.
+- The card from a2a-sdk 1.x has only `supportedInterfaces`. The 0.3 Java SDK needs a top-level `url`
+  and `protocolVersion`, so `server_agent/app.py` adds them to the served card.
 - ADK passes only text parts to the model. A request that carries `demoInput` only as a `data` part
   reaches the agent empty, so the Camunda client must also send the request as text.
 - ADK returns the answer as an unnamed artifact with a text part. The blueprint's result guard
