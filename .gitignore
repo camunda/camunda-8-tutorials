@@ -6,4 +6,5 @@ node_modules/
 .vscode
 .DS_Store
 .claude/
+connector-secrets.env
 *.code-workspace
