@@ -64,7 +64,7 @@ cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The lo
    ```
 
 2. In Operate (`http://localhost:8080/operate`) or with `c8ctl list pi`, check that:
-   - the client AI agent calls `fetchAgentCard`, then `sendMessage`, which returns a submitted Task
+   - the client fetches the Agent Card in its own `Fetch Agent Card` step, then the client AI agent calls `sendMessage`, which returns a submitted Task
      right away (it does not wait for the work);
    - the server side runs one `a2a-task` instance and one `a2a-server-agent` instance;
    - `Result callback received` completes when the server calls back, and the client reports
