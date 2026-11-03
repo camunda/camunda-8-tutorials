@@ -31,7 +31,8 @@ Camunda Process Test 8.9.8. This blueprint runs on a local [Camunda 8 Run (c8run
 cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The local cluster needs no authentication, so there are no API clients or engine URLs to configure.
 
 1. Install [Ollama](https://ollama.com) and pull a model that supports tool calling. The AI agents
-   use it through Ollama's OpenAI-compatible API, so no API key or cloud account is needed.
+   use it through Ollama's OpenAI-compatible API, so no API key, cloud account or LLM secret is needed. The endpoint (`http://localhost:11434/v1`)
+   and model (`llama3.1:8b`) are set in the AI Agent tasks of `01` and `03`. Change them there to use another model.
 
    ```bash
    ollama pull llama3.1:8b
@@ -45,7 +46,7 @@ cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The lo
    ```
 
 3. Add the connector secrets. Copy `connector-secrets.example.env` to a gitignored
-   `connector-secrets.env`, and import it. The defaults already point at local Ollama. Secrets persist outside the
+   `connector-secrets.env`, and import it. Secrets persist outside the
    repository and are shared by all local clusters (c8run 8.10+). See
    [manage local secrets](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/configuration/#manage-local-secrets).
 
@@ -60,7 +61,6 @@ cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The lo
    | `A2A_CALLBACK_URL` | `http://localhost:8086/inbound/a2a-client-callback`, the client's callback URL |
    | `A2A_CALLBACK_TOKEN` | A random string. The server sends it as a bearer token and the callback endpoint rejects calls without it. |
    | `A2A_REMOTE_SERVER_URL` | `http://localhost:8086/inbound/a2a-card` (used in Example 1) |
-   | `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` | Local Ollama defaults: `http://localhost:11434/v1`, a dummy key (`ollama`), and `llama3.1:8b`. Any Ollama model with tool support works. |
 
 4. Deploy the server resources. The `Agent Card requested` start event in `02` already uses
    `http://localhost:8086/inbound/a2a` as its **Public RPC URL** (`inbound.publicRpcUrl`).

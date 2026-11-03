@@ -14,9 +14,9 @@
         <zeebe:taskDefinition type="io.camunda.agenticai:aiagent-job-worker:1" retries="1" />
         <zeebe:ioMapping>
           <zeebe:input source="openaiCompatible" target="provider.type" />
-          <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_API_ENDPOINT}}" target="provider.openaiCompatible.endpoint" />
-          <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_API_KEY}}" target="provider.openaiCompatible.authentication.apiKey" />
-          <zeebe:input source="{{secrets.CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL}}" target="provider.openaiCompatible.model.model" />
+          <zeebe:input source="http://localhost:11434/v1" target="provider.openaiCompatible.endpoint" />
+          <zeebe:input source="ollama" target="provider.openaiCompatible.authentication.apiKey" />
+          <zeebe:input source="llama3.1:8b" target="provider.openaiCompatible.model.model" />
           <zeebe:input source="=0" target="provider.openaiCompatible.model.parameters.temperature" />
           <zeebe:input source="=&#34;You are the client in an A2A blueprint. Use the remote A2A agent tool: first fetch the Agent Card, then send the request below once as the message text, exactly as given. Never invent a result or claim completion unless the tool returned a completed task or a message with content. After receiving the result, briefly report it and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
           <zeebe:input source="=&#34;Send this request to the remote agent: &#34; + to json(demoInput)" target="data.userPrompt.prompt" />
