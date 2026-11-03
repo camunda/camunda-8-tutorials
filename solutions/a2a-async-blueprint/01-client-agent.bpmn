@@ -52,7 +52,7 @@
             <zeebe:input source="notification" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.type" />
             <zeebe:input source="{{secrets.A2A_CALLBACK_URL}}" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.webhookUrl" />
             <zeebe:input source="a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.token" />
-            <zeebe:input source='=["Bearer"]' target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.authenticationSchemes" />
+            <zeebe:input source="=[&#34;Bearer&#34;]" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.authenticationSchemes" />
             <zeebe:input source="{{secrets.A2A_CALLBACK_TOKEN}}" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.credentials" />
             <zeebe:input source="=3" target="data.connectorMode.toolOperation.sendMessageSettings.historyLength" />
             <zeebe:input source="PT1M" target="data.connectorMode.toolOperation.sendMessageSettings.timeout" />
@@ -120,7 +120,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_QuestionAsked_ClientAgent" sourceRef="QuestionAsked" targetRef="ClientAgent" />
     <bpmn:sequenceFlow id="Flow_ClientAgent_ClientConversationFinished" sourceRef="ClientAgent" targetRef="ClientConversationFinished" />
-      <bpmn:textAnnotation id="TextAnnotation_Purpose">
+    <bpmn:textAnnotation id="TextAnnotation_Purpose">
       <bpmn:text>Example 1. A client agent delegates a request to a remote A2A agent through the native A2A Client connector and returns the agent result when the remote agent calls back. The request returns a Task right away; nothing is polled.</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="QuestionAsked" targetRef="TextAnnotation_Purpose" />
@@ -133,76 +133,76 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-client">
     <bpmndi:BPMNPlane id="BPMNPlane_a2a-client" bpmnElement="a2a-client">
       <bpmndi:BPMNShape id="QuestionAsked_di" bpmnElement="QuestionAsked">
-        <dc:Bounds x="152" y="162" width="36" height="36" />
+        <dc:Bounds x="152" y="282" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="130" y="198" width="80" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ClientConversationFinished_di" bpmnElement="ClientConversationFinished">
-        <dc:Bounds x="872" y="162" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="861" y="198" width="59" height="27" />
+          <dc:Bounds x="128" y="318" width="84" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ClientAgent_di" bpmnElement="ClientAgent" isExpanded="true">
-        <dc:Bounds x="250" y="80" width="560" height="280" />
+        <dc:Bounds x="250" y="200" width="560" height="280" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="A2AClient_di" bpmnElement="A2AClient">
-        <dc:Bounds x="290" y="140" width="100" height="80" />
+        <dc:Bounds x="290" y="260" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AwaitCallback_di" bpmnElement="AwaitCallback">
-        <dc:Bounds x="435" y="155" width="50" height="50" />
+        <dc:Bounds x="435" y="275" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="418" y="125" width="84" height="27" />
+          <dc:Bounds x="432" y="245" width="56" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0rtfkf8_di" bpmnElement="A2ATaskResult">
-        <dc:Bounds x="552" y="162" width="36" height="36" />
+        <dc:Bounds x="552" y="282" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="530" y="205" width="80" height="27" />
+          <dc:Bounds x="533" y="325" width="74" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CallbackDeadline_di" bpmnElement="CallbackDeadline">
-        <dc:Bounds x="552" y="262" width="36" height="36" />
+        <dc:Bounds x="552" y="382" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="530" y="305" width="80" height="27" />
+          <dc:Bounds x="528" y="425" width="84" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ReportTimeout_di" bpmnElement="ReportTimeout">
-        <dc:Bounds x="650" y="240" width="100" height="80" />
+        <dc:Bounds x="650" y="360" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_A2AClient_AwaitCallback_di" bpmnElement="Flow_A2AClient_AwaitCallback">
-        <di:waypoint x="390" y="180" />
-        <di:waypoint x="435" y="180" />
+        <di:waypoint x="390" y="300" />
+        <di:waypoint x="435" y="300" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_AwaitCallback_A2ATaskResult_di" bpmnElement="Flow_AwaitCallback_A2ATaskResult">
-        <di:waypoint x="485" y="180" />
-        <di:waypoint x="552" y="180" />
+        <di:waypoint x="485" y="300" />
+        <di:waypoint x="552" y="300" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_AwaitCallback_CallbackDeadline_di" bpmnElement="Flow_AwaitCallback_CallbackDeadline">
-        <di:waypoint x="460" y="205" />
-        <di:waypoint x="460" y="280" />
-        <di:waypoint x="552" y="280" />
+        <di:waypoint x="460" y="325" />
+        <di:waypoint x="460" y="400" />
+        <di:waypoint x="552" y="400" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CallbackDeadline_ReportTimeout_di" bpmnElement="Flow_CallbackDeadline_ReportTimeout">
-        <di:waypoint x="588" y="280" />
-        <di:waypoint x="650" y="280" />
+        <di:waypoint x="588" y="400" />
+        <di:waypoint x="650" y="400" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_QuestionAsked_ClientAgent_di" bpmnElement="Flow_QuestionAsked_ClientAgent">
-        <di:waypoint x="188" y="180" />
-        <di:waypoint x="250" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_ClientAgent_ClientConversationFinished_di" bpmnElement="Flow_ClientAgent_ClientConversationFinished">
-        <di:waypoint x="810" y="180" />
-        <di:waypoint x="872" y="180" />
-      </bpmndi:BPMNEdge>
-          <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
-        <dc:Bounds x="132" y="12" width="300" height="100" />
+      <bpmndi:BPMNShape id="ClientConversationFinished_di" bpmnElement="ClientConversationFinished">
+        <dc:Bounds x="872" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="861" y="318" width="59" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
-        <di:waypoint x="170" y="162" />
-        <di:waypoint x="172" y="112" />
+        <di:waypoint x="170" y="282" />
+        <di:waypoint x="173" y="180" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_QuestionAsked_ClientAgent_di" bpmnElement="Flow_QuestionAsked_ClientAgent">
+        <di:waypoint x="188" y="300" />
+        <di:waypoint x="250" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ClientAgent_ClientConversationFinished_di" bpmnElement="Flow_ClientAgent_ClientConversationFinished">
+        <di:waypoint x="810" y="300" />
+        <di:waypoint x="872" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="132" y="80" width="300" height="100" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

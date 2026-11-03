@@ -5,28 +5,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.response.ProcessInstanceEvent;
-import io.camunda.process.test.api.CamundaSpringProcessTest;
-import io.camunda.process.test.api.TestDeployment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import io.camunda.process.test.api.TestDeployment;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * Headless-only coverage of the FEEL logic in 04-a2a-task.bpmn:
  * the outcome mapping on the TaskDone end event and the cancellation script.
  * BPMN element coverage is already reached by the Test Studio scenarios.
  */
-@SpringBootTest
-@CamundaSpringProcessTest
-@TestDeployment(resources = {"03-server-agent.bpmn", "04-a2a-task.bpmn"})
-public class FeelCasesTest {
+@TestDeployment(resources = {"01-client-agent.bpmn", "02-a2a-server.bpmn", "03-server-agent.bpmn", "04-a2a-task.bpmn", "server-request-validation.dmn"})
+public class FeelCasesTest extends A2ABlueprintTest {
 
     private static final String PROCESS_ID = "a2a-task";
     private static final String FAILED_TEXT = "The agent could not complete the request.";

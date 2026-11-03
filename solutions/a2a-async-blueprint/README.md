@@ -155,7 +155,7 @@ update the name, description, and skills in the Agent Card on `02`.
   inbound connector, so Camunda Process Test can't exercise them. The tests cover correlation,
   duplicate delivery after completion, the timeout, and the server's authenticated push request.
   Push retries stop at the HTTP connector's three attempts.
-- The Maven suite takes about two minutes, mostly embedded-engine startup per test class.
+- The Maven suite takes just under two minutes. Each test costs about two seconds of engine data reset, and timers use `INCREASE_TIME`, so there is no real waiting.
 - The A2A Client connector can't run in Camunda Process Test. The Example 1 scenario completes its
   jobs with mocked results. The Example 2 scenario runs 02, 03, and 04 together.
 - Every agent and connector response is mocked or scripted in the Maven suite. No test checks real
