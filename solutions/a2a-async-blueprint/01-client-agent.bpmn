@@ -14,7 +14,8 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="io.camunda.agenticai:a2aclient:0" retries="3" />
         <zeebe:ioMapping>
-          <zeebe:input source="http://localhost:8086/inbound/a2a-card" target="data.connection.url" />
+          <zeebe:input source="http://localhost:8086/inbound/" target="data.connection.url" />
+            <zeebe:input source="a2a-card" target="data.connection.agentCardLocation" />
           <zeebe:input source="standalone" target="data.connectorMode.type" />
           <zeebe:input source="fetchAgentCard" target="data.connectorMode.operation.type" />
         </zeebe:ioMapping>
@@ -37,8 +38,8 @@
           <zeebe:input source="ollama" target="provider.openaiCompatible.authentication.apiKey" />
           <zeebe:input source="llama3.1:8b" target="provider.openaiCompatible.model.model" />
           <zeebe:input source="=0" target="provider.openaiCompatible.model.parameters.temperature" />
-          <zeebe:input source="=&#34;You are the client in an A2A blueprint. Use the remote A2A agent tool: the Agent Card was already fetched (see below); send the request below once as the message text, exactly as given. Never invent a result or claim completion unless the tool returned a completed task or a message with content. After receiving the result, briefly report it and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
-          <zeebe:input source="=&#34;Remote agent: &#34; + agentCard.name + &#34;. Skills: &#34; + string join(agentCard.skills.name, &#34;, &#34;) + &#34;. Send this request to the remote agent: &#34; + to json(demoInput)" target="data.userPrompt.prompt" />
+          <zeebe:input source="=&#34;You are the client in an A2A blueprint. Use the remote A2A agent tool: the Agent Card was already fetched (see below), so never use the fetchAgentCard operation; call the sendMessage operation to send the request below once as the message text, exactly as given. Never invent a result or claim completion unless the tool returned a completed task or a message with content. After receiving the result, briefly report it and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
+          <zeebe:input source="=&#34;Remote agent: &#34; + agentCard.result.name + &#34;. Skills: &#34; + string join(agentCard.result.skills.name, &#34;, &#34;) + &#34;. Send this request to the remote agent: &#34; + to json(demoInput)" target="data.userPrompt.prompt" />
           <zeebe:input source="=null" target="agentContext" />
           <zeebe:input source="in-process" target="data.memory.storage.type" />
           <zeebe:input source="=20" target="data.memory.contextWindowSize" />
@@ -68,10 +69,11 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda.agenticai:a2aclient:0" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="http://localhost:8086/inbound/a2a-card" target="data.connection.url" />
+            <zeebe:input source="http://localhost:8086/inbound/" target="data.connection.url" />
+            <zeebe:input source="a2a-card" target="data.connection.agentCardLocation" />
             <zeebe:input source="aiAgentTool" target="data.connectorMode.type" />
-            <zeebe:input source="=toolCall.operation" target="data.connectorMode.toolOperation.operation" />
-            <zeebe:input source="=toolCall.params" target="data.connectorMode.toolOperation.params" />
+            <zeebe:input source="sendMessage" target="data.connectorMode.toolOperation.operation" />
+            <zeebe:input source="={text: if is defined(toolCall.params.text) then toolCall.params.text else to json(demoInput), taskId: if toolCall.params.taskId = &#34;null&#34; then null else toolCall.params.taskId, contextId: if toolCall.params.contextId = &#34;null&#34; then null else toolCall.params.contextId, referenceTaskIds: if toolCall.params.referenceTaskIds = &#34;null&#34; then null else toolCall.params.referenceTaskIds}" target="data.connectorMode.toolOperation.params" />
             <zeebe:input source="notification" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.type" />
             <zeebe:input source="http://localhost:8086/inbound/a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.webhookUrl" />
             <zeebe:input source="a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.token" />

@@ -19,13 +19,16 @@
           },
           "variables": {
             "agentCard": {
-              "name": "Example A2A agent",
-              "skills": [
-                {
-                  "id": "upper-case",
-                  "name": "Upper case"
-                }
-              ]
+              "result": {
+                "name": "Example A2A agent",
+                "kind": "agentCard",
+                "skills": [
+                  {
+                    "id": "upper-case",
+                    "name": "Upper case"
+                  }
+                ]
+              }
             }
           }
         },
@@ -162,13 +165,16 @@
           },
           "variables": {
             "agentCard": {
-              "name": "Example A2A agent",
-              "skills": [
-                {
-                  "id": "upper-case",
-                  "name": "Upper case"
-                }
-              ]
+              "result": {
+                "name": "Example A2A agent",
+                "kind": "agentCard",
+                "skills": [
+                  {
+                    "id": "upper-case",
+                    "name": "Upper case"
+                  }
+                ]
+              }
             }
           }
         },
@@ -336,13 +342,16 @@
           },
           "variables": {
             "agentCard": {
-              "name": "Example A2A agent",
-              "skills": [
-                {
-                  "id": "upper-case",
-                  "name": "Upper case"
-                }
-              ]
+              "result": {
+                "name": "Example A2A agent",
+                "kind": "agentCard",
+                "skills": [
+                  {
+                    "id": "upper-case",
+                    "name": "Upper case"
+                  }
+                ]
+              }
             }
           }
         },
@@ -460,13 +469,16 @@
           },
           "variables": {
             "agentCard": {
-              "name": "Example A2A agent",
-              "skills": [
-                {
-                  "id": "upper-case",
-                  "name": "Upper case"
-                }
-              ]
+              "result": {
+                "name": "Example A2A agent",
+                "kind": "agentCard",
+                "skills": [
+                  {
+                    "id": "upper-case",
+                    "name": "Upper case"
+                  }
+                ]
+              }
             }
           }
         },

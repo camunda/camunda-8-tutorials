@@ -165,6 +165,12 @@ Needs `c8ctl cluster start` and `ollama pull llama3.1:8b`. It skips with a messa
 Ollama or the Agent Card endpoint is unreachable. Use a cluster where no older process owns the
 `a2a-card` webhook path, otherwise the card endpoint answers with the older process's error.
 
+Live-cluster notes (verified on 8.10): `Fetch Agent Card` and the `Remote A2A agent` tool use the base URL
+`http://localhost:8086/inbound/` (trailing slash required) plus `agentCardLocation` `a2a-card`. The card is fetched once,
+synchronously, before the agent starts. The tool is pinned to `sendMessage`, and `"null"` strings that small models put
+in optional parameters are turned into real nulls. The card endpoint reads its properties from
+`correlation.activatedElement.delegate.properties` when present.
+
 The Maven suite runs in CI (`test-suites.yml`). The ADK tests do not. Camunda Process Test reports
 process coverage per class. The server (`a2a-rpc`) misses the webhook start events (`RpcReceived`,
 `CardRequested`), which scenarios cannot use as start instructions.
