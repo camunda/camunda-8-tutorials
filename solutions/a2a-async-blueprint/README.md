@@ -153,8 +153,17 @@ push-configuration methods are not supported.
 
 ```bash
 mvn test -f test/pom.xml                      # Camunda Process Test: 50 tests, no cluster or LLM needed
+mvn test -f test/pom.xml -Pe2e                # one real run: c8run + Ollama, no mocks (see below)
 cd adk && .venv/bin/python -m pytest          # offline ADK interop tests (see adk/README.md)
 ```
+
+**End-to-end test (`-Pe2e`, not in CI).** `E2eHappyPathTest` deploys the five resources to the
+cluster on `http://localhost:8080` (plain REST, ignores `CAMUNDA_*` env vars), starts `01`, and
+waits for it to finish. It asserts only that each stage happened: the `Fetch Agent Card` step,
+a `02` and a `04` instance, and the `Result callback received` event. It never asserts LLM text.
+Needs `c8ctl cluster start` and `ollama pull llama3.1:8b`. It skips with a message if the cluster,
+Ollama or the Agent Card endpoint is unreachable. Use a cluster where no older process owns the
+`a2a-card` webhook path, otherwise the card endpoint answers with the older process's error.
 
 The Maven suite runs in CI (`test-suites.yml`). The ADK tests do not. Camunda Process Test reports
 process coverage per class. The server (`a2a-rpc`) misses the webhook start events (`RpcReceived`,
@@ -178,7 +187,8 @@ update the name, description, and skills in the Agent Card on `02`.
 - The A2A Client connector can't run in Camunda Process Test. The Example 1 scenario completes its
   jobs with mocked results. The Example 2 scenario runs 02, 03, and 04 together.
 - Every agent and connector response is mocked or scripted in the Maven suite. No test checks real
-  LLM behavior, the real A2A Client or inbound connectors, or the Agent Card endpoint.
+  LLM behavior, the real A2A Client or inbound connectors, or the Agent Card endpoint, except the
+  opt-in `-Pe2e` test above.
 - The ADK interop tests run only locally, not in CI, and the Camunda-server variant needs
   `CAMUNDA_CARD_URL` pointing at a live deployment.
 - Process 01 can't resume a multi-turn conversation (a Task in the `input-required` state).
