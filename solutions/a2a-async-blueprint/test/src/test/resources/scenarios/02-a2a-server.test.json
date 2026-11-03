@@ -449,10 +449,9 @@
           }
         },
         {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "a2a-task"
-          },
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-start",
+          "correlationKey": "e2e-task",
           "variables": {
             "req": {
               "message": {

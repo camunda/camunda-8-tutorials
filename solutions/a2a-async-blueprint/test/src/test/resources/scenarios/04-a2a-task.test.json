@@ -7,10 +7,9 @@
       "description": "The task runs the server agent. The agent's answer becomes the task result and the task is marked as finished.",
       "instructions": [
         {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "a2a-task"
-          },
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-start",
+          "correlationKey": "task-1",
           "variables": {
             "req": {
               "message": {
@@ -118,10 +117,9 @@
       "description": "The agent fails. The task still finishes and is reported as failed.",
       "instructions": [
         {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "a2a-task"
-          },
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-start",
+          "correlationKey": "task-2",
           "variables": {
             "req": {
               "message": {
@@ -179,10 +177,9 @@
       "description": "A cancel request stops the agent and the task ends as canceled.",
       "instructions": [
         {
-          "type": "CREATE_PROCESS_INSTANCE",
-          "processDefinitionSelector": {
-            "processDefinitionId": "a2a-task"
-          },
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-start",
+          "correlationKey": "task-3",
           "variables": {
             "req": {
               "message": {

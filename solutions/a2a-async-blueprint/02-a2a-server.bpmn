@@ -148,31 +148,27 @@
         <bpmn:outgoing>Dispatch_Flow_IsNew_CreateTask</bpmn:outgoing>
         <bpmn:outgoing>Dispatch_Flow_IsNew_CorrelateTask</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:serviceTask id="CreateTask" name="Start agent process" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13">
+      <bpmn:intermediateThrowEvent id="CreateTask" name="Start task" zeebe:modelerTemplate="io.camunda.connectors.message.intermediate.v1" zeebe:modelerTemplateVersion="1">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+          <zeebe:taskDefinition type="io.camunda:sendMessage:1" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="noAuth" target="authentication.type" />
-            <zeebe:input source="POST" target="method" />
-            <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/process-instances&#34;" target="url" />
-            <zeebe:input source="=false" target="followRedirects" />
-            <zeebe:input source="JSON" target="documentReturnFormat.choice" />
-            <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
-            <zeebe:input source="=20" target="readTimeoutInSeconds" />
-            <zeebe:input source="={&#10;  processDefinitionId: &#34;a2a-task&#34;,&#10;  variables: {&#10;    task: lookup.task,&#10;    push: lookup.push,&#10;    req: {message: ctx.m, blocking: ctx.blocking, hl: ctx.hl}&#10;  },&#10;  tags: [&#34;a2a&#34;, &#34;task-&#34; + lookup.taskId, lookup.ctxTag]&#10;}" target="body" />
-            <zeebe:input source="true" target="ignoreNullValues" />
+            <zeebe:input source="a2a-start" target="messageName" />
+            <zeebe:input source="=lookup.taskId" target="correlationKey" />
+            <zeebe:input source="={&#10;  task: lookup.task,&#10;  push: lookup.push,&#10;  req: {message: ctx.m, blocking: ctx.blocking, hl: ctx.hl},&#10;  taskId: lookup.taskId,&#10;  ctxTag: lookup.ctxTag&#10;}" target="variables" />
+            <zeebe:input source="publish" target="correlationType.type" />
+            <zeebe:input source="PT0S" target="correlationType.timeToLive" />
+            <zeebe:input source="=lookup.taskId" target="correlationType.messageId" />
           </zeebe:ioMapping>
           <zeebe:taskHeaders>
-            <zeebe:header key="elementTemplateVersion" value="13" />
-            <zeebe:header key="elementTemplateId" value="io.camunda.connectors.HttpJson.v2" />
-            <zeebe:header key="resultExpression" value="={created: response.body.processInstanceKey}" />
-            <zeebe:header key="errorExpression" value="=if string(error.code) = &#34;404&#34;&#10;then bpmnError(&#34;NOT_FOUND&#34;, &#34;not found&#34;)&#10;else if string(error.code) = &#34;409&#34; then bpmnError(&#34;CONFLICT&#34;, &#34;already exists&#34;) else null" />
+            <zeebe:header key="elementTemplateVersion" value="1" />
+            <zeebe:header key="elementTemplateId" value="io.camunda.connectors.message.v1" />
             <zeebe:header key="retryBackoff" value="PT30S" />
           </zeebe:taskHeaders>
         </bpmn:extensionElements>
         <bpmn:incoming>Dispatch_Flow_IsNew_CreateTask</bpmn:incoming>
         <bpmn:outgoing>Dispatch_Flow_CreateTask_TriggerDone</bpmn:outgoing>
-      </bpmn:serviceTask>
+        <bpmn:messageEventDefinition id="CreateTask_def" />
+      </bpmn:intermediateThrowEvent>
       <bpmn:subProcess id="CorrelateTask" name="Hand message to the task">
         <bpmn:extensionElements>
           <zeebe:ioMapping>
@@ -338,7 +334,7 @@
           <zeebe:input source="JSON" target="documentReturnFormat.choice" />
           <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="=20" target="readTimeoutInSeconds" />
-          <zeebe:input source="={filter: {processDefinitionId: &#34;a2a-task&#34;, tags: [&#34;task-&#34; + lookup.taskId]}, page: {limit: 1}}" target="body" />
+          <zeebe:input source="={filter: {processDefinitionId: &#34;a2a-task&#34;, variables: [{name: &#34;taskId&#34;, value: &#34;\&#34;&#34; + lookup.taskId + &#34;\&#34;&#34;}]}, page: {limit: 1}}" target="body" />
           <zeebe:input source="true" target="ignoreNullValues" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
@@ -602,7 +598,7 @@
             <zeebe:input source="JSON" target="documentReturnFormat.choice" />
             <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
             <zeebe:input source="=20" target="readTimeoutInSeconds" />
-            <zeebe:input source="={&#10;  filter: {&#10;    processDefinitionId: &#34;a2a-task&#34;,&#10;    tags: if listReq.ctxTag != null then [&#34;a2a&#34;, listReq.ctxTag] else [&#34;a2a&#34;]&#10;  },&#10;  sort: [{field: &#34;startDate&#34;, order: &#34;DESC&#34;}, {field: &#34;processInstanceKey&#34;, order: &#34;DESC&#34;}],&#10;  page: {limit: 100, after: listScan.cursor}&#10;}" target="body" />
+            <zeebe:input source="={&#10;  filter: if listReq.ctxTag != null&#10;    then {processDefinitionId: &#34;a2a-task&#34;, variables: [{name: &#34;ctxTag&#34;, value: &#34;\&#34;&#34; + listReq.ctxTag + &#34;\&#34;&#34;}]}&#10;    else {processDefinitionId: &#34;a2a-task&#34;},&#10;  sort: [{field: &#34;startDate&#34;, order: &#34;DESC&#34;}, {field: &#34;processInstanceKey&#34;, order: &#34;DESC&#34;}],&#10;  page: {limit: 100, after: listScan.cursor}&#10;}" target="body" />
             <zeebe:input source="true" target="ignoreNullValues" />
           </zeebe:ioMapping>
           <zeebe:taskHeaders>
@@ -1447,7 +1443,10 @@
         <dc:Bounds x="623" y="300" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CreateTask_di" bpmnElement="CreateTask">
-        <dc:Bounds x="748" y="285" width="100" height="80" />
+        <dc:Bounds x="780" y="307" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="765" y="270" width="66" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CorrelateTask_di" bpmnElement="CorrelateTask">
         <dc:Bounds x="748" y="425" width="100" height="80" />
@@ -1506,7 +1505,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Dispatch_Flow_IsNew_CreateTask_di" bpmnElement="Dispatch_Flow_IsNew_CreateTask">
         <di:waypoint x="673" y="325" />
-        <di:waypoint x="748" y="325" />
+        <di:waypoint x="780" y="325" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Dispatch_Flow_IsNew_CorrelateTask_di" bpmnElement="Dispatch_Flow_IsNew_CorrelateTask">
         <di:waypoint x="648" y="350" />
@@ -1514,10 +1513,8 @@
         <di:waypoint x="748" y="465" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Dispatch_Flow_CreateTask_TriggerDone_di" bpmnElement="Dispatch_Flow_CreateTask_TriggerDone">
-        <di:waypoint x="798" y="365" />
-        <di:waypoint x="798" y="395" />
-        <di:waypoint x="1098" y="395" />
-        <di:waypoint x="1098" y="350" />
+        <di:waypoint x="816" y="325" />
+        <di:waypoint x="1073" y="325" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Dispatch_Flow_CorrelateTask_Correlated_di" bpmnElement="Dispatch_Flow_CorrelateTask_Correlated">
         <di:waypoint x="848" y="465" />

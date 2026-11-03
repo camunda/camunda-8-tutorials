@@ -3,6 +3,7 @@
   <bpmn:error id="AgentFailed" name="AgentFailed" errorCode="AGENT_FAILED" />
   <bpmn:error id="PushFailedError" name="PushFailed" errorCode="PUSH_FAILED" />
   <bpmn:signal id="Signal_Settled" name="=&#34;a2a-settled:&#34; + task.id + &#34;:&#34; + string(task.rev)" />
+  <bpmn:message id="A2AStartMessage" name="a2a-start" />
   <bpmn:message id="A2ACancelMessage" name="a2a-cancel">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=task.id" />
@@ -11,6 +12,7 @@
   <bpmn:process id="a2a-task" name="04 A2A Task" isExecutable="true">
     <bpmn:startEvent id="TaskReceived" name="Task accepted">
       <bpmn:outgoing>Flow_TaskReceived_AgentTools</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="TaskReceived_def" messageRef="A2AStartMessage" />
     </bpmn:startEvent>
     <bpmn:callActivity id="AgentTools" name="Run server agent">
       <bpmn:extensionElements>
@@ -128,7 +130,7 @@
     <bpmn:sequenceFlow id="Flow_PushJoin_PublishOutcome" sourceRef="PushJoin" targetRef="PublishOutcome" />
     <bpmn:sequenceFlow id="Flow_PublishOutcome_TaskSettled" sourceRef="PublishOutcome" targetRef="TaskSettled" />
       <bpmn:textAnnotation id="TextAnnotation_Purpose">
-      <bpmn:text>One A2A task. Runs the server agent, publishes each state change, and serves cancellation and follow-up messages until the task reaches a terminal state.</bpmn:text>
+      <bpmn:text>One A2A task. Started by the a2a-start message from 02. Runs the server agent, publishes the outcome, and serves cancellation until the task reaches a terminal state.</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="TaskReceived" targetRef="TextAnnotation_Purpose" />
   </bpmn:process>

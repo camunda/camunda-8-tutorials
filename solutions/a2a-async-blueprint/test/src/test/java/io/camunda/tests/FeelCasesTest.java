@@ -260,6 +260,7 @@ public class FeelCasesTest extends A2ABlueprintTest {
         return client.newCreateInstanceCommand()
                 .bpmnProcessId(PROCESS_ID)
                 .latestVersion()
+                .startBeforeElement("AgentTools")
                 .variables(Map.of("req", Map.of("message", Map.of("parts", List.of())), "task", task))
                 .send()
                 .join();

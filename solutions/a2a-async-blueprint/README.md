@@ -112,14 +112,21 @@ use the Google ADK client in [`adk/`](adk/README.md) and point it at the Agent C
 - **Agent (03).** Reads `demoInput` from the request (from the data part, otherwise from JSON text)
   and passes it to `upperCase` through `fromAi()`.
 
-**Why `02` calls the Camunda REST API.** The A2A endpoint is a synchronous webhook: the HTTP
+**Messages and REST in `02`.** The A2A endpoint is a synchronous webhook: the HTTP
 response is returned when the `02` instance completes, so that instance cannot be the long-running
-task. A task must outlive the request (the client gets a submitted Task right away and a callback
-later), which a call activity cannot do, because the child instance ends with its parent.
-`GetTask` and `CancelTask` also have to find running task instances, which BPMN cannot do. So `02`
-starts `04` through the process-instance API (no parent link in Operate, so look for the
-`task-<id>` tag), correlates messages to it, and searches its instances and variables. Local c8run
-needs no credentials for this. `04` does call the server agent (`03`) as a call activity.
+task. A task must outlive the request, which a call activity cannot do, because the child instance
+ends with its parent. So `02` starts `04` with a message throw event (`a2a-start`, correlation key =
+task id) that triggers `04`'s message start event. `04` calls the server agent (`03`) as a call activity.
+
+These things still use the Camunda REST API (local c8run needs no credentials), because BPMN has no
+equivalent:
+- Finding, reading and listing task instances (`GetTask`, `ListTasks`, and the lookup before cancel).
+  Because a message start cannot set tags, these search by the `taskId` and `ctxTag` variables, so
+  `a2a-task` instances no longer carry the `task-<id>` tag in Operate.
+- Correlating cancel and follow-up messages. A throw event cannot have a boundary event for retries,
+  and publish mode cannot report that nobody accepted the message, so `02` could not tell the caller
+  the cancel failed. Spike on 8.10.2: publish to a missing subscription is silently swallowed.
+  Note that `04` has no `a2a-send` catcher, so follow-up messages are rejected, as before.
 
 **A2A versions.** The Camunda client connector speaks A2A 0.3, so 02 serves both 0.3 and 1.0 on one
 endpoint with one Agent Card. It converts requests to the 1.0 format and answers each caller, including
@@ -129,7 +136,7 @@ push-configuration methods are not supported.
 ## Contents
 
 - `01-client-agent.bpmn`: client agent that uses the A2A Client connector.
-- `02-a2a-server.bpmn`: the A2A server (`a2a-rpc`). It calls the local Camunda REST API without authentication.
+- `02-a2a-server.bpmn`: the A2A server (`a2a-rpc`). It starts `04` with a message and uses the local Camunda REST API (no authentication) for searches and cancel/follow-up correlation.
 - `03-server-agent.bpmn`: server agent with a placeholder script tool, `upperCase`.
 - `04-a2a-task.bpmn`: per-task logic for the server (`a2a-task`).
 - `server-request-validation.dmn`: checks that incoming requests are valid A2A requests.
