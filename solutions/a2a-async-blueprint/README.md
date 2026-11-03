@@ -165,9 +165,9 @@ cd adk && .venv/bin/python -m pytest          # offline ADK interop tests (see a
 cluster on `http://localhost:8080` (plain REST, ignores `CAMUNDA_*` env vars), starts `01`, and
 waits for it to finish. It asserts only that each stage happened: the `Fetch Agent Card` step,
 a `02` and a `04` instance, and the `Result callback received` event. It never asserts LLM text.
-Needs `c8ctl cluster start` and `ollama pull llama3.1:8b`. It skips with a message if the cluster,
-Ollama or the Agent Card endpoint is unreachable. Use a cluster where no older process owns the
-`a2a-card` webhook path, otherwise the card endpoint answers with the older process's error.
+Needs `c8ctl cluster start` and `ollama pull llama3.1:8b`. It skips with a message if the cluster
+or Ollama is unreachable. Use a cluster where no older process owns the `a2a-card` webhook path,
+otherwise the `Fetch Agent Card` step fails with the older process's error.
 
 Live-cluster notes (verified on 8.9.27): `Fetch Agent Card` and the `Remote A2A agent` tool use the base URL
 `http://localhost:8086/inbound/` (trailing slash required) plus `agentCardLocation` `a2a-card`. The card is fetched once,

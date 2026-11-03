@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test;
 class E2eHappyPathTest {
 
     private static final String REST = System.getProperty("e2e.rest", "http://localhost:8080");
-    private static final String CARD = System.getProperty("e2e.card", "http://localhost:8086/inbound/a2a-card");
     private static final String OLLAMA = System.getProperty("e2e.ollama", "http://localhost:11434");
     private static final String MODEL = "llama3.1:8b";
     private static final Duration DEADLINE = Duration.ofMinutes(8);
@@ -43,7 +42,6 @@ class E2eHappyPathTest {
 
         final Path dir = Path.of("..").toAbsolutePath().normalize();
         deploy(dir, "server-request-validation.dmn", "03-server-agent.bpmn", "04-a2a-task.bpmn", "02-a2a-server.bpmn", "01-client-agent.bpmn");
-        assumeTrue(ok(CARD), "Agent Card endpoint at " + CARD + " does not answer 2xx after deploying 02. Check that the connectors runtime is up and that no older process on this cluster owns the same a2a-card webhook path");
 
         final String started = OffsetDateTime.now().minusSeconds(2).toString();
         final String clientKey = post("/v2/process-instances", Map.of("processDefinitionId", "a2a-client")).path("processInstanceKey").asText();
