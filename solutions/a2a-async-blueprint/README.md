@@ -71,7 +71,7 @@ cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The lo
    - the client AI agent calls `sendMessage` (the A2A Client tool reads the Agent Card itself), which returns a submitted Task
      right away (it does not wait for the work);
    - the server side runs one `a2a-task` instance and one `a2a-server-agent` instance;
-   - `Result callback received` completes when the server calls back, and the client reports
+   - `Result callback received` completes when the server calls back (if a server returns a final Task or Message straight away, such as the ADK server, `01` uses that response and skips the wait), and the client reports
      `{"received": {"value": "Example input"}, "uppercase": "EXAMPLE INPUT", "length": 13}`.
 
 ## Example 2: external client, Camunda server
@@ -187,6 +187,7 @@ update the name, description, and skills in the Agent Card on `02`.
 
 ## Known gaps
 
+- This is a local development prototype, not a production template. The element templates in `.camunda/element-templates/` return the A2A 1.0 shapes and omit the 0.3 discovery fields that `02` adds itself. The `04` push has no callback-URL allowlist, so it will POST to any `push.url` a caller sends, and a connector failure goes straight to `PUSH_FAILED` instead of retrying first. Harden all three before exposing it beyond localhost.
 - Callback authentication, duplicate suppression and non-final-state filtering are enforced by the
   inbound connector, so Camunda Process Test can't exercise them. The tests cover correlation,
   duplicate delivery after completion, the timeout, and the server's authenticated push request.

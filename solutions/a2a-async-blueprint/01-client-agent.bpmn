@@ -72,11 +72,27 @@
             <zeebe:property name="io.camunda.agenticai.gateway.type" value="a2aClient" />
           </zeebe:properties>
         </bpmn:extensionElements>
-        <bpmn:outgoing>Flow_A2AClient_AwaitCallback</bpmn:outgoing>
+        <bpmn:outgoing>Flow_A2AClient_SettledCheck</bpmn:outgoing>
       </bpmn:serviceTask>
-      <bpmn:sequenceFlow id="Flow_A2AClient_AwaitCallback" sourceRef="A2AClient" targetRef="AwaitCallback" />
+      <bpmn:sequenceFlow id="Flow_A2AClient_SettledCheck" sourceRef="A2AClient" targetRef="SettledCheck" />
+      <bpmn:exclusiveGateway id="SettledCheck" name="Task still running?" default="Flow_SettledCheck_UseImmediateResult">
+        <bpmn:incoming>Flow_A2AClient_SettledCheck</bpmn:incoming>
+        <bpmn:outgoing>Flow_SettledCheck_AwaitCallback</bpmn:outgoing>
+        <bpmn:outgoing>Flow_SettledCheck_UseImmediateResult</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_SettledCheck_AwaitCallback" name="yes" sourceRef="SettledCheck" targetRef="AwaitCallback">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=is defined(toolCallResult.result.status.state) and list contains(["submitted", "working"], toolCallResult.result.status.state)</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_SettledCheck_UseImmediateResult" name="no: final Task or Message" sourceRef="SettledCheck" targetRef="UseImmediateResult" />
+      <bpmn:scriptTask id="UseImmediateResult" name="Use immediate result">
+        <bpmn:documentation>The server already returned a final Task or a Message, so no callback will follow. The response is handed to the agent as is.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:script expression="=toolCallResult" resultVariable="toolCallResult" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_SettledCheck_UseImmediateResult</bpmn:incoming>
+      </bpmn:scriptTask>
       <bpmn:eventBasedGateway id="AwaitCallback" name="Callback or deadline?">
-        <bpmn:incoming>Flow_A2AClient_AwaitCallback</bpmn:incoming>
+        <bpmn:incoming>Flow_SettledCheck_AwaitCallback</bpmn:incoming>
         <bpmn:outgoing>Flow_AwaitCallback_A2ATaskResult</bpmn:outgoing>
         <bpmn:outgoing>Flow_AwaitCallback_CallbackDeadline</bpmn:outgoing>
       </bpmn:eventBasedGateway>
@@ -147,53 +163,77 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ClientAgent_di" bpmnElement="ClientAgent" isExpanded="true">
-        <dc:Bounds x="410" y="200" width="560" height="280" />
+        <dc:Bounds x="410" y="200" width="640" height="280" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="A2AClient_di" bpmnElement="A2AClient">
         <dc:Bounds x="450" y="260" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AwaitCallback_di" bpmnElement="AwaitCallback">
-        <dc:Bounds x="595" y="275" width="50" height="50" />
+        <dc:Bounds x="675" y="275" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="592" y="245" width="56" height="27" />
+          <dc:Bounds x="672" y="245" width="56" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0rtfkf8_di" bpmnElement="A2ATaskResult">
-        <dc:Bounds x="712" y="282" width="36" height="36" />
+        <dc:Bounds x="792" y="282" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="685" y="325" width="90" height="27" />
+          <dc:Bounds x="765" y="325" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CallbackDeadline_di" bpmnElement="CallbackDeadline">
-        <dc:Bounds x="712" y="382" width="36" height="36" />
+        <dc:Bounds x="792" y="382" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="688" y="425" width="84" height="27" />
+          <dc:Bounds x="768" y="425" width="84" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ReportTimeout_di" bpmnElement="ReportTimeout">
-        <dc:Bounds x="810" y="360" width="100" height="80" />
+        <dc:Bounds x="890" y="360" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_A2AClient_AwaitCallback_di" bpmnElement="Flow_A2AClient_AwaitCallback">
+      <bpmndi:BPMNShape id="SettledCheck_di" bpmnElement="SettledCheck" isMarkerVisible="true">
+        <dc:Bounds x="585" y="275" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="570" y="332" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UseImmediateResult_di" bpmnElement="UseImmediateResult">
+        <dc:Bounds x="760" y="205" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_A2AClient_SettledCheck_di" bpmnElement="Flow_A2AClient_SettledCheck">
         <di:waypoint x="550" y="300" />
-        <di:waypoint x="595" y="300" />
+        <di:waypoint x="585" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SettledCheck_AwaitCallback_di" bpmnElement="Flow_SettledCheck_AwaitCallback">
+        <di:waypoint x="635" y="300" />
+        <di:waypoint x="675" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="645" y="282" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SettledCheck_UseImmediateResult_di" bpmnElement="Flow_SettledCheck_UseImmediateResult">
+        <di:waypoint x="610" y="275" />
+        <di:waypoint x="610" y="235" />
+        <di:waypoint x="760" y="235" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="620" y="212" width="100" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_AwaitCallback_A2ATaskResult_di" bpmnElement="Flow_AwaitCallback_A2ATaskResult">
-        <di:waypoint x="645" y="300" />
-        <di:waypoint x="712" y="300" />
+        <di:waypoint x="725" y="300" />
+        <di:waypoint x="792" y="300" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_AwaitCallback_CallbackDeadline_di" bpmnElement="Flow_AwaitCallback_CallbackDeadline">
-        <di:waypoint x="620" y="325" />
-        <di:waypoint x="620" y="400" />
-        <di:waypoint x="712" y="400" />
+        <di:waypoint x="700" y="325" />
+        <di:waypoint x="700" y="400" />
+        <di:waypoint x="792" y="400" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CallbackDeadline_ReportTimeout_di" bpmnElement="Flow_CallbackDeadline_ReportTimeout">
-        <di:waypoint x="748" y="400" />
-        <di:waypoint x="810" y="400" />
+        <di:waypoint x="828" y="400" />
+        <di:waypoint x="890" y="400" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ClientConversationFinished_di" bpmnElement="ClientConversationFinished">
-        <dc:Bounds x="1032" y="282" width="36" height="36" />
+        <dc:Bounds x="1112" y="282" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1021" y="318" width="59" height="27" />
+          <dc:Bounds x="1101" y="318" width="59" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
@@ -204,8 +244,8 @@
         <di:waypoint x="410" y="300" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_ClientAgent_ClientConversationFinished_di" bpmnElement="Flow_ClientAgent_ClientConversationFinished">
-        <di:waypoint x="970" y="300" />
-        <di:waypoint x="1032" y="300" />
+        <di:waypoint x="1050" y="300" />
+        <di:waypoint x="1112" y="300" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
         <di:waypoint x="170" y="282" />
