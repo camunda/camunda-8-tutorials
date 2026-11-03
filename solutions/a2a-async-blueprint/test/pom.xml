@@ -63,35 +63,6 @@
                     <include>04-a2a-task.bpmn</include>
                 </includes>
             </testResource>
-            <!-- Test Studio scenarios live next to the BPMN; the Java suite runs them too. -->
-            <testResource>
-                <directory>../</directory>
-                <targetPath>scenarios/01</targetPath>
-                <includes>
-                    <include>01-client-agent.test.json</include>
-                </includes>
-            </testResource>
-            <testResource>
-                <directory>../</directory>
-                <targetPath>scenarios/02</targetPath>
-                <includes>
-                    <include>02-a2a-server.test.json</include>
-                </includes>
-            </testResource>
-            <testResource>
-                <directory>../</directory>
-                <targetPath>scenarios/03</targetPath>
-                <includes>
-                    <include>03-server-agent.test.json</include>
-                </includes>
-            </testResource>
-            <testResource>
-                <directory>../</directory>
-                <targetPath>scenarios/04</targetPath>
-                <includes>
-                    <include>04-a2a-task.test.json</include>
-                </includes>
-            </testResource>
         </testResources>
 
         <plugins>

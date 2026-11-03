@@ -136,14 +136,10 @@ push-configuration methods are not supported.
 - `.camunda/element-templates/`: the two A2A element templates (server endpoint and Agent Card).
   Camunda Desktop Modeler loads them from this folder. The HTTP JSON v13 and AI Agent v5 templates
   are built in, so they are not included.
-- `*.test.json`: Test Studio scenarios, one file per process (`01` to `04`). `01` has the Example 1
-  end-to-end scenario, and `02` has the Example 2 scenario. These mock connectors and use time
-  control, so they run headless with Camunda Process Test.
-- `*.integration.test.json` (`02` and `04`): the scenarios that run in Test Studio without mocks, as
-  in other blueprints. Test Studio cannot mock connectors, control time, or run ad-hoc sub-process
-  instructions, so `01` and `03` have no Test Studio file.
-- `test/`: Maven project that runs the scenarios with Camunda Process Test, plus `FeelCasesTest` for
-  the FEEL outcome mapping in `04`.
+- `test/`: Maven project that runs the scenarios with Camunda Process Test. The scenarios are in
+  `test/src/test/resources/scenarios/`, one `NN-name.test.json` per process (`01` to `04`). `01` has
+  the Example 1 end-to-end scenario, and `02` has the Example 2 scenario. They mock connectors and
+  use time control, so they run headless. `FeelCasesTest` covers the FEEL outcome mapping in `04`.
 - `adk/`: an external A2A agent built with Google ADK, used to check interoperability.
 
 ## Run the tests
@@ -154,10 +150,8 @@ cd adk && .venv/bin/python -m pytest          # offline ADK interop tests (see a
 ```
 
 The Maven suite runs in CI (`test-suites.yml`). The ADK tests do not. Camunda Process Test reports
-process coverage per class. The server (`a2a-rpc`) reaches about 97% in `ServerScenariosTest`. The
-uncovered elements are the webhook start events (`RpcReceived`, `CardRequested`), which Test Studio
-cannot use as start instructions. Test Studio scenarios cover the BPMN paths. The Java tests cover
-regression behavior.
+process coverage per class. The server (`a2a-rpc`) misses the webhook start events (`RpcReceived`,
+`CardRequested`), which scenarios cannot use as start instructions.
 
 This solution has no forms. Deploy only one server profile.
 
