@@ -26,7 +26,7 @@ flowchart LR
 
 ## Before you start
 
-Tested on Camunda 8.9.26 with Connectors 8.9.17 and Java 21. The Maven scenarios in `test/` use
+Tested on Camunda 8 Run 8.9.27 (including the live end-to-end test below) and Java 21. The Maven scenarios in `test/` use
 Camunda Process Test 8.9.8. This blueprint runs on a local [Camunda 8 Run (c8run)](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/)
 cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The local cluster needs no authentication, so there are no API clients, engine URLs or secrets to configure. All values are set in the BPMN files for localhost. The callback token is `local-dev-token`, so change it if you expose the cluster beyond your machine.
 
@@ -42,8 +42,12 @@ cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The lo
    connectors runtime on `http://localhost:8086`.
 
    ```bash
-   c8ctl cluster start
+   c8ctl cluster start 8.9
    ```
+
+   c8run passes your shell environment to the connectors runtime. If `ZEEBE_*` or `CAMUNDA_*`
+   variables for another cluster are set, unset them first, otherwise the connectors runtime cannot
+   reach the local broker and the webhooks answer 503.
 
 3. Deploy the server resources. The `Agent Card requested` start event in `02` already uses
    `http://localhost:8086/inbound/a2a` as its **Public RPC URL** (`inbound.publicRpcUrl`).
@@ -125,7 +129,7 @@ equivalent:
   `a2a-task` instances no longer carry the `task-<id>` tag in Operate.
 - Correlating cancel and follow-up messages. A throw event cannot have a boundary event for retries,
   and publish mode cannot report that nobody accepted the message, so `02` could not tell the caller
-  the cancel failed. Spike on 8.10.2: publish to a missing subscription is silently swallowed.
+  the cancel failed. Verified on a live cluster: publish to a missing subscription is silently swallowed.
   Note that `04` has no `a2a-send` catcher, so follow-up messages are rejected, as before.
 
 **A2A versions.** The Camunda client connector speaks A2A 0.3, so 02 serves both 0.3 and 1.0 on one
@@ -165,7 +169,7 @@ Needs `c8ctl cluster start` and `ollama pull llama3.1:8b`. It skips with a messa
 Ollama or the Agent Card endpoint is unreachable. Use a cluster where no older process owns the
 `a2a-card` webhook path, otherwise the card endpoint answers with the older process's error.
 
-Live-cluster notes (verified on 8.10): `Fetch Agent Card` and the `Remote A2A agent` tool use the base URL
+Live-cluster notes (verified on 8.9.27): `Fetch Agent Card` and the `Remote A2A agent` tool use the base URL
 `http://localhost:8086/inbound/` (trailing slash required) plus `agentCardLocation` `a2a-card`. The card is fetched once,
 synchronously, before the agent starts. The tool is pinned to `sendMessage`, and `"null"` strings that small models put
 in optional parameters are turned into real nulls. The card endpoint reads its properties from
