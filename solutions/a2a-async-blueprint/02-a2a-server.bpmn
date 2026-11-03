@@ -152,14 +152,9 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
-            <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
-            <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
-            <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
-            <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
-            <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
+            <zeebe:input source="noAuth" target="authentication.type" />
             <zeebe:input source="POST" target="method" />
-            <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/process-instances&#34;" target="url" />
+            <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/process-instances&#34;" target="url" />
             <zeebe:input source="=false" target="followRedirects" />
             <zeebe:input source="JSON" target="documentReturnFormat.choice" />
             <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
@@ -211,14 +206,9 @@
           <bpmn:extensionElements>
             <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
             <zeebe:ioMapping>
-              <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
-              <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
-              <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
-              <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
-              <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
-              <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
+              <zeebe:input source="noAuth" target="authentication.type" />
               <zeebe:input source="POST" target="method" />
-              <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/messages/correlation&#34;" target="url" />
+              <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/messages/correlation&#34;" target="url" />
               <zeebe:input source="=false" target="followRedirects" />
               <zeebe:input source="JSON" target="documentReturnFormat.choice" />
               <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
@@ -341,14 +331,9 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
-          <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
-          <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
-          <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
-          <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
-          <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
-          <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
+          <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="POST" target="method" />
-          <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/process-instances/search&#34;" target="url" />
+          <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/process-instances/search&#34;" target="url" />
           <zeebe:input source="=false" target="followRedirects" />
           <zeebe:input source="JSON" target="documentReturnFormat.choice" />
           <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
@@ -376,14 +361,9 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
-          <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
-          <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
-          <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
-          <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
-          <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
-          <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
+          <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="POST" target="method" />
-          <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/variables/search?truncateValues=false&#34;" target="url" />
+          <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/variables/search?truncateValues=false&#34;" target="url" />
           <zeebe:input source="=false" target="followRedirects" />
           <zeebe:input source="JSON" target="documentReturnFormat.choice" />
           <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
@@ -615,14 +595,9 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
-            <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
-            <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
-            <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
-            <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
-            <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
+            <zeebe:input source="noAuth" target="authentication.type" />
             <zeebe:input source="POST" target="method" />
-            <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/process-instances/search&#34;" target="url" />
+            <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/process-instances/search&#34;" target="url" />
             <zeebe:input source="=false" target="followRedirects" />
             <zeebe:input source="JSON" target="documentReturnFormat.choice" />
             <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
@@ -655,14 +630,9 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
-            <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
-            <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
-            <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
-            <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
-            <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
+            <zeebe:input source="noAuth" target="authentication.type" />
             <zeebe:input source="POST" target="method" />
-            <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/variables/search?truncateValues=false&#34;" target="url" />
+            <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/variables/search?truncateValues=false&#34;" target="url" />
             <zeebe:input source="=false" target="followRedirects" />
             <zeebe:input source="JSON" target="documentReturnFormat.choice" />
             <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
@@ -776,15 +746,15 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_ListCollected_BuildListFailure" name="incomplete" sourceRef="ListCollected" targetRef="ListFailureReady" />
     <bpmn:startEvent id="CardRequested" name="Agent Card requested" zeebe:modelerTemplate="dev.hansel.a2a.core.card.v1" zeebe:modelerTemplateVersion="4">
-      <bpmn:documentation>Replace the placeholder URL (camunda-a2a-demo.example.com) with the HTTPS URL of your deployed A2A webhook (your connectors URL followed by /inbound/a2a). Clients use this address to reach the server, so it must be reachable from them.</bpmn:documentation>
+      <bpmn:documentation>The default points at the local c8run connectors runtime (http://localhost:8086/inbound/a2a). Change it if clients reach your connectors runtime at a different address.</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:properties>
           <zeebe:property name="inbound.type" value="io.camunda:webhook:1" />
           <zeebe:property name="inbound.context" value="a2a-card" />
           <zeebe:property name="inbound.auth.type" value="NONE" />
           <zeebe:property name="inbound.method" value="get" />
-          <zeebe:property name="inbound.responseExpression" value="={&#10;  rpcUrl: get value(correlation.activatedElement.properties, &#34;inbound.publicRpcUrl&#34;),&#10;  response:&#10;    if rpcUrl instance of string and matches(rpcUrl, &#34;^https://[^ /]+/[^ ]*$&#34;)&#10;    then {&#10;      statusCode: 200,&#10;      headers: {&#34;Content-Type&#34;: &#34;application/json&#34;},&#10;      body: {&#10;        name: &#34;A2A blueprint agent&#34;,&#10;        url: rpcUrl,&#10;        protocolVersion: &#34;0.3.0&#34;,&#10;        preferredTransport: &#34;JSONRPC&#34;,&#10;        supportsAuthenticatedExtendedCard: false,&#10;        version: &#34;0.1.0&#34;,&#10;        description: &#34;Example agent from the Camunda A2A blueprint. Returns your request data with an uppercased copy and its length.&#34;,&#10;        provider: {organization: &#34;Camunda&#34;, url: &#34;https://github.com/camunda/camunda-8-tutorials/tree/main/solutions/a2a-async-blueprint&#34;},&#10;        supportedInterfaces: [{url: rpcUrl, protocolBinding: &#34;JSONRPC&#34;, protocolVersion: &#34;1.0&#34;}],&#10;        capabilities: {streaming: false, pushNotifications: true, extendedAgentCard: false},&#10;        defaultInputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        defaultOutputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        securitySchemes: {},&#10;        securityRequirements: [],&#10;        skills: [&#10;          {&#10;            id: &#34;upperCase&#34;,&#10;            name: &#34;Uppercase text&#34;,&#10;            description: &#34;Returns the request data with an uppercased copy and its length. Replace this skill with your own business logic.&#34;,&#10;            tags: [&#34;example&#34;],&#10;            examples: [&#34;Example input&#34;]&#10;          }&#10;        ]&#10;      }&#10;    }&#10;    else {statusCode: 500, body: {error: &#34;Set the Agent Card's public URL to your HTTPS webhook URL&#34;}}&#10;}.response" />
-          <zeebe:property name="inbound.publicRpcUrl" value="https://camunda-a2a-demo.example.com/inbound/a2a" />
+          <zeebe:property name="inbound.responseExpression" value="={&#10;  rpcUrl: get value(correlation.activatedElement.properties, &#34;inbound.publicRpcUrl&#34;),&#10;  response:&#10;    if rpcUrl instance of string and matches(rpcUrl, &#34;^https?://[^ /]+/[^ ]*$&#34;)&#10;    then {&#10;      statusCode: 200,&#10;      headers: {&#34;Content-Type&#34;: &#34;application/json&#34;},&#10;      body: {&#10;        name: &#34;A2A blueprint agent&#34;,&#10;        url: rpcUrl,&#10;        protocolVersion: &#34;0.3.0&#34;,&#10;        preferredTransport: &#34;JSONRPC&#34;,&#10;        supportsAuthenticatedExtendedCard: false,&#10;        version: &#34;0.1.0&#34;,&#10;        description: &#34;Example agent from the Camunda A2A blueprint. Returns your request data with an uppercased copy and its length.&#34;,&#10;        provider: {organization: &#34;Camunda&#34;, url: &#34;https://github.com/camunda/camunda-8-tutorials/tree/main/solutions/a2a-async-blueprint&#34;},&#10;        supportedInterfaces: [{url: rpcUrl, protocolBinding: &#34;JSONRPC&#34;, protocolVersion: &#34;1.0&#34;}],&#10;        capabilities: {streaming: false, pushNotifications: true, extendedAgentCard: false},&#10;        defaultInputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        defaultOutputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        securitySchemes: {},&#10;        securityRequirements: [],&#10;        skills: [&#10;          {&#10;            id: &#34;upperCase&#34;,&#10;            name: &#34;Uppercase text&#34;,&#10;            description: &#34;Returns the request data with an uppercased copy and its length. Replace this skill with your own business logic.&#34;,&#10;            tags: [&#34;example&#34;],&#10;            examples: [&#34;Example input&#34;]&#10;          }&#10;        ]&#10;      }&#10;    }&#10;    else {statusCode: 500, body: {error: &#34;Set the Agent Card's public URL to your webhook URL&#34;}}&#10;}.response" />
+          <zeebe:property name="inbound.publicRpcUrl" value="http://localhost:8086/inbound/a2a" />
         </zeebe:properties>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_CardRequested_CardServed</bpmn:outgoing>

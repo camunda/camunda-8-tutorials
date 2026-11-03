@@ -27,43 +27,55 @@ flowchart LR
 ## Before you start
 
 Tested on Camunda 8.9.26 with Connectors 8.9.17 and Java 21. The Maven scenarios in `test/` use
-Camunda Process Test 8.9.8.
+Camunda Process Test 8.9.8. This blueprint runs on a local [Camunda 8 Run (c8run)](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/)
+cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The local cluster needs no authentication, so there are no API clients or engine URLs to configure.
 
-1. Use a Camunda 8.9 SaaS cluster (or a self-managed 8.9 cluster with the connector runtime).
-2. Create an API client with the **Zeebe** scope (Console → Cluster → API) and add these cluster
-   secrets. The values below are placeholders to copy and replace:
+1. Start a local cluster. The Orchestration Cluster API is on `http://localhost:8080` and the
+   connectors runtime on `http://localhost:8086`.
 
-| Secret                                                                                                    | Value                                                                       |
-| --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `ENGINE_URL`                                                                                              | Cluster REST address, for example `https://bru-2.zeebe.camunda.io/<cluster-id>`, without `/v2` |
-| `ENGINE_CLIENT_ID`, `ENGINE_CLIENT_SECRET`                                                                | The API client credentials                                                  |
-| `A2A_AGENT_PROCESS`                                                                                       | `a2a-server-agent` (the process the server runs for each task)              |
-| `A2A_CALLBACK_URL`                                                                                        | `<connectors-url>/inbound/a2a-client-callback` (the client's callback URL)  |
-| `A2A_CALLBACK_TOKEN`                                                                                      | A random string you choose. The server sends it as a Bearer token and the callback endpoint rejects calls without it. |
-| `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` | LLM access for the AI agents                                                |
+   ```bash
+   c8ctl cluster start
+   ```
 
-   On a local Camunda 8 Run (8.10+), store the secrets once with `c8run secrets set NAME` (hidden
-   prompt) or `c8run secrets import <dotenv-file>`. They persist outside the repository and are
-   shared by all local clusters. Copy `connector-secrets.example.env` to a gitignored
-   `connector-secrets.env`, fill it in and import it. See
+2. Add the connector secrets. Copy `connector-secrets.example.env` to a gitignored
+   `connector-secrets.env`, set the three `CAMUNDA_PROVIDED_LLM_*` values (LLM access for the AI
+   agents), and import it. Everything else has a working local default. Secrets persist outside the
+   repository and are shared by all local clusters (c8run 8.10+). See
    [manage local secrets](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/configuration/#manage-local-secrets).
 
-   On self-managed without OAuth, change the `authentication.*` inputs of the HTTP JSON tasks in
-   `02` to your cluster's auth type.
+   ```bash
+   cp connector-secrets.example.env connector-secrets.env
+   c8run secrets import connector-secrets.env
+   ```
 
-3. In `02-a2a-server.bpmn`, select the `Agent Card requested` start event and set **Public RPC URL**
-   (`inbound.publicRpcUrl`) to `<connectors-url>/inbound/a2a`. It must use HTTPS. In SaaS, `<connectors-url>` is the connector
-   runtime URL of your cluster.
-4. Deploy `02`, `03`, `04`, and `server-request-validation.dmn`.
-5. Open `<connectors-url>/inbound/a2a-card` in a browser. You should see the Agent Card as JSON.
+   | Secret | Value |
+   | --- | --- |
+   | `A2A_AGENT_PROCESS` | `a2a-server-agent`, the process the server runs for each task |
+   | `A2A_CALLBACK_URL` | `http://localhost:8086/inbound/a2a-client-callback`, the client's callback URL |
+   | `A2A_CALLBACK_TOKEN` | A random string. The server sends it as a bearer token and the callback endpoint rejects calls without it. |
+   | `A2A_REMOTE_SERVER_URL` | `http://localhost:8086/inbound/a2a-card` (used in Example 1) |
+   | `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` | LLM access for the AI agents |
+
+3. Deploy the server resources. The `Agent Card requested` start event in `02` already uses
+   `http://localhost:8086/inbound/a2a` as its **Public RPC URL** (`inbound.publicRpcUrl`).
+
+   ```bash
+   c8ctl deploy 02-a2a-server.bpmn 03-server-agent.bpmn 04-a2a-task.bpmn server-request-validation.dmn
+   ```
+
+4. Open `http://localhost:8086/inbound/a2a-card` in a browser. You should see the Agent Card as JSON.
 
 ## Example 1: Camunda client, Camunda server
 
-1. Set the secret `A2A_REMOTE_SERVER_URL` to `<connectors-url>/inbound/a2a-card` and restart the
-   connector runtime.
-2. Deploy `01-client-agent.bpmn` and start `a2a-client`. It sends `demoInput` as
-   `{"value": "Example input"}`.
-3. In Operate, check that:
+1. Restart the cluster if you changed secrets after it started.
+2. Deploy and start the client. It sends `demoInput` as `{"value": "Example input"}`.
+
+   ```bash
+   c8ctl deploy 01-client-agent.bpmn
+   c8ctl create pi --id a2a-client
+   ```
+
+3. In Operate (`http://localhost:8080/operate`) or with `c8ctl list pi`, check that:
    - the client AI agent calls `fetchAgentCard`, then `sendMessage`, which returns a submitted Task
      right away (it does not wait for the work);
    - the server side runs one `a2a-task` instance and one `a2a-server-agent` instance;
@@ -75,7 +87,7 @@ Camunda Process Test 8.9.8.
 Any A2A client works. This example uses `curl` with an A2A 0.3 request. A2A 1.0 requests also work.
 
 ```bash
-curl -s -X POST "<connectors-url>/inbound/a2a" -H 'Content-Type: application/json' -d '{
+curl -s -X POST "http://localhost:8086/inbound/a2a" -H 'Content-Type: application/json' -d '{
   "jsonrpc": "2.0", "id": 1, "method": "message/send",
   "params": {"message": {
     "kind": "message", "messageId": "m1", "role": "user",
@@ -120,7 +132,7 @@ push-configuration methods are not supported.
 ## Contents
 
 - `01-client-agent.bpmn`: client agent that uses the A2A Client connector.
-- `02-a2a-server.bpmn`: the A2A server (`a2a-rpc`). It uses OAuth client credentials for Camunda API calls.
+- `02-a2a-server.bpmn`: the A2A server (`a2a-rpc`). It calls the local Camunda REST API without authentication.
 - `03-server-agent.bpmn`: server agent with a placeholder script tool, `upperCase`.
 - `04-a2a-task.bpmn`: per-task logic for the server (`a2a-task`).
 - `server-request-validation.dmn`: checks that incoming requests are valid A2A requests.
@@ -151,12 +163,6 @@ cannot use as start instructions. Test Studio scenarios cover the BPMN paths. Th
 regression behavior.
 
 This solution has no forms. Deploy only one server profile.
-
-## Import into Camunda SaaS
-
-[Import all resources into Web Modeler](https://modeler.cloud.camunda.io/import/resources?source=https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/01-client-agent.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/02-a2a-server.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/03-server-agent.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/04-a2a-task.bpmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/server-request-validation.dmn,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/.camunda/element-templates/server-a2a-rpc-endpoint.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/.camunda/element-templates/server-agent-card-endpoint.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/01-client-agent.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/02-a2a-server.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/03-server-agent.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/04-a2a-task.test.json,https://raw.githubusercontent.com/camunda/camunda-8-tutorials/refs/heads/main/solutions/a2a-async-blueprint/README.md&title=A2A%20Async%20Blueprint)
-
-The link loads the files from `main`, so it works only after this solution is merged there. It imports the BPMN and DMN files, the two element templates, the tests, and this README.
 
 ## Customization
 
