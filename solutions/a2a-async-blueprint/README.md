@@ -122,7 +122,11 @@ push-configuration methods are not supported.
   Camunda Desktop Modeler loads them from this folder. The HTTP JSON v13 and AI Agent v5 templates
   are built in, so they are not included.
 - `*.test.json`: Test Studio scenarios, one file per process (`01` to `04`). `01` has the Example 1
-  end-to-end scenario, and `02` has the Example 2 scenario.
+  end-to-end scenario, and `02` has the Example 2 scenario. These mock connectors and use time
+  control, so they run headless with Camunda Process Test.
+- `*.integration.test.json` (`02` and `04`): the scenarios that run in Test Studio without mocks, as
+  in other blueprints. Test Studio cannot mock connectors, control time, or run ad-hoc sub-process
+  instructions, so `01` and `03` have no Test Studio file.
 - `test/`: Maven project that runs the scenarios with Camunda Process Test, plus `FeelCasesTest` for
   the FEEL outcome mapping in `04`.
 - `adk/`: an external A2A agent built with Google ADK, used to check interoperability.

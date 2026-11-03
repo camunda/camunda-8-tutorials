@@ -357,5 +357,5 @@
       ]
     }
   ],
-  "_integrationTestNotes": "Integration tests should verify: (1) the task process starts from a real SendMessage hand-over and publishes the a2a-settled signal after every revision; (2) NotifyClient (Push task to client) posts to the real push notification URL registered by the client with its token; (3) A2ASetCanceled commits the canceled state once a2a-cancel is correlated; (4) follow-up messages reach a task waiting for input. Note: the push callback and the server agent are mocked in Test Studio."
+  "_integrationTestNotes": "Headless suite (mvn test): connectors, the LLM and the remote server are mocked with COMPLETE_JOB instructions, which Test Studio cannot do. Run 04-a2a-task.integration.test.json in Test Studio for the segments that need no mocks."
 }

@@ -185,5 +185,5 @@
       ]
     }
   ],
-  "_integrationTestNotes": "Integration tests should verify: (1) the AI agent connector (a2a-server-agent) calls the configured LLM through the CAMUNDA_PROVIDED_LLM_* secrets; (2) the upperCase script task returns the upper-cased text; (3) the agent returns a final answer in the agent variable for the task process. Note: the LLM response is mocked in Test Studio."
+  "_integrationTestNotes": "Headless suite (mvn test): connectors, the LLM and the remote server are mocked with COMPLETE_JOB instructions, which Test Studio cannot do. Test Studio cannot run this process end to end (ad-hoc subprocess tool calls, LLM), so it is covered by the headless suite only."
 }

@@ -492,5 +492,5 @@
       ]
     }
   ],
-  "_integrationTestNotes": "Integration tests should verify: (1) A2AClient sends a real SendMessage in notification mode and receives a Task before the work completes; (2) the callback endpoint <connectors-url>/inbound/a2a-client-callback rejects calls without the Bearer token and correlates valid calls on task id and notification token; (3) the client AI agent reaches the configured LLM through the CAMUNDA_PROVIDED_LLM_* secrets. The connector, the LLM and the remote server are mocked in Test Studio. Authentication failures are enforced by the inbound connector and are covered in the README checks."
+  "_integrationTestNotes": "Headless suite (mvn test): connectors, the LLM and the remote server are mocked with COMPLETE_JOB instructions, which Test Studio cannot do. Test Studio cannot run this process end to end (ad-hoc subprocess tool calls, LLM), so it is covered by the headless suite only."
 }

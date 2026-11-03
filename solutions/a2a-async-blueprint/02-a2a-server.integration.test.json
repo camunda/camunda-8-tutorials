@@ -1,0 +1,448 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-rpc",
+  "testCases": [
+    {
+      "name": "Invalid request - return a validation error",
+      "description": "Checks that a valid request is parsed and accepted, without needing a live webhook or secrets.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "ParseRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "1.0",
+              "id": "invalid-request",
+              "method": "GetTask",
+              "params": {
+                "id": "demo-task"
+              }
+            },
+            "hdr": {
+              "content-type": "application/json",
+              "a2a-version": "1.0"
+            },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "ValidationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Get task - return the supplied task view",
+      "description": "Returns the details of an existing task when a client asks for it with GetTask.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "get-task",
+              "method": "GetTask",
+              "hl": 0
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "RouteMethod"
+            },
+            {
+              "elementId": "TaskViewReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Cancel terminal task - reject cancellation",
+      "description": "Rejects a cancel request for a task that has already completed, and leaves the task unchanged.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "cancel-task",
+              "method": "CancelTask"
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_COMPLETED",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "RouteMethod"
+            },
+            {
+              "elementId": "Cancelable"
+            },
+            {
+              "elementId": "Link_NotCancelable_FromCancelable"
+            },
+            {
+              "elementId": "NotCancelableReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Follow-up in another context - reject before correlation",
+      "description": "Rejects a follow-up message whose context ID does not match the task.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "CheckFollowUp"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "follow-up",
+              "method": "SendMessage",
+              "contextId": "another-context"
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_INPUT_REQUIRED",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CheckFollowUp"
+            },
+            {
+              "elementId": "FollowUpAccepted"
+            },
+            {
+              "elementId": "Link_FollowUpError_FromAccepted"
+            },
+            {
+              "elementId": "FollowUpErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "A2A 0.3 request - detect the dialect and return a validation error",
+      "description": "An A2A 0.3 request without a message is rejected with the same error as an A2A 1.0 request.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "NormalizeRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "2.0",
+              "id": "legacy-invalid",
+              "method": "message/send",
+              "params": {}
+            },
+            "hdr": {
+              "content-type": "application/json"
+            },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "NormalizeRequest"
+            },
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "ValidationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "variables": {
+            "dialect": "0.3"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "A2A 1.0 request - keep the dialect",
+      "description": "An A2A 1.0 request is processed as sent, with no conversion.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "NormalizeRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "1.0",
+              "id": "v1-invalid",
+              "method": "GetTask",
+              "params": {
+                "id": "demo-task"
+              }
+            },
+            "hdr": {
+              "content-type": "application/json"
+            },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "NormalizeRequest"
+            },
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "ValidationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "variables": {
+            "dialect": "1.0"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Unsupported method on a known task - return not found",
+      "description": "A method the server does not handle for tasks gets the not-found answer.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "u",
+              "method": "UnknownMethod"
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "RouteMethod"
+            },
+            {
+              "elementId": "Link_NotFound_FromMethod"
+            },
+            {
+              "elementId": "NotFoundReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Test Studio cannot mock connectors, the LLM or ad-hoc tool calls. These segments start at or after the routing logic and call no connector, so they run unchanged in Test Studio."
+}
