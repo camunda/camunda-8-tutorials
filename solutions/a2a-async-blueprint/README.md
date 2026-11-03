@@ -28,10 +28,10 @@ flowchart LR
 
 Tested on Camunda 8.9.26 with Connectors 8.9.17 and Java 21. The Maven scenarios in `test/` use
 Camunda Process Test 8.9.8. This blueprint runs on a local [Camunda 8 Run (c8run)](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/)
-cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The local cluster needs no authentication, so there are no API clients or engine URLs to configure.
+cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The local cluster needs no authentication, so there are no API clients, engine URLs or secrets to configure. All values are set in the BPMN files for localhost. The callback token is `local-dev-token`, so change it if you expose the cluster beyond your machine.
 
 1. Install [Ollama](https://ollama.com) and pull a model that supports tool calling. The AI agents
-   use it through Ollama's OpenAI-compatible API, so no API key, cloud account or LLM secret is needed. The endpoint (`http://localhost:11434/v1`)
+   use it through Ollama's OpenAI-compatible API, so no API key or cloud account is needed. The endpoint (`http://localhost:11434/v1`)
    and model (`llama3.1:8b`) are set in the AI Agent tasks of `01` and `03`. Change them there to use another model.
 
    ```bash
@@ -45,43 +45,25 @@ cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The lo
    c8ctl cluster start
    ```
 
-3. Add the connector secrets. Copy `connector-secrets.example.env` to a gitignored
-   `connector-secrets.env`, and import it. Secrets persist outside the
-   repository and are shared by all local clusters (c8run 8.10+). See
-   [manage local secrets](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/configuration/#manage-local-secrets).
-
-   ```bash
-   cp connector-secrets.example.env connector-secrets.env
-   c8run secrets import connector-secrets.env
-   ```
-
-   | Secret | Value |
-   | --- | --- |
-   | `A2A_AGENT_PROCESS` | `a2a-server-agent`, the process the server runs for each task |
-   | `A2A_CALLBACK_URL` | `http://localhost:8086/inbound/a2a-client-callback`, the client's callback URL |
-   | `A2A_CALLBACK_TOKEN` | A random string. The server sends it as a bearer token and the callback endpoint rejects calls without it. |
-   | `A2A_REMOTE_SERVER_URL` | `http://localhost:8086/inbound/a2a-card` (used in Example 1) |
-
-4. Deploy the server resources. The `Agent Card requested` start event in `02` already uses
+3. Deploy the server resources. The `Agent Card requested` start event in `02` already uses
    `http://localhost:8086/inbound/a2a` as its **Public RPC URL** (`inbound.publicRpcUrl`).
 
    ```bash
    c8ctl deploy 02-a2a-server.bpmn 03-server-agent.bpmn 04-a2a-task.bpmn server-request-validation.dmn
    ```
 
-5. Open `http://localhost:8086/inbound/a2a-card` in a browser. You should see the Agent Card as JSON.
+4. Open `http://localhost:8086/inbound/a2a-card` in a browser. You should see the Agent Card as JSON.
 
 ## Example 1: Camunda client, Camunda server
 
-1. Restart the cluster if you changed secrets after it started.
-2. Deploy and start the client. It sends `demoInput` as `{"value": "Example input"}`.
+1. Deploy and start the client. It sends `demoInput` as `{"value": "Example input"}`.
 
    ```bash
    c8ctl deploy 01-client-agent.bpmn
    c8ctl create pi --id a2a-client
    ```
 
-3. In Operate (`http://localhost:8080/operate`) or with `c8ctl list pi`, check that:
+2. In Operate (`http://localhost:8080/operate`) or with `c8ctl list pi`, check that:
    - the client AI agent calls `fetchAgentCard`, then `sendMessage`, which returns a submitted Task
      right away (it does not wait for the work);
    - the server side runs one `a2a-task` instance and one `a2a-server-agent` instance;
@@ -111,7 +93,7 @@ use the Google ADK client in [`adk/`](adk/README.md) and point it at the Agent C
 ## How it works
 
 - **Client (01).** `sendMessage` runs in `notification` mode. It returns the Task immediately and
-  registers `A2A_CALLBACK_URL` with a Bearer token. The *A2A Client Webhook* catch event
+  registers its callback URL (`http://localhost:8086/inbound/a2a-client-callback`) with a Bearer token. The *A2A Client Webhook* catch event
   (`Result callback received`) accepts only calls with that token, correlates on task id and
   notification token, ignores non-final states, and drops duplicate deliveries. If no callback
   arrives within 10 minutes, the tool call ends with a `timeout` result.

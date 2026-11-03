@@ -45,15 +45,15 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda.agenticai:a2aclient:0" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="{{secrets.A2A_REMOTE_SERVER_URL}}" target="data.connection.url" />
+            <zeebe:input source="http://localhost:8086/inbound/a2a-card" target="data.connection.url" />
             <zeebe:input source="aiAgentTool" target="data.connectorMode.type" />
             <zeebe:input source="=toolCall.operation" target="data.connectorMode.toolOperation.operation" />
             <zeebe:input source="=toolCall.params" target="data.connectorMode.toolOperation.params" />
             <zeebe:input source="notification" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.type" />
-            <zeebe:input source="{{secrets.A2A_CALLBACK_URL}}" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.webhookUrl" />
+            <zeebe:input source="http://localhost:8086/inbound/a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.webhookUrl" />
             <zeebe:input source="a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.token" />
             <zeebe:input source="=[&#34;Bearer&#34;]" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.authenticationSchemes" />
-            <zeebe:input source="{{secrets.A2A_CALLBACK_TOKEN}}" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.credentials" />
+            <zeebe:input source="local-dev-token" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.credentials" />
             <zeebe:input source="=3" target="data.connectorMode.toolOperation.sendMessageSettings.historyLength" />
             <zeebe:input source="PT1M" target="data.connectorMode.toolOperation.sendMessageSettings.timeout" />
           </zeebe:ioMapping>
@@ -86,7 +86,7 @@
             <zeebe:property name="inbound.clientResponse" value="=toolCallResult" />
             <zeebe:property name="inbound.shouldValidateHmac" value="disabled" />
             <zeebe:property name="inbound.auth.type" value="APIKEY" />
-            <zeebe:property name="inbound.auth.apiKey" value="{{secrets.A2A_CALLBACK_TOKEN}}" />
+            <zeebe:property name="inbound.auth.apiKey" value="local-dev-token" />
             <zeebe:property name="inbound.auth.apiKeyLocator" value="=split(request.headers.authorization, &#34; &#34;)[2]" />
             <zeebe:property name="activationCondition" value="=is defined(request.body.status.state) and not(list contains([&#34;submitted&#34;, &#34;working&#34;], request.body.status.state))" />
             <zeebe:property name="correlationKeyExpression" value="=request.body.id + (if is defined(request.headers.`x-a2a-notification-token`) then (&#34;-&#34; + request.headers.`x-a2a-notification-token`) else &#34;&#34;)" />

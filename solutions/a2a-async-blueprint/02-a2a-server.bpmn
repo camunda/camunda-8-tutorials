@@ -2,7 +2,7 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Collaboration_a2a_protocol" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
   <bpmn:error id="NotFound" name="NotFound" errorCode="NOT_FOUND" />
   <bpmn:process id="a2a-rpc" name="02 A2A Server" isExecutable="true">
-    <bpmn:documentation>The A2A server endpoint. It accepts A2A 1.0 and 0.3 requests on one URL. For each new task it starts the agent process named by the secret A2A_AGENT_PROCESS, and it answers all other requests from the task's current state. Deploy it next to your agent process without changes.</bpmn:documentation>
+    <bpmn:documentation>The A2A server endpoint. It accepts A2A 1.0 and 0.3 requests on one URL. For each new task it starts the agent process `a2a-server-agent`, and it answers all other requests from the task's current state. Deploy it next to your agent process without changes.</bpmn:documentation>
     <bpmn:startEvent id="RpcReceived" name="A2A request received" zeebe:modelerTemplate="dev.hansel.a2a.core.rpc.v1" zeebe:modelerTemplateVersion="3">
       <bpmn:extensionElements>
         <zeebe:properties>
