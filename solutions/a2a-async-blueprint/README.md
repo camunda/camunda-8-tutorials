@@ -91,6 +91,9 @@ use the Google ADK client in [`adk/`](adk/README.md) and point it at the Agent C
   (`Result callback received`) accepts only calls with that token, correlates on task id and
   notification token, ignores non-final states, and drops duplicate deliveries. If no callback
   arrives within 10 minutes, the tool call ends with a `timeout` result.
+  The A2A Client connector itself works with any response pattern. This blueprint demonstrates only
+  push notifications. For the blocking (synchronous), polling, and webhook BPMN flows, see
+  [A2A Client usage patterns](https://docs.camunda.io/docs/components/early-access/alpha/a2a-client/a2a-client-usage-patterns/).
 - **Server (02).** Validates the request, starts `a2a-task` (04), and waits for its settled signal
   (`a2a-settled:<taskId>:<rev>`). `SendMessage`, `GetTask`, and `CancelTask` answer from the settled
   Task.
