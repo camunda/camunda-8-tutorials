@@ -42,6 +42,12 @@ Camunda Process Test 8.9.8.
 | `A2A_CALLBACK_TOKEN`                                                                                      | A random string you choose. The server sends it as a Bearer token and the callback endpoint rejects calls without it. |
 | `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` | LLM access for the AI agents                                                |
 
+   On a local Camunda 8 Run (8.10+), store the secrets once with `c8run secrets set NAME` (hidden
+   prompt) or `c8run secrets import <dotenv-file>`. They persist outside the repository and are
+   shared by all local clusters. Copy `connector-secrets.example.env` to a gitignored
+   `connector-secrets.env`, fill it in and import it. See
+   [manage local secrets](https://docs.camunda.io/docs/self-managed/quickstart/developer-quickstart/c8run/configuration/#manage-local-secrets).
+
    On self-managed without OAuth, change the `authentication.*` inputs of the HTTP JSON tasks in
    `02` to your cluster's auth type.
 
