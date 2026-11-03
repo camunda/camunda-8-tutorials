@@ -31,7 +31,7 @@ Camunda Process Test 8.9.8. This blueprint runs on a local [Camunda 8 Run (c8run
 cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The local cluster needs no authentication, so there are no API clients, engine URLs or secrets to configure. All values are set in the BPMN files for localhost. The callback token is `local-dev-token`, so change it if you expose the cluster beyond your machine.
 
 1. Install [Ollama](https://ollama.com) and pull a model that supports tool calling. The AI agents
-   use it through Ollama's OpenAI-compatible API, so no API key or cloud account is needed. The endpoint (`http://localhost:11434/v1`)
+   use it through Ollama's OpenAI-compatible API, so no API key or cloud account is needed. To use LM Studio instead, start its local server and change the endpoint (`http://localhost:1234/v1`) and model in the AI Agent tasks of `01` and `03`. The endpoint (`http://localhost:11434/v1`)
    and model (`llama3.1:8b`) are set in the AI Agent tasks of `01` and `03`. Change them there to use another model.
 
    ```bash
@@ -111,6 +111,15 @@ use the Google ADK client in [`adk/`](adk/README.md) and point it at the Agent C
   configuration inline in `SendMessage`.
 - **Agent (03).** Reads `demoInput` from the request (from the data part, otherwise from JSON text)
   and passes it to `upperCase` through `fromAi()`.
+
+**Why `02` calls the Camunda REST API.** The A2A endpoint is a synchronous webhook: the HTTP
+response is returned when the `02` instance completes, so that instance cannot be the long-running
+task. A task must outlive the request (the client gets a submitted Task right away and a callback
+later), which a call activity cannot do, because the child instance ends with its parent.
+`GetTask` and `CancelTask` also have to find running task instances, which BPMN cannot do. So `02`
+starts `04` through the process-instance API (no parent link in Operate, so look for the
+`task-<id>` tag), correlates messages to it, and searches its instances and variables. Local c8run
+needs no credentials for this. `04` does call the server agent (`03`) as a call activity.
 
 **A2A versions.** The Camunda client connector speaks A2A 0.3, so 02 serves both 0.3 and 1.0 on one
 endpoint with one Agent Card. It converts requests to the 1.0 format and answers each caller, including
