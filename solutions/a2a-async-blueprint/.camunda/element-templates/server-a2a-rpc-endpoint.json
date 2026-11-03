@@ -141,7 +141,7 @@
     {
       "id": "resultExpression",
       "label": "Result expression",
-      "description": "Stores the request body and only the content-type and a2a-version headers. Do not store authorization headers, API keys, or other request headers.",
+      "description": "Stores the request body and the content-type and a2a-version headers.",
       "value": "={rpc: request.body, hdr: {\"content-type\": request.headers.`content-type`, \"a2a-version\": request.headers.`a2a-version`}, pushEnabled: true}",
       "feel": "required",
       "group": "output",
@@ -149,7 +149,8 @@
         "name": "resultExpression",
         "type": "zeebe:property"
       },
-      "type": "Text"
+      "type": "Text",
+      "tooltip": "Stores only the content-type and a2a-version headers. Do not store authorization headers, API keys, or other request headers."
     }
   ],
   "icon": {
