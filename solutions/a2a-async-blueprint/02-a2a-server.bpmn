@@ -152,7 +152,12 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="basic" target="authentication.type" />
+            <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
+            <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
+            <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
+            <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
+            <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
+            <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
             <zeebe:input source="POST" target="method" />
             <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/process-instances&#34;" target="url" />
             <zeebe:input source="=false" target="followRedirects" />
@@ -161,8 +166,6 @@
             <zeebe:input source="=20" target="readTimeoutInSeconds" />
             <zeebe:input source="={&#10;  processDefinitionId: &#34;a2a-task&#34;,&#10;  variables: {&#10;    task: lookup.task,&#10;    push: lookup.push,&#10;    req: {message: ctx.m, blocking: ctx.blocking, hl: ctx.hl}&#10;  },&#10;  tags: [&#34;a2a&#34;, &#34;task-&#34; + lookup.taskId, lookup.ctxTag]&#10;}" target="body" />
             <zeebe:input source="true" target="ignoreNullValues" />
-            <zeebe:input source="{{secrets.ENGINE_USERNAME}}" target="authentication.username" />
-            <zeebe:input source="{{secrets.ENGINE_PASSWORD}}" target="authentication.password" />
           </zeebe:ioMapping>
           <zeebe:taskHeaders>
             <zeebe:header key="elementTemplateVersion" value="13" />
@@ -208,7 +211,12 @@
           <bpmn:extensionElements>
             <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
             <zeebe:ioMapping>
-              <zeebe:input source="basic" target="authentication.type" />
+              <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
+              <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
+              <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
+              <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
+              <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
+              <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
               <zeebe:input source="POST" target="method" />
               <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/messages/correlation&#34;" target="url" />
               <zeebe:input source="=false" target="followRedirects" />
@@ -217,8 +225,6 @@
               <zeebe:input source="=20" target="readTimeoutInSeconds" />
               <zeebe:input source="={name: messageName, correlationKey: taskId, variables: payload}" target="body" />
               <zeebe:input source="true" target="ignoreNullValues" />
-              <zeebe:input source="{{secrets.ENGINE_USERNAME}}" target="authentication.username" />
-              <zeebe:input source="{{secrets.ENGINE_PASSWORD}}" target="authentication.password" />
             </zeebe:ioMapping>
             <zeebe:taskHeaders>
               <zeebe:header key="elementTemplateVersion" value="13" />
@@ -335,7 +341,12 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
-          <zeebe:input source="basic" target="authentication.type" />
+          <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
+          <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
+          <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
+          <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
+          <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
+          <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
           <zeebe:input source="POST" target="method" />
           <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/process-instances/search&#34;" target="url" />
           <zeebe:input source="=false" target="followRedirects" />
@@ -344,8 +355,6 @@
           <zeebe:input source="=20" target="readTimeoutInSeconds" />
           <zeebe:input source="={filter: {processDefinitionId: &#34;a2a-task&#34;, tags: [&#34;task-&#34; + lookup.taskId]}, page: {limit: 1}}" target="body" />
           <zeebe:input source="true" target="ignoreNullValues" />
-          <zeebe:input source="{{secrets.ENGINE_USERNAME}}" target="authentication.username" />
-          <zeebe:input source="{{secrets.ENGINE_PASSWORD}}" target="authentication.password" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="elementTemplateVersion" value="13" />
@@ -367,7 +376,12 @@
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
-          <zeebe:input source="basic" target="authentication.type" />
+          <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
+          <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
+          <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
+          <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
+          <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
+          <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
           <zeebe:input source="POST" target="method" />
           <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/variables/search?truncateValues=false&#34;" target="url" />
           <zeebe:input source="=false" target="followRedirects" />
@@ -376,8 +390,6 @@
           <zeebe:input source="=20" target="readTimeoutInSeconds" />
           <zeebe:input source="={&#10;  filter: {&#10;    name: &#34;task&#34;,&#10;    processInstanceKey: if found != null then found else &#34;0&#34;,&#10;    scopeKey: if found != null then found else &#34;0&#34;&#10;  },&#10;  page: {limit: 1}&#10;}" target="body" />
           <zeebe:input source="true" target="ignoreNullValues" />
-          <zeebe:input source="{{secrets.ENGINE_USERNAME}}" target="authentication.username" />
-          <zeebe:input source="{{secrets.ENGINE_PASSWORD}}" target="authentication.password" />
         </zeebe:ioMapping>
         <zeebe:taskHeaders>
           <zeebe:header key="elementTemplateVersion" value="13" />
@@ -603,7 +615,12 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="basic" target="authentication.type" />
+            <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
+            <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
+            <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
+            <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
+            <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
+            <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
             <zeebe:input source="POST" target="method" />
             <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/process-instances/search&#34;" target="url" />
             <zeebe:input source="=false" target="followRedirects" />
@@ -612,8 +629,6 @@
             <zeebe:input source="=20" target="readTimeoutInSeconds" />
             <zeebe:input source="={&#10;  filter: {&#10;    processDefinitionId: &#34;a2a-task&#34;,&#10;    tags: if listReq.ctxTag != null then [&#34;a2a&#34;, listReq.ctxTag] else [&#34;a2a&#34;]&#10;  },&#10;  sort: [{field: &#34;startDate&#34;, order: &#34;DESC&#34;}, {field: &#34;processInstanceKey&#34;, order: &#34;DESC&#34;}],&#10;  page: {limit: 100, after: listScan.cursor}&#10;}" target="body" />
             <zeebe:input source="true" target="ignoreNullValues" />
-            <zeebe:input source="{{secrets.ENGINE_USERNAME}}" target="authentication.username" />
-            <zeebe:input source="{{secrets.ENGINE_PASSWORD}}" target="authentication.password" />
           </zeebe:ioMapping>
           <zeebe:taskHeaders>
             <zeebe:header key="elementTemplateVersion" value="13" />
@@ -640,7 +655,12 @@
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
           <zeebe:ioMapping>
-            <zeebe:input source="basic" target="authentication.type" />
+            <zeebe:input source="oauth-client-credentials-flow" target="authentication.type" />
+            <zeebe:input source="https://login.cloud.camunda.io/oauth/token" target="authentication.oauthTokenEndpoint" />
+            <zeebe:input source="{{secrets.ENGINE_CLIENT_ID}}" target="authentication.clientId" />
+            <zeebe:input source="{{secrets.ENGINE_CLIENT_SECRET}}" target="authentication.clientSecret" />
+            <zeebe:input source="zeebe.camunda.io" target="authentication.audience" />
+            <zeebe:input source="credentialsBody" target="authentication.clientAuthentication" />
             <zeebe:input source="POST" target="method" />
             <zeebe:input source="=&#34;{{secrets.ENGINE_URL}}&#34; + &#34;/v2/variables/search?truncateValues=false&#34;" target="url" />
             <zeebe:input source="=false" target="followRedirects" />
@@ -649,8 +669,6 @@
             <zeebe:input source="=20" target="readTimeoutInSeconds" />
             <zeebe:input source="={&#10;  filter: {name: &#34;task&#34;, processInstanceKey: {&#34;$in&#34;: taskKeys}, scopeKey: {&#34;$in&#34;: taskKeys}},&#10;  page: {limit: 100}&#10;}" target="body" />
             <zeebe:input source="true" target="ignoreNullValues" />
-            <zeebe:input source="{{secrets.ENGINE_USERNAME}}" target="authentication.username" />
-            <zeebe:input source="{{secrets.ENGINE_PASSWORD}}" target="authentication.password" />
           </zeebe:ioMapping>
           <zeebe:taskHeaders>
             <zeebe:header key="elementTemplateVersion" value="13" />

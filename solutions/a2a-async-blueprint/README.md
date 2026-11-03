@@ -29,18 +29,25 @@ flowchart LR
 Tested on Camunda 8.9.26 with Connectors 8.9.17 and Java 21. The Maven scenarios in `test/` use
 Camunda Process Test 8.9.8.
 
-1. Start Camunda 8.9 or later with the connector runtime (for example, `c8ctl cluster start`).
-2. Set these connector secrets, then restart the connector runtime:
+1. Use a Camunda 8.9 SaaS cluster (or a self-managed 8.9 cluster with the connector runtime).
+2. Create an API client with the **Zeebe** scope (Console → Cluster → API) and add these cluster
+   secrets. The values below are placeholders to copy and replace:
 
-| Secret                                                                                                    | Value                                                             |
-| --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `ENGINE_URL`                                                                                              | Camunda REST URL as the connector runtime reaches it, without `/v2` |
-| `ENGINE_USERNAME`, `ENGINE_PASSWORD`                                                                      | Basic auth credentials for Camunda API calls                                    |
-| `A2A_AGENT_PROCESS`                                                                                       | `a2a-server-agent` (the process the server runs for each task)    |
-| `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` | LLM access for the AI agents                                            |
+| Secret                                                                                                    | Value                                                                       |
+| --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `ENGINE_URL`                                                                                              | Cluster REST address, for example `https://bru-2.zeebe.camunda.io/<cluster-id>`, without `/v2` |
+| `ENGINE_CLIENT_ID`, `ENGINE_CLIENT_SECRET`                                                                | The API client credentials                                                  |
+| `A2A_AGENT_PROCESS`                                                                                       | `a2a-server-agent` (the process the server runs for each task)              |
+| `A2A_CALLBACK_URL`                                                                                        | `<connectors-url>/inbound/a2a-client-callback` (the client's callback URL)  |
+| `A2A_CALLBACK_TOKEN`                                                                                      | A random string you choose. The server sends it as a Bearer token and the callback endpoint rejects calls without it. |
+| `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` | LLM access for the AI agents                                                |
+
+   On self-managed without OAuth, change the `authentication.*` inputs of the HTTP JSON tasks in
+   `02` to your cluster's auth type.
 
 3. In `02-a2a-server.bpmn`, select the `Agent Card requested` start event and set **Public RPC URL**
-   (`inbound.publicRpcUrl`) to `<connectors-url>/inbound/a2a`. It must use HTTPS.
+   (`inbound.publicRpcUrl`) to `<connectors-url>/inbound/a2a`. It must use HTTPS. In SaaS, `<connectors-url>` is the connector
+   runtime URL of your cluster.
 4. Deploy `02`, `03`, `04`, and `server-request-validation.dmn`.
 5. Open `<connectors-url>/inbound/a2a-card` in a browser. You should see the Agent Card as JSON.
 
@@ -51,9 +58,10 @@ Camunda Process Test 8.9.8.
 2. Deploy `01-client-agent.bpmn` and start `a2a-client`. It sends `demoInput` as
    `{"value": "Example input"}`.
 3. In Operate, check that:
-   - the client AI agent calls `fetchAgentCard`, then `sendMessage`;
+   - the client AI agent calls `fetchAgentCard`, then `sendMessage`, which returns a submitted Task
+     right away (it does not wait for the work);
    - the server side runs one `a2a-task` instance and one `a2a-server-agent` instance;
-   - `Remote task settled` completes, and the client reports
+   - `Result callback received` completes when the server calls back, and the client reports
      `{"received": {"value": "Example input"}, "uppercase": "EXAMPLE INPUT", "length": 13}`.
 
 ## Example 2: external client, Camunda server
@@ -78,15 +86,17 @@ use the Google ADK client in [`adk/`](adk/README.md) and point it at the Agent C
 
 ## How it works
 
-- **Client (01).** The connector's `sendMessage` runs in polling mode. It returns the Task, and the
-  `Remote task settled` catch event polls until the Task is final. To use push (`notification`) mode
-  instead, you need the connector webhook URL and token, and the *A2A Client Webhook* catch event.
+- **Client (01).** `sendMessage` runs in `notification` mode. It returns the Task immediately and
+  registers `A2A_CALLBACK_URL` with a Bearer token. The *A2A Client Webhook* catch event
+  (`Result callback received`) accepts only calls with that token, correlates on task id and
+  notification token, ignores non-final states, and drops duplicate deliveries. If no callback
+  arrives within 10 minutes, the tool call ends with a `timeout` result.
 - **Server (02).** Validates the request, starts `a2a-task` (04), and waits for its settled signal
   (`a2a-settled:<taskId>:<rev>`). `SendMessage`, `GetTask`, and `CancelTask` answer from the settled
   Task.
-- **Task (04).** Calls the server agent (03), maps failures and cancellations to the Task state, and
+- **Task (04).** Part of the one A2A server: it has no endpoint of its own and is started only by 02. Calls the server agent (03), maps failures and cancellations to the Task state, and
   builds the next Task revision. If the client sent a push configuration, it also POSTs the Task to
-  that URL. Standalone push-configuration methods return `UNSUPPORTED_OPERATION`, so send the
+  that URL with the Bearer credentials and the notification token. Standalone push-configuration methods return `UNSUPPORTED_OPERATION`, so send the
   configuration inline in `SendMessage`.
 - **Agent (03).** Reads `demoInput` from the request (from the data part, otherwise from JSON text)
   and passes it to `upperCase` through `fromAi()`.
@@ -99,7 +109,7 @@ push-configuration methods are not supported.
 ## Contents
 
 - `01-client-agent.bpmn`: client agent that uses the A2A Client connector.
-- `02-a2a-server.bpmn`: the A2A server (`a2a-rpc`). It uses Basic auth for Camunda API calls.
+- `02-a2a-server.bpmn`: the A2A server (`a2a-rpc`). It uses OAuth client credentials for Camunda API calls.
 - `03-server-agent.bpmn`: server agent with a placeholder script tool, `upperCase`.
 - `04-a2a-task.bpmn`: per-task logic for the server (`a2a-task`).
 - `server-request-validation.dmn`: checks that incoming requests are valid A2A requests.
@@ -115,7 +125,7 @@ push-configuration methods are not supported.
 ## Run the tests
 
 ```bash
-mvn test -f test/pom.xml                      # Camunda Process Test: 46 tests, no cluster or LLM needed
+mvn test -f test/pom.xml                      # Camunda Process Test: 50 tests, no cluster or LLM needed
 cd adk && .venv/bin/python -m pytest          # offline ADK interop tests (see adk/README.md)
 ```
 
@@ -141,8 +151,11 @@ update the name, description, and skills in the Agent Card on `02`.
 
 ## Known gaps
 
-- Push callbacks have not been tested against a live engine. The blueprint doesn't handle duplicate
-  or out-of-order callbacks, or retries beyond the HTTP connector's three attempts.
+- Callback authentication, duplicate suppression and non-final-state filtering are enforced by the
+  inbound connector, so Camunda Process Test can't exercise them. The tests cover correlation,
+  duplicate delivery after completion, the timeout, and the server's authenticated push request.
+  Push retries stop at the HTTP connector's three attempts.
+- The Maven suite takes about two minutes, mostly embedded-engine startup per test class.
 - The A2A Client connector can't run in Camunda Process Test. The Example 1 scenario completes its
   jobs with mocked results. The Example 2 scenario runs 02, 03, and 04 together.
 - Every agent and connector response is mocked or scripted in the Maven suite. No test checks real

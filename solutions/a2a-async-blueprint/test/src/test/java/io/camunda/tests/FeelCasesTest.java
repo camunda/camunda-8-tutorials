@@ -218,6 +218,46 @@ public class FeelCasesTest {
         assertThat(instance).hasActiveElements("AgentTools").hasNoActiveElements("A2ASetCanceled");
     }
 
+    // ---------- Authenticated push callback ----------
+
+    @Test
+    void pushCarriesBearerCredentialsAndNotificationToken() {
+        client.newCreateInstanceCommand()
+                .bpmnProcessId(PROCESS_ID)
+                .latestVersion()
+                .startBeforeElement("PushConfigured")
+                .variables(Map.of(
+                        "task", Map.of(
+                                "id", "task-push",
+                                "contextId", "ctx-1",
+                                "rev", 2,
+                                "status", Map.of("state", "TASK_STATE_COMPLETED"),
+                                "artifacts", List.of(),
+                                "history", List.of()),
+                        "push", Map.of(
+                                "url", "https://client.example.invalid/callback",
+                                "dialect", "1.0",
+                                "token", "notify-token",
+                                "authentication", Map.of("scheme", "Bearer", "credentials", "secret-value"))))
+                .send()
+                .join();
+
+        final var job = client.newActivateJobsCommand()
+                .jobType("io.camunda:http-json:1")
+                .maxJobsToActivate(1)
+                .requestTimeout(java.time.Duration.ofSeconds(5))
+                .send()
+                .join()
+                .getJobs()
+                .get(0);
+
+        @SuppressWarnings("unchecked")
+        final var headers = (Map<String, Object>) job.getVariablesAsMap().get("headers");
+        assertThat(headers.get("Authorization")).isEqualTo("Bearer secret-value");
+        assertThat(headers.get("X-A2A-Notification-Token")).isEqualTo("notify-token");
+        assertThat(job.getVariablesAsMap().get("url")).isEqualTo("https://client.example.invalid/callback");
+    }
+
     // ---------- Helpers ----------
 
     private ProcessInstanceEvent start(final Map<String, Object> task) {
