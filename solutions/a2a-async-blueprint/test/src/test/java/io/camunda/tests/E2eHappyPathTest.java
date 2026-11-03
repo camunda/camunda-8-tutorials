@@ -49,7 +49,6 @@ class E2eHappyPathTest {
         await(() -> state(clientKey).matches("COMPLETED|TERMINATED"), "client 01 to finish");
         assertThat(state(clientKey)).as("01 client").isEqualTo("COMPLETED");
 
-        assertThat(completed(clientKey, "FetchAgentCard")).as("Agent Card fetched in 01").isTrue();
         assertThat(completed(clientKey, "A2ATaskResult")).as("callback caught in 01").isTrue();
         assertThat(instances("a2a-rpc", started)).as("02 instances").isGreaterThan(0);
         assertThat(instances("a2a-task", started)).as("04 instances").isGreaterThan(0);

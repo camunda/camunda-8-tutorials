@@ -13,26 +13,6 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
-            "elementId": "FetchAgentCard"
-          },
-          "variables": {
-            "agentCard": {
-              "result": {
-                "name": "Example A2A agent",
-                "kind": "agentCard",
-                "skills": [
-                  {
-                    "id": "upper-case",
-                    "name": "Upper case"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
             "elementId": "ClientAgent"
@@ -156,26 +136,6 @@
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
             "processDefinitionId": "a2a-client"
-          }
-        },
-        {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
-            "elementId": "FetchAgentCard"
-          },
-          "variables": {
-            "agentCard": {
-              "result": {
-                "name": "Example A2A agent",
-                "kind": "agentCard",
-                "skills": [
-                  {
-                    "id": "upper-case",
-                    "name": "Upper case"
-                  }
-                ]
-              }
-            }
           }
         },
         {
@@ -336,26 +296,6 @@
           }
         },
         {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
-            "elementId": "FetchAgentCard"
-          },
-          "variables": {
-            "agentCard": {
-              "result": {
-                "name": "Example A2A agent",
-                "kind": "agentCard",
-                "skills": [
-                  {
-                    "id": "upper-case",
-                    "name": "Upper case"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        {
           "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
           "jobSelector": {
             "elementId": "ClientAgent"
@@ -460,26 +400,6 @@
           "type": "CREATE_PROCESS_INSTANCE",
           "processDefinitionSelector": {
             "processDefinitionId": "a2a-client"
-          }
-        },
-        {
-          "type": "COMPLETE_JOB",
-          "jobSelector": {
-            "elementId": "FetchAgentCard"
-          },
-          "variables": {
-            "agentCard": {
-              "result": {
-                "name": "Example A2A agent",
-                "kind": "agentCard",
-                "skills": [
-                  {
-                    "id": "upper-case",
-                    "name": "Upper case"
-                  }
-                ]
-              }
-            }
           }
         },
         {

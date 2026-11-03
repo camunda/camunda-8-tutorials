@@ -68,7 +68,7 @@ cluster and is operated with [`c8ctl`](https://github.com/camunda/c8ctl). The lo
    ```
 
 2. In Operate (`http://localhost:8080/operate`) or with `c8ctl list pi`, check that:
-   - the client fetches the Agent Card in its own `Fetch Agent Card` step, then the client AI agent calls `sendMessage`, which returns a submitted Task
+   - the client AI agent calls `sendMessage` (the A2A Client tool reads the Agent Card itself), which returns a submitted Task
      right away (it does not wait for the work);
    - the server side runs one `a2a-task` instance and one `a2a-server-agent` instance;
    - `Result callback received` completes when the server calls back, and the client reports
@@ -163,15 +163,13 @@ cd adk && .venv/bin/python -m pytest          # offline ADK interop tests (see a
 
 **End-to-end test (`-Pe2e`, not in CI).** `E2eHappyPathTest` deploys the five resources to the
 cluster on `http://localhost:8080` (plain REST, ignores `CAMUNDA_*` env vars), starts `01`, and
-waits for it to finish. It asserts only that each stage happened: the `Fetch Agent Card` step,
-a `02` and a `04` instance, and the `Result callback received` event. It never asserts LLM text.
+waits for it to finish. It asserts only that each stage happened: a `02` and a `04` instance, and the `Result callback received` event. It never asserts LLM text.
 Needs `c8ctl cluster start` and `ollama pull llama3.1:8b`. It skips with a message if the cluster
 or Ollama is unreachable. Use a cluster where no older process owns the `a2a-card` webhook path,
-otherwise the `Fetch Agent Card` step fails with the older process's error.
+otherwise the card endpoint answers with the older process's error.
 
-Live-cluster notes (verified on 8.9.27): `Fetch Agent Card` and the `Remote A2A agent` tool use the base URL
-`http://localhost:8086/inbound/` (trailing slash required) plus `agentCardLocation` `a2a-card`. The card is fetched once,
-synchronously, before the agent starts. The tool is pinned to `sendMessage`, and `"null"` strings that small models put
+Live-cluster notes (verified on 8.9.27): The `Remote A2A agent` tool uses the base URL
+`http://localhost:8086/inbound/` (trailing slash required) plus `agentCardLocation` `a2a-card`. The tool fetches the card itself when the agent starts. The tool is pinned to `sendMessage`, and `"null"` strings that small models put
 in optional parameters are turned into real nulls. The card endpoint reads its properties from
 `correlation.activatedElement.delegate.properties` when present.
 
