@@ -1,0 +1,189 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-server-agent",
+  "testCases": [
+    {
+      "name": "Agent calls the tool - agent result is returned",
+      "description": "The agent calls its text tool and finishes. The agent's answer is the result of the process.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-server-agent"
+          },
+          "variables": {
+            "req": {
+              "message": {
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "activateElements": [
+            {
+              "elementId": "upperCase",
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "upperCase"
+                  },
+                  "requestData": {
+                    "value": "Example input"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-server-agent"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "upperCase"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "completionConditionFulfilled": true,
+          "variables": {
+            "agent": {
+              "responseText": "Done.",
+              "context": {
+                "conversation": {
+                  "messages": [
+                    {
+                      "role": "tool_call_result",
+                      "results": [
+                        {
+                          "id": "call-1",
+                          "name": "upperCase",
+                          "content": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-server-agent"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "AgentFinished"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-server-agent"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Request as JSON text part - the tool still receives demoInput",
+      "description": "A client that sends only text passes its input as JSON inside a text part.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-server-agent"
+          },
+          "variables": {
+            "req": {
+              "message": {
+                "parts": [
+                  {
+                    "text": "{\"value\":\"Example input\"}"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "activateElements": [
+            {
+              "elementId": "upperCase",
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "upperCase"
+                  },
+                  "requestData": {
+                    "value": "Example input"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-server-agent"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "upperCase"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-server-agent"
+          },
+          "variables": {
+            "toolCallResult": {
+              "received": {
+                "value": "Example input"
+              },
+              "uppercase": "EXAMPLE INPUT",
+              "length": 13
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Headless suite (mvn test): connectors, the LLM and the remote server are mocked with COMPLETE_JOB instructions, which Test Studio cannot do. Test Studio cannot run this process end to end (ad-hoc subprocess tool calls, LLM), so it is covered by the headless suite only."
+}

@@ -60,4 +60,6 @@ jobs:
 
       - name: Run bpmnlint (changed files only)
         if: steps.changed.outputs.files != ''
-        run: npx bpmnlint --config .bpmnlintrc ${{ steps.changed.outputs.files }}
+        run: |
+          BPMN=$(echo "${{ steps.changed.outputs.files }}" | tr ' ' '\n' | grep '\.bpmn$' | tr '\n' ' ')
+          if [ -n "$BPMN" ]; then npx bpmnlint --config .bpmnlintrc $BPMN; fi

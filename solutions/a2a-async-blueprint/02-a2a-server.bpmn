@@ -1,0 +1,1676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_Collaboration_a2a_protocol" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:error id="NotFound" name="NotFound" errorCode="NOT_FOUND" />
+  <bpmn:process id="a2a-rpc" name="02 A2A Server" isExecutable="true">
+    <bpmn:documentation>The A2A server endpoint. It accepts A2A 1.0 and 0.3 requests on one URL. For each new task it starts the agent process `a2a-server-agent`, and it answers all other requests from the task's current state. Deploy it next to your agent process without changes.</bpmn:documentation>
+    <bpmn:startEvent id="RpcReceived" name="A2A request received" zeebe:modelerTemplate="dev.hansel.a2a.core.rpc.v1" zeebe:modelerTemplateVersion="3" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMTguNSIgdmlld0JveD0iMyA5IDMwIDE4LjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTguNyAxNC43MjVDOC41MTY2NyAxNC45MDgzIDguMjgzMzMgMTUgOCAxNUM3LjcxNjY3IDE1IDcuNDc1IDE0LjkwODMgNy4yNzUgMTQuNzI1QzcuMDkxNjcgMTQuNTI1IDcgMTQuMjgzMyA3IDE0QzcgMTMuNzE2NyA3LjA5MTY3IDEzLjQ4MzMgNy4yNzUgMTMuM0M3LjQ3NSAxMy4xIDcuNzE2NjcgMTMgOCAxM0M4LjI4MzMzIDEzIDguNTE2NjcgMTMuMSA4LjcgMTMuM0M4LjkgMTMuNDgzMyA5IDEzLjcxNjcgOSAxNEM5IDE0LjI4MzMgOC45IDE0LjUyNSA4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMTQuNyAxNC43MjVDMTQuNTE2NyAxNC45MDgzIDE0LjI4MzMgMTUgMTQgMTVDMTMuNzE2NyAxNSAxMy40NzUgMTQuOTA4MyAxMy4yNzUgMTQuNzI1QzEzLjA5MTcgMTQuNTI1IDEzIDE0LjI4MzMgMTMgMTRDMTMgMTMuNzE2NyAxMy4wOTE3IDEzLjQ4MzMgMTMuMjc1IDEzLjNDMTMuNDc1IDEzLjEgMTMuNzE2NyAxMyAxNCAxM0MxNC4yODMzIDEzIDE0LjUxNjcgMTMuMSAxNC43IDEzLjNDMTQuOSAxMy40ODMzIDE1IDEzLjcxNjcgMTUgMTRDMTUgMTQuMjgzMyAxNC45IDE0LjUyNSAxNC43IDE0LjcyNVoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTIyLjcgMTQuNzI1QzIyLjUxNjcgMTQuOTA4MyAyMi4yODMzIDE1IDIyIDE1QzIxLjcxNjcgMTUgMjEuNDc1IDE0LjkwODMgMjEuMjc1IDE0LjcyNUMyMS4wOTE3IDE0LjUyNSAyMSAxNC4yODMzIDIxIDE0QzIxIDEzLjcxNjcgMjEuMDkxNyAxMy40ODMzIDIxLjI3NSAxMy4zQzIxLjQ3NSAxMy4xIDIxLjcxNjcgMTMgMjIgMTNDMjIuMjgzMyAxMyAyMi41MTY3IDEzLjEgMjIuNyAxMy4zQzIyLjkgMTMuNDgzMyAyMyAxMy43MTY3IDIzIDE0QzIzIDE0LjI4MzMgMjIuOSAxNC41MjUgMjIuNyAxNC43MjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0yOC43IDE0LjcyNUMyOC41MTY3IDE0LjkwODMgMjguMjgzMyAxNSAyOCAxNUMyNy43MTY3IDE1IDI3LjQ3NSAxNC45MDgzIDI3LjI3NSAxNC43MjVDMjcuMDkxNyAxNC41MjUgMjcgMTQuMjgzMyAyNyAxNEMyNyAxMy43MTY3IDI3LjA5MTcgMTMuNDgzMyAyNy4yNzUgMTMuM0MyNy40NzUgMTMuMSAyNy43MTY3IDEzIDI4IDEzQzI4LjI4MzMgMTMgMjguNTE2NyAxMy4xIDI4LjcgMTMuM0MyOC45IDEzLjQ4MzMgMjkgMTMuNzE2NyAyOSAxNEMyOSAxNC4yODMzIDI4LjkgMTQuNTI1IDI4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUgMTRDNSAxMi4zNDMxIDYuMzQzMTUgMTEgOCAxMUgxNEMxNC43NzYgMTEgMTUuMjg0IDExLjE1MzcgMTUuNjQgMTEuMzgxOEMxNS44NTg5IDEwLjc5NCAxNi4xNTE3IDEwLjE3MDkgMTYuNTU1IDkuNTk3OTVDMTUuODc5NyA5LjIxMTUzIDE1LjAzODYgOSAxNCA5SDhDNS4yMzg1OCA5IDMgMTEuMjM4NiAzIDE0QzMgMTYuNzYxMiA1LjIzNzU5IDE5IDcuOTk5MjYgMTlIMTRDMTUuNzYzNCAxOSAxNi45NTczIDE4LjM5MDIgMTcuNzM3NSAxNy4zNUMxOC40MjI4IDE2LjQzNjMgMTguNzE0OCAxNS4yNjYgMTguOTQ4MyAxNC4zMjk5TDE4Ljk3MDEgMTQuMjQyNUMxOS4yMzI3IDEzLjE5MjQgMTkuNDQ0MiAxMi40MDc3IDE5Ljg2MjUgMTEuODVDMjAuMjA3MyAxMS4zOTAyIDIwLjc2MzQgMTEgMjIgMTFIMjguMDAwNUMyOS42NTcyIDExIDMxIDEyLjM0MyAzMSAxNEMzMSAxNS42NTY5IDI5LjY1NjkgMTcgMjggMTdIMjJDMjEuMjI0IDE3IDIwLjcxNiAxNi44NDYzIDIwLjM2IDE2LjYxODJDMjAuMTQxMSAxNy4yMDYgMTkuODQ4MyAxNy44MjkxIDE5LjQ0NSAxOC40MDJDMjAuMTIwMyAxOC43ODg1IDIwLjk2MTQgMTkgMjIgMTlIMjhDMzAuNzYxNCAxOSAzMyAxNi43NjE0IDMzIDE0QzMzIDExLjIzODggMzAuNzYyMSA5IDI4LjAwMDUgOUgyMkMyMC4yMzY2IDkgMTkuMDQyNyA5LjYwOTc5IDE4LjI2MjUgMTAuNjVDMTcuNTc3MiAxMS41NjM3IDE3LjI4NTIgMTIuNzM0IDE3LjA1MTcgMTMuNjcwMUwxNy4wMjk5IDEzLjc1NzVDMTYuNzY3MyAxNC44MDc2IDE2LjU1NTggMTUuNTkyMyAxNi4xMzc1IDE2LjE1QzE1Ljc5MjcgMTYuNjA5OCAxNS4yMzY2IDE3IDE0IDE3SDcuOTk5MjZDNi4zNDI2NSAxNyA1IDE1LjY1NzEgNSAxNFoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTcgMjMuNUM2LjcxNjY3IDIzLjUgNi40NzUgMjMuNDA4MyA2LjI3NSAyMy4yMjVDNi4wOTE2NyAyMy4wMjUgNiAyMi43ODMzIDYgMjIuNUM2IDIyLjIxNjcgNi4wOTE2NyAyMS45ODMzIDYuMjc1IDIxLjhDNi40NzUgMjEuNiA2LjcxNjY3IDIxLjUgNyAyMS41SDEyQzEyLjI4MzMgMjEuNSAxMi41MTY3IDIxLjYgMTIuNyAyMS44QzEyLjkgMjEuOTgzMyAxMyAyMi4yMTY3IDEzIDIyLjVDMTMgMjIuNzgzMyAxMi45IDIzLjAyNSAxMi43IDIzLjIyNUMxMi41MTY3IDIzLjQwODMgMTIuMjgzMyAyMy41IDEyIDIzLjVIN1pNNSAyNy41QzQuNzE2NjcgMjcuNSA0LjQ3NSAyNy40MDgzIDQuMjc1IDI3LjIyNUM0LjA5MTY3IDI3LjAyNSA0IDI2Ljc4MzMgNCAyNi41QzQgMjYuMjE2NyA0LjA5MTY3IDI1Ljk4MzMgNC4yNzUgMjUuOEM0LjQ3NSAyNS42IDQuNzE2NjcgMjUuNSA1IDI1LjVIOEM4LjI4MzMzIDI1LjUgOC41MTY2NyAyNS42IDguNyAyNS44QzguOSAyNS45ODMzIDkgMjYuMjE2NyA5IDI2LjVDOSAyNi43ODMzIDguOSAyNy4wMjUgOC43IDI3LjIyNUM4LjUxNjY3IDI3LjQwODMgOC4yODMzMyAyNy41IDggMjcuNUg1Wk0xMiAyNy41QzExLjcxNjcgMjcuNSAxMS40NzUgMjcuNDA4MyAxMS4yNzUgMjcuMjI1QzExLjA5MTcgMjcuMDI1IDExIDI2Ljc4MzMgMTEgMjYuNUMxMSAyNi4yMTY3IDExLjA5MTcgMjUuOTgzMyAxMS4yNzUgMjUuOEMxMS40NzUgMjUuNiAxMS43MTY3IDI1LjUgMTIgMjUuNUgyMEMyMC4yODMzIDI1LjUgMjAuNTE2NyAyNS42IDIwLjcgMjUuOEMyMC45IDI1Ljk4MzMgMjEgMjYuMjE2NyAyMSAyNi41QzIxIDI2Ljc4MzMgMjAuOSAyNy4wMjUgMjAuNyAyNy4yMjVDMjAuNTE2NyAyNy40MDgzIDIwLjI4MzMgMjcuNSAyMCAyNy41SDEyWk0yOCAyNy41QzI3LjcxNjcgMjcuNSAyNy40NzUgMjcuNDA4MyAyNy4yNzUgMjcuMjI1QzI3LjA5MTcgMjcuMDI1IDI3IDI2Ljc4MzMgMjcgMjYuNUMyNyAyNi4yMTY3IDI3LjA5MTcgMjUuOTgzMyAyNy4yNzUgMjUuOEMyNy40NzUgMjUuNiAyNy43MTY3IDI1LjUgMjggMjUuNUgzMkMzMi4yODMzIDI1LjUgMzIuNTE2NyAyNS42IDMyLjcgMjUuOEMzMi45IDI1Ljk4MzMgMzMgMjYuMjE2NyAzMyAyNi41QzMzIDI2Ljc4MzMzMi45IDI3LjAyNSAzMi43IDI3LjIyNUMzMi41MTY3IDI3LjQwODMgMzIuMjgzMyAyNy41IDMyIDI3LjVIMjhaTTE2IDIzLjVDMTUuNzE2NyAyMy41IDE1LjQ3NSAyMy40MDgzIDE1LjI3NSAyMy4yMjVDMTUuMDkxNyAyMy4wMjUgMTUgMjIuNzgzMyAxNSAyMi41QzE1IDIyLjIxNjcgMTUuMDkxNyAyMS45ODMzIDE1LjI3NSAyMS44QzE1LjQ3NSAyMS42IDE1LjcxNjcgMjEuNSAxNiAyMS41QzE2LjI4MzMgMjEuNSAxNi41MTY3IDIxLjYgMTYuNyAyMS44QzE2LjkgMjEuOTgzMyAxNyAyMi4yMTY3IDE3IDIyLjVDMTcgMjIuNzgzMyAxNi45IDIzLjAyNSAxNi43IDIzLjIyNUMxNi41MTY3IDIzLjQwODMgMTYuMjgzMyAyMy41IDE2IDIzLjVaTTI0IDI3LjVDMjMuNzE2NyAyNy41IDIzLjQ3NSAyNy40MDgzIDIzLjI3NSAyNy4yMjVDMjMuMDkxNyAyNy4wMjUgMjMgMjYuNzgzMyAyMyAyNi41QzIzIDI2LjIxNjcgMjMuMDkxNyAyNS45ODMzIDIzLjI3NSAyNS44QzIzLjQ3NSAyNS42IDIzLjcxNjcgMjUuNSAyNCAyNS41QzI0LjI4MzMgMjUuNSAyNC41MTY3IDI1LjYgMjQuNyAyNS44QzI0LjkgMjUuOTgzMyAyNSAyNi4yMTY3IDI1IDI2LjVDMjUgMjYuNzgzMyAyNC45IDI3LjAyNSAyNC43IDI3LjIyNUMyNC41MTY3IDI3LjQwODMgMjQuMjgzMyAyNy41IDI0IDI3LjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0xOS4yNzUgMjMuMjI1QzE5LjQ3NSAyMy40MDgzIDE5LjcxNjcgMjMuNSAyMCAyMy41SDIzQzIzLjI4MzMgMjMuNSAyMy41MTY3IDIzLjQwODMgMjMuNyAyMy4yMjVDMjMuOSAyMy4wMjUgMjQgMjIuNzgzMyAyNCAyMi41QzI0IDIyLjIxNjcgMjMuOSAyMS45ODMzIDIzLjcgMjEuOEMyMy41MTY3IDIxLjYgMjMuMjgzMyAyMS41IDIzIDIxLjVIMjBDMTkuNzE2NyAyMS41IDE5LjQ3NSAyMS42IDE5LjI3NSAyMS44QzE5LjA5MTcgMjEuOTgzMyAxOSAyMi4yMTY3IDE5IDIyLjVDMTkgMjIuNzgzMyAxOS4wOTE3IDIzLjAyNSAxOS4yNzUgMjMuMjI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMjYuMjc1IDIzLjIyNUMyNi40NzUgMjMuNDA4MyAyNi43MTY3IDIzLjUgMjcgMjMuNUgzMEMzMC4yODMzIDIzLjUgMzAuNTE2NyAyMy40MDgzIDMwLjcgMjMuMjI1QzMwLjkgMjMuMDI1IDMxIDIyLjc4MzMgMzEgMjIuNUMzMSAyMi4yMTY3IDMwLjkgMjEuOTgzMyAzMC43IDIxLjhDMzAuNTE2NyAyMS42IDMwLjI4MzMgMjEuNSAzMCAyMS41SDI3QzI2LjcxNjcgMjEuNSAyNi40NzUgMjEuNiAyNi4yNzUgMjEuOEMyNi4wOTE3IDIxLjk4MzMgMjYgMjIuMjE2NyAyNiAyMi41QzI2IDIyLjc4MzMgMjYuMDkxNyAyMy4wMjUgMjYuMjc1IDIzLjIyNVoiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPg==">
+      <bpmn:extensionElements>
+        <zeebe:properties>
+          <zeebe:property name="inbound.type" value="io.camunda:webhook:1" />
+          <zeebe:property name="inbound.shouldValidateHmac" value="disabled" />
+          <zeebe:property name="synchronousResponse" value="true" />
+          <zeebe:property name="consumeUnmatchedEvents" value="true" />
+          <zeebe:property name="deduplicationModeManualFlag" value="false" />
+          <zeebe:property name="deduplicationMode" value="AUTO" />
+          <zeebe:property name="inbound.method" value="post" />
+          <zeebe:property name="inbound.context" value="a2a" />
+          <zeebe:property name="inbound.responseExpression" value="={&#10;  statusCode: 200,&#10;  headers: {&#34;Content-Type&#34;: &#34;application/json&#34;},&#10;  body: (&#10;    for resp in [correlation.variables.rpcResponse]&#10;    return&#10;      if resp = null or correlation.variables.dialect != &#34;0.3&#34; or resp.error != null&#10;      then resp&#10;      else (&#10;        for c in [&#10;          {&#10;            st: {&#10;              &#34;TASK_STATE_SUBMITTED&#34;: &#34;submitted&#34;,&#10;              &#34;TASK_STATE_WORKING&#34;: &#34;working&#34;,&#10;              &#34;TASK_STATE_INPUT_REQUIRED&#34;: &#34;input-required&#34;,&#10;              &#34;TASK_STATE_AUTH_REQUIRED&#34;: &#34;auth-required&#34;,&#10;              &#34;TASK_STATE_COMPLETED&#34;: &#34;completed&#34;,&#10;              &#34;TASK_STATE_CANCELED&#34;: &#34;canceled&#34;,&#10;              &#34;TASK_STATE_FAILED&#34;: &#34;failed&#34;,&#10;              &#34;TASK_STATE_REJECTED&#34;: &#34;rejected&#34;&#10;            },&#10;            part:&#10;              function(p)&#10;                if p.data != null&#10;                then {kind: &#34;data&#34;, data: p.data}&#10;                else if p.url != null&#10;                then {&#10;                  kind: &#34;file&#34;,&#10;                  file: context(&#10;                    get entries(&#10;                      {uri: p.url, mimeType: p.mediaType, name: p.filename}&#10;                    )[item.value != null]&#10;                  )&#10;                }&#10;                else if p.raw != null&#10;                then {&#10;                  kind: &#34;file&#34;,&#10;                  file: context(&#10;                    get entries(&#10;                      {bytes: p.raw, mimeType: p.mediaType, name: p.filename}&#10;                    )[item.value != null]&#10;                  )&#10;                }&#10;                else {kind: &#34;text&#34;, text: p.text},&#10;            msg:&#10;              function(m)&#10;                context(&#10;                  get entries(&#10;                    {&#10;                      kind: &#34;message&#34;,&#10;                      messageId: m.messageId,&#10;                      role: if m.role = &#34;ROLE_USER&#34; then &#34;user&#34; else &#34;agent&#34;,&#10;                      parts: for p in m.parts return part(p),&#10;                      taskId: m.taskId,&#10;                      contextId: m.contextId,&#10;                      metadata: m.metadata&#10;                    }&#10;                  )[item.value != null]&#10;                ),&#10;            task:&#10;              function(t)&#10;                context(&#10;                  get entries(&#10;                    {&#10;                      kind: &#34;task&#34;,&#10;                      id: t.id,&#10;                      contextId: t.contextId,&#10;                      status: context(&#10;                        get entries(&#10;                          {&#10;                            state: get value(st, t.status.state),&#10;                            timestamp: t.status.timestamp,&#10;                            message:&#10;                              if t.status.message != null then msg(t.status.message) else null&#10;                          }&#10;                        )[item.value != null]&#10;                      ),&#10;                      artifacts:&#10;                        for a in t.artifacts&#10;                        return context(&#10;                          get entries(&#10;                            {&#10;                              artifactId: a.artifactId,&#10;                              name: a.name,&#10;                              description: a.description,&#10;                              parts: for p in a.parts return part(p),&#10;                              metadata: a.metadata&#10;                            }&#10;                          )[item.value != null]&#10;                        ),&#10;                      history: for h in t.history return msg(h),&#10;                      metadata: t.metadata&#10;                    }&#10;                  )[item.value != null]&#10;                )&#10;          }&#10;        ]&#10;        return {&#10;          jsonrpc: resp.jsonrpc,&#10;          id: resp.id,&#10;          result:&#10;            if resp.result.message != null&#10;            then c.msg(resp.result.message)&#10;            else c.task(if resp.result.task != null then resp.result.task else resp.result)&#10;        }&#10;      )[1]&#10;  )[1]&#10;}" />
+          <zeebe:property name="resultVariable" value="" />
+          <zeebe:property name="resultExpression" value="={&#10;  rpc: request.body,&#10;  hdr: {&#10;    &#34;content-type&#34;: request.headers.`content-type`,&#10;    &#34;a2a-version&#34;: request.headers.`a2a-version`&#10;  },&#10;  pushEnabled: true&#10;}" />
+          <zeebe:property name="inbound.auth.type" value="NONE" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_RpcReceived_NormalizeRequest</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:scriptTask id="NormalizeRequest" name="Normalize request dialect">
+      <bpmn:documentation>Converts A2A 0.3 requests (message/send, tasks/get, tasks/cancel) to the A2A 1.0 format so the rest of the process handles one format. A2A 1.0 requests pass through unchanged.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:script expression="=(&#10;  for r in [if rpc instance of context then rpc else {}]&#10;  return for legacy in [r.method instance of string and contains(r.method, &#34;/&#34;)]&#10;  return for p in [if r.params instance of context then r.params else {}]&#10;  return for m in [if p.message instance of context then p.message else {}]&#10;  return for c in [if p.configuration instance of context then p.configuration else {}]&#10;  return {&#10;    dialect: if legacy then &#34;0.3&#34; else &#34;1.0&#34;,&#10;    hdr: if legacy then put(hdr, &#34;a2a-version&#34;, &#34;1.0&#34;) else hdr,&#10;    rpc:&#10;      if not(legacy)&#10;      then rpc&#10;      else put(&#10;        put(&#10;          r,&#10;          &#34;method&#34;,&#10;          if r.method = &#34;message/send&#34;&#10;          then &#34;SendMessage&#34;&#10;          else if r.method = &#34;tasks/get&#34;&#10;          then &#34;GetTask&#34;&#10;          else if r.method = &#34;tasks/cancel&#34; then &#34;CancelTask&#34; else r.method&#10;        ),&#10;        &#34;params&#34;,&#10;        if r.method = &#34;message/send&#34; and p.message instance of context&#10;        then put(&#10;          put(&#10;            p,&#10;            &#34;message&#34;,&#10;            put(&#10;              put(&#10;                m,&#10;                &#34;role&#34;,&#10;                if m.role = &#34;user&#34;&#10;                then &#34;ROLE_USER&#34;&#10;                else if m.role = &#34;agent&#34; then &#34;ROLE_AGENT&#34; else m.role&#10;              ),&#10;              &#34;parts&#34;,&#10;              if m.parts instance of list&#10;              then (&#10;                for q in m.parts&#10;                return&#10;                  if q instance of context and q.kind = &#34;data&#34;&#10;                  then {data: q.data}&#10;                  else if q instance of context and q.kind = &#34;file&#34;&#10;                  then context(&#10;                    get entries(&#10;                      {&#10;                        url: q.file.uri,&#10;                        raw: q.file.bytes,&#10;                        mediaType: q.file.mimeType,&#10;                        filename: q.file.name&#10;                      }&#10;                    )[item.value != null]&#10;                  )&#10;                  else if q instance of context then {text: q.text} else q&#10;              )&#10;              else m.parts&#10;            )&#10;          ),&#10;          &#34;configuration&#34;,&#10;          if p.configuration instance of context&#10;          then put(c, &#34;returnImmediately&#34;, c.blocking = false)&#10;          else p.configuration&#10;        )&#10;        else r.params&#10;      )&#10;  }&#10;)[1][1][1][1][1]" resultVariable="normalized" />
+        <zeebe:ioMapping>
+          <zeebe:output source="=normalized.rpc" target="rpc" />
+          <zeebe:output source="=normalized.hdr" target="hdr" />
+          <zeebe:output source="=normalized.dialect" target="dialect" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RpcReceived_NormalizeRequest</bpmn:incoming>
+      <bpmn:outgoing>Flow_NormalizeRequest_ParseRequest</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="ParseRequest" name="Parse request">
+      <bpmn:extensionElements>
+        <zeebe:script expression="={&#10;  r: if rpc instance of context then rpc else {},&#10;  p: if r.params instance of context then r.params else {},&#10;  m: if p.message instance of context then p.message else {},&#10;  cfg: if p.configuration instance of context then p.configuration else {},&#10;  ct: get value(hdr, &#34;content-type&#34;),&#10;  ver: get value(hdr, &#34;a2a-version&#34;),&#10;  supported: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;  method: if r.method instance of string then r.method else null,&#10;  id: r.id,&#10;  versionOk: if ver instance of string then matches(ver, &#34;^1[.]0([.][0-9]+)?$&#34;) else false,&#10;  contentTypeOk:&#10;    if ct instance of string&#10;    then (&#10;      starts with(lower case(ct), &#34;application/json&#34;)&#10;        or starts with(lower case(ct), &#34;application/a2a+json&#34;)&#10;    )&#10;    else false,&#10;  jsonrpcOk: r.jsonrpc = &#34;2.0&#34; and method != null,&#10;  msgOk: p.message instance of context&#10;    and m.messageId instance of string&#10;    and m.role instance of string&#10;    and m.parts instance of list,&#10;  mediaOk:&#10;    if m.parts instance of list&#10;    then not(&#10;      some part in m.parts satisfies&#10;        part instance of context&#10;          and part.mediaType != null&#10;          and not(list contains(supported, part.mediaType))&#10;    )&#10;    else true,&#10;  pushMethods: [&#10;    &#34;CreateTaskPushNotificationConfig&#34;,&#10;    &#34;GetTaskPushNotificationConfig&#34;,&#10;    &#34;ListTaskPushNotificationConfigs&#34;,&#10;    &#34;DeleteTaskPushNotificationConfig&#34;&#10;  ],&#10;  pushRef:&#10;    if p.task_id instance of string&#10;    then p.task_id&#10;    else if p.taskId instance of string then p.taskId else null,&#10;  ref:&#10;    if method != null and list contains(pushMethods, method)&#10;    then pushRef&#10;    else if p.id instance of string then p.id else null,&#10;  idOk: ref instance of string and ref != &#34;&#34;,&#10;  pushEnabled: pushEnabled = true,&#10;  pushCfg: context(&#10;    get entries(&#10;      {id: p.id, url: p.url, token: p.token, authentication: p.authentication}&#10;    )[item.value != null]&#10;  ),&#10;  taskPush:&#10;    if cfg.taskPushNotificationConfig instance of context&#10;    then cfg.taskPushNotificationConfig&#10;    else if cfg.pushNotificationConfig instance of context&#10;    then {&#10;      url: cfg.pushNotificationConfig.url,&#10;      token: cfg.pushNotificationConfig.token,&#10;      authentication: {&#10;        scheme:&#10;          if cfg.pushNotificationConfig.authentication.schemes instance of list&#10;            and count(cfg.pushNotificationConfig.authentication.schemes) &#62; 0&#10;          then cfg.pushNotificationConfig.authentication.schemes[1]&#10;          else &#34;Bearer&#34;,&#10;        credentials: cfg.pushNotificationConfig.authentication.credentials&#10;      }&#10;    }&#10;    else null,&#10;  taskId: if m.taskId instance of string and m.taskId != &#34;&#34; and lower case(m.taskId) != &#34;null&#34; then m.taskId else null,&#10;  contextId: if m.contextId instance of string and m.contextId != &#34;&#34; and lower case(m.contextId) != &#34;null&#34; then m.contextId else null,&#10;  messageId: if m.messageId instance of string then m.messageId else null,&#10;  blocking: cfg.returnImmediately != true,&#10;  hl:&#10;    if cfg.historyLength instance of number&#10;    then cfg.historyLength&#10;    else if p.historyLength instance of number&#10;    then p.historyLength&#10;    else if p.history_length instance of number then p.history_length else null,&#10;  pageSize:&#10;    if p.pageSize instance of number&#10;    then p.pageSize&#10;    else if p.page_size instance of number then p.page_size else 50,&#10;  listContextId:&#10;    if p.contextId instance of string and p.contextId != &#34;&#34;&#10;    then p.contextId&#10;    else if p.context_id instance of string and p.context_id != &#34;&#34; then p.context_id else null,&#10;  listStatus: if p.status instance of string and p.status != &#34;&#34; then p.status else null,&#10;  listAfter:&#10;    if p.statusTimestampAfter instance of string&#10;    then p.statusTimestampAfter&#10;    else if p.status_timestamp_after instance of string then p.status_timestamp_after else null,&#10;  pageToken:&#10;    if p.pageToken instance of string&#10;    then p.pageToken&#10;    else if p.page_token instance of string then p.page_token else null,&#10;  includeArtifacts: p.includeArtifacts = true or p.include_artifacts = true&#10;}" resultVariable="ctx" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_NormalizeRequest_ParseRequest</bpmn:incoming>
+      <bpmn:outgoing>Flow_ParseRequest_ValidateRequest</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:businessRuleTask id="ValidateRequest" name="Validate request">
+      <bpmn:extensionElements>
+        <zeebe:calledDecision decisionId="a2a-validate" resultVariable="verdict" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ParseRequest_ValidateRequest</bpmn:incoming>
+      <bpmn:outgoing>Flow_ValidateRequest_RouteRequest</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="RouteRequest" name="Route request" default="Flow_RouteRequest_PrepareLookup">
+      <bpmn:incoming>Flow_ValidateRequest_RouteRequest</bpmn:incoming>
+      <bpmn:outgoing>Flow_RouteRequest_BuildValidationError</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteRequest_PrepareList</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteRequest_PrepareNewTask</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteRequest_PrepareLookup</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="ValidationErrorReady" name="Error response ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="={&#10;  jsonrpc: &#34;2.0&#34;,&#10;  id: ctx.id,&#10;  error:&#10;    if verdict.reason = null&#10;    then {code: verdict.code, message: verdict.message}&#10;    else {&#10;      code: verdict.code,&#10;      message: verdict.message,&#10;      data: [&#10;        {&#10;          &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;          reason: verdict.reason,&#10;          domain: &#34;a2a-protocol.org&#34;&#10;        }&#10;      ]&#10;    }&#10;}" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RouteRequest_BuildValidationError</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:scriptTask id="PrepareList" name="Prepare task list">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=(&#10;  for s in [&#10;    if ctx.listContextId != null then replace(ctx.listContextId, &#34;[^A-Za-z0-9_:.-]&#34;, &#34;_&#34;) else &#34;&#34;&#10;  ]&#10;  return {&#10;    ctxTag:&#10;      if ctx.listContextId != null&#10;      then &#34;ctx-&#34; + (if string length(s) &#62; 90 then substring(s, 1, 90) else s)&#10;      else null,&#10;    size: if ctx.pageSize &#60; 1 then 50 else if ctx.pageSize &#62; 100 then 100 else ctx.pageSize,&#10;    start:&#10;      if ctx.pageToken != null and number(ctx.pageToken) != null then number(ctx.pageToken) else 0&#10;  }&#10;)[1]" resultVariable="listReq" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RouteRequest_PrepareList</bpmn:incoming>
+      <bpmn:outgoing>Flow_PrepareList_CollectTaskList</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:endEvent id="TaskListReady" name="Task list ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=(&#10;  for taskViews in [&#10;    if is defined(taskItems) and taskItems != null&#10;    then&#10;      for i in taskItems&#10;      return (&#10;        for task in [i.value]&#10;        return (&#10;          for h in [&#10;            if ctx.hl = null or ctx.hl &#62;= count(task.history)&#10;            then task.history&#10;            else if ctx.hl &#60;= 0 then [] else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;          ]&#10;          return context(&#10;            get entries(&#10;              {&#10;                id: task.id,&#10;                contextId: task.contextId,&#10;                status: task.status,&#10;                artifacts: if count(task.artifacts) &#62; 0 then task.artifacts else null,&#10;                history: if count(h) &#62; 0 then h else null&#10;              }&#10;            )[item.value != null]&#10;          )&#10;        )[1]&#10;      )[1]&#10;    else []&#10;  ]&#10;  return (&#10;    for views in [&#10;      if is defined(taskViews) and taskViews != null then taskViews[item != null] else []&#10;    ]&#10;    return for found in [&#10;      sort(&#10;        views[&#10;          (ctx.listContextId = null or item.contextId = ctx.listContextId)&#10;            and (ctx.listStatus = null or item.status.state = ctx.listStatus)&#10;            and (ctx.listAfter = null or item.status.timestamp &#62; ctx.listAfter)&#10;        ],&#10;        function(a, b)&#10;          if a.status.timestamp = b.status.timestamp&#10;          then a.id &#62; b.id&#10;          else a.status.timestamp &#62; b.status.timestamp&#10;      )&#10;    ]&#10;    return for left in [count(found) - listReq.start]&#10;    return for page in [&#10;      if left &#60;= 0&#10;      then []&#10;      else sublist(found, listReq.start + 1, if left &#60; listReq.size then left else listReq.size)&#10;    ]&#10;    return {&#10;      jsonrpc: &#34;2.0&#34;,&#10;      id: ctx.id,&#10;      result: {&#10;        tasks:&#10;          for t in page&#10;          return&#10;            if ctx.includeArtifacts then t else context(get entries(t)[item.key != &#34;artifacts&#34;]),&#10;        nextPageToken:&#10;          if listReq.start + listReq.size &#60; count(found)&#10;          then string(listReq.start + listReq.size)&#10;          else &#34;&#34;,&#10;        pageSize: listReq.size,&#10;        totalSize: count(found)&#10;      }&#10;    }&#10;  )[1][1][1][1]&#10;)[1]" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ListCollected_BuildTaskList</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:scriptTask id="PrepareNewTask" name="Prepare new task">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=(&#10;  for cid in [if ctx.contextId != null then ctx.contextId else uuid()]&#10;  return for s in [replace(cid, &#34;[^A-Za-z0-9_:.-]&#34;, &#34;_&#34;)]&#10;  return for tid in [uuid()]&#10;  return {&#10;    taskId: tid,&#10;    contextId: cid,&#10;    ctxTag: &#34;ctx-&#34; + (if string length(s) &#62; 90 then substring(s, 1, 90) else s),&#10;    task: {&#10;      id: tid,&#10;      contextId: cid,&#10;      rev: 1,&#10;      status: {state: &#34;TASK_STATE_WORKING&#34;, timestamp: substring(string(now()), 1, 19) + &#34;Z&#34;},&#10;      artifacts: [],&#10;      history: [put(put(ctx.m, &#34;taskId&#34;, tid), &#34;contextId&#34;, cid)]&#10;    },&#10;    push:&#10;      if ctx.pushEnabled and ctx.taskPush != null&#10;      then put(&#10;        put(put(ctx.taskPush, &#34;dialect&#34;, if dialect = &#34;0.3&#34; then &#34;0.3&#34; else &#34;1.0&#34;), &#34;taskId&#34;, tid),&#10;        &#34;id&#34;,&#10;        if ctx.taskPush.id instance of string then ctx.taskPush.id else uuid()&#10;      )&#10;      else null&#10;  }&#10;)[1][1][1]" resultVariable="lookup" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RouteRequest_PrepareNewTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_PrepareNewTask_DispatchJoin</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:endEvent id="NewTaskReady" name="Task response ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=(&#10;  for task in [if seen != null then seen else lookup.task]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    result:&#10;      if task.responseMode = &#34;message&#34;&#10;        and task.status.state = &#34;TASK_STATE_COMPLETED&#34;&#10;        and task.status.message != null&#10;        and count(task.artifacts) = 0&#10;      then {message: task.status.message}&#10;      else (&#10;        for v in [&#10;          (&#10;            for h in [&#10;              if ctx.hl = null or ctx.hl &#62;= count(task.history)&#10;              then task.history&#10;              else if ctx.hl &#60;= 0&#10;              then []&#10;              else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;            ]&#10;            return context(&#10;              get entries(&#10;                {&#10;                  id: task.id,&#10;                  contextId: task.contextId,&#10;                  status: task.status,&#10;                  artifacts: if count(task.artifacts) &#62; 0 then task.artifacts else null,&#10;                  history: if count(h) &#62; 0 then h else null&#10;                }&#10;              )[item.value != null]&#10;            )&#10;          )[1]&#10;        ]&#10;        return&#10;          if &#34;task&#34; = &#34;task&#34; then {task: v} else v&#10;      )[1]&#10;  }&#10;)[1]" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RouteOutcome_BuildNewTaskResponse</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="DispatchJoin">
+      <bpmn:incoming>Flow_PrepareNewTask_DispatchJoin</bpmn:incoming>
+      <bpmn:incoming>Flow_LinkDispatch_DispatchJoin</bpmn:incoming>
+      <bpmn:outgoing>Flow_DispatchJoin_Dispatch</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:subProcess id="Dispatch" name="Hand over to task and wait for outcome">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="=if lookup.task != null&#10;then lookup.task.id + &#34;:&#34; + string(lookup.task.rev + 1)&#10;else task.id + &#34;:&#34; + string(task.rev + 1)" target="awaitKey" />
+          <zeebe:input source="=if ctx.method = &#34;CancelTask&#34; then &#34;PT5S&#34; else if ctx.blocking then &#34;PT20S&#34; else &#34;PT0S&#34;" target="wait" />
+          <zeebe:input source="=null" target="settled" />
+          <zeebe:input source="=null" target="correlated" />
+          <zeebe:output source="=if settled != null then settled else task" target="seen" />
+          <zeebe:output source="=settled != null" target="visible" />
+          <zeebe:output source="=correlated" target="correlated" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_DispatchJoin_Dispatch</bpmn:incoming>
+      <bpmn:outgoing>Flow_Dispatch_RouteOutcome</bpmn:outgoing>
+      <bpmn:startEvent id="Dispatch_Requested" name="Dispatch requested">
+        <bpmn:outgoing>Dispatch_Flow_Requested_Fork</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:parallelGateway id="Dispatch_Fork" name="Subscribe and hand over">
+        <bpmn:incoming>Dispatch_Flow_Requested_Fork</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_Fork_OutcomeFirst</bpmn:outgoing>
+        <bpmn:outgoing>Dispatch_Flow_Fork_IsNew</bpmn:outgoing>
+      </bpmn:parallelGateway>
+      <bpmn:eventBasedGateway id="Dispatch_OutcomeFirst" name="Outcome or time limit?">
+        <bpmn:incoming>Dispatch_Flow_Fork_OutcomeFirst</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_OutcomeFirst_OutcomePublished</bpmn:outgoing>
+        <bpmn:outgoing>Dispatch_Flow_OutcomeFirst_TimeLimit</bpmn:outgoing>
+      </bpmn:eventBasedGateway>
+      <bpmn:intermediateCatchEvent id="Dispatch_OutcomePublished" name="Outcome published">
+        <bpmn:incoming>Dispatch_Flow_OutcomeFirst_OutcomePublished</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_OutcomePublished_AwaitDone</bpmn:outgoing>
+        <bpmn:signalEventDefinition id="Dispatch_OutcomePublished_def" signalRef="Signal_Settled" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:intermediateCatchEvent id="Dispatch_TimeLimit" name="Time limit reached">
+        <bpmn:incoming>Dispatch_Flow_OutcomeFirst_TimeLimit</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_TimeLimit_AwaitDone</bpmn:outgoing>
+        <bpmn:timerEventDefinition id="Dispatch_TimeLimit_def">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">=wait</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:intermediateCatchEvent>
+      <bpmn:exclusiveGateway id="Dispatch_AwaitDone">
+        <bpmn:incoming>Dispatch_Flow_OutcomePublished_AwaitDone</bpmn:incoming>
+        <bpmn:incoming>Dispatch_Flow_TimeLimit_AwaitDone</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_AwaitDone_Sync</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:exclusiveGateway id="Dispatch_IsNew" name="New task?" default="Dispatch_Flow_IsNew_CorrelateTask">
+        <bpmn:incoming>Dispatch_Flow_Fork_IsNew</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_IsNew_CreateTask</bpmn:outgoing>
+        <bpmn:outgoing>Dispatch_Flow_IsNew_CorrelateTask</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:intermediateThrowEvent id="CreateTask" name="Start task" zeebe:modelerTemplate="io.camunda.connectors.message.intermediate.v1" zeebe:modelerTemplateVersion="0" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMTguNSIgdmlld0JveD0iMyA5IDMwIDE4LjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTguNyAxNC43MjVDOC41MTY2NyAxNC45MDgzIDguMjgzMzMgMTUgOCAxNUM3LjcxNjY3IDE1IDcuNDc1IDE0LjkwODMgNy4yNzUgMTQuNzI1QzcuMDkxNjcgMTQuNTI1IDcgMTQuMjgzMyA3IDE0QzcgMTMuNzE2NyA3LjA5MTY3IDEzLjQ4MzMgNy4yNzUgMTMuM0M3LjQ3NSAxMy4xIDcuNzE2NjcgMTMgOCAxM0M4LjI4MzMzIDEzIDguNTE2NjcgMTMuMSA4LjcgMTMuM0M4LjkgMTMuNDgzMyA5IDEzLjcxNjcgOSAxNEM5IDE0LjI4MzMgOC45IDE0LjUyNSA4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMTQuNyAxNC43MjVDMTQuNTE2NyAxNC45MDgzIDE0LjI4MzMgMTUgMTQgMTVDMTMuNzE2NyAxNSAxMy40NzUgMTQuOTA4MyAxMy4yNzUgMTQuNzI1QzEzLjA5MTcgMTQuNTI1IDEzIDE0LjI4MzMgMTMgMTRDMTMgMTMuNzE2NyAxMy4wOTE3IDEzLjQ4MzMgMTMuMjc1IDEzLjNDMTMuNDc1IDEzLjEgMTMuNzE2NyAxMyAxNCAxM0MxNC4yODMzIDEzIDE0LjUxNjcgMTMuMSAxNC43IDEzLjNDMTQuOSAxMy40ODMzIDE1IDEzLjcxNjcgMTUgMTRDMTUgMTQuMjgzMyAxNC45IDE0LjUyNSAxNC43IDE0LjcyNVoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTIyLjcgMTQuNzI1QzIyLjUxNjcgMTQuOTA4MyAyMi4yODMzIDE1IDIyIDE1QzIxLjcxNjcgMTUgMjEuNDc1IDE0LjkwODMgMjEuMjc1IDE0LjcyNUMyMS4wOTE3IDE0LjUyNSAyMSAxNC4yODMzIDIxIDE0QzIxIDEzLjcxNjcgMjEuMDkxNyAxMy40ODMzIDIxLjI3NSAxMy4zQzIxLjQ3NSAxMy4xIDIxLjcxNjcgMTMgMjIgMTNDMjIuMjgzMyAxMyAyMi41MTY3IDEzLjEgMjIuNyAxMy4zQzIyLjkgMTMuNDgzMyAyMyAxMy43MTY3IDIzIDE0QzIzIDE0LjI4MzMgMjIuOSAxNC41MjUgMjIuNyAxNC43MjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0yOC43IDE0LjcyNUMyOC41MTY3IDE0LjkwODMgMjguMjgzMyAxNSAyOCAxNUMyNy43MTY3IDE1IDI3LjQ3NSAxNC45MDgzIDI3LjI3NSAxNC43MjVDMjcuMDkxNyAxNC41MjUgMjcgMTQuMjgzMyAyNyAxNEMyNyAxMy43MTY3IDI3LjA5MTcgMTMuNDgzMyAyNy4yNzUgMTMuM0MyNy40NzUgMTMuMSAyNy43MTY3IDEzIDI4IDEzQzI4LjI4MzMgMTMgMjguNTE2NyAxMy4xIDI4LjcgMTMuM0MyOC45IDEzLjQ4MzMgMjkgMTMuNzE2NyAyOSAxNEMyOSAxNC4yODMzIDI4LjkgMTQuNTI1IDI4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUgMTRDNSAxMi4zNDMxIDYuMzQzMTUgMTEgOCAxMUgxNEMxNC43NzYgMTEgMTUuMjg0IDExLjE1MzcgMTUuNjQgMTEuMzgxOEMxNS44NTg5IDEwLjc5NCAxNi4xNTE3IDEwLjE3MDkgMTYuNTU1IDkuNTk3OTVDMTUuODc5NyA5LjIxMTUzIDE1LjAzODYgOSAxNCA5SDhDNS4yMzg1OCA5IDMgMTEuMjM4NiAzIDE0QzMgMTYuNzYxMiA1LjIzNzU5IDE5IDcuOTk5MjYgMTlIMTRDMTUuNzYzNCAxOSAxNi45NTczIDE4LjM5MDIgMTcuNzM3NSAxNy4zNUMxOC40MjI4IDE2LjQzNjMgMTguNzE0OCAxNS4yNjYgMTguOTQ4MyAxNC4zMjk5TDE4Ljk3MDEgMTQuMjQyNUMxOS4yMzI3IDEzLjE5MjQgMTkuNDQ0MiAxMi40MDc3IDE5Ljg2MjUgMTEuODVDMjAuMjA3MyAxMS4zOTAyIDIwLjc2MzQgMTEgMjIgMTFIMjguMDAwNUMyOS42NTcyIDExIDMxIDEyLjM0MyAzMSAxNEMzMSAxNS42NTY5IDI5LjY1NjkgMTcgMjggMTdIMjJDMjEuMjI0IDE3IDIwLjcxNiAxNi44NDYzIDIwLjM2IDE2LjYxODJDMjAuMTQxMSAxNy4yMDYgMTkuODQ4MyAxNy44MjkxIDE5LjQ0NSAxOC40MDJDMjAuMTIwMyAxOC43ODg1IDIwLjk2MTQgMTkgMjIgMTlIMjhDMzAuNzYxNCAxOSAzMyAxNi43NjE0IDMzIDE0QzMzIDExLjIzODggMzAuNzYyMSA5IDI4LjAwMDUgOUgyMkMyMC4yMzY2IDkgMTkuMDQyNyA5LjYwOTc5IDE4LjI2MjUgMTAuNjVDMTcuNTc3MiAxMS41NjM3IDE3LjI4NTIgMTIuNzM0IDE3LjA1MTcgMTMuNjcwMUwxNy4wMjk5IDEzLjc1NzVDMTYuNzY3MyAxNC44MDc2IDE2LjU1NTggMTUuNTkyMyAxNi4xMzc1IDE2LjE1QzE1Ljc5MjcgMTYuNjA5OCAxNS4yMzY2IDE3IDE0IDE3SDcuOTk5MjZDNi4zNDI2NSAxNyA1IDE1LjY1NzEgNSAxNFoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTcgMjMuNUM2LjcxNjY3IDIzLjUgNi40NzUgMjMuNDA4MyA2LjI3NSAyMy4yMjVDNi4wOTE2NyAyMy4wMjUgNiAyMi43ODMzIDYgMjIuNUM2IDIyLjIxNjcgNi4wOTE2NyAyMS45ODMzIDYuMjc1IDIxLjhDNi40NzUgMjEuNiA2LjcxNjY3IDIxLjUgNyAyMS41SDEyQzEyLjI4MzMgMjEuNSAxMi41MTY3IDIxLjYgMTIuNyAyMS44QzEyLjkgMjEuOTgzMyAxMyAyMi4yMTY3IDEzIDIyLjVDMTMgMjIuNzgzMyAxMi45IDIzLjAyNSAxMi43IDIzLjIyNUMxMi41MTY3IDIzLjQwODMgMTIuMjgzMyAyMy41IDEyIDIzLjVIN1pNNSAyNy41QzQuNzE2NjcgMjcuNSA0LjQ3NSAyNy40MDgzIDQuMjc1IDI3LjIyNUM0LjA5MTY3IDI3LjAyNSA0IDI2Ljc4MzMgNCAyNi41QzQgMjYuMjE2NyA0LjA5MTY3IDI1Ljk4MzMgNC4yNzUgMjUuOEM0LjQ3NSAyNS42IDQuNzE2NjcgMjUuNSA1IDI1LjVIOEM4LjI4MzMzIDI1LjUgOC41MTY2NyAyNS42IDguNyAyNS44QzguOSAyNS45ODMzIDkgMjYuMjE2NyA5IDI2LjVDOSAyNi43ODMzIDguOSAyNy4wMjUgOC43IDI3LjIyNUM4LjUxNjY3IDI3LjQwODMgOC4yODMzMyAyNy41IDggMjcuNUg1Wk0xMiAyNy41QzExLjcxNjcgMjcuNSAxMS40NzUgMjcuNDA4MyAxMS4yNzUgMjcuMjI1QzExLjA5MTcgMjcuMDI1IDExIDI2Ljc4MzMgMTEgMjYuNUMxMSAyNi4yMTY3IDExLjA5MTcgMjUuOTgzMyAxMS4yNzUgMjUuOEMxMS40NzUgMjUuNiAxMS43MTY3IDI1LjUgMTIgMjUuNUgyMEMyMC4yODMzIDI1LjUgMjAuNTE2NyAyNS42IDIwLjcgMjUuOEMyMC45IDI1Ljk4MzMgMjEgMjYuMjE2NyAyMSAyNi41QzIxIDI2Ljc4MzMgMjAuOSAyNy4wMjUgMjAuNyAyNy4yMjVDMjAuNTE2NyAyNy40MDgzIDIwLjI4MzMgMjcuNSAyMCAyNy41SDEyWk0yOCAyNy41QzI3LjcxNjcgMjcuNSAyNy40NzUgMjcuNDA4MyAyNy4yNzUgMjcuMjI1QzI3LjA5MTcgMjcuMDI1IDI3IDI2Ljc4MzMgMjcgMjYuNUMyNyAyNi4yMTY3IDI3LjA5MTcgMjUuOTgzMyAyNy4yNzUgMjUuOEMyNy40NzUgMjUuNiAyNy43MTY3IDI1LjUgMjggMjUuNUgzMkMzMi4yODMzIDI1LjUgMzIuNTE2NyAyNS42IDMyLjcgMjUuOEMzMi45IDI1Ljk4MzMgMzMgMjYuMjE2NyAzMyAyNi41QzMzIDI2Ljc4MzMzMi45IDI3LjAyNSAzMi43IDI3LjIyNUMzMi41MTY3IDI3LjQwODMgMzIuMjgzMyAyNy41IDMyIDI3LjVIMjhaTTE2IDIzLjVDMTUuNzE2NyAyMy41IDE1LjQ3NSAyMy40MDgzIDE1LjI3NSAyMy4yMjVDMTUuMDkxNyAyMy4wMjUgMTUgMjIuNzgzMyAxNSAyMi41QzE1IDIyLjIxNjcgMTUuMDkxNyAyMS45ODMzIDE1LjI3NSAyMS44QzE1LjQ3NSAyMS42IDE1LjcxNjcgMjEuNSAxNiAyMS41QzE2LjI4MzMgMjEuNSAxNi41MTY3IDIxLjYgMTYuNyAyMS44QzE2LjkgMjEuOTgzMyAxNyAyMi4yMTY3IDE3IDIyLjVDMTcgMjIuNzgzMyAxNi45IDIzLjAyNSAxNi43IDIzLjIyNUMxNi41MTY3IDIzLjQwODMgMTYuMjgzMyAyMy41IDE2IDIzLjVaTTI0IDI3LjVDMjMuNzE2NyAyNy41IDIzLjQ3NSAyNy40MDgzIDIzLjI3NSAyNy4yMjVDMjMuMDkxNyAyNy4wMjUgMjMgMjYuNzgzMyAyMyAyNi41QzIzIDI2LjIxNjcgMjMuMDkxNyAyNS45ODMzIDIzLjI3NSAyNS44QzIzLjQ3NSAyNS42IDIzLjcxNjcgMjUuNSAyNCAyNS41QzI0LjI4MzMgMjUuNSAyNC41MTY3IDI1LjYgMjQuNyAyNS44QzI0LjkgMjUuOTgzMyAyNSAyNi4yMTY3IDI1IDI2LjVDMjUgMjYuNzgzMyAyNC45IDI3LjAyNSAyNC43IDI3LjIyNUMyNC41MTY3IDI3LjQwODMgMjQuMjgzMyAyNy41IDI0IDI3LjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0xOS4yNzUgMjMuMjI1QzE5LjQ3NSAyMy40MDgzIDE5LjcxNjcgMjMuNSAyMCAyMy41SDIzQzIzLjI4MzMgMjMuNSAyMy41MTY3IDIzLjQwODMgMjMuNyAyMy4yMjVDMjMuOSAyMy4wMjUgMjQgMjIuNzgzMyAyNCAyMi41QzI0IDIyLjIxNjcgMjMuOSAyMS45ODMzIDIzLjcgMjEuOEMyMy41MTY3IDIxLjYgMjMuMjgzMyAyMS41IDIzIDIxLjVIMjBDMTkuNzE2NyAyMS41IDE5LjQ3NSAyMS42IDE5LjI3NSAyMS44QzE5LjA5MTcgMjEuOTgzMyAxOSAyMi4yMTY3IDE5IDIyLjVDMTkgMjIuNzgzMyAxOS4wOTE3IDIzLjAyNSAxOS4yNzUgMjMuMjI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMjYuMjc1IDIzLjIyNUMyNi40NzUgMjMuNDA4MyAyNi43MTY3IDIzLjUgMjcgMjMuNUgzMEMzMC4yODMzIDIzLjUgMzAuNTE2NyAyMy40MDgzIDMwLjcgMjMuMjI1QzMwLjkgMjMuMDI1IDMxIDIyLjc4MzMgMzEgMjIuNUMzMSAyMi4yMTY3IDMwLjkgMjEuOTgzMyAzMC43IDIxLjhDMzAuNTE2NyAyMS42IDMwLjI4MzMgMjEuNSAzMCAyMS41SDI3QzI2LjcxNjcgMjEuNSAyNi40NzUgMjEuNiAyNi4yNzUgMjEuOEMyNi4wOTE3IDIxLjk4MzMgMjYgMjIuMjE2NyAyNiAyMi41QzI2IDIyLjc4MzMgMjYuMDkxNyAyMy4wMjUgMjYuMjc1IDIzLjIyNVoiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPg==">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="io.camunda:sendMessage:1" retries="3" />
+          <zeebe:ioMapping>
+            <zeebe:input source="a2a-start" target="messageName" />
+            <zeebe:input source="=lookup.taskId" target="correlationKey" />
+            <zeebe:input source="={&#10;  task: lookup.task,&#10;  push: lookup.push,&#10;  req: {message: ctx.m, blocking: ctx.blocking, hl: ctx.hl},&#10;  taskId: lookup.taskId,&#10;  ctxTag: lookup.ctxTag&#10;}" target="variables" />
+            <zeebe:input source="publish" target="correlationType.type" />
+            <zeebe:input source="PT0S" target="correlationType.timeToLive" />
+            <zeebe:input source="=lookup.taskId" target="correlationType.messageId" />
+          </zeebe:ioMapping>
+          <zeebe:taskHeaders>
+            <zeebe:header key="elementTemplateVersion" value="0" />
+            <zeebe:header key="elementTemplateId" value="io.camunda.connectors.message.v1" />
+            <zeebe:header key="retryBackoff" value="PT30S" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Dispatch_Flow_IsNew_CreateTask</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_CreateTask_TriggerDone</bpmn:outgoing>
+        <bpmn:messageEventDefinition id="CreateTask_def" />
+      </bpmn:intermediateThrowEvent>
+      <bpmn:subProcess id="CorrelateTask" name="Hand message to the task">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:input source="=if ctx.method = &#34;CancelTask&#34; then &#34;a2a-cancel&#34; else &#34;a2a-send&#34;" target="messageName" />
+            <zeebe:input source="=task.id" target="taskId" />
+            <zeebe:input source="=3" target="tries" />
+            <zeebe:input source="=if ctx.method = &#34;CancelTask&#34;&#10;then {}&#10;else {followUp: {message: ctx.m, blocking: ctx.blocking, hl: ctx.hl}}" target="payload" />
+            <zeebe:input source="=null" target="attempt" />
+            <zeebe:input source="=null" target="correlated" />
+            <zeebe:output source="=correlated" target="correlated" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Dispatch_Flow_IsNew_CorrelateTask</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_CorrelateTask_Correlated</bpmn:outgoing>
+        <bpmn:startEvent id="CorrelateTask_CorrelateRequested" name="Correlation requested">
+          <bpmn:outgoing>CorrelateTask_Flow_CorrelateRequested_ResetAttempts</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:scriptTask id="CorrelateTask_ResetAttempts" name="Reset attempts">
+          <bpmn:extensionElements>
+            <zeebe:script expression="=0" resultVariable="attempt" />
+          </bpmn:extensionElements>
+          <bpmn:incoming>CorrelateTask_Flow_CorrelateRequested_ResetAttempts</bpmn:incoming>
+          <bpmn:outgoing>CorrelateTask_Flow_ResetAttempts_TryJoin</bpmn:outgoing>
+        </bpmn:scriptTask>
+        <bpmn:exclusiveGateway id="CorrelateTask_TryJoin" name="Try correlation">
+          <bpmn:incoming>CorrelateTask_Flow_ResetAttempts_TryJoin</bpmn:incoming>
+          <bpmn:incoming>CorrelateTask_Flow_WaitBeforeRetry_TryJoin</bpmn:incoming>
+          <bpmn:outgoing>CorrelateTask_Flow_TryJoin_CorrelateMessage</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:serviceTask id="CorrelateTask_CorrelateMessage" name="Correlate message" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+          <bpmn:extensionElements>
+            <zeebe:taskDefinition type="io.camunda:http-json:1" retries="1" />
+            <zeebe:ioMapping>
+              <zeebe:input source="noAuth" target="authentication.type" />
+              <zeebe:input source="POST" target="method" />
+              <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/messages/correlation&#34;" target="url" />
+              <zeebe:input source="=false" target="followRedirects" />
+              <zeebe:input source="JSON" target="documentReturnFormat.choice" />
+              <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
+              <zeebe:input source="=20" target="readTimeoutInSeconds" />
+              <zeebe:input source="={name: messageName, correlationKey: taskId, variables: payload}" target="body" />
+              <zeebe:input source="true" target="ignoreNullValues" />
+            </zeebe:ioMapping>
+            <zeebe:taskHeaders>
+              <zeebe:header key="elementTemplateVersion" value="13" />
+              <zeebe:header key="elementTemplateId" value="io.camunda.connectors.HttpJson.v2" />
+              <zeebe:header key="resultExpression" value="={}" />
+              <zeebe:header key="errorExpression" value="=if string(error.code) = &#34;404&#34;&#10;then bpmnError(&#34;NOT_FOUND&#34;, &#34;not found&#34;)&#10;else if string(error.code) = &#34;409&#34; then bpmnError(&#34;CONFLICT&#34;, &#34;already exists&#34;) else null" />
+            </zeebe:taskHeaders>
+          </bpmn:extensionElements>
+          <bpmn:incoming>CorrelateTask_Flow_TryJoin_CorrelateMessage</bpmn:incoming>
+          <bpmn:outgoing>CorrelateTask_Flow_CorrelateMessage_MarkCorrelated</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:endEvent id="CorrelateTask_Correlated" name="Correlated">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=true" target="correlated" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+          <bpmn:incoming>CorrelateTask_Flow_CorrelateMessage_MarkCorrelated</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:scriptTask id="CorrelateTask_CountAttempt" name="Count attempt">
+          <bpmn:extensionElements>
+            <zeebe:script expression="=attempt + 1" resultVariable="attempt" />
+          </bpmn:extensionElements>
+          <bpmn:incoming>CorrelateTask_Flow_NoSubscription_CountAttempt</bpmn:incoming>
+          <bpmn:outgoing>CorrelateTask_Flow_CountAttempt_AttemptsLeft</bpmn:outgoing>
+        </bpmn:scriptTask>
+        <bpmn:exclusiveGateway id="CorrelateTask_AttemptsLeft" name="Attempts left?" default="CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated">
+          <bpmn:incoming>CorrelateTask_Flow_CountAttempt_AttemptsLeft</bpmn:incoming>
+          <bpmn:outgoing>CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry</bpmn:outgoing>
+          <bpmn:outgoing>CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated</bpmn:outgoing>
+        </bpmn:exclusiveGateway>
+        <bpmn:intermediateCatchEvent id="CorrelateTask_WaitBeforeRetry" name="Wait before retry">
+          <bpmn:incoming>CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry</bpmn:incoming>
+          <bpmn:outgoing>CorrelateTask_Flow_WaitBeforeRetry_TryJoin</bpmn:outgoing>
+          <bpmn:timerEventDefinition id="CorrelateTask_WaitBeforeRetry_def">
+            <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">="PT0.3S"</bpmn:timeDuration>
+          </bpmn:timerEventDefinition>
+        </bpmn:intermediateCatchEvent>
+        <bpmn:endEvent id="CorrelateTask_NotCorrelated" name="Not correlated">
+          <bpmn:extensionElements>
+            <zeebe:ioMapping>
+              <zeebe:output source="=false" target="correlated" />
+            </zeebe:ioMapping>
+          </bpmn:extensionElements>
+          <bpmn:incoming>CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:boundaryEvent id="CorrelateTask_NoSubscription" name="No subscription yet" attachedToRef="CorrelateTask_CorrelateMessage">
+          <bpmn:outgoing>CorrelateTask_Flow_NoSubscription_CountAttempt</bpmn:outgoing>
+          <bpmn:errorEventDefinition id="CorrelateTask_NoSubscription_def" errorRef="NotFound" />
+        </bpmn:boundaryEvent>
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_CorrelateRequested_ResetAttempts" sourceRef="CorrelateTask_CorrelateRequested" targetRef="CorrelateTask_ResetAttempts" />
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_ResetAttempts_TryJoin" sourceRef="CorrelateTask_ResetAttempts" targetRef="CorrelateTask_TryJoin" />
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_WaitBeforeRetry_TryJoin" sourceRef="CorrelateTask_WaitBeforeRetry" targetRef="CorrelateTask_TryJoin" />
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_TryJoin_CorrelateMessage" sourceRef="CorrelateTask_TryJoin" targetRef="CorrelateTask_CorrelateMessage" />
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_CorrelateMessage_MarkCorrelated" sourceRef="CorrelateTask_CorrelateMessage" targetRef="CorrelateTask_Correlated" />
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_NoSubscription_CountAttempt" sourceRef="CorrelateTask_NoSubscription" targetRef="CorrelateTask_CountAttempt" />
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_CountAttempt_AttemptsLeft" sourceRef="CorrelateTask_CountAttempt" targetRef="CorrelateTask_AttemptsLeft" />
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry" name="yes" sourceRef="CorrelateTask_AttemptsLeft" targetRef="CorrelateTask_WaitBeforeRetry">
+          <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=attempt &lt; tries</bpmn:conditionExpression>
+        </bpmn:sequenceFlow>
+        <bpmn:sequenceFlow id="CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated" name="no" sourceRef="CorrelateTask_AttemptsLeft" targetRef="CorrelateTask_NotCorrelated" />
+      </bpmn:subProcess>
+      <bpmn:exclusiveGateway id="Dispatch_Correlated" name="Task accepted it?" default="Dispatch_Flow_Correlated_NotHandled">
+        <bpmn:incoming>Dispatch_Flow_CorrelateTask_Correlated</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_Correlated_TriggerDone</bpmn:outgoing>
+        <bpmn:outgoing>Dispatch_Flow_Correlated_NotHandled</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="Dispatch_NotHandled" name="Task did not accept it">
+        <bpmn:incoming>Dispatch_Flow_Correlated_NotHandled</bpmn:incoming>
+        <bpmn:terminateEventDefinition id="Dispatch_NotHandled_def" />
+      </bpmn:endEvent>
+      <bpmn:exclusiveGateway id="Dispatch_TriggerDone">
+        <bpmn:incoming>Dispatch_Flow_CreateTask_TriggerDone</bpmn:incoming>
+        <bpmn:incoming>Dispatch_Flow_Correlated_TriggerDone</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_TriggerDone_Sync</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:parallelGateway id="Dispatch_Sync" name="Handed over and outcome known">
+        <bpmn:incoming>Dispatch_Flow_AwaitDone_Sync</bpmn:incoming>
+        <bpmn:incoming>Dispatch_Flow_TriggerDone_Sync</bpmn:incoming>
+        <bpmn:outgoing>Dispatch_Flow_Sync_Done</bpmn:outgoing>
+      </bpmn:parallelGateway>
+      <bpmn:endEvent id="Dispatch_Done" name="Done">
+        <bpmn:incoming>Dispatch_Flow_Sync_Done</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Dispatch_Flow_Requested_Fork" sourceRef="Dispatch_Requested" targetRef="Dispatch_Fork" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_Fork_OutcomeFirst" sourceRef="Dispatch_Fork" targetRef="Dispatch_OutcomeFirst" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_Fork_IsNew" sourceRef="Dispatch_Fork" targetRef="Dispatch_IsNew" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_OutcomeFirst_OutcomePublished" sourceRef="Dispatch_OutcomeFirst" targetRef="Dispatch_OutcomePublished" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_OutcomeFirst_TimeLimit" sourceRef="Dispatch_OutcomeFirst" targetRef="Dispatch_TimeLimit" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_OutcomePublished_AwaitDone" sourceRef="Dispatch_OutcomePublished" targetRef="Dispatch_AwaitDone" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_TimeLimit_AwaitDone" sourceRef="Dispatch_TimeLimit" targetRef="Dispatch_AwaitDone" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_AwaitDone_Sync" sourceRef="Dispatch_AwaitDone" targetRef="Dispatch_Sync" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_IsNew_CreateTask" name="yes" sourceRef="Dispatch_IsNew" targetRef="CreateTask">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=lookup.task != null</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Dispatch_Flow_IsNew_CorrelateTask" name="no" sourceRef="Dispatch_IsNew" targetRef="CorrelateTask" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_CreateTask_TriggerDone" sourceRef="CreateTask" targetRef="Dispatch_TriggerDone" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_CorrelateTask_Correlated" sourceRef="CorrelateTask" targetRef="Dispatch_Correlated" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_Correlated_TriggerDone" name="yes" sourceRef="Dispatch_Correlated" targetRef="Dispatch_TriggerDone">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=correlated = true</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Dispatch_Flow_Correlated_NotHandled" name="no" sourceRef="Dispatch_Correlated" targetRef="Dispatch_NotHandled" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_TriggerDone_Sync" sourceRef="Dispatch_TriggerDone" targetRef="Dispatch_Sync" />
+      <bpmn:sequenceFlow id="Dispatch_Flow_Sync_Done" sourceRef="Dispatch_Sync" targetRef="Dispatch_Done" />
+    </bpmn:subProcess>
+    <bpmn:scriptTask id="PrepareLookup" name="Prepare lookup">
+      <bpmn:extensionElements>
+        <zeebe:script expression="={&#10;  taskId: if ctx.method = &#34;SendMessage&#34; then ctx.taskId else ctx.ref,&#10;  indexDeadline: string(now() + duration(&#34;PT3S&#34;))&#10;}" resultVariable="lookup" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RouteRequest_PrepareLookup</bpmn:incoming>
+      <bpmn:outgoing>Flow_PrepareLookup_LookupJoin</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:serviceTask id="FindTask" name="Find task" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/process-instances/search&#34;" target="url" />
+          <zeebe:input source="=false" target="followRedirects" />
+          <zeebe:input source="JSON" target="documentReturnFormat.choice" />
+          <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="=20" target="readTimeoutInSeconds" />
+          <zeebe:input source="={filter: {processDefinitionId: &#34;a2a-task&#34;, variables: [{name: &#34;taskId&#34;, value: &#34;\&#34;&#34; + lookup.taskId + &#34;\&#34;&#34;}]}, page: {limit: 1}}" target="body" />
+          <zeebe:input source="true" target="ignoreNullValues" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="elementTemplateVersion" value="13" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connectors.HttpJson.v2" />
+          <zeebe:header key="resultExpression" value="={found: if count(response.body.items) &#62; 0 then response.body.items[1].processInstanceKey else null}" />
+          <zeebe:header key="errorExpression" value="=if string(error.code) = &#34;404&#34;&#10;then bpmnError(&#34;NOT_FOUND&#34;, &#34;not found&#34;)&#10;else if string(error.code) = &#34;409&#34; then bpmnError(&#34;CONFLICT&#34;, &#34;already exists&#34;) else null" />
+          <zeebe:header key="retryBackoff" value="PT30S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_LookupJoin_FindTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_FindTask_ReadTask</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="TaskKnown" name="Task known?" default="Flow_TaskKnown_LookupTimeLeft">
+      <bpmn:incoming>Flow_ReadTask_TaskKnown</bpmn:incoming>
+      <bpmn:outgoing>Flow_TaskKnown_RouteMethod</bpmn:outgoing>
+      <bpmn:outgoing>Flow_TaskKnown_LookupTimeLeft</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ReadTask" name="Read task" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/variables/search?truncateValues=false&#34;" target="url" />
+          <zeebe:input source="=false" target="followRedirects" />
+          <zeebe:input source="JSON" target="documentReturnFormat.choice" />
+          <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="=20" target="readTimeoutInSeconds" />
+          <zeebe:input source="={&#10;  filter: {&#10;    name: &#34;task&#34;,&#10;    processInstanceKey: if found != null then found else &#34;0&#34;,&#10;    scopeKey: if found != null then found else &#34;0&#34;&#10;  },&#10;  page: {limit: 1}&#10;}" target="body" />
+          <zeebe:input source="true" target="ignoreNullValues" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="elementTemplateVersion" value="13" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connectors.HttpJson.v2" />
+          <zeebe:header key="resultExpression" value="={task: if count(response.body.items) &#62; 0 then from json(response.body.items[1].value) else null}" />
+          <zeebe:header key="errorExpression" value="=if string(error.code) = &#34;404&#34;&#10;then bpmnError(&#34;NOT_FOUND&#34;, &#34;not found&#34;)&#10;else if string(error.code) = &#34;409&#34; then bpmnError(&#34;CONFLICT&#34;, &#34;already exists&#34;) else null" />
+          <zeebe:header key="retryBackoff" value="PT30S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_FindTask_ReadTask</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReadTask_TaskKnown</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="RouteMethod" name="Method" default="Flow_RouteMethod_NotFoundJoin">
+      <bpmn:incoming>Flow_TaskKnown_RouteMethod</bpmn:incoming>
+      <bpmn:outgoing>Flow_RouteMethod_NotFoundJoin</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteMethod_BuildTaskView</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteMethod_Cancelable</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteMethod_CheckFollowUp</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="NotFoundReady" name="Not found response ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=(&#10;  for e in [{code: -32001, message: &#34;Task not found&#34;, reason: &#34;TASK_NOT_FOUND&#34;}]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_NotFoundJoin_BuildNotFound</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="TaskViewReady" name="Task response ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="={&#10;  jsonrpc: &#34;2.0&#34;,&#10;  id: ctx.id,&#10;  result: (&#10;    for h in [&#10;      if ctx.hl = null or ctx.hl &#62;= count(task.history)&#10;      then task.history&#10;      else if ctx.hl &#60;= 0 then [] else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;    ]&#10;    return context(&#10;      get entries(&#10;        {&#10;          id: task.id,&#10;          contextId: task.contextId,&#10;          status: task.status,&#10;          artifacts: if count(task.artifacts) &#62; 0 then task.artifacts else null,&#10;          history: if count(h) &#62; 0 then h else null&#10;        }&#10;      )[item.value != null]&#10;    )&#10;  )[1]&#10;}" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RouteMethod_BuildTaskView</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Cancelable" name="Cancelable?" default="Flow_Cancelable_NotCancelableJoin">
+      <bpmn:incoming>Flow_RouteMethod_Cancelable</bpmn:incoming>
+      <bpmn:outgoing>Flow_Cancelable_NotCancelableJoin</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Cancelable_DispatchJoin</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="CanceledReady" name="Cancel response ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="={&#10;  jsonrpc: &#34;2.0&#34;,&#10;  id: ctx.id,&#10;  result: (&#10;    for h in [&#10;      if null = null or null &#62;= count(seen.history)&#10;      then seen.history&#10;      else if null &#60;= 0 then [] else sublist(seen.history, count(seen.history) - null + 1)&#10;    ]&#10;    return context(&#10;      get entries(&#10;        {&#10;          id: seen.id,&#10;          contextId: seen.contextId,&#10;          status: seen.status,&#10;          artifacts: if count(seen.artifacts) &#62; 0 then seen.artifacts else null,&#10;          history: if count(h) &#62; 0 then h else null&#10;        }&#10;      )[item.value != null]&#10;    )&#10;  )[1]&#10;}" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_CancellationOutcome_BuildCanceledView</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="NotCancelableReady" name="Not cancelable response ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=(&#10;  for e in [&#10;    {&#10;      code: -32002,&#10;      message: &#34;The task has already finished or cannot be canceled&#34;,&#10;      reason: &#34;TASK_NOT_CANCELABLE&#34;&#10;    }&#10;  ]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_NotCancelableJoin_BuildNotCancelable</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:scriptTask id="CheckFollowUp" name="Check follow-up">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=if ctx.contextId != null and ctx.contextId != task.contextId&#10;then {code: -32602, message: &#34;contextId does not match the task&#34;}&#10;else if list contains(&#10;  [&#34;TASK_STATE_COMPLETED&#34;, &#34;TASK_STATE_CANCELED&#34;, &#34;TASK_STATE_FAILED&#34;, &#34;TASK_STATE_REJECTED&#34;],&#10;  task.status.state&#10;)&#10;then {&#10;  code: -32004,&#10;  message: &#34;Task is in a terminal state and cannot accept messages&#34;,&#10;  reason: &#34;UNSUPPORTED_OPERATION&#34;&#10;}&#10;else null" resultVariable="followError" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RouteMethod_CheckFollowUp</bpmn:incoming>
+      <bpmn:outgoing>Flow_CheckFollowUp_FollowUpAccepted</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:exclusiveGateway id="FollowUpAccepted" name="Accepted?" default="Flow_FollowUpAccepted_FollowUpErrorJoin">
+      <bpmn:incoming>Flow_CheckFollowUp_FollowUpAccepted</bpmn:incoming>
+      <bpmn:outgoing>Flow_FollowUpAccepted_DispatchJoin</bpmn:outgoing>
+      <bpmn:outgoing>Flow_FollowUpAccepted_FollowUpErrorJoin</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="RouteOutcome" name="Outcome" default="Flow_RouteOutcome_FollowUpErrorJoin">
+      <bpmn:incoming>Flow_Dispatch_RouteOutcome</bpmn:incoming>
+      <bpmn:outgoing>Flow_RouteOutcome_BuildNewTaskResponse</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteOutcome_CancellationOutcome</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteOutcome_BuildFollowUpResponse</bpmn:outgoing>
+      <bpmn:outgoing>Flow_RouteOutcome_FollowUpErrorJoin</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="FollowUpReady" name="Task response ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=(&#10;  for task in [if seen != null then seen else task]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    result:&#10;      if task.responseMode = &#34;message&#34;&#10;        and task.status.state = &#34;TASK_STATE_COMPLETED&#34;&#10;        and task.status.message != null&#10;        and count(task.artifacts) = 0&#10;      then {message: task.status.message}&#10;      else (&#10;        for v in [&#10;          (&#10;            for h in [&#10;              if ctx.hl = null or ctx.hl &#62;= count(task.history)&#10;              then task.history&#10;              else if ctx.hl &#60;= 0&#10;              then []&#10;              else sublist(task.history, count(task.history) - ctx.hl + 1)&#10;            ]&#10;            return context(&#10;              get entries(&#10;                {&#10;                  id: task.id,&#10;                  contextId: task.contextId,&#10;                  status: task.status,&#10;                  artifacts: if count(task.artifacts) &#62; 0 then task.artifacts else null,&#10;                  history: if count(h) &#62; 0 then h else null&#10;                }&#10;              )[item.value != null]&#10;            )&#10;          )[1]&#10;        ]&#10;        return&#10;          if &#34;task&#34; = &#34;task&#34; then {task: v} else v&#10;      )[1]&#10;  }&#10;)[1]" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_RouteOutcome_BuildFollowUpResponse</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="FollowUpErrorReady" name="Error response ready">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=(&#10;  for e in [&#10;    if followError != null&#10;    then followError&#10;    else {code: -32004, message: &#34;Task is not waiting for input&#34;, reason: &#34;UNSUPPORTED_OPERATION&#34;}&#10;  ]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_FollowUpErrorJoin_BuildFollowUpError</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_RpcReceived_NormalizeRequest" sourceRef="RpcReceived" targetRef="NormalizeRequest" />
+    <bpmn:sequenceFlow id="Flow_NormalizeRequest_ParseRequest" sourceRef="NormalizeRequest" targetRef="ParseRequest" />
+    <bpmn:sequenceFlow id="Flow_ParseRequest_ValidateRequest" sourceRef="ParseRequest" targetRef="ValidateRequest" />
+    <bpmn:sequenceFlow id="Flow_ValidateRequest_RouteRequest" sourceRef="ValidateRequest" targetRef="RouteRequest" />
+    <bpmn:sequenceFlow id="Flow_RouteRequest_BuildValidationError" name="invalid" sourceRef="RouteRequest" targetRef="ValidationErrorReady">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=verdict.route = "error"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RouteRequest_PrepareList" name="list" sourceRef="RouteRequest" targetRef="PrepareList">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=verdict.route = "ListTasks"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RouteRequest_PrepareNewTask" name="new task" sourceRef="RouteRequest" targetRef="PrepareNewTask">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=verdict.route = "SendMessage" and ctx.taskId = null</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RouteRequest_PrepareLookup" name="task method" sourceRef="RouteRequest" targetRef="PrepareLookup" />
+    <bpmn:sequenceFlow id="Flow_PrepareNewTask_DispatchJoin" sourceRef="PrepareNewTask" targetRef="DispatchJoin" />
+    <bpmn:sequenceFlow id="Flow_FollowUpAccepted_DispatchJoin" name="yes" sourceRef="FollowUpAccepted" targetRef="Link_Dispatch_FromFollowUp">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=followError = null</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Cancelable_DispatchJoin" name="active" sourceRef="Cancelable" targetRef="Link_Dispatch_FromCancel">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=not(list contains(["TASK_STATE_COMPLETED", "TASK_STATE_CANCELED", "TASK_STATE_FAILED", "TASK_STATE_REJECTED"], task.status.state))</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_DispatchJoin_Dispatch" sourceRef="DispatchJoin" targetRef="Dispatch" />
+    <bpmn:sequenceFlow id="Flow_Dispatch_RouteOutcome" sourceRef="Dispatch" targetRef="RouteOutcome" />
+    <bpmn:sequenceFlow id="Flow_RouteOutcome_BuildNewTaskResponse" name="new task" sourceRef="RouteOutcome" targetRef="NewTaskReady">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ctx.method != "CancelTask" and lookup.task != null</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RouteOutcome_CancellationOutcome" name="cancel" sourceRef="RouteOutcome" targetRef="CancellationOutcome">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=ctx.method = "CancelTask"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RouteOutcome_BuildFollowUpResponse" name="follow-up handed over" sourceRef="RouteOutcome" targetRef="FollowUpReady">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=correlated = true and ctx.method != "CancelTask"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_FindTask_ReadTask" sourceRef="FindTask" targetRef="ReadTask" />
+    <bpmn:sequenceFlow id="Flow_ReadTask_TaskKnown" sourceRef="ReadTask" targetRef="TaskKnown" />
+    <bpmn:sequenceFlow id="Flow_TaskKnown_RouteMethod" name="yes" sourceRef="TaskKnown" targetRef="RouteMethod">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=task != null</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RouteMethod_NotFoundJoin" name="unsupported method" sourceRef="RouteMethod" targetRef="Link_NotFound_FromMethod" />
+    <bpmn:sequenceFlow id="Flow_RouteMethod_BuildTaskView" name="GetTask" sourceRef="RouteMethod" targetRef="TaskViewReady">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=task != null and ctx.method = "GetTask"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RouteMethod_Cancelable" name="CancelTask" sourceRef="RouteMethod" targetRef="Cancelable">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=task != null and ctx.method = "CancelTask"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_RouteMethod_CheckFollowUp" name="SendMessage" sourceRef="RouteMethod" targetRef="CheckFollowUp">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=task != null and ctx.method = "SendMessage"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_NotFoundJoin_BuildNotFound" sourceRef="Link_NotFound_Catch" targetRef="NotFoundReady" />
+    <bpmn:sequenceFlow id="Flow_Cancelable_NotCancelableJoin" name="no" sourceRef="Cancelable" targetRef="Link_NotCancelable_FromCancelable" />
+    <bpmn:sequenceFlow id="Flow_NotCancelableJoin_BuildNotCancelable" sourceRef="Link_NotCancelable_Catch" targetRef="NotCancelableReady" />
+    <bpmn:sequenceFlow id="Flow_CheckFollowUp_FollowUpAccepted" sourceRef="CheckFollowUp" targetRef="FollowUpAccepted" />
+    <bpmn:sequenceFlow id="Flow_FollowUpAccepted_FollowUpErrorJoin" name="no" sourceRef="FollowUpAccepted" targetRef="Link_FollowUpError_FromAccepted" />
+    <bpmn:sequenceFlow id="Flow_RouteOutcome_FollowUpErrorJoin" name="no" sourceRef="RouteOutcome" targetRef="Link_FollowUpError_FromOutcome" />
+    <bpmn:sequenceFlow id="Flow_FollowUpErrorJoin_BuildFollowUpError" sourceRef="Link_FollowUpError_Catch" targetRef="FollowUpErrorReady" />
+    <bpmn:exclusiveGateway id="LookupTimeLeft" name="Time left for lookup?" default="Flow_LookupTimeLeft_NotFoundJoin">
+      <bpmn:incoming>Flow_TaskKnown_LookupTimeLeft</bpmn:incoming>
+      <bpmn:outgoing>Flow_LookupTimeLeft_WaitForIndex</bpmn:outgoing>
+      <bpmn:outgoing>Flow_LookupTimeLeft_NotFoundJoin</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="LookupJoin">
+      <bpmn:incoming>Flow_PrepareLookup_LookupJoin</bpmn:incoming>
+      <bpmn:incoming>Flow_WaitForIndex_LookupJoin</bpmn:incoming>
+      <bpmn:outgoing>Flow_LookupJoin_FindTask</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:intermediateCatchEvent id="WaitForIndex" name="Await task index">
+      <bpmn:incoming>Flow_LookupTimeLeft_WaitForIndex</bpmn:incoming>
+      <bpmn:outgoing>Flow_WaitForIndex_LookupJoin</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="WaitForIndex_def">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">="PT0.25S"</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_PrepareLookup_LookupJoin" sourceRef="PrepareLookup" targetRef="LookupJoin" />
+    <bpmn:sequenceFlow id="Flow_LookupJoin_FindTask" sourceRef="LookupJoin" targetRef="FindTask" />
+    <bpmn:sequenceFlow id="Flow_TaskKnown_LookupTimeLeft" name="not readable yet" sourceRef="TaskKnown" targetRef="LookupTimeLeft" />
+    <bpmn:sequenceFlow id="Flow_LookupTimeLeft_WaitForIndex" name="retry" sourceRef="LookupTimeLeft" targetRef="WaitForIndex">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=now() &lt; date and time(lookup.indexDeadline)</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_LookupTimeLeft_NotFoundJoin" name="expired" sourceRef="LookupTimeLeft" targetRef="Link_NotFound_FromLookup" />
+    <bpmn:sequenceFlow id="Flow_WaitForIndex_LookupJoin" sourceRef="WaitForIndex" targetRef="LookupJoin" />
+    <bpmn:exclusiveGateway id="CancellationOutcome" name="Terminal outcome visible?" default="Flow_CancellationOutcome_CancellationTimeout">
+      <bpmn:incoming>Flow_RouteOutcome_CancellationOutcome</bpmn:incoming>
+      <bpmn:outgoing>Flow_CancellationOutcome_BuildCanceledView</bpmn:outgoing>
+      <bpmn:outgoing>Flow_CancellationOutcome_NotCancelableJoin</bpmn:outgoing>
+      <bpmn:outgoing>Flow_CancellationOutcome_CancellationTimeout</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="CancellationErrorReady" name="Cancellation failed">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=(&#10;  for e in [&#10;    {&#10;      code: -32603,&#10;      message: &#34;The cancellation result was not available in time&#34;,&#10;      reason: &#34;DEADLINE_EXCEEDED&#34;&#10;    }&#10;  ]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_CancellationOutcome_CancellationTimeout</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_CancellationOutcome_BuildCanceledView" name="canceled" sourceRef="CancellationOutcome" targetRef="CanceledReady">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=visible and seen.status.state = "TASK_STATE_CANCELED"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_CancellationOutcome_NotCancelableJoin" name="not canceled" sourceRef="CancellationOutcome" targetRef="Link_NotCancelable_FromCancellation">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=seen != null and seen.status.state != "TASK_STATE_CANCELED" and ((visible and list contains(["TASK_STATE_COMPLETED", "TASK_STATE_CANCELED", "TASK_STATE_FAILED", "TASK_STATE_REJECTED"], seen.status.state)) or not(correlated))</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_CancellationOutcome_CancellationTimeout" name="not visible" sourceRef="CancellationOutcome" targetRef="CancellationErrorReady" />
+    <bpmn:subProcess id="CollectTaskList" name="List all tasks">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="=listReq" target="listReq" />
+          <zeebe:input source="=null" target="listScan" />
+          <zeebe:input source="=null" target="listing" />
+          <zeebe:input source="=null" target="taskKeys" />
+          <zeebe:input source="=null" target="listPage" />
+          <zeebe:input source="=null" target="taskBatch" />
+          <zeebe:output source="=listing.items" target="taskItems" />
+          <zeebe:output source="=listing.failure" target="listFailure" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_PrepareList_CollectTaskList</bpmn:incoming>
+      <bpmn:outgoing>Flow_CollectTaskList_ListCollected</bpmn:outgoing>
+      <bpmn:startEvent id="CollectTaskList_ListScanRequested" name="Collect tasks">
+        <bpmn:outgoing>CollectTaskList_Flow_ListScanRequested_StartListScan</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:scriptTask id="CollectTaskList_StartListScan" name="Start listing">
+        <bpmn:extensionElements>
+          <zeebe:script expression="={items: [], keys: [], cursor: null, cursors: [], deadline: string(now() + duration(&#34;PT10S&#34;))}" resultVariable="listScan" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>CollectTaskList_Flow_ListScanRequested_StartListScan</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_StartListScan_ListProcessPageJoin</bpmn:outgoing>
+      </bpmn:scriptTask>
+      <bpmn:exclusiveGateway id="CollectTaskList_ListProcessPageJoin">
+        <bpmn:incoming>CollectTaskList_Flow_StartListScan_ListProcessPageJoin</bpmn:incoming>
+        <bpmn:incoming>CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_ListProcessPageJoin_SearchTasks</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:serviceTask id="CollectTaskList_SearchTasks" name="Search next page of tasks" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+          <zeebe:ioMapping>
+            <zeebe:input source="noAuth" target="authentication.type" />
+            <zeebe:input source="POST" target="method" />
+            <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/process-instances/search&#34;" target="url" />
+            <zeebe:input source="=false" target="followRedirects" />
+            <zeebe:input source="JSON" target="documentReturnFormat.choice" />
+            <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
+            <zeebe:input source="=20" target="readTimeoutInSeconds" />
+            <zeebe:input source="={&#10;  filter: if listReq.ctxTag != null&#10;    then {processDefinitionId: &#34;a2a-task&#34;, variables: [{name: &#34;ctxTag&#34;, value: &#34;\&#34;&#34; + listReq.ctxTag + &#34;\&#34;&#34;}]}&#10;    else {processDefinitionId: &#34;a2a-task&#34;},&#10;  sort: [{field: &#34;startDate&#34;, order: &#34;DESC&#34;}, {field: &#34;processInstanceKey&#34;, order: &#34;DESC&#34;}],&#10;  page: {limit: 100, after: listScan.cursor}&#10;}" target="body" />
+            <zeebe:input source="true" target="ignoreNullValues" />
+          </zeebe:ioMapping>
+          <zeebe:taskHeaders>
+            <zeebe:header key="elementTemplateVersion" value="13" />
+            <zeebe:header key="elementTemplateId" value="io.camunda.connectors.HttpJson.v2" />
+            <zeebe:header key="resultExpression" value="={&#10;  taskKeys: for i in response.body.items return i.processInstanceKey,&#10;  listPage: {count: count(response.body.items), cursor: response.body.page.endCursor}&#10;}" />
+            <zeebe:header key="errorExpression" value="=if string(error.code) = &#34;404&#34;&#10;then bpmnError(&#34;NOT_FOUND&#34;, &#34;not found&#34;)&#10;else if string(error.code) = &#34;409&#34; then bpmnError(&#34;CONFLICT&#34;, &#34;already exists&#34;) else null" />
+            <zeebe:header key="retryBackoff" value="PT30S" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+        <bpmn:incoming>CollectTaskList_Flow_ListProcessPageJoin_SearchTasks</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_SearchTasks_AnyTasks</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:exclusiveGateway id="CollectTaskList_AnyTasks" name="Any tasks?" default="CollectTaskList_Flow_AnyTasks_ListBatchJoin">
+        <bpmn:incoming>CollectTaskList_Flow_SearchTasks_AnyTasks</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_AnyTasks_ListVariablesJoin</bpmn:outgoing>
+        <bpmn:outgoing>CollectTaskList_Flow_AnyTasks_ListBatchJoin</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:exclusiveGateway id="CollectTaskList_ListVariablesJoin">
+        <bpmn:incoming>CollectTaskList_Flow_AnyTasks_ListVariablesJoin</bpmn:incoming>
+        <bpmn:incoming>CollectTaskList_Flow_WaitListVariables_ListVariablesJoin</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_ListVariablesJoin_ReadTasks</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:serviceTask id="CollectTaskList_ReadTasks" name="Read batch of task data" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+          <zeebe:ioMapping>
+            <zeebe:input source="noAuth" target="authentication.type" />
+            <zeebe:input source="POST" target="method" />
+            <zeebe:input source="=&#34;http://localhost:8080&#34; + &#34;/v2/variables/search?truncateValues=false&#34;" target="url" />
+            <zeebe:input source="=false" target="followRedirects" />
+            <zeebe:input source="JSON" target="documentReturnFormat.choice" />
+            <zeebe:input source="=20" target="connectionTimeoutInSeconds" />
+            <zeebe:input source="=20" target="readTimeoutInSeconds" />
+            <zeebe:input source="={&#10;  filter: {name: &#34;task&#34;, processInstanceKey: {&#34;$in&#34;: taskKeys}, scopeKey: {&#34;$in&#34;: taskKeys}},&#10;  page: {limit: 100}&#10;}" target="body" />
+            <zeebe:input source="true" target="ignoreNullValues" />
+          </zeebe:ioMapping>
+          <zeebe:taskHeaders>
+            <zeebe:header key="elementTemplateVersion" value="13" />
+            <zeebe:header key="elementTemplateId" value="io.camunda.connectors.HttpJson.v2" />
+            <zeebe:header key="resultExpression" value="={taskBatch: for i in response.body.items return context merge([i, {value: from json(i.value)}])}" />
+            <zeebe:header key="errorExpression" value="=if string(error.code) = &#34;404&#34;&#10;then bpmnError(&#34;NOT_FOUND&#34;, &#34;not found&#34;)&#10;else if string(error.code) = &#34;409&#34; then bpmnError(&#34;CONFLICT&#34;, &#34;already exists&#34;) else null" />
+            <zeebe:header key="retryBackoff" value="PT30S" />
+          </zeebe:taskHeaders>
+        </bpmn:extensionElements>
+        <bpmn:incoming>CollectTaskList_Flow_ListVariablesJoin_ReadTasks</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_ReadTasks_ListBatchJoin</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:exclusiveGateway id="CollectTaskList_ListBatchJoin">
+        <bpmn:incoming>CollectTaskList_Flow_AnyTasks_ListBatchJoin</bpmn:incoming>
+        <bpmn:incoming>CollectTaskList_Flow_ReadTasks_ListBatchJoin</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_ListBatchJoin_CollectListBatch</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:scriptTask id="CollectTaskList_CollectListBatch" name="Validate and collect batch">
+        <bpmn:extensionElements>
+          <zeebe:script expression="=(&#10;  for ready in [&#10;    if count(taskKeys) = 0&#10;    then true&#10;    else taskBatch instance of list&#10;      and count(distinct values(taskKeys)) = count(taskKeys)&#10;      and count(taskBatch) = count(taskKeys)&#10;      and count(distinct values(taskBatch.scopeKey)) = count(taskKeys)&#10;      and (&#10;        every i in taskBatch satisfies&#10;          i.scopeKey = i.processInstanceKey&#10;            and list contains(taskKeys, i.scopeKey)&#10;            and i.value instance of context&#10;            and i.value.id instance of string&#10;            and i.value.contextId instance of string&#10;            and i.value.rev instance of number&#10;            and i.value.status instance of context&#10;            and i.value.status.state instance of string&#10;            and i.value.status.timestamp instance of string&#10;            and i.value.history instance of list&#10;            and i.value.artifacts instance of list&#10;      )&#10;  ]&#10;  return for overlap in [some k in taskKeys satisfies list contains(listScan.keys, k)]&#10;  return for nextOk in [&#10;    listPage.cursor instance of string&#10;      and listPage.cursor != &#34;&#34;&#10;      and not(list contains(listScan.cursors, listPage.cursor))&#10;  ]&#10;  return for action in [&#10;    if not(ready)&#10;    then (if now() &#62;= date and time(listScan.deadline) then &#34;deadline&#34; else &#34;variables&#34;)&#10;    else if overlap&#10;    then &#34;overlap&#34;&#10;    else if listPage.count &#60; 100&#10;    then &#34;done&#34;&#10;    else if listPage.count != 100 or not(nextOk)&#10;    then &#34;cursor&#34;&#10;    else if now() &#62;= date and time(listScan.deadline) then &#34;deadline&#34; else &#34;page&#34;&#10;  ]&#10;  return context merge(&#10;    [&#10;      listScan,&#10;      {&#10;        action: action,&#10;        items:&#10;          if ready and not(overlap) and count(taskKeys) &#62; 0&#10;          then concatenate(listScan.items, taskBatch)&#10;          else listScan.items,&#10;        keys: if ready then concatenate(listScan.keys, taskKeys) else listScan.keys,&#10;        cursor: if action = &#34;page&#34; then listPage.cursor else listScan.cursor,&#10;        cursors:&#10;          if action = &#34;page&#34; then append(listScan.cursors, listPage.cursor) else listScan.cursors&#10;      }&#10;    ]&#10;  )&#10;)[1][1][1][1]" resultVariable="listScan" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>CollectTaskList_Flow_ListBatchJoin_CollectListBatch</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_CollectListBatch_ListScanDecision</bpmn:outgoing>
+      </bpmn:scriptTask>
+      <bpmn:exclusiveGateway id="CollectTaskList_ListScanDecision" name="Listing finished?" default="CollectTaskList_Flow_ListScanDecision_FailListScan">
+        <bpmn:incoming>CollectTaskList_Flow_CollectListBatch_ListScanDecision</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_ListScanDecision_FinishListScan</bpmn:outgoing>
+        <bpmn:outgoing>CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin</bpmn:outgoing>
+        <bpmn:outgoing>CollectTaskList_Flow_ListScanDecision_WaitListVariables</bpmn:outgoing>
+        <bpmn:outgoing>CollectTaskList_Flow_ListScanDecision_FailListScan</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:scriptTask id="CollectTaskList_FinishListScan" name="Return complete collection">
+        <bpmn:extensionElements>
+          <zeebe:script expression="={items: listScan.items, failure: null}" resultVariable="listing" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>CollectTaskList_Flow_ListScanDecision_FinishListScan</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_FinishListScan_ListResultJoin</bpmn:outgoing>
+      </bpmn:scriptTask>
+      <bpmn:exclusiveGateway id="CollectTaskList_ListResultJoin">
+        <bpmn:incoming>CollectTaskList_Flow_FinishListScan_ListResultJoin</bpmn:incoming>
+        <bpmn:incoming>CollectTaskList_Flow_FailListScan_ListResultJoin</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_ListResultJoin_ListScanReady</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:endEvent id="CollectTaskList_ListScanReady" name="Collection ready">
+        <bpmn:incoming>CollectTaskList_Flow_ListResultJoin_ListScanReady</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:intermediateCatchEvent id="CollectTaskList_WaitListVariables" name="Wait for task data to be searchable">
+        <bpmn:incoming>CollectTaskList_Flow_ListScanDecision_WaitListVariables</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_WaitListVariables_ListVariablesJoin</bpmn:outgoing>
+        <bpmn:timerEventDefinition id="CollectTaskList_WaitListVariables_def">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">="PT0.25S"</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:intermediateCatchEvent>
+      <bpmn:scriptTask id="CollectTaskList_FailListScan" name="Fail incomplete list">
+        <bpmn:extensionElements>
+          <zeebe:script expression="={&#10;  items: [],&#10;  failure:&#10;    if listScan.action = &#34;deadline&#34;&#10;    then {&#10;      code: -32603,&#10;      message: &#34;The task list was not ready in time&#34;,&#10;      reason: &#34;DEADLINE_EXCEEDED&#34;&#10;    }&#10;    else {&#10;      code: -32603,&#10;      message: &#34;The task list could not be read completely&#34;,&#10;      reason: &#34;DATA_LOSS&#34;&#10;    }&#10;}" resultVariable="listing" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>CollectTaskList_Flow_ListScanDecision_FailListScan</bpmn:incoming>
+        <bpmn:outgoing>CollectTaskList_Flow_FailListScan_ListResultJoin</bpmn:outgoing>
+      </bpmn:scriptTask>
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListScanRequested_StartListScan" sourceRef="CollectTaskList_ListScanRequested" targetRef="CollectTaskList_StartListScan" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_StartListScan_ListProcessPageJoin" sourceRef="CollectTaskList_StartListScan" targetRef="CollectTaskList_ListProcessPageJoin" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListProcessPageJoin_SearchTasks" sourceRef="CollectTaskList_ListProcessPageJoin" targetRef="CollectTaskList_SearchTasks" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_SearchTasks_AnyTasks" sourceRef="CollectTaskList_SearchTasks" targetRef="CollectTaskList_AnyTasks" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_AnyTasks_ListVariablesJoin" name="read" sourceRef="CollectTaskList_AnyTasks" targetRef="CollectTaskList_ListVariablesJoin">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=count(taskKeys) &gt; 0</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListVariablesJoin_ReadTasks" sourceRef="CollectTaskList_ListVariablesJoin" targetRef="CollectTaskList_ReadTasks" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_AnyTasks_ListBatchJoin" name="empty" sourceRef="CollectTaskList_AnyTasks" targetRef="CollectTaskList_ListBatchJoin" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ReadTasks_ListBatchJoin" sourceRef="CollectTaskList_ReadTasks" targetRef="CollectTaskList_ListBatchJoin" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListBatchJoin_CollectListBatch" sourceRef="CollectTaskList_ListBatchJoin" targetRef="CollectTaskList_CollectListBatch" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_CollectListBatch_ListScanDecision" sourceRef="CollectTaskList_CollectListBatch" targetRef="CollectTaskList_ListScanDecision" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListScanDecision_FinishListScan" name="complete" sourceRef="CollectTaskList_ListScanDecision" targetRef="CollectTaskList_FinishListScan">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=listScan.action = "done"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin" name="next page" sourceRef="CollectTaskList_ListScanDecision" targetRef="CollectTaskList_ListProcessPageJoin">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=listScan.action = "page"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListScanDecision_WaitListVariables" name="retry state" sourceRef="CollectTaskList_ListScanDecision" targetRef="CollectTaskList_WaitListVariables">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=listScan.action = "variables"</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_WaitListVariables_ListVariablesJoin" sourceRef="CollectTaskList_WaitListVariables" targetRef="CollectTaskList_ListVariablesJoin" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListScanDecision_FailListScan" name="incomplete" sourceRef="CollectTaskList_ListScanDecision" targetRef="CollectTaskList_FailListScan" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_FinishListScan_ListResultJoin" sourceRef="CollectTaskList_FinishListScan" targetRef="CollectTaskList_ListResultJoin" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_FailListScan_ListResultJoin" sourceRef="CollectTaskList_FailListScan" targetRef="CollectTaskList_ListResultJoin" />
+      <bpmn:sequenceFlow id="CollectTaskList_Flow_ListResultJoin_ListScanReady" sourceRef="CollectTaskList_ListResultJoin" targetRef="CollectTaskList_ListScanReady" />
+    </bpmn:subProcess>
+    <bpmn:exclusiveGateway id="ListCollected" name="Complete task collection?" default="Flow_ListCollected_BuildListFailure">
+      <bpmn:incoming>Flow_CollectTaskList_ListCollected</bpmn:incoming>
+      <bpmn:outgoing>Flow_ListCollected_BuildTaskList</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ListCollected_BuildListFailure</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="ListFailureReady" name="Listing failed">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=(&#10;  for e in [listFailure]&#10;  return {&#10;    jsonrpc: &#34;2.0&#34;,&#10;    id: ctx.id,&#10;    error:&#10;      if e.reason = null&#10;      then {code: e.code, message: e.message}&#10;      else {&#10;        code: e.code,&#10;        message: e.message,&#10;        data: [&#10;          {&#10;            &#34;@type&#34;: &#34;type.googleapis.com/google.rpc.ErrorInfo&#34;,&#10;            reason: e.reason,&#10;            domain: &#34;a2a-protocol.org&#34;&#10;          }&#10;        ]&#10;      }&#10;  }&#10;)[1]" target="rpcResponse" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ListCollected_BuildListFailure</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_PrepareList_CollectTaskList" sourceRef="PrepareList" targetRef="CollectTaskList" />
+    <bpmn:sequenceFlow id="Flow_CollectTaskList_ListCollected" sourceRef="CollectTaskList" targetRef="ListCollected" />
+    <bpmn:sequenceFlow id="Flow_ListCollected_BuildTaskList" name="complete" sourceRef="ListCollected" targetRef="TaskListReady">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=listFailure = null</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_ListCollected_BuildListFailure" name="incomplete" sourceRef="ListCollected" targetRef="ListFailureReady" />
+    <bpmn:startEvent id="CardRequested" name="Agent Card requested" zeebe:modelerTemplate="dev.hansel.a2a.core.card.v1" zeebe:modelerTemplateVersion="4" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMTguNSIgdmlld0JveD0iMyA5IDMwIDE4LjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTguNyAxNC43MjVDOC41MTY2NyAxNC45MDgzIDguMjgzMzMgMTUgOCAxNUM3LjcxNjY3IDE1IDcuNDc1IDE0LjkwODMgNy4yNzUgMTQuNzI1QzcuMDkxNjcgMTQuNTI1IDcgMTQuMjgzMyA3IDE0QzcgMTMuNzE2NyA3LjA5MTY3IDEzLjQ4MzMgNy4yNzUgMTMuM0M3LjQ3NSAxMy4xIDcuNzE2NjcgMTMgOCAxM0M4LjI4MzMzIDEzIDguNTE2NjcgMTMuMSA4LjcgMTMuM0M4LjkgMTMuNDgzMyA5IDEzLjcxNjcgOSAxNEM5IDE0LjI4MzMgOC45IDE0LjUyNSA4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMTQuNyAxNC43MjVDMTQuNTE2NyAxNC45MDgzIDE0LjI4MzMgMTUgMTQgMTVDMTMuNzE2NyAxNSAxMy40NzUgMTQuOTA4MyAxMy4yNzUgMTQuNzI1QzEzLjA5MTcgMTQuNTI1IDEzIDE0LjI4MzMgMTMgMTRDMTMgMTMuNzE2NyAxMy4wOTE3IDEzLjQ4MzMgMTMuMjc1IDEzLjNDMTMuNDc1IDEzLjEgMTMuNzE2NyAxMyAxNCAxM0MxNC4yODMzIDEzIDE0LjUxNjcgMTMuMSAxNC43IDEzLjNDMTQuOSAxMy40ODMzIDE1IDEzLjcxNjcgMTUgMTRDMTUgMTQuMjgzMyAxNC45IDE0LjUyNSAxNC43IDE0LjcyNVoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTIyLjcgMTQuNzI1QzIyLjUxNjcgMTQuOTA4MyAyMi4yODMzIDE1IDIyIDE1QzIxLjcxNjcgMTUgMjEuNDc1IDE0LjkwODMgMjEuMjc1IDE0LjcyNUMyMS4wOTE3IDE0LjUyNSAyMSAxNC4yODMzIDIxIDE0QzIxIDEzLjcxNjcgMjEuMDkxNyAxMy40ODMzIDIxLjI3NSAxMy4zQzIxLjQ3NSAxMy4xIDIxLjcxNjcgMTMgMjIgMTNDMjIuMjgzMyAxMyAyMi41MTY3IDEzLjEgMjIuNyAxMy4zQzIyLjkgMTMuNDgzMyAyMyAxMy43MTY3IDIzIDE0QzIzIDE0LjI4MzMgMjIuOSAxNC41MjUgMjIuNyAxNC43MjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0yOC43IDE0LjcyNUMyOC41MTY3IDE0LjkwODMgMjguMjgzMyAxNSAyOCAxNUMyNy43MTY3IDE1IDI3LjQ3NSAxNC45MDgzIDI3LjI3NSAxNC43MjVDMjcuMDkxNyAxNC41MjUgMjcgMTQuMjgzMyAyNyAxNEMyNyAxMy43MTY3IDI3LjA5MTcgMTMuNDgzMyAyNy4yNzUgMTMuM0MyNy40NzUgMTMuMSAyNy43MTY3IDEzIDI4IDEzQzI4LjI4MzMgMTMgMjguNTE2NyAxMy4xIDI4LjcgMTMuM0MyOC45IDEzLjQ4MzMgMjkgMTMuNzE2NyAyOSAxNEMyOSAxNC4yODMzIDI4LjkgMTQuNTI1IDI4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUgMTRDNSAxMi4zNDMxIDYuMzQzMTUgMTEgOCAxMUgxNEMxNC43NzYgMTEgMTUuMjg0IDExLjE1MzcgMTUuNjQgMTEuMzgxOEMxNS44NTg5IDEwLjc5NCAxNi4xNTE3IDEwLjE3MDkgMTYuNTU1IDkuNTk3OTVDMTUuODc5NyA5LjIxMTUzIDE1LjAzODYgOSAxNCA5SDhDNS4yMzg1OCA5IDMgMTEuMjM4NiAzIDE0QzMgMTYuNzYxMiA1LjIzNzU5IDE5IDcuOTk5MjYgMTlIMTRDMTUuNzYzNCAxOSAxNi45NTczIDE4LjM5MDIgMTcuNzM3NSAxNy4zNUMxOC40MjI4IDE2LjQzNjMgMTguNzE0OCAxNS4yNjYgMTguOTQ4MyAxNC4zMjk5TDE4Ljk3MDEgMTQuMjQyNUMxOS4yMzI3IDEzLjE5MjQgMTkuNDQ0MiAxMi40MDc3IDE5Ljg2MjUgMTEuODVDMjAuMjA3MyAxMS4zOTAyIDIwLjc2MzQgMTEgMjIgMTFIMjguMDAwNUMyOS42NTcyIDExIDMxIDEyLjM0MyAzMSAxNEMzMSAxNS42NTY5IDI5LjY1NjkgMTcgMjggMTdIMjJDMjEuMjI0IDE3IDIwLjcxNiAxNi44NDYzIDIwLjM2IDE2LjYxODJDMjAuMTQxMSAxNy4yMDYgMTkuODQ4MyAxNy44MjkxIDE5LjQ0NSAxOC40MDJDMjAuMTIwMyAxOC43ODg1IDIwLjk2MTQgMTkgMjIgMTlIMjhDMzAuNzYxNCAxOSAzMyAxNi43NjE0IDMzIDE0QzMzIDExLjIzODggMzAuNzYyMSA5IDI4LjAwMDUgOUgyMkMyMC4yMzY2IDkgMTkuMDQyNyA5LjYwOTc5IDE4LjI2MjUgMTAuNjVDMTcuNTc3MiAxMS41NjM3IDE3LjI4NTIgMTIuNzM0IDE3LjA1MTcgMTMuNjcwMUwxNy4wMjk5IDEzLjc1NzVDMTYuNzY3MyAxNC44MDc2IDE2LjU1NTggMTUuNTkyMyAxNi4xMzc1IDE2LjE1QzE1Ljc5MjcgMTYuNjA5OCAxNS4yMzY2IDE3IDE0IDE3SDcuOTk5MjZDNi4zNDI2NSAxNyA1IDE1LjY1NzEgNSAxNFoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTcgMjMuNUM2LjcxNjY3IDIzLjUgNi40NzUgMjMuNDA4MyA2LjI3NSAyMy4yMjVDNi4wOTE2NyAyMy4wMjUgNiAyMi43ODMzIDYgMjIuNUM2IDIyLjIxNjcgNi4wOTE2NyAyMS45ODMzIDYuMjc1IDIxLjhDNi40NzUgMjEuNiA2LjcxNjY3IDIxLjUgNyAyMS41SDEyQzEyLjI4MzMgMjEuNSAxMi41MTY3IDIxLjYgMTIuNyAyMS44QzEyLjkgMjEuOTgzMyAxMyAyMi4yMTY3IDEzIDIyLjVDMTMgMjIuNzgzMyAxMi45IDIzLjAyNSAxMi43IDIzLjIyNUMxMi41MTY3IDIzLjQwODMgMTIuMjgzMyAyMy41IDEyIDIzLjVIN1pNNSAyNy41QzQuNzE2NjcgMjcuNSA0LjQ3NSAyNy40MDgzIDQuMjc1IDI3LjIyNUM0LjA5MTY3IDI3LjAyNSA0IDI2Ljc4MzMgNCAyNi41QzQgMjYuMjE2NyA0LjA5MTY3IDI1Ljk4MzMgNC4yNzUgMjUuOEM0LjQ3NSAyNS42IDQuNzE2NjcgMjUuNSA1IDI1LjVIOEM4LjI4MzMzIDI1LjUgOC41MTY2NyAyNS42IDguNyAyNS44QzguOSAyNS45ODMzIDkgMjYuMjE2NyA5IDI2LjVDOSAyNi43ODMzIDguOSAyNy4wMjUgOC43IDI3LjIyNUM4LjUxNjY3IDI3LjQwODMgOC4yODMzMyAyNy41IDggMjcuNUg1Wk0xMiAyNy41QzExLjcxNjcgMjcuNSAxMS40NzUgMjcuNDA4MyAxMS4yNzUgMjcuMjI1QzExLjA5MTcgMjcuMDI1IDExIDI2Ljc4MzMgMTEgMjYuNUMxMSAyNi4yMTY3IDExLjA5MTcgMjUuOTgzMyAxMS4yNzUgMjUuOEMxMS40NzUgMjUuNiAxMS43MTY3IDI1LjUgMTIgMjUuNUgyMEMyMC4yODMzIDI1LjUgMjAuNTE2NyAyNS42IDIwLjcgMjUuOEMyMC45IDI1Ljk4MzMgMjEgMjYuMjE2NyAyMSAyNi41QzIxIDI2Ljc4MzMgMjAuOSAyNy4wMjUgMjAuNyAyNy4yMjVDMjAuNTE2NyAyNy40MDgzIDIwLjI4MzMgMjcuNSAyMCAyNy41SDEyWk0yOCAyNy41QzI3LjcxNjcgMjcuNSAyNy40NzUgMjcuNDA4MyAyNy4yNzUgMjcuMjI1QzI3LjA5MTcgMjcuMDI1IDI3IDI2Ljc4MzMgMjcgMjYuNUMyNyAyNi4yMTY3IDI3LjA5MTcgMjUuOTgzMyAyNy4yNzUgMjUuOEMyNy40NzUgMjUuNiAyNy43MTY3IDI1LjUgMjggMjUuNUgzMkMzMi4yODMzIDI1LjUgMzIuNTE2NyAyNS42IDMyLjcgMjUuOEMzMi45IDI1Ljk4MzMgMzMgMjYuMjE2NyAzMyAyNi41QzMzIDI2Ljc4MzMzMi45IDI3LjAyNSAzMi43IDI3LjIyNUMzMi41MTY3IDI3LjQwODMgMzIuMjgzMyAyNy41IDMyIDI3LjVIMjhaTTE2IDIzLjVDMTUuNzE2NyAyMy41IDE1LjQ3NSAyMy40MDgzIDE1LjI3NSAyMy4yMjVDMTUuMDkxNyAyMy4wMjUgMTUgMjIuNzgzMyAxNSAyMi41QzE1IDIyLjIxNjcgMTUuMDkxNyAyMS45ODMzIDE1LjI3NSAyMS44QzE1LjQ3NSAyMS42IDE1LjcxNjcgMjEuNSAxNiAyMS41QzE2LjI4MzMgMjEuNSAxNi41MTY3IDIxLjYgMTYuNyAyMS44QzE2LjkgMjEuOTgzMyAxNyAyMi4yMTY3IDE3IDIyLjVDMTcgMjIuNzgzMyAxNi45IDIzLjAyNSAxNi43IDIzLjIyNUMxNi41MTY3IDIzLjQwODMgMTYuMjgzMyAyMy41IDE2IDIzLjVaTTI0IDI3LjVDMjMuNzE2NyAyNy41IDIzLjQ3NSAyNy40MDgzIDIzLjI3NSAyNy4yMjVDMjMuMDkxNyAyNy4wMjUgMjMgMjYuNzgzMyAyMyAyNi41QzIzIDI2LjIxNjcgMjMuMDkxNyAyNS45ODMzIDIzLjI3NSAyNS44QzIzLjQ3NSAyNS42IDIzLjcxNjcgMjUuNSAyNCAyNS41QzI0LjI4MzMgMjUuNSAyNC41MTY3IDI1LjYgMjQuNyAyNS44QzI0LjkgMjUuOTgzMyAyNSAyNi4yMTY3IDI1IDI2LjVDMjUgMjYuNzgzMyAyNC45IDI3LjAyNSAyNC43IDI3LjIyNUMyNC41MTY3IDI3LjQwODMgMjQuMjgzMyAyNy41IDI0IDI3LjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0xOS4yNzUgMjMuMjI1QzE5LjQ3NSAyMy40MDgzIDE5LjcxNjcgMjMuNSAyMCAyMy41SDIzQzIzLjI4MzMgMjMuNSAyMy41MTY3IDIzLjQwODMgMjMuNyAyMy4yMjVDMjMuOSAyMy4wMjUgMjQgMjIuNzgzMyAyNCAyMi41QzI0IDIyLjIxNjcgMjMuOSAyMS45ODMzIDIzLjcgMjEuOEMyMy41MTY3IDIxLjYgMjMuMjgzMyAyMS41IDIzIDIxLjVIMjBDMTkuNzE2NyAyMS41IDE5LjQ3NSAyMS42IDE5LjI3NSAyMS44QzE5LjA5MTcgMjEuOTgzMyAxOSAyMi4yMTY3IDE5IDIyLjVDMTkgMjIuNzgzMyAxOS4wOTE3IDIzLjAyNSAxOS4yNzUgMjMuMjI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMjYuMjc1IDIzLjIyNUMyNi40NzUgMjMuNDA4MyAyNi43MTY3IDIzLjUgMjcgMjMuNUgzMEMzMC4yODMzIDIzLjUgMzAuNTE2NyAyMy40MDgzIDMwLjcgMjMuMjI1QzMwLjkgMjMuMDI1IDMxIDIyLjc4MzMgMzEgMjIuNUMzMSAyMi4yMTY3IDMwLjkgMjEuOTgzMyAzMC43IDIxLjhDMzAuNTE2NyAyMS42IDMwLjI4MzMgMjEuNSAzMCAyMS41SDI3QzI2LjcxNjcgMjEuNSAyNi40NzUgMjEuNiAyNi4yNzUgMjEuOEMyNi4wOTE3IDIxLjk4MzMgMjYgMjIuMjE2NyAyNiAyMi41QzI2IDIyLjc4MzMgMjYuMDkxNyAyMy4wMjUgMjYuMjc1IDIzLjIyNVoiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPg==">
+      <bpmn:documentation>The default points at the local c8run connectors runtime (http://localhost:8086/inbound/a2a). Change it if clients reach your connectors runtime at a different address.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <zeebe:properties>
+          <zeebe:property name="inbound.type" value="io.camunda:webhook:1" />
+          <zeebe:property name="inbound.context" value="a2a-card" />
+          <zeebe:property name="inbound.auth.type" value="NONE" />
+          <zeebe:property name="inbound.method" value="get" />
+          <zeebe:property name="inbound.responseExpression" value="={&#10;  rpcUrl: get value(if correlation.activatedElement.delegate != null then correlation.activatedElement.delegate.properties else correlation.activatedElement.properties, &#34;inbound.publicRpcUrl&#34;),&#10;  response:&#10;    if rpcUrl instance of string and matches(rpcUrl, &#34;^https?://[^ /]+/[^ ]*$&#34;)&#10;    then {&#10;      statusCode: 200,&#10;      headers: {&#34;Content-Type&#34;: &#34;application/json&#34;},&#10;      body: {&#10;        name: &#34;A2A blueprint agent&#34;,&#10;        url: rpcUrl,&#10;        protocolVersion: &#34;0.3.0&#34;,&#10;        preferredTransport: &#34;JSONRPC&#34;,&#10;        supportsAuthenticatedExtendedCard: false,&#10;        version: &#34;0.1.0&#34;,&#10;        description: &#34;Example agent from the Camunda A2A blueprint. Returns your request data with an uppercased copy and its length.&#34;,&#10;        provider: {organization: &#34;Camunda&#34;, url: &#34;https://github.com/camunda/camunda-8-tutorials/tree/main/solutions/a2a-async-blueprint&#34;},&#10;        supportedInterfaces: [{url: rpcUrl, protocolBinding: &#34;JSONRPC&#34;, protocolVersion: &#34;1.0&#34;}],&#10;        capabilities: {streaming: false, pushNotifications: true, extendedAgentCard: false},&#10;        defaultInputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        defaultOutputModes: [&#34;text/plain&#34;, &#34;application/json&#34;],&#10;        securitySchemes: {},&#10;        securityRequirements: [],&#10;        skills: [&#10;          {&#10;            id: &#34;upperCase&#34;,&#10;            name: &#34;Uppercase text&#34;,&#10;            description: &#34;Returns the request data with an uppercased copy and its length. Replace this skill with your own business logic.&#34;,&#10;            tags: [&#34;example&#34;],&#10;            examples: [&#34;Example input&#34;]&#10;          }&#10;        ]&#10;      }&#10;    }&#10;    else {statusCode: 500, body: {error: &#34;Set the Agent Card&#39;s public URL to your webhook URL&#34;}}&#10;}.response" />
+          <zeebe:property name="inbound.publicRpcUrl" value="http://localhost:8086/inbound/a2a" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_CardRequested_CardServed</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="CardRequested_message" messageRef="AgentCardRequestMessage" />
+    </bpmn:startEvent>
+    <bpmn:endEvent id="CardServed" name="Card served">
+      <bpmn:incoming>Flow_CardRequested_CardServed</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_CardRequested_CardServed" sourceRef="CardRequested" targetRef="CardServed" />
+    <bpmn:intermediateCatchEvent id="Link_NotFound_Catch" name="Not found">
+      <bpmn:outgoing>Flow_NotFoundJoin_BuildNotFound</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="Link_NotFound_Catch_def" name="NotFound" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateThrowEvent id="Link_NotFound_FromMethod" name="Not found">
+      <bpmn:incoming>Flow_RouteMethod_NotFoundJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_NotFound_FromMethod_def" name="NotFound" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Link_NotFound_FromLookup" name="Not found">
+      <bpmn:incoming>Flow_LookupTimeLeft_NotFoundJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_NotFound_FromLookup_def" name="NotFound" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="Link_NotCancelable_Catch" name="Not cancelable">
+      <bpmn:outgoing>Flow_NotCancelableJoin_BuildNotCancelable</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="Link_NotCancelable_Catch_def" name="NotCancelable" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateThrowEvent id="Link_NotCancelable_FromCancelable" name="Not cancelable">
+      <bpmn:incoming>Flow_Cancelable_NotCancelableJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_NotCancelable_FromCancelable_def" name="NotCancelable" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Link_NotCancelable_FromCancellation" name="Not cancelable">
+      <bpmn:incoming>Flow_CancellationOutcome_NotCancelableJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_NotCancelable_FromCancellation_def" name="NotCancelable" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="Link_FollowUpError_Catch" name="Follow-up error">
+      <bpmn:outgoing>Flow_FollowUpErrorJoin_BuildFollowUpError</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="Link_FollowUpError_Catch_def" name="FollowUpError" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateThrowEvent id="Link_FollowUpError_FromAccepted" name="Follow-up error">
+      <bpmn:incoming>Flow_FollowUpAccepted_FollowUpErrorJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_FollowUpError_FromAccepted_def" name="FollowUpError" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Link_FollowUpError_FromOutcome" name="Follow-up error">
+      <bpmn:incoming>Flow_RouteOutcome_FollowUpErrorJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_FollowUpError_FromOutcome_def" name="FollowUpError" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="Link_Dispatch_In" name="Dispatch">
+      <bpmn:outgoing>Flow_LinkDispatch_DispatchJoin</bpmn:outgoing>
+      <bpmn:linkEventDefinition id="Link_Dispatch_In_def" name="Dispatch" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_LinkDispatch_DispatchJoin" sourceRef="Link_Dispatch_In" targetRef="DispatchJoin" />
+    <bpmn:intermediateThrowEvent id="Link_Dispatch_FromFollowUp" name="Dispatch">
+      <bpmn:incoming>Flow_FollowUpAccepted_DispatchJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_Dispatch_FromFollowUp_def" name="Dispatch" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Link_Dispatch_FromCancel" name="Dispatch">
+      <bpmn:incoming>Flow_Cancelable_DispatchJoin</bpmn:incoming>
+      <bpmn:linkEventDefinition id="Link_Dispatch_FromCancel_def" name="Dispatch" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:textAnnotation id="TextAnnotation_Purpose">
+      <bpmn:text>Example 2. Receives A2A JSON-RPC requests, validates them, and answers SendMessage, GetTask, ListTasks and CancelTask by handing work to a task process and waiting for its outcome.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="RpcReceived" targetRef="TextAnnotation_Purpose" />
+  </bpmn:process>
+  <bpmn:signal id="Signal_Settled" name="=&#34;a2a-settled:&#34; + awaitKey" />
+  <bpmn:message id="AgentCardRequestMessage" name="Agent Card request" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-rpc">
+    <bpmndi:BPMNPlane id="BPMNPlane_a2a-rpc" bpmnElement="a2a-rpc">
+      <bpmndi:BPMNShape id="RpcReceived_di" bpmnElement="RpcReceived">
+        <dc:Bounds x="162" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="150" y="258" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NormalizeRequest_di" bpmnElement="NormalizeRequest">
+        <dc:Bounds x="277" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ParseRequest_di" bpmnElement="ParseRequest">
+        <dc:Bounds x="494" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ValidateRequest_di" bpmnElement="ValidateRequest">
+        <dc:Bounds x="711" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RouteRequest_di" bpmnElement="RouteRequest" isMarkerVisible="true">
+        <dc:Bounds x="953" y="215" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="943" y="185" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ValidationErrorReady_di" bpmnElement="ValidationErrorReady">
+        <dc:Bounds x="1072" y="222" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1054" y="258" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PrepareList_di" bpmnElement="PrepareList">
+        <dc:Bounds x="1082" y="685" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskListReady_di" bpmnElement="TaskListReady">
+        <dc:Bounds x="1688" y="707" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1671" y="743" width="70" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PrepareNewTask_di" bpmnElement="PrepareNewTask">
+        <dc:Bounds x="1082" y="355" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NewTaskReady_di" bpmnElement="NewTaskReady">
+        <dc:Bounds x="1716" y="227" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1699" y="263" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DispatchJoin_di" bpmnElement="DispatchJoin" isMarkerVisible="true">
+        <dc:Bounds x="1261" y="370" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PrepareLookup_di" bpmnElement="PrepareLookup">
+        <dc:Bounds x="1082" y="880" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FindTask_di" bpmnElement="FindTask">
+        <dc:Bounds x="1348" y="880" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskKnown_di" bpmnElement="TaskKnown" isMarkerVisible="true">
+        <dc:Bounds x="1695" y="895" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1688" y="865" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReadTask_di" bpmnElement="ReadTask">
+        <dc:Bounds x="1516" y="880" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RouteMethod_di" bpmnElement="RouteMethod" isMarkerVisible="true">
+        <dc:Bounds x="1835" y="895" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1812" y="865" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotFoundReady_di" bpmnElement="NotFoundReady">
+        <dc:Bounds x="2292" y="632" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2272" y="668" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TaskViewReady_di" bpmnElement="TaskViewReady">
+        <dc:Bounds x="1968" y="902" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1951" y="938" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Cancelable_di" bpmnElement="Cancelable" isMarkerVisible="true">
+        <dc:Bounds x="1975" y="1045" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1969" y="1105" width="62" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CanceledReady_di" bpmnElement="CanceledReady">
+        <dc:Bounds x="1996" y="377" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1973" y="413" width="83" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="NotCancelableReady_di" bpmnElement="NotCancelableReady">
+        <dc:Bounds x="2292" y="482" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2272" y="518" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CheckFollowUp_di" bpmnElement="CheckFollowUp">
+        <dc:Bounds x="1992" y="1180" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FollowUpAccepted_di" bpmnElement="FollowUpAccepted" isMarkerVisible="true">
+        <dc:Bounds x="2171" y="1195" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2170" y="1165" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RouteOutcome_di" bpmnElement="RouteOutcome" isMarkerVisible="true">
+        <dc:Bounds x="1625" y="370" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1598" y="340" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FollowUpReady_di" bpmnElement="FollowUpReady">
+        <dc:Bounds x="1716" y="482" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1699" y="518" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="FollowUpErrorReady_di" bpmnElement="FollowUpErrorReady">
+        <dc:Bounds x="2292" y="772" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2274" y="808" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LookupTimeLeft_di" bpmnElement="LookupTimeLeft" isMarkerVisible="true">
+        <dc:Bounds x="1695" y="1030" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1751" y="1041" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="LookupJoin_di" bpmnElement="LookupJoin" isMarkerVisible="true">
+        <dc:Bounds x="1261" y="895" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="WaitForIndex_di" bpmnElement="WaitForIndex">
+        <dc:Bounds x="1562" y="1037" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1540" y="1073" width="80" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CancellationOutcome_di" bpmnElement="CancellationOutcome" isMarkerVisible="true">
+        <dc:Bounds x="1821" y="370" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1718" y="422" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CancellationErrorReady_di" bpmnElement="CancellationErrorReady">
+        <dc:Bounds x="1828" y="482" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1801" y="518" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ListCollected_di" bpmnElement="ListCollected" isMarkerVisible="true">
+        <dc:Bounds x="1541" y="700" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1531" y="670" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ListFailureReady_di" bpmnElement="ListFailureReady">
+        <dc:Bounds x="1548" y="797" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1535" y="833" width="62" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CardRequested_di" bpmnElement="CardRequested">
+        <dc:Bounds x="162" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="152" y="378" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CardServed_di" bpmnElement="CardServed">
+        <dc:Bounds x="372" y="342" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="360" y="378" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotFound_Catch_di" bpmnElement="Link_NotFound_Catch" bioc:stroke="#e07b00" bioc:fill="#fff1de">
+        <dc:Bounds x="2124" y="632" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2118" y="668" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotFound_FromMethod_di" bpmnElement="Link_NotFound_FromMethod" bioc:stroke="#e07b00" bioc:fill="#fff1de">
+        <dc:Bounds x="1842" y="791" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1836" y="761" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotFound_FromLookup_di" bpmnElement="Link_NotFound_FromLookup" bioc:stroke="#e07b00" bioc:fill="#fff1de">
+        <dc:Bounds x="1702" y="1157" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1696" y="1193" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotCancelable_Catch_di" bpmnElement="Link_NotCancelable_Catch" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
+        <dc:Bounds x="2124" y="482" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2106" y="518" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotCancelable_FromCancelable_di" bpmnElement="Link_NotCancelable_FromCancelable" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
+        <dc:Bounds x="1982" y="992" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2040" y="997" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_NotCancelable_FromCancellation_di" bpmnElement="Link_NotCancelable_FromCancellation" bioc:stroke="#8a3fc0" bioc:fill="#f2e6fb">
+        <dc:Bounds x="1828" y="287" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1810" y="257" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_FollowUpError_Catch_di" bpmnElement="Link_FollowUpError_Catch" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
+        <dc:Bounds x="2124" y="772" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2105" y="808" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_FollowUpError_FromAccepted_di" bpmnElement="Link_FollowUpError_FromAccepted" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
+        <dc:Bounds x="2178" y="1292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2159" y="1328" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_FollowUpError_FromOutcome_di" bpmnElement="Link_FollowUpError_FromOutcome" bioc:stroke="#d6336c" bioc:fill="#fde6ee">
+        <dc:Bounds x="1632" y="572" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1613" y="608" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_Dispatch_In_di" bpmnElement="Link_Dispatch_In" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
+        <dc:Bounds x="1268" y="280" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1189" y="285" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_Dispatch_FromFollowUp_di" bpmnElement="Link_Dispatch_FromFollowUp" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
+        <dc:Bounds x="2304" y="1202" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2301" y="1238" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Link_Dispatch_FromCancel_di" bpmnElement="Link_Dispatch_FromCancel" bioc:stroke="#1a6fd1" bioc:fill="#e3efff">
+        <dc:Bounds x="2122" y="1052" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2119" y="1088" width="43" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_di" bpmnElement="Dispatch">
+        <dc:Bounds x="1404" y="355" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_di" bpmnElement="CollectTaskList">
+        <dc:Bounds x="1320" y="685" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
+        <di:waypoint x="180" y="222" />
+        <di:waypoint x="182" y="172" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="142" y="72" width="300" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_RpcReceived_NormalizeRequest_di" bpmnElement="Flow_RpcReceived_NormalizeRequest">
+        <di:waypoint x="198" y="240" />
+        <di:waypoint x="277" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NormalizeRequest_ParseRequest_di" bpmnElement="Flow_NormalizeRequest_ParseRequest">
+        <di:waypoint x="377" y="240" />
+        <di:waypoint x="494" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ParseRequest_ValidateRequest_di" bpmnElement="Flow_ParseRequest_ValidateRequest">
+        <di:waypoint x="594" y="240" />
+        <di:waypoint x="711" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ValidateRequest_RouteRequest_di" bpmnElement="Flow_ValidateRequest_RouteRequest">
+        <di:waypoint x="811" y="240" />
+        <di:waypoint x="953" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteRequest_BuildValidationError_di" bpmnElement="Flow_RouteRequest_BuildValidationError">
+        <di:waypoint x="1003" y="240" />
+        <di:waypoint x="1072" y="240" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1022" y="222" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareList_di" bpmnElement="Flow_RouteRequest_PrepareList">
+        <di:waypoint x="978" y="265" />
+        <di:waypoint x="978" y="725" />
+        <di:waypoint x="1082" y="725" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1023" y="707" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareNewTask_di" bpmnElement="Flow_RouteRequest_PrepareNewTask">
+        <di:waypoint x="978" y="265" />
+        <di:waypoint x="978" y="395" />
+        <di:waypoint x="1082" y="395" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1008" y="377" width="44" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteRequest_PrepareLookup_di" bpmnElement="Flow_RouteRequest_PrepareLookup">
+        <di:waypoint x="978" y="265" />
+        <di:waypoint x="978" y="920" />
+        <di:waypoint x="1082" y="920" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1000" y="902" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PrepareList_CollectTaskList_di" bpmnElement="Flow_PrepareList_CollectTaskList">
+        <di:waypoint x="1182" y="725" />
+        <di:waypoint x="1320" y="725" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ListCollected_BuildTaskList_di" bpmnElement="Flow_ListCollected_BuildTaskList">
+        <di:waypoint x="1591" y="725" />
+        <di:waypoint x="1688" y="725" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1618" y="707" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PrepareNewTask_DispatchJoin_di" bpmnElement="Flow_PrepareNewTask_DispatchJoin">
+        <di:waypoint x="1182" y="395" />
+        <di:waypoint x="1261" y="395" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteOutcome_BuildNewTaskResponse_di" bpmnElement="Flow_RouteOutcome_BuildNewTaskResponse">
+        <di:waypoint x="1650" y="370" />
+        <di:waypoint x="1650" y="245" />
+        <di:waypoint x="1716" y="245" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1661" y="227" width="44" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LinkDispatch_DispatchJoin_di" bpmnElement="Flow_LinkDispatch_DispatchJoin">
+        <di:waypoint x="1286" y="316" />
+        <di:waypoint x="1286" y="370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DispatchJoin_Dispatch_di" bpmnElement="Flow_DispatchJoin_Dispatch">
+        <di:waypoint x="1311" y="395" />
+        <di:waypoint x="1404" y="395" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Dispatch_RouteOutcome_di" bpmnElement="Flow_Dispatch_RouteOutcome">
+        <di:waypoint x="1504" y="395" />
+        <di:waypoint x="1625" y="395" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_PrepareLookup_LookupJoin_di" bpmnElement="Flow_PrepareLookup_LookupJoin">
+        <di:waypoint x="1182" y="920" />
+        <di:waypoint x="1261" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LookupJoin_FindTask_di" bpmnElement="Flow_LookupJoin_FindTask">
+        <di:waypoint x="1311" y="920" />
+        <di:waypoint x="1348" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FindTask_ReadTask_di" bpmnElement="Flow_FindTask_ReadTask">
+        <di:waypoint x="1448" y="920" />
+        <di:waypoint x="1516" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ReadTask_TaskKnown_di" bpmnElement="Flow_ReadTask_TaskKnown">
+        <di:waypoint x="1616" y="920" />
+        <di:waypoint x="1695" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TaskKnown_RouteMethod_di" bpmnElement="Flow_TaskKnown_RouteMethod">
+        <di:waypoint x="1745" y="920" />
+        <di:waypoint x="1835" y="920" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1781" y="902" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TaskKnown_LookupTimeLeft_di" bpmnElement="Flow_TaskKnown_LookupTimeLeft">
+        <di:waypoint x="1720" y="945" />
+        <di:waypoint x="1720" y="1030" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1722" y="983" width="79" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteMethod_NotFoundJoin_di" bpmnElement="Flow_RouteMethod_NotFoundJoin">
+        <di:waypoint x="1860" y="895" />
+        <di:waypoint x="1860" y="827" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1870" y="830" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteMethod_BuildTaskView_di" bpmnElement="Flow_RouteMethod_BuildTaskView">
+        <di:waypoint x="1885" y="920" />
+        <di:waypoint x="1968" y="920" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1907" y="902" width="41" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteMethod_Cancelable_di" bpmnElement="Flow_RouteMethod_Cancelable">
+        <di:waypoint x="1860" y="945" />
+        <di:waypoint x="1860" y="1070" />
+        <di:waypoint x="1975" y="1070" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1890" y="1052" width="57" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteMethod_CheckFollowUp_di" bpmnElement="Flow_RouteMethod_CheckFollowUp">
+        <di:waypoint x="1860" y="945" />
+        <di:waypoint x="1860" y="1220" />
+        <di:waypoint x="1992" y="1220" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1891" y="1202" width="71" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotFoundJoin_BuildNotFound_di" bpmnElement="Flow_NotFoundJoin_BuildNotFound">
+        <di:waypoint x="2160" y="650" />
+        <di:waypoint x="2292" y="650" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Cancelable_DispatchJoin_di" bpmnElement="Flow_Cancelable_DispatchJoin">
+        <di:waypoint x="2025" y="1070" />
+        <di:waypoint x="2122" y="1070" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2060" y="1052" width="29" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Cancelable_NotCancelableJoin_di" bpmnElement="Flow_Cancelable_NotCancelableJoin">
+        <di:waypoint x="2000" y="1045" />
+        <di:waypoint x="2000" y="1028" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2007" y="1037" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_BuildCanceledView_di" bpmnElement="Flow_CancellationOutcome_BuildCanceledView">
+        <di:waypoint x="1871" y="395" />
+        <di:waypoint x="1996" y="395" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1912" y="377" width="45" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NotCancelableJoin_BuildNotCancelable_di" bpmnElement="Flow_NotCancelableJoin_BuildNotCancelable">
+        <di:waypoint x="2160" y="500" />
+        <di:waypoint x="2292" y="500" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CheckFollowUp_FollowUpAccepted_di" bpmnElement="Flow_CheckFollowUp_FollowUpAccepted">
+        <di:waypoint x="2092" y="1220" />
+        <di:waypoint x="2171" y="1220" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FollowUpAccepted_DispatchJoin_di" bpmnElement="Flow_FollowUpAccepted_DispatchJoin">
+        <di:waypoint x="2221" y="1220" />
+        <di:waypoint x="2304" y="1220" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2254" y="1202" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FollowUpAccepted_FollowUpErrorJoin_di" bpmnElement="Flow_FollowUpAccepted_FollowUpErrorJoin">
+        <di:waypoint x="2196" y="1245" />
+        <di:waypoint x="2196" y="1292" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2231" y="1278" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteOutcome_CancellationOutcome_di" bpmnElement="Flow_RouteOutcome_CancellationOutcome">
+        <di:waypoint x="1675" y="395" />
+        <di:waypoint x="1821" y="395" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1732" y="377" width="32" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteOutcome_BuildFollowUpResponse_di" bpmnElement="Flow_RouteOutcome_BuildFollowUpResponse">
+        <di:waypoint x="1650" y="420" />
+        <di:waypoint x="1650" y="500" />
+        <di:waypoint x="1716" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1629" y="482" width="109" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RouteOutcome_FollowUpErrorJoin_di" bpmnElement="Flow_RouteOutcome_FollowUpErrorJoin">
+        <di:waypoint x="1650" y="420" />
+        <di:waypoint x="1650" y="572" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1685" y="542" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_FollowUpErrorJoin_BuildFollowUpError_di" bpmnElement="Flow_FollowUpErrorJoin_BuildFollowUpError">
+        <di:waypoint x="2160" y="790" />
+        <di:waypoint x="2292" y="790" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LookupTimeLeft_WaitForIndex_di" bpmnElement="Flow_LookupTimeLeft_WaitForIndex">
+        <di:waypoint x="1695" y="1055" />
+        <di:waypoint x="1598" y="1055" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1636" y="1037" width="39" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_LookupTimeLeft_NotFoundJoin_di" bpmnElement="Flow_LookupTimeLeft_NotFoundJoin">
+        <di:waypoint x="1720" y="1080" />
+        <di:waypoint x="1720" y="1157" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1743" y="1138" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_WaitForIndex_LookupJoin_di" bpmnElement="Flow_WaitForIndex_LookupJoin">
+        <di:waypoint x="1562" y="1055" />
+        <di:waypoint x="1286" y="1055" />
+        <di:waypoint x="1286" y="945" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_NotCancelableJoin_di" bpmnElement="Flow_CancellationOutcome_NotCancelableJoin">
+        <di:waypoint x="1846" y="370" />
+        <di:waypoint x="1846" y="323" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1856" y="323" width="63" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CancellationOutcome_CancellationTimeout_di" bpmnElement="Flow_CancellationOutcome_CancellationTimeout">
+        <di:waypoint x="1846" y="420" />
+        <di:waypoint x="1846" y="482" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1863" y="466" width="49" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CollectTaskList_ListCollected_di" bpmnElement="Flow_CollectTaskList_ListCollected">
+        <di:waypoint x="1420" y="725" />
+        <di:waypoint x="1541" y="725" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ListCollected_BuildListFailure_di" bpmnElement="Flow_ListCollected_BuildListFailure">
+        <di:waypoint x="1566" y="750" />
+        <di:waypoint x="1566" y="797" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1580" y="783" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CardRequested_CardServed_di" bpmnElement="Flow_CardRequested_CardServed">
+        <di:waypoint x="198" y="360" />
+        <di:waypoint x="372" y="360" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="CorrelateTask">
+      <bpmndi:BPMNShape id="CorrelateTask_CorrelateRequested_di" bpmnElement="CorrelateTask_CorrelateRequested">
+        <dc:Bounds x="180" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_ResetAttempts_di" bpmnElement="CorrelateTask_ResetAttempts">
+        <dc:Bounds x="448" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_TryJoin_di" bpmnElement="CorrelateTask_TryJoin" isMarkerVisible="true">
+        <dc:Bounds x="623" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_CorrelateMessage_di" bpmnElement="CorrelateTask_CorrelateMessage">
+        <dc:Bounds x="748" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_Correlated_di" bpmnElement="CorrelateTask_Correlated">
+        <dc:Bounds x="930" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_CountAttempt_di" bpmnElement="CorrelateTask_CountAttempt">
+        <dc:Bounds x="898" y="300" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_AttemptsLeft_di" bpmnElement="CorrelateTask_AttemptsLeft" isMarkerVisible="true">
+        <dc:Bounds x="1073" y="315" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_WaitBeforeRetry_di" bpmnElement="CorrelateTask_WaitBeforeRetry">
+        <dc:Bounds x="1230" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_NotCorrelated_di" bpmnElement="CorrelateTask_NotCorrelated">
+        <dc:Bounds x="1230" y="462" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_NoSubscription_di" bpmnElement="CorrelateTask_NoSubscription">
+        <dc:Bounds x="780" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CorrelateRequested_ResetAttempts_di" bpmnElement="CorrelateTask_Flow_CorrelateRequested_ResetAttempts">
+        <di:waypoint x="216" y="200" />
+        <di:waypoint x="448" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_ResetAttempts_TryJoin_di" bpmnElement="CorrelateTask_Flow_ResetAttempts_TryJoin">
+        <di:waypoint x="548" y="200" />
+        <di:waypoint x="623" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_WaitBeforeRetry_TryJoin_di" bpmnElement="CorrelateTask_Flow_WaitBeforeRetry_TryJoin">
+        <di:waypoint x="1248" y="358" />
+        <di:waypoint x="1248" y="410" />
+        <di:waypoint x="648" y="410" />
+        <di:waypoint x="648" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_TryJoin_CorrelateMessage_di" bpmnElement="CorrelateTask_Flow_TryJoin_CorrelateMessage">
+        <di:waypoint x="673" y="200" />
+        <di:waypoint x="748" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CorrelateMessage_MarkCorrelated_di" bpmnElement="CorrelateTask_Flow_CorrelateMessage_MarkCorrelated">
+        <di:waypoint x="848" y="200" />
+        <di:waypoint x="930" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_NoSubscription_CountAttempt_di" bpmnElement="CorrelateTask_Flow_NoSubscription_CountAttempt">
+        <di:waypoint x="798" y="258" />
+        <di:waypoint x="798" y="340" />
+        <di:waypoint x="898" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_CountAttempt_AttemptsLeft_di" bpmnElement="CorrelateTask_Flow_CountAttempt_AttemptsLeft">
+        <di:waypoint x="998" y="340" />
+        <di:waypoint x="1073" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry_di" bpmnElement="CorrelateTask_Flow_AttemptsLeft_WaitBeforeRetry">
+        <di:waypoint x="1123" y="340" />
+        <di:waypoint x="1230" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated_di" bpmnElement="CorrelateTask_Flow_AttemptsLeft_MarkNotCorrelated">
+        <di:waypoint x="1098" y="365" />
+        <di:waypoint x="1098" y="480" />
+        <di:waypoint x="1230" y="480" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="Dispatch">
+      <bpmndi:BPMNShape id="Dispatch_Requested_di" bpmnElement="Dispatch_Requested">
+        <dc:Bounds x="180" y="167" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_Fork_di" bpmnElement="Dispatch_Fork">
+        <dc:Bounds x="473" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_OutcomeFirst_di" bpmnElement="Dispatch_OutcomeFirst">
+        <dc:Bounds x="623" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_OutcomePublished_di" bpmnElement="Dispatch_OutcomePublished">
+        <dc:Bounds x="780" y="167" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_TimeLimit_di" bpmnElement="Dispatch_TimeLimit">
+        <dc:Bounds x="930" y="307" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_AwaitDone_di" bpmnElement="Dispatch_AwaitDone" isMarkerVisible="true">
+        <dc:Bounds x="923" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_IsNew_di" bpmnElement="Dispatch_IsNew" isMarkerVisible="true">
+        <dc:Bounds x="623" y="300" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CreateTask_di" bpmnElement="CreateTask">
+        <dc:Bounds x="780" y="307" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="765" y="270" width="66" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CorrelateTask_di" bpmnElement="CorrelateTask">
+        <dc:Bounds x="748" y="425" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_Correlated_di" bpmnElement="Dispatch_Correlated" isMarkerVisible="true">
+        <dc:Bounds x="923" y="440" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_NotHandled_di" bpmnElement="Dispatch_NotHandled">
+        <dc:Bounds x="1080" y="587" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_TriggerDone_di" bpmnElement="Dispatch_TriggerDone" isMarkerVisible="true">
+        <dc:Bounds x="1073" y="300" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_Sync_di" bpmnElement="Dispatch_Sync">
+        <dc:Bounds x="1223" y="160" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Dispatch_Done_di" bpmnElement="Dispatch_Done">
+        <dc:Bounds x="1380" y="167" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Requested_Fork_di" bpmnElement="Dispatch_Flow_Requested_Fork">
+        <di:waypoint x="216" y="185" />
+        <di:waypoint x="473" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Fork_OutcomeFirst_di" bpmnElement="Dispatch_Flow_Fork_OutcomeFirst">
+        <di:waypoint x="523" y="185" />
+        <di:waypoint x="623" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Fork_IsNew_di" bpmnElement="Dispatch_Flow_Fork_IsNew">
+        <di:waypoint x="498" y="210" />
+        <di:waypoint x="498" y="325" />
+        <di:waypoint x="623" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomeFirst_OutcomePublished_di" bpmnElement="Dispatch_Flow_OutcomeFirst_OutcomePublished">
+        <di:waypoint x="673" y="185" />
+        <di:waypoint x="780" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomeFirst_TimeLimit_di" bpmnElement="Dispatch_Flow_OutcomeFirst_TimeLimit">
+        <di:waypoint x="673" y="185" />
+        <di:waypoint x="723" y="185" />
+        <di:waypoint x="723" y="255" />
+        <di:waypoint x="873" y="255" />
+        <di:waypoint x="873" y="325" />
+        <di:waypoint x="930" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_OutcomePublished_AwaitDone_di" bpmnElement="Dispatch_Flow_OutcomePublished_AwaitDone">
+        <di:waypoint x="816" y="185" />
+        <di:waypoint x="923" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_TimeLimit_AwaitDone_di" bpmnElement="Dispatch_Flow_TimeLimit_AwaitDone">
+        <di:waypoint x="948" y="307" />
+        <di:waypoint x="948" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_AwaitDone_Sync_di" bpmnElement="Dispatch_Flow_AwaitDone_Sync">
+        <di:waypoint x="973" y="185" />
+        <di:waypoint x="1223" y="185" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_IsNew_CreateTask_di" bpmnElement="Dispatch_Flow_IsNew_CreateTask">
+        <di:waypoint x="673" y="325" />
+        <di:waypoint x="780" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_IsNew_CorrelateTask_di" bpmnElement="Dispatch_Flow_IsNew_CorrelateTask">
+        <di:waypoint x="648" y="350" />
+        <di:waypoint x="648" y="465" />
+        <di:waypoint x="748" y="465" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_CreateTask_TriggerDone_di" bpmnElement="Dispatch_Flow_CreateTask_TriggerDone">
+        <di:waypoint x="816" y="325" />
+        <di:waypoint x="1073" y="325" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_CorrelateTask_Correlated_di" bpmnElement="Dispatch_Flow_CorrelateTask_Correlated">
+        <di:waypoint x="848" y="465" />
+        <di:waypoint x="923" y="465" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Correlated_TriggerDone_di" bpmnElement="Dispatch_Flow_Correlated_TriggerDone">
+        <di:waypoint x="973" y="465" />
+        <di:waypoint x="1098" y="465" />
+        <di:waypoint x="1098" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Correlated_NotHandled_di" bpmnElement="Dispatch_Flow_Correlated_NotHandled">
+        <di:waypoint x="948" y="490" />
+        <di:waypoint x="948" y="605" />
+        <di:waypoint x="1080" y="605" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_TriggerDone_Sync_di" bpmnElement="Dispatch_Flow_TriggerDone_Sync">
+        <di:waypoint x="1123" y="325" />
+        <di:waypoint x="1248" y="325" />
+        <di:waypoint x="1248" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Dispatch_Flow_Sync_Done_di" bpmnElement="Dispatch_Flow_Sync_Done">
+        <di:waypoint x="1273" y="185" />
+        <di:waypoint x="1380" y="185" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="CollectTaskList">
+      <bpmndi:BPMNShape id="CollectTaskList_ListScanRequested_di" bpmnElement="CollectTaskList_ListScanRequested">
+        <dc:Bounds x="180" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_StartListScan_di" bpmnElement="CollectTaskList_StartListScan">
+        <dc:Bounds x="448" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListProcessPageJoin_di" bpmnElement="CollectTaskList_ListProcessPageJoin" isMarkerVisible="true">
+        <dc:Bounds x="623" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_SearchTasks_di" bpmnElement="CollectTaskList_SearchTasks">
+        <dc:Bounds x="748" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_AnyTasks_di" bpmnElement="CollectTaskList_AnyTasks" isMarkerVisible="true">
+        <dc:Bounds x="923" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListVariablesJoin_di" bpmnElement="CollectTaskList_ListVariablesJoin" isMarkerVisible="true">
+        <dc:Bounds x="1073" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ReadTasks_di" bpmnElement="CollectTaskList_ReadTasks">
+        <dc:Bounds x="1198" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListBatchJoin_di" bpmnElement="CollectTaskList_ListBatchJoin" isMarkerVisible="true">
+        <dc:Bounds x="1373" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_CollectListBatch_di" bpmnElement="CollectTaskList_CollectListBatch">
+        <dc:Bounds x="1498" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListScanDecision_di" bpmnElement="CollectTaskList_ListScanDecision" isMarkerVisible="true">
+        <dc:Bounds x="1673" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_FinishListScan_di" bpmnElement="CollectTaskList_FinishListScan">
+        <dc:Bounds x="1798" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListResultJoin_di" bpmnElement="CollectTaskList_ListResultJoin" isMarkerVisible="true">
+        <dc:Bounds x="1973" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_ListScanReady_di" bpmnElement="CollectTaskList_ListScanReady">
+        <dc:Bounds x="2130" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_WaitListVariables_di" bpmnElement="CollectTaskList_WaitListVariables">
+        <dc:Bounds x="630" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CollectTaskList_FailListScan_di" bpmnElement="CollectTaskList_FailListScan">
+        <dc:Bounds x="598" y="440" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanRequested_StartListScan_di" bpmnElement="CollectTaskList_Flow_ListScanRequested_StartListScan">
+        <di:waypoint x="216" y="200" />
+        <di:waypoint x="448" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_StartListScan_ListProcessPageJoin_di" bpmnElement="CollectTaskList_Flow_StartListScan_ListProcessPageJoin">
+        <di:waypoint x="548" y="200" />
+        <di:waypoint x="623" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListProcessPageJoin_SearchTasks_di" bpmnElement="CollectTaskList_Flow_ListProcessPageJoin_SearchTasks">
+        <di:waypoint x="673" y="200" />
+        <di:waypoint x="748" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_SearchTasks_AnyTasks_di" bpmnElement="CollectTaskList_Flow_SearchTasks_AnyTasks">
+        <di:waypoint x="848" y="200" />
+        <di:waypoint x="923" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_AnyTasks_ListVariablesJoin_di" bpmnElement="CollectTaskList_Flow_AnyTasks_ListVariablesJoin">
+        <di:waypoint x="973" y="200" />
+        <di:waypoint x="1073" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListVariablesJoin_ReadTasks_di" bpmnElement="CollectTaskList_Flow_ListVariablesJoin_ReadTasks">
+        <di:waypoint x="1123" y="200" />
+        <di:waypoint x="1198" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_AnyTasks_ListBatchJoin_di" bpmnElement="CollectTaskList_Flow_AnyTasks_ListBatchJoin">
+        <di:waypoint x="948" y="225" />
+        <di:waypoint x="948" y="270" />
+        <di:waypoint x="1398" y="270" />
+        <di:waypoint x="1398" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ReadTasks_ListBatchJoin_di" bpmnElement="CollectTaskList_Flow_ReadTasks_ListBatchJoin">
+        <di:waypoint x="1298" y="200" />
+        <di:waypoint x="1373" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListBatchJoin_CollectListBatch_di" bpmnElement="CollectTaskList_Flow_ListBatchJoin_CollectListBatch">
+        <di:waypoint x="1423" y="200" />
+        <di:waypoint x="1498" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_CollectListBatch_ListScanDecision_di" bpmnElement="CollectTaskList_Flow_CollectListBatch_ListScanDecision">
+        <di:waypoint x="1598" y="200" />
+        <di:waypoint x="1673" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_FinishListScan_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_FinishListScan">
+        <di:waypoint x="1723" y="200" />
+        <di:waypoint x="1798" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_ListProcessPageJoin">
+        <di:waypoint x="1698" y="225" />
+        <di:waypoint x="1698" y="270" />
+        <di:waypoint x="648" y="270" />
+        <di:waypoint x="648" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_WaitListVariables_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_WaitListVariables">
+        <di:waypoint x="1698" y="175" />
+        <di:waypoint x="1698" y="130" />
+        <di:waypoint x="648" y="130" />
+        <di:waypoint x="648" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_WaitListVariables_ListVariablesJoin_di" bpmnElement="CollectTaskList_Flow_WaitListVariables_ListVariablesJoin">
+        <di:waypoint x="666" y="340" />
+        <di:waypoint x="1098" y="340" />
+        <di:waypoint x="1098" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListScanDecision_FailListScan_di" bpmnElement="CollectTaskList_Flow_ListScanDecision_FailListScan">
+        <di:waypoint x="1698" y="175" />
+        <di:waypoint x="1698" y="130" />
+        <di:waypoint x="648" y="130" />
+        <di:waypoint x="648" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_FinishListScan_ListResultJoin_di" bpmnElement="CollectTaskList_Flow_FinishListScan_ListResultJoin">
+        <di:waypoint x="1898" y="200" />
+        <di:waypoint x="1973" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_FailListScan_ListResultJoin_di" bpmnElement="CollectTaskList_Flow_FailListScan_ListResultJoin">
+        <di:waypoint x="698" y="480" />
+        <di:waypoint x="1998" y="480" />
+        <di:waypoint x="1998" y="225" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="CollectTaskList_Flow_ListResultJoin_ListScanReady_di" bpmnElement="CollectTaskList_Flow_ListResultJoin_ListScanReady">
+        <di:waypoint x="2023" y="200" />
+        <di:waypoint x="2130" y="200" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

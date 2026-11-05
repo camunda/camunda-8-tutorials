@@ -1,0 +1,1838 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-rpc",
+  "testCases": [
+    {
+      "name": "Invalid request - return a validation error",
+      "description": "Checks that a valid request is parsed and accepted, without needing a live webhook or secrets.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "ParseRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "1.0",
+              "id": "invalid-request",
+              "method": "GetTask",
+              "params": {
+                "id": "demo-task"
+              }
+            },
+            "hdr": {
+              "content-type": "application/json",
+              "a2a-version": "1.0"
+            },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "ValidationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Get task - return the supplied task view",
+      "description": "Returns the details of an existing task when a client asks for it with GetTask.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "get-task",
+              "method": "GetTask",
+              "hl": 0
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "RouteMethod"
+            },
+            {
+              "elementId": "TaskViewReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Cancel terminal task - reject cancellation",
+      "description": "Rejects a cancel request for a task that has already completed, and leaves the task unchanged.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "cancel-task",
+              "method": "CancelTask"
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_COMPLETED",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "RouteMethod"
+            },
+            {
+              "elementId": "Cancelable"
+            },
+            {
+              "elementId": "Link_NotCancelable_FromCancelable"
+            },
+            {
+              "elementId": "NotCancelableReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Follow-up in another context - reject before correlation",
+      "description": "Rejects a follow-up message whose context ID does not match the task.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "CheckFollowUp"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "follow-up",
+              "method": "SendMessage",
+              "contextId": "another-context"
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_INPUT_REQUIRED",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CheckFollowUp"
+            },
+            {
+              "elementId": "FollowUpAccepted"
+            },
+            {
+              "elementId": "Link_FollowUpError_FromAccepted"
+            },
+            {
+              "elementId": "FollowUpErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "A2A 0.3 request - detect the dialect and return a validation error",
+      "description": "An A2A 0.3 request without a message is rejected with the same error as an A2A 1.0 request.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "NormalizeRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "2.0",
+              "id": "legacy-invalid",
+              "method": "message/send",
+              "params": {}
+            },
+            "hdr": {
+              "content-type": "application/json"
+            },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "NormalizeRequest"
+            },
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "ValidationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "variables": {
+            "dialect": "0.3"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "A2A 1.0 request - keep the dialect",
+      "description": "An A2A 1.0 request is processed as sent, with no conversion.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "NormalizeRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "1.0",
+              "id": "v1-invalid",
+              "method": "GetTask",
+              "params": {
+                "id": "demo-task"
+              }
+            },
+            "hdr": {
+              "content-type": "application/json"
+            },
+            "pushEnabled": false
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "NormalizeRequest"
+            },
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "ValidationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "variables": {
+            "dialect": "1.0"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "End to end: external client sends a message - server agent settles the task",
+      "description": "Example 2. An external client sends a message and waits for the answer. The server starts a task, the task runs the server agent, and the server returns the finished task to the client.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "DispatchJoin"
+            }
+          ],
+          "variables": {
+            "dialect": "1.0",
+            "ctx": {
+              "id": "e2e-1",
+              "method": "SendMessage",
+              "blocking": true,
+              "hl": 0,
+              "m": {
+                "messageId": "m1",
+                "role": "ROLE_USER",
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              },
+              "pushEnabled": false
+            },
+            "lookup": {
+              "taskId": "e2e-task",
+              "contextId": "e2e-context",
+              "ctxTag": "ctx-e2e-context",
+              "task": {
+                "id": "e2e-task",
+                "contextId": "e2e-context",
+                "rev": 1,
+                "status": {
+                  "state": "TASK_STATE_WORKING",
+                  "timestamp": "2026-01-01T00:00:00Z"
+                },
+                "history": [],
+                "artifacts": []
+              },
+              "push": null
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CreateTask"
+          },
+          "variables": {
+            "created": "1"
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-start",
+          "correlationKey": "e2e-task",
+          "variables": {
+            "req": {
+              "message": {
+                "messageId": "m1",
+                "role": "ROLE_USER",
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              },
+              "blocking": true,
+              "hl": 0
+            },
+            "task": {
+              "id": "e2e-task",
+              "contextId": "e2e-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "activateElements": [
+            {
+              "elementId": "upperCase",
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "upperCase"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "completionConditionFulfilled": true,
+          "variables": {
+            "agent": {
+              "responseText": "Done.",
+              "context": {
+                "conversation": {
+                  "messages": [
+                    {
+                      "role": "tool_call_result",
+                      "results": [
+                        {
+                          "id": "call-1",
+                          "name": "upperCase",
+                          "content": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "TaskDone"
+            },
+            {
+              "elementId": "PublishOutcome"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CreateTask"
+            },
+            {
+              "elementId": "Dispatch_OutcomePublished"
+            },
+            {
+              "elementId": "NewTaskReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Valid SendMessage - start a new task",
+      "description": "A valid message without a task id creates a new task and returns it without waiting.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "ParseRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "2.0",
+              "id": "r1",
+              "method": "SendMessage",
+              "params": {
+                "message": {
+                  "messageId": "m1",
+                  "role": "ROLE_USER",
+                  "parts": [
+                    {
+                      "data": {
+                        "demoInput": {
+                          "value": "Example input"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "configuration": {
+                  "returnImmediately": true
+                }
+              }
+            },
+            "hdr": {
+              "content-type": "application/json",
+              "a2a-version": "1.0"
+            },
+            "pushEnabled": false,
+            "dialect": "1.0"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CreateTask"
+          },
+          "variables": {
+            "created": "1"
+          }
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT1S"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "ParseRequest"
+            },
+            {
+              "elementId": "ValidateRequest"
+            },
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "PrepareNewTask"
+            },
+            {
+              "elementId": "CreateTask"
+            },
+            {
+              "elementId": "Dispatch_TimeLimit"
+            },
+            {
+              "elementId": "NewTaskReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "Valid ListTasks - return an empty list",
+      "description": "A valid ListTasks request with no tasks returns an empty list.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "ParseRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "2.0",
+              "id": "r1",
+              "method": "ListTasks",
+              "params": {}
+            },
+            "hdr": {
+              "content-type": "application/json",
+              "a2a-version": "1.0"
+            },
+            "pushEnabled": false,
+            "dialect": "1.0"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CollectTaskList_SearchTasks"
+          },
+          "variables": {
+            "taskKeys": [],
+            "listPage": {
+              "count": 0
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "PrepareList"
+            },
+            {
+              "elementId": "CollectTaskList_SearchTasks"
+            },
+            {
+              "elementId": "CollectTaskList_AnyTasks"
+            },
+            {
+              "elementId": "CollectTaskList_FinishListScan"
+            },
+            {
+              "elementId": "TaskListReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "ListTasks with one task - read the task variables",
+      "description": "The server reads the stored task for each key and lists it.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "PrepareList"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "method": "ListTasks",
+              "pageSize": 50,
+              "listContextId": "demo-context"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CollectTaskList_SearchTasks"
+          },
+          "variables": {
+            "taskKeys": [
+              "101"
+            ],
+            "listPage": {
+              "count": 1
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CollectTaskList_ReadTasks"
+          },
+          "variables": {
+            "taskBatch": [
+              {
+                "scopeKey": "101",
+                "processInstanceKey": "101",
+                "value": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "rev": 1,
+                  "status": {
+                    "state": "TASK_STATE_WORKING",
+                    "timestamp": "2026-01-01T00:00:00Z"
+                  },
+                  "history": [],
+                  "artifacts": []
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CollectTaskList_ReadTasks"
+            },
+            {
+              "elementId": "CollectTaskList_CollectListBatch"
+            },
+            {
+              "elementId": "CollectTaskList_FinishListScan"
+            },
+            {
+              "elementId": "TaskListReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "ListTasks before task data is readable - retry",
+      "description": "The task variables are not indexed yet, so the server waits and reads them again.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "PrepareList"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "method": "ListTasks",
+              "pageSize": 50
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CollectTaskList_SearchTasks"
+          },
+          "variables": {
+            "taskKeys": [
+              "101"
+            ],
+            "listPage": {
+              "count": 1
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CollectTaskList_ReadTasks"
+          },
+          "variables": {
+            "taskBatch": []
+          }
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT1S"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CollectTaskList_ReadTasks"
+          },
+          "variables": {
+            "taskBatch": [
+              {
+                "scopeKey": "101",
+                "processInstanceKey": "101",
+                "value": {
+                  "id": "demo-task",
+                  "contextId": "demo-context",
+                  "rev": 1,
+                  "status": {
+                    "state": "TASK_STATE_WORKING",
+                    "timestamp": "2026-01-01T00:00:00Z"
+                  },
+                  "history": [],
+                  "artifacts": []
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CollectTaskList_WaitListVariables"
+            },
+            {
+              "elementId": "CollectTaskList_ReadTasks"
+            },
+            {
+              "elementId": "CollectTaskList_FinishListScan"
+            },
+            {
+              "elementId": "TaskListReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "ListTasks never becomes readable - report a failure",
+      "description": "Task data stays unreadable past the deadline, so the server returns an error instead of a partial list.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "PrepareList"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "method": "ListTasks",
+              "pageSize": 50
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CollectTaskList_SearchTasks"
+          },
+          "variables": {
+            "taskKeys": [
+              "101"
+            ],
+            "listPage": {
+              "count": 1
+            }
+          }
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT11S"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CollectTaskList_ReadTasks"
+          },
+          "variables": {
+            "taskBatch": []
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CollectTaskList_CollectListBatch"
+            },
+            {
+              "elementId": "CollectTaskList_FailListScan"
+            },
+            {
+              "elementId": "ListFailureReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "Valid GetTask - read the task from the engine",
+      "description": "The server finds the task by its tag and reads its stored state.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "ParseRequest"
+            }
+          ],
+          "variables": {
+            "rpc": {
+              "jsonrpc": "2.0",
+              "id": "r1",
+              "method": "GetTask",
+              "params": {
+                "id": "demo-task"
+              }
+            },
+            "hdr": {
+              "content-type": "application/json",
+              "a2a-version": "1.0"
+            },
+            "pushEnabled": false,
+            "dialect": "1.0"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "FindTask"
+          },
+          "variables": {
+            "found": "101"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ReadTask"
+          },
+          "variables": {
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "RouteRequest"
+            },
+            {
+              "elementId": "PrepareLookup"
+            },
+            {
+              "elementId": "FindTask"
+            },
+            {
+              "elementId": "ReadTask"
+            },
+            {
+              "elementId": "TaskKnown"
+            },
+            {
+              "elementId": "RouteMethod"
+            },
+            {
+              "elementId": "TaskViewReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "Task not readable yet - wait and look again",
+      "description": "A new task may not be searchable yet, so the server waits and tries again.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "PrepareLookup"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "g",
+              "method": "GetTask",
+              "ref": "demo-task",
+              "hl": 0
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "FindTask"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ReadTask"
+          },
+          "variables": {}
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT1S"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "FindTask"
+          },
+          "variables": {
+            "found": "101"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ReadTask"
+          },
+          "variables": {
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "LookupTimeLeft"
+            },
+            {
+              "elementId": "WaitForIndex"
+            },
+            {
+              "elementId": "FindTask"
+            },
+            {
+              "elementId": "ReadTask"
+            },
+            {
+              "elementId": "TaskViewReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "Task never found - return not found",
+      "description": "The task is still unknown when the lookup time is up.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "LookupJoin"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "g",
+              "method": "GetTask",
+              "ref": "missing",
+              "hl": 0
+            },
+            "lookup": {
+              "taskId": "missing",
+              "indexDeadline": "2020-01-01T00:00:00Z"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "FindTask"
+          },
+          "variables": {}
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "ReadTask"
+          },
+          "variables": {}
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "TaskKnown"
+            },
+            {
+              "elementId": "LookupTimeLeft"
+            },
+            {
+              "elementId": "Link_NotFound_FromLookup"
+            },
+            {
+              "elementId": "NotFoundReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "Unsupported method on a known task - return not found",
+      "description": "A method the server does not handle for tasks gets the not-found answer.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "u",
+              "method": "UnknownMethod"
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "RouteMethod"
+            },
+            {
+              "elementId": "Link_NotFound_FromMethod"
+            },
+            {
+              "elementId": "NotFoundReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "Cancel a running task - the task settles as canceled",
+      "description": "The server hands the cancellation to the task and returns the canceled task.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "c",
+              "method": "CancelTask",
+              "hl": 0
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            },
+            "lookup": {
+              "taskId": "demo-task"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "variables": {}
+        },
+        {
+          "type": "BROADCAST_SIGNAL",
+          "signalName": "a2a-settled:demo-task:3",
+          "variables": {
+            "settled": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 3,
+              "status": {
+                "state": "TASK_STATE_CANCELED",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Cancelable"
+            },
+            {
+              "elementId": "Link_Dispatch_FromCancel"
+            },
+            {
+              "elementId": "CorrelateTask_Correlated"
+            },
+            {
+              "elementId": "Dispatch_OutcomePublished"
+            },
+            {
+              "elementId": "CancellationOutcome"
+            },
+            {
+              "elementId": "CanceledReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "Cancel a task that cannot be reached - report not cancelable",
+      "description": "No task is waiting for the cancel message, so the server retries and then gives up.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "c",
+              "method": "CancelTask",
+              "hl": 0
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            },
+            "lookup": {
+              "taskId": "demo-task"
+            }
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "errorCode": "NOT_FOUND",
+          "errorMessage": "not found"
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT1S"
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "errorCode": "NOT_FOUND",
+          "errorMessage": "not found"
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT1S"
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "errorCode": "NOT_FOUND",
+          "errorMessage": "not found"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CorrelateTask_AttemptsLeft"
+            },
+            {
+              "elementId": "CorrelateTask_WaitBeforeRetry"
+            },
+            {
+              "elementId": "CorrelateTask_NotCorrelated"
+            },
+            {
+              "elementId": "Dispatch_NotHandled"
+            },
+            {
+              "elementId": "Link_NotCancelable_FromCancellation"
+            },
+            {
+              "elementId": "NotCancelableReady"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Cancel is not confirmed in time - return an error",
+      "description": "The task accepts the cancellation but does not publish its outcome before the time limit.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "c",
+              "method": "CancelTask",
+              "hl": 0
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_WORKING",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            },
+            "lookup": {
+              "taskId": "demo-task"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "variables": {}
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT6S"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "Dispatch_TimeLimit"
+            },
+            {
+              "elementId": "CancellationOutcome"
+            },
+            {
+              "elementId": "CancellationErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    },
+    {
+      "name": "Follow-up to a task that waits for input - hand it to the task",
+      "description": "The follow-up message is handed to the waiting task.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "f",
+              "method": "SendMessage",
+              "contextId": "demo-context",
+              "blocking": false,
+              "hl": 0,
+              "m": {
+                "messageId": "m1",
+                "role": "ROLE_USER",
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_INPUT_REQUIRED",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            },
+            "lookup": {
+              "taskId": "demo-task"
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "variables": {}
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT1S"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CheckFollowUp"
+            },
+            {
+              "elementId": "FollowUpAccepted"
+            },
+            {
+              "elementId": "Link_Dispatch_FromFollowUp"
+            },
+            {
+              "elementId": "Dispatch_TimeLimit"
+            },
+            {
+              "elementId": "CorrelateTask_Correlated"
+            },
+            {
+              "elementId": "FollowUpReady"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Follow-up the task does not accept - return an error",
+      "description": "The task is gone before it can take the follow-up, so the client gets an error.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "startInstructions": [
+            {
+              "elementId": "RouteMethod"
+            }
+          ],
+          "variables": {
+            "ctx": {
+              "id": "f",
+              "method": "SendMessage",
+              "contextId": "demo-context",
+              "blocking": false,
+              "hl": 0,
+              "m": {
+                "messageId": "m1",
+                "role": "ROLE_USER",
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "task": {
+              "id": "demo-task",
+              "contextId": "demo-context",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_INPUT_REQUIRED",
+                "timestamp": "2026-01-01T00:00:00Z"
+              },
+              "history": [],
+              "artifacts": []
+            },
+            "lookup": {
+              "taskId": "demo-task"
+            }
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "errorCode": "NOT_FOUND",
+          "errorMessage": "not found"
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT1S"
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "errorCode": "NOT_FOUND",
+          "errorMessage": "not found"
+        },
+        {
+          "type": "INCREASE_TIME",
+          "duration": "PT1S"
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "CorrelateTask_CorrelateMessage"
+          },
+          "errorCode": "NOT_FOUND",
+          "errorMessage": "not found"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-rpc"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "CorrelateTask_NotCorrelated"
+            },
+            {
+              "elementId": "Dispatch_NotHandled"
+            },
+            {
+              "elementId": "Link_FollowUpError_FromOutcome"
+            },
+            {
+              "elementId": "FollowUpErrorReady"
+            }
+          ],
+          "state": "IS_COMPLETED_IN_ORDER"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Headless suite (mvn test): connectors, the LLM and the remote server are mocked with COMPLETE_JOB instructions, which Test Studio cannot do. Run 02-a2a-server.integration.test.json in Test Studio for the segments that need no mocks."
+}

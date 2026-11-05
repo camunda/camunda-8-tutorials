@@ -1,0 +1,21 @@
+{
+  "$schema": "https://camunda.com/schemas/runnable-example/v1.json",
+  "title": "EXPERIMENTAL: A2A server and client (unmaintained)",
+  "subtitle": "Unmaintained technical experiment, not an official blueprint",
+  "description": "Experimental and unmaintained: not an official or supported Camunda blueprint, and not for production. A Camunda client agent calls a Camunda server agent over A2A, and any external A2A client can call the same server, using A2A element templates on the released 8.9 connectors runtime. See the README for its limitations.",
+  "creator": "Camunda",
+  "status": "experimental",
+  "camundaVersion": "8.9+",
+  "resources": [
+    "01-client-agent.bpmn",
+    "02-a2a-server.bpmn",
+    "03-server-agent.bpmn",
+    "04-a2a-task.bpmn",
+    "server-request-validation.dmn",
+    ".camunda/element-templates/server-a2a-rpc-endpoint.json",
+    ".camunda/element-templates/server-agent-card-endpoint.json"
+  ],
+  "importTitle": "A2A Async Experiment (unmaintained)",
+  "documentation": "https://github.com/camunda/camunda-8-tutorials/tree/main/solutions/a2a-async-blueprint",
+  "support": "https://forum.camunda.io/"
+}

@@ -1,7 +1,7 @@
 {
   "extends": [
     "bpmnlint:recommended",
-    "plugin:camunda-compat/camunda-cloud-8-8"
+    "plugin:camunda-compat/camunda-cloud-8-9"
   ],
   "rules": {
     "no-inclusive-gateway": "off",

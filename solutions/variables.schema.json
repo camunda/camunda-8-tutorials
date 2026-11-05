@@ -72,7 +72,14 @@
         "context": {
           "type": "object",
           "description": "Execution metrics and conversation state.",
-          "examples": [{"state": "READY", "metrics": {"modelCalls": 1}}],
+          "examples": [
+            {
+              "state": "READY",
+              "metrics": {
+                "modelCalls": 1
+              }
+            }
+          ],
           "properties": {
             "state": {
               "type": "string",
@@ -84,7 +91,15 @@
             "metrics": {
               "type": "object",
               "description": "Token usage counters.",
-              "examples": [{"modelCalls": 1, "tokenUsage": {"inputTokenCount": 100, "outputTokenCount": 50}}],
+              "examples": [
+                {
+                  "modelCalls": 1,
+                  "tokenUsage": {
+                    "inputTokenCount": 100,
+                    "outputTokenCount": 50
+                  }
+                }
+              ],
               "properties": {
                 "modelCalls": {
                   "type": "integer",
@@ -96,7 +111,12 @@
                 "tokenUsage": {
                   "type": "object",
                   "description": "Input and output token counts.",
-                  "examples": [{"inputTokenCount": 100, "outputTokenCount": 50}],
+                  "examples": [
+                    {
+                      "inputTokenCount": 100,
+                      "outputTokenCount": 50
+                    }
+                  ],
                   "properties": {
                     "inputTokenCount": {
                       "type": "integer",
@@ -348,14 +368,6 @@
       "title": "Email",
       "type": "string",
       "description": "{TODO: business description} — used in: solutions/event-registration, solutions/bank-loan-origination-and-processing, solutions/expense-reimbursement (sources: bpmn-output, form-key)",
-      "examples": [
-        "{TODO: example value}"
-      ]
-    },
-    "emailOk": {
-      "title": "Email Ok",
-      "type": "string",
-      "description": "{TODO: business description} — used in: solutions/ai-agent-chat-with-tools (sources: form-key)",
       "examples": [
         "{TODO: example value}"
       ]
@@ -756,14 +768,6 @@
         "{TODO: example value}"
       ]
     },
-    "operatorFeedback": {
-      "title": "Operator Feedback",
-      "type": "string",
-      "description": "{TODO: business description} — used in: solutions/ai-agent-chat-with-tools (sources: form-key)",
-      "examples": [
-        "{TODO: example value}"
-      ]
-    },
     "personal_property": {
       "title": "Personal property",
       "type": "string",
@@ -1003,6 +1007,540 @@
       "examples": [
         "{TODO: example value}"
       ]
+    },
+    "demoInput": {
+      "title": "Demo input",
+      "type": "object",
+      "description": "Placeholder business input the client delegates to the remote agent. Used in: solutions/a2a-async-blueprint.",
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "string",
+          "description": "Free-text request the client delegates.",
+          "examples": [
+            "Example input"
+          ]
+        }
+      },
+      "examples": [
+        {
+          "value": "Example input"
+        }
+      ]
+    },
+    "clientAgent": {
+      "title": "Client agent state",
+      "type": "object",
+      "description": "AI Agent state (context and last response) of the client agent. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "context": {}
+        }
+      ],
+      "properties": {
+        "context": {
+          "title": "Context",
+          "type": "object",
+          "description": "context of clientAgent.",
+          "examples": [
+            {}
+          ],
+          "properties": {}
+        }
+      }
+    },
+    "rpcResponse": {
+      "title": "RPC response",
+      "type": "object",
+      "description": "JSON-RPC response the A2A server returns to the HTTP caller. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "jsonrpc": "2.0",
+          "id": "1",
+          "result": {
+            "task": {
+              "id": "task-1",
+              "contextId": "ctx-1",
+              "rev": 2,
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "jsonrpc": {
+          "title": "Jsonrpc",
+          "type": "string",
+          "description": "jsonrpc of rpcResponse.",
+          "examples": [
+            "2.0"
+          ]
+        },
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "description": "id of rpcResponse.",
+          "examples": [
+            "1"
+          ]
+        },
+        "result": {
+          "title": "Result",
+          "type": "object",
+          "description": "result of rpcResponse.",
+          "examples": [
+            {
+              "task": {
+                "id": "task-1",
+                "contextId": "ctx-1",
+                "rev": 2,
+                "status": {
+                  "state": "TASK_STATE_COMPLETED"
+                }
+              }
+            }
+          ],
+          "properties": {
+            "task": {
+              "title": "Task",
+              "type": "object",
+              "description": "task of result.",
+              "examples": [
+                {
+                  "id": "task-1",
+                  "contextId": "ctx-1",
+                  "rev": 2,
+                  "status": {
+                    "state": "TASK_STATE_COMPLETED"
+                  }
+                }
+              ],
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "string",
+                  "description": "id of task.",
+                  "examples": [
+                    "task-1"
+                  ]
+                },
+                "contextId": {
+                  "title": "Contextid",
+                  "type": "string",
+                  "description": "contextId of task.",
+                  "examples": [
+                    "ctx-1"
+                  ]
+                },
+                "rev": {
+                  "title": "Rev",
+                  "type": "integer",
+                  "description": "rev of task.",
+                  "examples": [
+                    2
+                  ]
+                },
+                "status": {
+                  "title": "Status",
+                  "type": "object",
+                  "description": "status of task.",
+                  "examples": [
+                    {
+                      "state": "TASK_STATE_COMPLETED"
+                    }
+                  ],
+                  "properties": {
+                    "state": {
+                      "title": "State",
+                      "type": "string",
+                      "description": "state of status.",
+                      "examples": [
+                        "TASK_STATE_COMPLETED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "seen": {
+      "title": "Task as seen",
+      "type": "object",
+      "description": "The task as seen after it was started: the finished task, or the last stored version if it did not finish in time. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "id": "task-1",
+          "contextId": "ctx-1",
+          "rev": 2,
+          "status": {
+            "state": "TASK_STATE_COMPLETED"
+          }
+        }
+      ],
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "description": "id of seen.",
+          "examples": [
+            "task-1"
+          ]
+        },
+        "contextId": {
+          "title": "Contextid",
+          "type": "string",
+          "description": "contextId of seen.",
+          "examples": [
+            "ctx-1"
+          ]
+        },
+        "rev": {
+          "title": "Rev",
+          "type": "integer",
+          "description": "rev of seen.",
+          "examples": [
+            2
+          ]
+        },
+        "status": {
+          "title": "Status",
+          "type": "object",
+          "description": "status of seen.",
+          "examples": [
+            {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          ],
+          "properties": {
+            "state": {
+              "title": "State",
+              "type": "string",
+              "description": "state of status.",
+              "examples": [
+                "TASK_STATE_COMPLETED"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "visible": {
+      "title": "Task visible",
+      "type": "boolean",
+      "description": "Whether the task finished before the wait time ran out. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        true
+      ]
+    },
+    "correlated": {
+      "title": "Task accepted the message",
+      "type": "boolean",
+      "description": "Whether the running task accepted the follow-up or cancel request. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        true
+      ]
+    },
+    "taskItems": {
+      "title": "Task items",
+      "type": "array",
+      "description": "Tasks collected for a ListTasks response. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        [
+          {
+            "id": "task-1",
+            "contextId": "ctx-1",
+            "rev": 2,
+            "status": {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          }
+        ]
+      ],
+      "items": {
+        "type": "object",
+        "description": "Element of the list.",
+        "examples": [
+          {
+            "id": "task-1",
+            "contextId": "ctx-1",
+            "rev": 2,
+            "status": {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          }
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "id of item.",
+            "examples": [
+              "task-1"
+            ]
+          },
+          "contextId": {
+            "type": "string",
+            "description": "contextId of item.",
+            "examples": [
+              "ctx-1"
+            ]
+          },
+          "rev": {
+            "type": "integer",
+            "description": "rev of item.",
+            "examples": [
+              2
+            ]
+          },
+          "status": {
+            "type": "object",
+            "description": "status of item.",
+            "examples": [
+              {
+                "state": "TASK_STATE_COMPLETED"
+              }
+            ],
+            "properties": {
+              "state": {
+                "type": "string",
+                "description": "state of status.",
+                "examples": [
+                  "TASK_STATE_COMPLETED"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "listFailure": {
+      "title": "List failure",
+      "type": "object",
+      "description": "Failure reported while collecting tasks for ListTasks. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "code": -32603,
+          "message": "Internal error"
+        }
+      ],
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "integer",
+          "description": "code of listFailure.",
+          "examples": [
+            -32603
+          ]
+        },
+        "message": {
+          "title": "Message",
+          "type": "string",
+          "description": "message of listFailure.",
+          "examples": [
+            "Internal error"
+          ]
+        }
+      }
+    },
+    "outcome": {
+      "title": "Agent outcome",
+      "type": "object",
+      "description": "The outcome of the server agent's run, before it is stored on the task. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "state": "TASK_STATE_COMPLETED"
+        }
+      ],
+      "properties": {
+        "state": {
+          "title": "State",
+          "type": "string",
+          "description": "state of outcome.",
+          "examples": [
+            "TASK_STATE_COMPLETED"
+          ]
+        }
+      }
+    },
+    "task": {
+      "title": "A2A task",
+      "type": "object",
+      "description": "The A2A task handled by the server agent. Its revision number increases each time the task changes. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "id": "task-1",
+          "contextId": "ctx-1",
+          "rev": 2,
+          "status": {
+            "state": "TASK_STATE_COMPLETED"
+          }
+        }
+      ],
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "description": "id of task.",
+          "examples": [
+            "task-1"
+          ]
+        },
+        "contextId": {
+          "title": "Contextid",
+          "type": "string",
+          "description": "contextId of task.",
+          "examples": [
+            "ctx-1"
+          ]
+        },
+        "rev": {
+          "title": "Rev",
+          "type": "integer",
+          "description": "rev of task.",
+          "examples": [
+            2
+          ]
+        },
+        "status": {
+          "title": "Status",
+          "type": "object",
+          "description": "status of task.",
+          "examples": [
+            {
+              "state": "TASK_STATE_COMPLETED"
+            }
+          ],
+          "properties": {
+            "state": {
+              "title": "State",
+              "type": "string",
+              "description": "state of status.",
+              "examples": [
+                "TASK_STATE_COMPLETED"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rpc": {
+      "title": "A2A JSON-RPC request",
+      "type": "object",
+      "description": "The JSON-RPC request body received by the A2A server. A2A 0.3 requests are converted to the A2A 1.0 format first. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "jsonrpc": "2.0",
+          "id": "1",
+          "method": "GetTask",
+          "params": {
+            "id": "task-1"
+          }
+        }
+      ],
+      "properties": {
+        "jsonrpc": {
+          "title": "Jsonrpc",
+          "type": "string",
+          "description": "jsonrpc of rpc.",
+          "examples": [
+            "2.0"
+          ]
+        },
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "description": "id of rpc.",
+          "examples": [
+            "1"
+          ]
+        },
+        "method": {
+          "title": "Method",
+          "type": "string",
+          "description": "method of rpc.",
+          "examples": [
+            "GetTask"
+          ]
+        },
+        "params": {
+          "title": "Params",
+          "type": "object",
+          "description": "params of rpc.",
+          "examples": [
+            {
+              "id": "task-1"
+            }
+          ],
+          "properties": {
+            "id": {
+              "title": "Id",
+              "type": "string",
+              "description": "id of params.",
+              "examples": [
+                "task-1"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "hdr": {
+      "title": "A2A request headers",
+      "type": "object",
+      "description": "The HTTP headers of the A2A request, with lower-case names. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        {
+          "content-type": "application/json",
+          "a2a-version": "1.0"
+        }
+      ],
+      "properties": {
+        "content-type": {
+          "title": "Content type",
+          "type": "string",
+          "description": "content-type of hdr.",
+          "examples": [
+            "application/json"
+          ]
+        },
+        "a2a-version": {
+          "title": "A2a version",
+          "type": "string",
+          "description": "a2a-version of hdr.",
+          "examples": [
+            "1.0"
+          ]
+        }
+      }
+    },
+    "dialect": {
+      "title": "A2A dialect",
+      "type": "string",
+      "description": "The A2A version the caller uses, taken from the method name: 0.3 (message/send) or 1.0 (SendMessage). Responses and push notifications use the same version. Used in: solutions/a2a-async-blueprint.",
+      "examples": [
+        "0.3",
+        "1.0"
+      ]
     }
+  },
+  "a2aClientResponse": {
+    "title": "A2A Client Response",
+    "type": "object",
+    "description": "Raw response of the A2A client connector (task or message result plus push notification data); used internally to decide whether to wait for the callback — used in: solutions/a2a-async-blueprint (sources: bpmn-output)",
+    "examples": [
+      {
+        "result": {
+          "kind": "task",
+          "id": "remote-task-1",
+          "status": {
+            "state": "submitted"
+          }
+        }
+      }
+    ]
   }
 }

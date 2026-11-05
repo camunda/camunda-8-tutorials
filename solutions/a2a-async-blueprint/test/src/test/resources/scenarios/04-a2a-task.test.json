@@ -1,0 +1,358 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.9/schema.json",
+  "processId": "a2a-task",
+  "testCases": [
+    {
+      "name": "Agent calls the tool - task outcome is published",
+      "description": "The task runs the server agent. The agent's answer becomes the task result and the task is marked as finished.",
+      "instructions": [
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-start",
+          "correlationKey": "task-1",
+          "variables": {
+            "req": {
+              "message": {
+                "parts": [
+                  {
+                    "data": {
+                      "demoInput": {
+                        "value": "Example input"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "task": {
+              "id": "task-1",
+              "contextId": "ctx-1",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "activateElements": [
+            {
+              "elementId": "upperCase",
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "upperCase"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "completionConditionFulfilled": true,
+          "variables": {
+            "agent": {
+              "responseText": "Done.",
+              "context": {
+                "conversation": {
+                  "messages": [
+                    {
+                      "role": "tool_call_result",
+                      "results": [
+                        {
+                          "id": "call-1",
+                          "name": "upperCase",
+                          "content": {
+                            "value": "Example input"
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "OutcomeJoin"
+            },
+            {
+              "elementId": "TaskDone"
+            },
+            {
+              "elementId": "PublishOutcome"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Agent fails - failed outcome is published",
+      "description": "The agent fails. The task still finishes and is reported as failed.",
+      "instructions": [
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-start",
+          "correlationKey": "task-2",
+          "variables": {
+            "req": {
+              "message": {
+                "parts": []
+              }
+            },
+            "task": {
+              "id": "task-2",
+              "contextId": "ctx-2",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "THROW_BPMN_ERROR_FROM_JOB",
+          "jobSelector": {
+            "elementId": "AgentTools"
+          },
+          "errorCode": "AGENT_FAILED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "AgentError"
+            },
+            {
+              "elementId": "OutcomeJoin"
+            },
+            {
+              "elementId": "TaskDone"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Caller cancels a running task - cancellation is settled",
+      "description": "A cancel request stops the agent and the task ends as canceled.",
+      "instructions": [
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-start",
+          "correlationKey": "task-3",
+          "variables": {
+            "req": {
+              "message": {
+                "parts": []
+              }
+            },
+            "task": {
+              "id": "task-3",
+              "contextId": "ctx-3",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_WORKING"
+              },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "PUBLISH_MESSAGE",
+          "name": "a2a-cancel",
+          "correlationKey": "task-3"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "A2ACancelRequested"
+            },
+            {
+              "elementId": "A2ASetCanceled"
+            },
+            {
+              "elementId": "TaskSettled"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Client offered push - the task is pushed before it settles",
+      "description": "When the client asked for push notifications, the task sends its result to the client and waits for the notification to be delivered.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "startInstructions": [
+            {
+              "elementId": "PushConfigured"
+            }
+          ],
+          "variables": {
+            "task": {
+              "id": "task-4",
+              "contextId": "ctx-4",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [],
+              "history": []
+            },
+            "push": {
+              "url": "https://client.example.invalid/a2a-push",
+              "token": "t",
+              "authentication": {
+                "scheme": "Bearer",
+                "credentials": "c"
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelector": {
+            "elementId": "NotifyClient"
+          },
+          "state": "IS_ACTIVE"
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "NotifyClient"
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
+      "name": "Client did not offer push - the task settles without a push",
+      "description": "When the client did not ask for push notifications, nothing is sent and the client reads the result with GetTask.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "startInstructions": [
+            {
+              "elementId": "PushConfigured"
+            }
+          ],
+          "variables": {
+            "task": {
+              "id": "task-5",
+              "contextId": "ctx-5",
+              "rev": 1,
+              "status": {
+                "state": "TASK_STATE_COMPLETED"
+              },
+              "artifacts": [],
+              "history": []
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "PublishOutcome"
+            },
+            {
+              "elementId": "TaskSettled"
+            }
+          ],
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "NotifyClient"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-task"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ],
+  "_integrationTestNotes": "Headless suite (mvn test): connectors, the LLM and the remote server are mocked with COMPLETE_JOB instructions, which Test Studio cannot do. Run 04-a2a-task.integration.test.json in Test Studio for the segments that need no mocks."
+}

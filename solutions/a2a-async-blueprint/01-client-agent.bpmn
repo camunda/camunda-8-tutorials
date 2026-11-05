@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_A2AClientConversation" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.9.0">
+  <bpmn:process id="a2a-client" name="01 A2A Client Agent" isExecutable="true">
+    <bpmn:startEvent id="QuestionAsked" name="Start placeholder request">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="={value: &#34;Example input&#34;}" target="demoInput" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_QuestionAsked_ClientAgent</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:adHocSubProcess id="ClientAgent" name="Client AI agent" zeebe:modelerTemplate="io.camunda.connectors.agenticai.aiagent.jobworker.v1" zeebe:modelerTemplateVersion="7" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNBNTZFRkYiLz4KPG1hc2sgaWQ9InBhdGgtMi1vdXRzaWRlLTFfMTg1XzYiIG1hc2tVbml0cz0idXNlclNwYWNlT25Vc2UiIHg9IjQiIHk9IjQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgZmlsbD0iYmxhY2siPgo8cmVjdCBmaWxsPSJ3aGl0ZSIgeD0iNCIgeT0iNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ii8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMjAuMDEwNSAxMi4wOTg3QzE4LjQ5IDEwLjU4OTQgMTcuMTU5NCA4LjEwODE0IDE2LjE3OTkgNi4wMTEwM0MxNi4xNTIgNi4wMDQ1MSAxNi4xMTc2IDYgMTYuMDc5NCA2QzE2LjA0MTEgNiAxNi4wMDY2IDYuMDA0NTEgMTUuOTc4OCA2LjAxMTA0QzE0Ljk5OTQgOC4xMDgxNCAxMy42Njk3IDEwLjU4ODkgMTIuMTQ4MSAxMi4wOTgxQzEwLjYyNjkgMTMuNjA3MSA4LjEyNTY4IDE0LjkyNjQgNi4wMTE1NyAxNS44OTgxQzYuMDA0NzQgMTUuOTI2MSA2IDE1Ljk2MTEgNiAxNkM2IDE2LjAzODcgNi4wMDQ2OCAxNi4wNzM2IDYuMDExNDQgMTYuMTAxNEM4LjEyNTE5IDE3LjA3MjkgMTAuNjI2MiAxOC4zOTE5IDEyLjE0NzcgMTkuOTAxNkMxMy42Njk3IDIxLjQxMDcgMTQuOTk5NiAyMy44OTIgMTUuOTc5MSAyNS45ODlDMTYuMDA2OCAyNS45OTU2IDE2LjA0MTEgMjYgMTYuMDc5MyAyNkMxNi4xMTc1IDI2IDE2LjE1MTkgMjUuOTk1NCAxNi4xNzk2IDI1Ljk4OUMxNy4xNTkxIDIzLjg5MiAxOC40ODg4IDIxLjQxMSAyMC4wMDk5IDE5LjkwMjFNMjAuMDA5OSAxOS45MDIxQzIxLjUyNTMgMTguMzk4NyAyMy45NDY1IDE3LjA2NjkgMjUuOTkxNSAxNi4wODI0QzI1Ljk5NjUgMTYuMDU5MyAyNiAxNi4wMzEgMjYgMTUuOTk5N0MyNiAxNS45Njg0IDI1Ljk5NjUgMTUuOTQwMyAyNS45OTE1IDE1LjkxNzFDMjMuOTQ3NCAxNC45MzI3IDIxLjUyNTkgMTMuNjAxIDIwLjAxMDUgMTIuMDk4NyIvPgo8L21hc2s+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMjAuMDEwNSAxMi4wOTg3QzE4LjQ5IDEwLjU4OTQgMTcuMTU5NCA4LjEwODE0IDE2LjE3OTkgNi4wMTEwM0MxNi4xNTIgNi4wMDQ1MSAxNi4xMTc2IDYgMTYuMDc5NCA2QzE2LjA0MTEgNiAxNi4wMDY2IDYuMDA0NTEgMTUuOTc4OCA2LjAxMTA0QzE0Ljk5OTQgOC4xMDgxNCAxMy42Njk3IDEwLjU4ODkgMTIuMTQ4MSAxMi4wOTgxQzEwLjYyNjkgMTMuNjA3MSA4LjEyNTY4IDE0LjkyNjQgNi4wMTE1NyAxNS44OTgxQzYuMDA0NzQgMTUuOTI2MSA2IDE1Ljk2MTEgNiAxNkM2IDE2LjAzODcgNi4wMDQ2OCAxNi4wNzM2IDYuMDExNDQgMTYuMTAxNEM4LjEyNTE5IDE3LjA3MjkgMTAuNjI2MiAxOC4zOTE5IDEyLjE0NzcgMTkuOTAxNkMxMy42Njk3IDIxLjQxMDcgMTQuOTk5NiAyMy44OTIgMTUuOTc5MSAyNS45ODlDMTYuMDA2OCAyNS45OTU2IDE2LjA0MTEgMjYgMTYuMDc5MyAyNkMxNi4xMTc1IDI2IDE2LjE1MTkgMjUuOTk1NCAxNi4xNzk2IDI1Ljk4OUMxNy4xNTkxIDIzLjg5MiAxOC40ODg4IDIxLjQxMSAyMC4wMDk5IDE5LjkwMjFNMjAuMDA5OSAxOS45MDIxQzIxLjUyNTMgMTguMzk4NyAyMy45NDY1IDE3LjA2NjkgMjUuOTkxNSAxNi4wODI0QzI1Ljk5NjUgMTYuMDU5MyAyNiAxNi4wMzEgMjYgMTUuOTk5N0MyNiAxNS45Njg0IDI1Ljk5NjUgMTUuOTQwMyAyNS45OTE1IDE1LjkxNzFDMjMuOTQ3NCAxNC45MzI3IDIxLjUyNTkgMTMuNjAxIDIwLjAxMDUgMTIuMDk4NyIgZmlsbD0id2hpdGUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMC4wMTA1IDEyLjA5ODdDMTguNDkgMTAuNTg5NCAxNy4xNTk0IDguMTA4MTQgMTYuMTc5OSA2LjAxMTAzQzE2LjE1MiA2LjAwNDUxIDE2LjExNzYgNiAxNi4wNzk0IDZDMTYuMDQxMSA2IDE2LjAwNjYgNi4wMDQ1MSAxNS45Nzg4IDYuMDExMDRDMTQuOTk5NCA4LjEwODE0IDEzLjY2OTcgMTAuNTg4OSAxMi4xNDgxIDEyLjA5ODFDMTAuNjI2OSAxMy42MDcxIDguMTI1NjggMTQuOTI2NCA2LjAxMTU3IDE1Ljg5ODFDNi4wMDQ3NCAxNS45MjYxIDYgMTUuOTYxMSA2IDE2QzYgMTYuMDM4NyA2LjAwNDY4IDE2LjA3MzYgNi4wMTE0NCAxNi4xMDE0QzguMTI1MTkgMTcuMDcyOSAxMC42MjYyIDE4LjM5MTkgMTIuMTQ3NyAxOS45MDE2QzEzLjY2OTcgMjEuNDEwNyAxNC45OTk2IDIzLjg5MiAxNS45NzkxIDI1Ljk4OUMxNi4wMDY4IDI1Ljk5NTYgMTYuMDQxMSAyNiAxNi4wNzkzIDI2QzE2LjExNzUgMjYgMTYuMTUxOSAyNS45OTU0IDE2LjE3OTYgMjUuOTg5QzE3LjE1OTEgMjMuODkyIDE4LjQ4ODggMjEuNDExIDIwLjAwOTkgMTkuOTAyMU0yMC4wMDk5IDE5LjkwMjFDMjEuNTI1MyAxOC4zOTg3IDIzLjk0NjUgMTcuMDY2OSAyNS45OTE1IDE2LjA4MjRDMjUuOTk2NSAxNi4wNTkzIDI2IDE2LjAzMSAyNiAxNS45OTk3QzI2IDE1Ljk2ODQgMjUuOTk2NSAxNS45NDAzIDI1Ljk5MTUgMTUuOTE3MUMyMy45NDc0IDE0LjkzMjcgMjEuNTI1OSAxMy42MDEgMjAuMDEwNSAxMi4wOTg3IiBzdHJva2U9IiM0OTFEOEIiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgbWFzaz0idXJsKCNwYXRoLTItb3V0c2lkZS0xXzE4NV82KSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda.agenticai:aiagent-job-worker:1" retries="1" />
+        <zeebe:ioMapping>
+          <zeebe:input source="openaiCompatible" target="provider.type" />
+          <zeebe:input source="http://localhost:11434/v1" target="provider.openaiCompatible.endpoint" />
+          <zeebe:input source="ollama" target="provider.openaiCompatible.authentication.apiKey" />
+          <zeebe:input source="llama3.1:8b" target="provider.openaiCompatible.model.model" />
+          <zeebe:input source="=0" target="provider.openaiCompatible.model.parameters.temperature" />
+          <zeebe:input source="=&#34;You are a client agent. Use the remote agent tool to send the request below once as the message text, exactly as given. Never invent a result or claim completion unless the tool returned a completed task or a message with content. After receiving the result, briefly report it and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
+          <zeebe:input source="=&#34;Send this request to the remote agent: &#34; + to json(demoInput)" target="data.userPrompt.prompt" />
+          <zeebe:input source="=null" target="agentContext" />
+          <zeebe:input source="in-process" target="data.memory.storage.type" />
+          <zeebe:input source="=20" target="data.memory.contextWindowSize" />
+          <zeebe:input source="=8" target="data.limits.maxModelCalls" />
+          <zeebe:input source="WAIT_FOR_TOOL_CALL_RESULTS" target="data.events.behavior" />
+          <zeebe:input source="text" target="data.response.format.type" />
+          <zeebe:input source="=false" target="data.response.format.parseJson" />
+          <zeebe:input source="=false" target="data.response.includeAssistantMessage" />
+          <zeebe:input source="=true" target="data.response.includeAgentContext" />
+          <zeebe:input target="agent" />
+          <zeebe:output source="=agent" target="clientAgent" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="elementTemplateVersion" value="7" />
+          <zeebe:header key="elementTemplateId" value="io.camunda.connectors.agenticai.aiagent.jobworker.v1" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+        <zeebe:adHoc outputCollection="toolCallResults" outputElement="={&#10;  id: toolCall._meta.id,&#10;  name: toolCall._meta.name,&#10;  content: toolCallResult&#10;}" />
+        <zeebe:properties>
+          <zeebe:property name="io.camunda.agenticai.toolContainer" value="true" />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_QuestionAsked_ClientAgent</bpmn:incoming>
+      <bpmn:outgoing>Flow_ClientAgent_ClientConversationFinished</bpmn:outgoing>
+      <bpmn:serviceTask id="A2AClient" name="Remote A2A agent" zeebe:modelerTemplate="io.camunda.connectors.agenticai.a2a.client.v0" zeebe:modelerTemplateVersion="0" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMTguNSIgdmlld0JveD0iMyA5IDMwIDE4LjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTguNyAxNC43MjVDOC41MTY2NyAxNC45MDgzIDguMjgzMzMgMTUgOCAxNUM3LjcxNjY3IDE1IDcuNDc1IDE0LjkwODMgNy4yNzUgMTQuNzI1QzcuMDkxNjcgMTQuNTI1IDcgMTQuMjgzMyA3IDE0QzcgMTMuNzE2NyA3LjA5MTY3IDEzLjQ4MzMgNy4yNzUgMTMuM0M3LjQ3NSAxMy4xIDcuNzE2NjcgMTMgOCAxM0M4LjI4MzMzIDEzIDguNTE2NjcgMTMuMSA4LjcgMTMuM0M4LjkgMTMuNDgzMyA5IDEzLjcxNjcgOSAxNEM5IDE0LjI4MzMgOC45IDE0LjUyNSA4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMTQuNyAxNC43MjVDMTQuNTE2NyAxNC45MDgzIDE0LjI4MzMgMTUgMTQgMTVDMTMuNzE2NyAxNSAxMy40NzUgMTQuOTA4MyAxMy4yNzUgMTQuNzI1QzEzLjA5MTcgMTQuNTI1IDEzIDE0LjI4MzMgMTMgMTRDMTMgMTMuNzE2NyAxMy4wOTE3IDEzLjQ4MzMgMTMuMjc1IDEzLjNDMTMuNDc1IDEzLjEgMTMuNzE2NyAxMyAxNCAxM0MxNC4yODMzIDEzIDE0LjUxNjcgMTMuMSAxNC43IDEzLjNDMTQuOSAxMy40ODMzIDE1IDEzLjcxNjcgMTUgMTRDMTUgMTQuMjgzMyAxNC45IDE0LjUyNSAxNC43IDE0LjcyNVoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTIyLjcgMTQuNzI1QzIyLjUxNjcgMTQuOTA4MyAyMi4yODMzIDE1IDIyIDE1QzIxLjcxNjcgMTUgMjEuNDc1IDE0LjkwODMgMjEuMjc1IDE0LjcyNUMyMS4wOTE3IDE0LjUyNSAyMSAxNC4yODMzIDIxIDE0QzIxIDEzLjcxNjcgMjEuMDkxNyAxMy40ODMzIDIxLjI3NSAxMy4zQzIxLjQ3NSAxMy4xIDIxLjcxNjcgMTMgMjIgMTNDMjIuMjgzMyAxMyAyMi41MTY3IDEzLjEgMjIuNyAxMy4zQzIyLjkgMTMuNDgzMyAyMyAxMy43MTY3IDIzIDE0QzIzIDE0LjI4MzMgMjIuOSAxNC41MjUgMjIuNyAxNC43MjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0yOC43IDE0LjcyNUMyOC41MTY3IDE0LjkwODMgMjguMjgzMyAxNSAyOCAxNUMyNy43MTY3IDE1IDI3LjQ3NSAxNC45MDgzIDI3LjI3NSAxNC43MjVDMjcuMDkxNyAxNC41MjUgMjcgMTQuMjgzMyAyNyAxNEMyNyAxMy43MTY3IDI3LjA5MTcgMTMuNDgzMyAyNy4yNzUgMTMuM0MyNy40NzUgMTMuMSAyNy43MTY3IDEzIDI4IDEzQzI4LjI4MzMgMTMgMjguNTE2NyAxMy4xIDI4LjcgMTMuM0MyOC45IDEzLjQ4MzMgMjkgMTMuNzE2NyAyOSAxNEMyOSAxNC4yODMzIDI4LjkgMTQuNTI1IDI4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUgMTRDNSAxMi4zNDMxIDYuMzQzMTUgMTEgOCAxMUgxNEMxNC43NzYgMTEgMTUuMjg0IDExLjE1MzcgMTUuNjQgMTEuMzgxOEMxNS44NTg5IDEwLjc5NCAxNi4xNTE3IDEwLjE3MDkgMTYuNTU1IDkuNTk3OTVDMTUuODc5NyA5LjIxMTUzIDE1LjAzODYgOSAxNCA5SDhDNS4yMzg1OCA5IDMgMTEuMjM4NiAzIDE0QzMgMTYuNzYxMiA1LjIzNzU5IDE5IDcuOTk5MjYgMTlIMTRDMTUuNzYzNCAxOSAxNi45NTczIDE4LjM5MDIgMTcuNzM3NSAxNy4zNUMxOC40MjI4IDE2LjQzNjMgMTguNzE0OCAxNS4yNjYgMTguOTQ4MyAxNC4zMjk5TDE4Ljk3MDEgMTQuMjQyNUMxOS4yMzI3IDEzLjE5MjQgMTkuNDQ0MiAxMi40MDc3IDE5Ljg2MjUgMTEuODVDMjAuMjA3MyAxMS4zOTAyIDIwLjc2MzQgMTEgMjIgMTFIMjguMDAwNUMyOS42NTcyIDExIDMxIDEyLjM0MyAzMSAxNEMzMSAxNS42NTY5IDI5LjY1NjkgMTcgMjggMTdIMjJDMjEuMjI0IDE3IDIwLjcxNiAxNi44NDYzIDIwLjM2IDE2LjYxODJDMjAuMTQxMSAxNy4yMDYgMTkuODQ4MyAxNy44MjkxIDE5LjQ0NSAxOC40MDJDMjAuMTIwMyAxOC43ODg1IDIwLjk2MTQgMTkgMjIgMTlIMjhDMzAuNzYxNCAxOSAzMyAxNi43NjE0IDMzIDE0QzMzIDExLjIzODggMzAuNzYyMSA5IDI4LjAwMDUgOUgyMkMyMC4yMzY2IDkgMTkuMDQyNyA5LjYwOTc5IDE4LjI2MjUgMTAuNjVDMTcuNTc3MiAxMS41NjM3IDE3LjI4NTIgMTIuNzM0IDE3LjA1MTcgMTMuNjcwMUwxNy4wMjk5IDEzLjc1NzVDMTYuNzY3MyAxNC44MDc2IDE2LjU1NTggMTUuNTkyMyAxNi4xMzc1IDE2LjE1QzE1Ljc5MjcgMTYuNjA5OCAxNS4yMzY2IDE3IDE0IDE3SDcuOTk5MjZDNi4zNDI2NSAxNyA1IDE1LjY1NzEgNSAxNFoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTcgMjMuNUM2LjcxNjY3IDIzLjUgNi40NzUgMjMuNDA4MyA2LjI3NSAyMy4yMjVDNi4wOTE2NyAyMy4wMjUgNiAyMi43ODMzIDYgMjIuNUM2IDIyLjIxNjcgNi4wOTE2NyAyMS45ODMzIDYuMjc1IDIxLjhDNi40NzUgMjEuNiA2LjcxNjY3IDIxLjUgNyAyMS41SDEyQzEyLjI4MzMgMjEuNSAxMi41MTY3IDIxLjYgMTIuNyAyMS44QzEyLjkgMjEuOTgzMyAxMyAyMi4yMTY3IDEzIDIyLjVDMTMgMjIuNzgzMyAxMi45IDIzLjAyNSAxMi43IDIzLjIyNUMxMi41MTY3IDIzLjQwODMgMTIuMjgzMyAyMy41IDEyIDIzLjVIN1pNNSAyNy41QzQuNzE2NjcgMjcuNSA0LjQ3NSAyNy40MDgzIDQuMjc1IDI3LjIyNUM0LjA5MTY3IDI3LjAyNSA0IDI2Ljc4MzMgNCAyNi41QzQgMjYuMjE2NyA0LjA5MTY3IDI1Ljk4MzMgNC4yNzUgMjUuOEM0LjQ3NSAyNS42IDQuNzE2NjcgMjUuNSA1IDI1LjVIOEM4LjI4MzMzIDI1LjUgOC41MTY2NyAyNS42IDguNyAyNS44QzguOSAyNS45ODMzIDkgMjYuMjE2NyA5IDI2LjVDOSAyNi43ODMzIDguOSAyNy4wMjUgOC43IDI3LjIyNUM4LjUxNjY3IDI3LjQwODMgOC4yODMzMyAyNy41IDggMjcuNUg1Wk0xMiAyNy41QzExLjcxNjcgMjcuNSAxMS40NzUgMjcuNDA4MyAxMS4yNzUgMjcuMjI1QzExLjA5MTcgMjcuMDI1IDExIDI2Ljc4MzMgMTEgMjYuNUMxMSAyNi4yMTY3IDExLjA5MTcgMjUuOTgzMyAxMS4yNzUgMjUuOEMxMS40NzUgMjUuNiAxMS43MTY3IDI1LjUgMTIgMjUuNUgyMEMyMC4yODMzIDI1LjUgMjAuNTE2NyAyNS42IDIwLjcgMjUuOEMyMC45IDI1Ljk4MzMgMjEgMjYuMjE2NyAyMSAyNi41QzIxIDI2Ljc4MzMgMjAuOSAyNy4wMjUgMjAuNyAyNy4yMjVDMjAuNTE2NyAyNy40MDgzIDIwLjI4MzMgMjcuNSAyMCAyNy41SDEyWk0yOCAyNy41QzI3LjcxNjcgMjcuNSAyNy40NzUgMjcuNDA4MyAyNy4yNzUgMjcuMjI1QzI3LjA5MTcgMjcuMDI1IDI3IDI2Ljc4MzMgMjcgMjYuNUMyNyAyNi4yMTY3IDI3LjA5MTcgMjUuOTgzMyAyNy4yNzUgMjUuOEMyNy40NzUgMjUuNiAyNy43MTY3IDI1LjUgMjggMjUuNUgzMkMzMi4yODMzIDI1LjUgMzIuNTE2NyAyNS42IDMyLjcgMjUuOEMzMi45IDI1Ljk4MzMgMzMgMjYuMjE2NyAzMyAyNi41QzMzIDI2Ljc4MzMzMi45IDI3LjAyNSAzMi43IDI3LjIyNUMzMi41MTY3IDI3LjQwODMgMzIuMjgzMyAyNy41IDMyIDI3LjVIMjhaTTE2IDIzLjVDMTUuNzE2NyAyMy41IDE1LjQ3NSAyMy40MDgzIDE1LjI3NSAyMy4yMjVDMTUuMDkxNyAyMy4wMjUgMTUgMjIuNzgzMyAxNSAyMi41QzE1IDIyLjIxNjcgMTUuMDkxNyAyMS45ODMzIDE1LjI3NSAyMS44QzE1LjQ3NSAyMS42IDE1LjcxNjcgMjEuNSAxNiAyMS41QzE2LjI4MzMgMjEuNSAxNi41MTY3IDIxLjYgMTYuNyAyMS44QzE2LjkgMjEuOTgzMyAxNyAyMi4yMTY3IDE3IDIyLjVDMTcgMjIuNzgzMyAxNi45IDIzLjAyNSAxNi43IDIzLjIyNUMxNi41MTY3IDIzLjQwODMgMTYuMjgzMyAyMy41IDE2IDIzLjVaTTI0IDI3LjVDMjMuNzE2NyAyNy41IDIzLjQ3NSAyNy40MDgzIDIzLjI3NSAyNy4yMjVDMjMuMDkxNyAyNy4wMjUgMjMgMjYuNzgzMyAyMyAyNi41QzIzIDI2LjIxNjcgMjMuMDkxNyAyNS45ODMzIDIzLjI3NSAyNS44QzIzLjQ3NSAyNS42IDIzLjcxNjcgMjUuNSAyNCAyNS41QzI0LjI4MzMgMjUuNSAyNC41MTY3IDI1LjYgMjQuNyAyNS44QzI0LjkgMjUuOTgzMyAyNSAyNi4yMTY3IDI1IDI2LjVDMjUgMjYuNzgzMyAyNC45IDI3LjAyNSAyNC43IDI3LjIyNUMyNC41MTY3IDI3LjQwODMgMjQuMjgzMyAyNy41IDI0IDI3LjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0xOS4yNzUgMjMuMjI1QzE5LjQ3NSAyMy40MDgzIDE5LjcxNjcgMjMuNSAyMCAyMy41SDIzQzIzLjI4MzMgMjMuNSAyMy41MTY3IDIzLjQwODMgMjMuNyAyMy4yMjVDMjMuOSAyMy4wMjUgMjQgMjIuNzgzMyAyNCAyMi41QzI0IDIyLjIxNjcgMjMuOSAyMS45ODMzIDIzLjcgMjEuOEMyMy41MTY3IDIxLjYgMjMuMjgzMyAyMS41IDIzIDIxLjVIMjBDMTkuNzE2NyAyMS41IDE5LjQ3NSAyMS42IDE5LjI3NSAyMS44QzE5LjA5MTcgMjEuOTgzMyAxOSAyMi4yMTY3IDE5IDIyLjVDMTkgMjIuNzgzMyAxOS4wOTE3IDIzLjAyNSAxOS4yNzUgMjMuMjI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMjYuMjc1IDIzLjIyNUMyNi40NzUgMjMuNDA4MyAyNi43MTY3IDIzLjUgMjcgMjMuNUgzMEMzMC4yODMzIDIzLjUgMzAuNTE2NyAyMy40MDgzIDMwLjcgMjMuMjI1QzMwLjkgMjMuMDI1IDMxIDIyLjc4MzMgMzEgMjIuNUMzMSAyMi4yMTY3IDMwLjkgMjEuOTgzMyAzMC43IDIxLjhDMzAuNTE2NyAyMS42IDMwLjI4MzMgMjEuNSAzMCAyMS41SDI3QzI2LjcxNjcgMjEuNSAyNi40NzUgMjEuNiAyNi4yNzUgMjEuOEMyNi4wOTE3IDIxLjk4MzMgMjYgMjIuMjE2NyAyNiAyMi41QzI2IDIyLjc4MzMgMjYuMDkxNyAyMy4wMjUgMjYuMjc1IDIzLjIyNVoiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPg==">
+        <bpmn:documentation>Talks to the remote A2A agent: fetches its Agent Card or sends it a message. The remote server returns the task right away and later calls the callback URL with the result.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="io.camunda.agenticai:a2aclient:0" retries="3" />
+          <zeebe:ioMapping>
+            <zeebe:input source="http://localhost:8086/inbound/" target="data.connection.url" />
+            <zeebe:input source="a2a-card" target="data.connection.agentCardLocation" />
+            <zeebe:input source="aiAgentTool" target="data.connectorMode.type" />
+            <zeebe:input source="=toolCall.operation" target="data.connectorMode.toolOperation.operation" />
+            <zeebe:input source="=toolCall.params" target="data.connectorMode.toolOperation.params" />
+            <zeebe:input source="notification" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.type" />
+            <zeebe:input source="http://localhost:8086/inbound/a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.webhookUrl" />
+            <zeebe:input source="a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.token" />
+            <zeebe:input source="=[&#34;Bearer&#34;]" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.authenticationSchemes" />
+            <zeebe:input source="local-dev-token" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.credentials" />
+            <zeebe:input source="=3" target="data.connectorMode.toolOperation.sendMessageSettings.historyLength" />
+            <zeebe:input source="PT1M" target="data.connectorMode.toolOperation.sendMessageSettings.timeout" />
+          </zeebe:ioMapping>
+          <zeebe:taskHeaders>
+            <zeebe:header key="elementTemplateVersion" value="0" />
+            <zeebe:header key="elementTemplateId" value="io.camunda.connectors.agenticai.a2a.client.v0" />
+            <zeebe:header key="resultVariable" value="a2aClientResponse" />
+            <zeebe:header key="retryBackoff" value="PT30S" />
+          </zeebe:taskHeaders>
+          <zeebe:properties>
+            <zeebe:property name="io.camunda.agenticai.gateway.type" value="a2aClient" />
+          </zeebe:properties>
+        </bpmn:extensionElements>
+        <bpmn:outgoing>Flow_A2AClient_SettledCheck</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_A2AClient_SettledCheck" sourceRef="A2AClient" targetRef="SettledCheck" />
+      <bpmn:exclusiveGateway id="SettledCheck" name="Task still running?" default="Flow_SettledCheck_UseImmediateResult">
+        <bpmn:incoming>Flow_A2AClient_SettledCheck</bpmn:incoming>
+        <bpmn:outgoing>Flow_SettledCheck_AwaitCallback</bpmn:outgoing>
+        <bpmn:outgoing>Flow_SettledCheck_UseImmediateResult</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+      <bpmn:sequenceFlow id="Flow_SettledCheck_AwaitCallback" name="yes" sourceRef="SettledCheck" targetRef="AwaitCallback">
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=is defined(a2aClientResponse.result.status.state) and list contains(["submitted", "working"], a2aClientResponse.result.status.state)</bpmn:conditionExpression>
+      </bpmn:sequenceFlow>
+      <bpmn:sequenceFlow id="Flow_SettledCheck_UseImmediateResult" name="no: final Task or Message" sourceRef="SettledCheck" targetRef="UseImmediateResult" />
+      <bpmn:scriptTask id="UseImmediateResult" name="Use immediate result">
+        <bpmn:documentation>The server already returned a final Task or a Message, so no callback will follow. The response is handed to the agent as is.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:script expression="=a2aClientResponse.result" resultVariable="toolCallResult" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_SettledCheck_UseImmediateResult</bpmn:incoming>
+      </bpmn:scriptTask>
+      <bpmn:eventBasedGateway id="AwaitCallback" name="Callback or deadline?">
+        <bpmn:incoming>Flow_SettledCheck_AwaitCallback</bpmn:incoming>
+        <bpmn:outgoing>Flow_AwaitCallback_A2ATaskResult</bpmn:outgoing>
+        <bpmn:outgoing>Flow_AwaitCallback_CallbackDeadline</bpmn:outgoing>
+      </bpmn:eventBasedGateway>
+      <bpmn:sequenceFlow id="Flow_AwaitCallback_A2ATaskResult" sourceRef="AwaitCallback" targetRef="A2ATaskResult" />
+      <bpmn:sequenceFlow id="Flow_AwaitCallback_CallbackDeadline" sourceRef="AwaitCallback" targetRef="CallbackDeadline" />
+      <bpmn:intermediateCatchEvent id="A2ATaskResult" name="Result callback received" zeebe:modelerTemplate="io.camunda.connectors.agenticai.a2a.client.webhook.intermediate.v0" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMTguNSIgdmlld0JveD0iMyA5IDMwIDE4LjUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTguNyAxNC43MjVDOC41MTY2NyAxNC45MDgzIDguMjgzMzMgMTUgOCAxNUM3LjcxNjY3IDE1IDcuNDc1IDE0LjkwODMgNy4yNzUgMTQuNzI1QzcuMDkxNjcgMTQuNTI1IDcgMTQuMjgzMyA3IDE0QzcgMTMuNzE2NyA3LjA5MTY3IDEzLjQ4MzMgNy4yNzUgMTMuM0M3LjQ3NSAxMy4xIDcuNzE2NjcgMTMgOCAxM0M4LjI4MzMzIDEzIDguNTE2NjcgMTMuMSA4LjcgMTMuM0M4LjkgMTMuNDgzMyA5IDEzLjcxNjcgOSAxNEM5IDE0LjI4MzMgOC45IDE0LjUyNSA4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMTQuNyAxNC43MjVDMTQuNTE2NyAxNC45MDgzIDE0LjI4MzMgMTUgMTQgMTVDMTMuNzE2NyAxNSAxMy40NzUgMTQuOTA4MyAxMy4yNzUgMTQuNzI1QzEzLjA5MTcgMTQuNTI1IDEzIDE0LjI4MzMgMTMgMTRDMTMgMTMuNzE2NyAxMy4wOTE3IDEzLjQ4MzMgMTMuMjc1IDEzLjNDMTMuNDc1IDEzLjEgMTMuNzE2NyAxMyAxNCAxM0MxNC4yODMzIDEzIDE0LjUxNjcgMTMuMSAxNC43IDEzLjNDMTQuOSAxMy40ODMzIDE1IDEzLjcxNjcgMTUgMTRDMTUgMTQuMjgzMyAxNC45IDE0LjUyNSAxNC43IDE0LjcyNVoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTIyLjcgMTQuNzI1QzIyLjUxNjcgMTQuOTA4MyAyMi4yODMzIDE1IDIyIDE1QzIxLjcxNjcgMTUgMjEuNDc1IDE0LjkwODMgMjEuMjc1IDE0LjcyNUMyMS4wOTE3IDE0LjUyNSAyMSAxNC4yODMzIDIxIDE0QzIxIDEzLjcxNjcgMjEuMDkxNyAxMy40ODMzIDIxLjI3NSAxMy4zQzIxLjQ3NSAxMy4xIDIxLjcxNjcgMTMgMjIgMTNDMjIuMjgzMyAxMyAyMi41MTY3IDEzLjEgMjIuNyAxMy4zQzIyLjkgMTMuNDgzMyAyMyAxMy43MTY3IDIzIDE0QzIzIDE0LjI4MzMgMjIuOSAxNC41MjUgMjIuNyAxNC43MjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0yOC43IDE0LjcyNUMyOC41MTY3IDE0LjkwODMgMjguMjgzMyAxNSAyOCAxNUMyNy43MTY3IDE1IDI3LjQ3NSAxNC45MDgzIDI3LjI3NSAxNC43MjVDMjcuMDkxNyAxNC41MjUgMjcgMTQuMjgzMyAyNyAxNEMyNyAxMy43MTY3IDI3LjA5MTcgMTMuNDgzMyAyNy4yNzUgMTMuM0MyNy40NzUgMTMuMSAyNy43MTY3IDEzIDI4IDEzQzI4LjI4MzMgMTMgMjguNTE2NyAxMy4xIDI4LjcgMTMuM0MyOC45IDEzLjQ4MzMgMjkgMTMuNzE2NyAyOSAxNEMyOSAxNC4yODMzIDI4LjkgMTQuNTI1IDI4LjcgMTQuNzI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTUgMTRDNSAxMi4zNDMxIDYuMzQzMTUgMTEgOCAxMUgxNEMxNC43NzYgMTEgMTUuMjg0IDExLjE1MzcgMTUuNjQgMTEuMzgxOEMxNS44NTg5IDEwLjc5NCAxNi4xNTE3IDEwLjE3MDkgMTYuNTU1IDkuNTk3OTVDMTUuODc5NyA5LjIxMTUzIDE1LjAzODYgOSAxNCA5SDhDNS4yMzg1OCA5IDMgMTEuMjM4NiAzIDE0QzMgMTYuNzYxMiA1LjIzNzU5IDE5IDcuOTk5MjYgMTlIMTRDMTUuNzYzNCAxOSAxNi45NTczIDE4LjM5MDIgMTcuNzM3NSAxNy4zNUMxOC40MjI4IDE2LjQzNjMgMTguNzE0OCAxNS4yNjYgMTguOTQ4MyAxNC4zMjk5TDE4Ljk3MDEgMTQuMjQyNUMxOS4yMzI3IDEzLjE5MjQgMTkuNDQ0MiAxMi40MDc3IDE5Ljg2MjUgMTEuODVDMjAuMjA3MyAxMS4zOTAyIDIwLjc2MzQgMTEgMjIgMTFIMjguMDAwNUMyOS42NTcyIDExIDMxIDEyLjM0MyAzMSAxNEMzMSAxNS42NTY5IDI5LjY1NjkgMTcgMjggMTdIMjJDMjEuMjI0IDE3IDIwLjcxNiAxNi44NDYzIDIwLjM2IDE2LjYxODJDMjAuMTQxMSAxNy4yMDYgMTkuODQ4MyAxNy44MjkxIDE5LjQ0NSAxOC40MDJDMjAuMTIwMyAxOC43ODg1IDIwLjk2MTQgMTkgMjIgMTlIMjhDMzAuNzYxNCAxOSAzMyAxNi43NjE0IDMzIDE0QzMzIDExLjIzODggMzAuNzYyMSA5IDI4LjAwMDUgOUgyMkMyMC4yMzY2IDkgMTkuMDQyNyA5LjYwOTc5IDE4LjI2MjUgMTAuNjVDMTcuNTc3MiAxMS41NjM3IDE3LjI4NTIgMTIuNzM0IDE3LjA1MTcgMTMuNjcwMUwxNy4wMjk5IDEzLjc1NzVDMTYuNzY3MyAxNC44MDc2IDE2LjU1NTggMTUuNTkyMyAxNi4xMzc1IDE2LjE1QzE1Ljc5MjcgMTYuNjA5OCAxNS4yMzY2IDE3IDE0IDE3SDcuOTk5MjZDNi4zNDI2NSAxNyA1IDE1LjY1NzEgNSAxNFoiIGZpbGw9ImJsYWNrIi8+CiAgPHBhdGggZD0iTTcgMjMuNUM2LjcxNjY3IDIzLjUgNi40NzUgMjMuNDA4MyA2LjI3NSAyMy4yMjVDNi4wOTE2NyAyMy4wMjUgNiAyMi43ODMzIDYgMjIuNUM2IDIyLjIxNjcgNi4wOTE2NyAyMS45ODMzIDYuMjc1IDIxLjhDNi40NzUgMjEuNiA2LjcxNjY3IDIxLjUgNyAyMS41SDEyQzEyLjI4MzMgMjEuNSAxMi41MTY3IDIxLjYgMTIuNyAyMS44QzEyLjkgMjEuOTgzMyAxMyAyMi4yMTY3IDEzIDIyLjVDMTMgMjIuNzgzMyAxMi45IDIzLjAyNSAxMi43IDIzLjIyNUMxMi41MTY3IDIzLjQwODMgMTIuMjgzMyAyMy41IDEyIDIzLjVIN1pNNSAyNy41QzQuNzE2NjcgMjcuNSA0LjQ3NSAyNy40MDgzIDQuMjc1IDI3LjIyNUM0LjA5MTY3IDI3LjAyNSA0IDI2Ljc4MzMgNCAyNi41QzQgMjYuMjE2NyA0LjA5MTY3IDI1Ljk4MzMgNC4yNzUgMjUuOEM0LjQ3NSAyNS42IDQuNzE2NjcgMjUuNSA1IDI1LjVIOEM4LjI4MzMzIDI1LjUgOC41MTY2NyAyNS42IDguNyAyNS44QzguOSAyNS45ODMzIDkgMjYuMjE2NyA5IDI2LjVDOSAyNi43ODMzIDguOSAyNy4wMjUgOC43IDI3LjIyNUM4LjUxNjY3IDI3LjQwODMgOC4yODMzMyAyNy41IDggMjcuNUg1Wk0xMiAyNy41QzExLjcxNjcgMjcuNSAxMS40NzUgMjcuNDA4MyAxMS4yNzUgMjcuMjI1QzExLjA5MTcgMjcuMDI1IDExIDI2Ljc4MzMgMTEgMjYuNUMxMSAyNi4yMTY3IDExLjA5MTcgMjUuOTgzMyAxMS4yNzUgMjUuOEMxMS40NzUgMjUuNiAxMS43MTY3IDI1LjUgMTIgMjUuNUgyMEMyMC4yODMzIDI1LjUgMjAuNTE2NyAyNS42IDIwLjcgMjUuOEMyMC45IDI1Ljk4MzMgMjEgMjYuMjE2NyAyMSAyNi41QzIxIDI2Ljc4MzMgMjAuOSAyNy4wMjUgMjAuNyAyNy4yMjVDMjAuNTE2NyAyNy40MDgzIDIwLjI4MzMgMjcuNSAyMCAyNy41SDEyWk0yOCAyNy41QzI3LjcxNjcgMjcuNSAyNy40NzUgMjcuNDA4MyAyNy4yNzUgMjcuMjI1QzI3LjA5MTcgMjcuMDI1IDI3IDI2Ljc4MzMgMjcgMjYuNUMyNyAyNi4yMTY3IDI3LjA5MTcgMjUuOTgzMyAyNy4yNzUgMjUuOEMyNy40NzUgMjUuNiAyNy43MTY3IDI1LjUgMjggMjUuNUgzMkMzMi4yODMzIDI1LjUgMzIuNTE2NyAyNS42IDMyLjcgMjUuOEMzMi45IDI1Ljk4MzMgMzMgMjYuMjE2NyAzMyAyNi41QzMzIDI2Ljc4MzMzMi45IDI3LjAyNSAzMi43IDI3LjIyNUMzMi41MTY3IDI3LjQwODMgMzIuMjgzMyAyNy41IDMyIDI3LjVIMjhaTTE2IDIzLjVDMTUuNzE2NyAyMy41IDE1LjQ3NSAyMy40MDgzIDE1LjI3NSAyMy4yMjVDMTUuMDkxNyAyMy4wMjUgMTUgMjIuNzgzMyAxNSAyMi41QzE1IDIyLjIxNjcgMTUuMDkxNyAyMS45ODMzIDE1LjI3NSAyMS44QzE1LjQ3NSAyMS42IDE1LjcxNjcgMjEuNSAxNiAyMS41QzE2LjI4MzMgMjEuNSAxNi41MTY3IDIxLjYgMTYuNyAyMS44QzE2LjkgMjEuOTgzMyAxNyAyMi4yMTY3IDE3IDIyLjVDMTcgMjIuNzgzMyAxNi45IDIzLjAyNSAxNi43IDIzLjIyNUMxNi41MTY3IDIzLjQwODMgMTYuMjgzMyAyMy41IDE2IDIzLjVaTTI0IDI3LjVDMjMuNzE2NyAyNy41IDIzLjQ3NSAyNy40MDgzIDIzLjI3NSAyNy4yMjVDMjMuMDkxNyAyNy4wMjUgMjMgMjYuNzgzMyAyMyAyNi41QzIzIDI2LjIxNjcgMjMuMDkxNyAyNS45ODMzIDIzLjI3NSAyNS44QzIzLjQ3NSAyNS42IDIzLjcxNjcgMjUuNSAyNCAyNS41QzI0LjI4MzMgMjUuNSAyNC41MTY3IDI1LjYgMjQuNyAyNS44QzI0LjkgMjUuOTgzMyAyNSAyNi4yMTY3IDI1IDI2LjVDMjUgMjYuNzgzMyAyNC45IDI3LjAyNSAyNC43IDI3LjIyNUMyNC41MTY3IDI3LjQwODMgMjQuMjgzMyAyNy41IDI0IDI3LjVaIiBmaWxsPSJibGFjayIvPgogIDxwYXRoIGQ9Ik0xOS4yNzUgMjMuMjI1QzE5LjQ3NSAyMy40MDgzIDE5LjcxNjcgMjMuNSAyMCAyMy41SDIzQzIzLjI4MzMgMjMuNSAyMy41MTY3IDIzLjQwODMgMjMuNyAyMy4yMjVDMjMuOSAyMy4wMjUgMjQgMjIuNzgzMyAyNCAyMi41QzI0IDIyLjIxNjcgMjMuOSAyMS45ODMzIDIzLjcgMjEuOEMyMy41MTY3IDIxLjYgMjMuMjgzMyAyMS41IDIzIDIxLjVIMjBDMTkuNzE2NyAyMS41IDE5LjQ3NSAyMS42IDE5LjI3NSAyMS44QzE5LjA5MTcgMjEuOTgzMyAxOSAyMi4yMTY3IDE5IDIyLjVDMTkgMjIuNzgzMyAxOS4wOTE3IDIzLjAyNSAxOS4yNzUgMjMuMjI1WiIgZmlsbD0iYmxhY2siLz4KICA8cGF0aCBkPSJNMjYuMjc1IDIzLjIyNUMyNi40NzUgMjMuNDA4MyAyNi43MTY3IDIzLjUgMjcgMjMuNUgzMEMzMC4yODMzIDIzLjUgMzAuNTE2NyAyMy40MDgzIDMwLjcgMjMuMjI1QzMwLjkgMjMuMDI1IDMxIDIyLjc4MzMgMzEgMjIuNUMzMSAyMi4yMTY3IDMwLjkgMjEuOTgzMyAzMC43IDIxLjhDMzAuNTE2NyAyMS42IDMwLjI4MzMgMjEuNSAzMCAyMS41SDI3QzI2LjcxNjcgMjEuNSAyNi40NzUgMjEuNiAyNi4yNzUgMjEuOEMyNi4wOTE3IDIxLjk4MzMgMjYgMjIuMjE2NyAyNiAyMi41QzI2IDIyLjc4MzMgMjYuMDkxNyAyMy4wMjUgMjYuMjc1IDIzLjIyNVoiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPg==">
+        <bpmn:documentation>Authenticated callback from the remote server. Matches the task id and notification token, ignores non-final states, and drops duplicates.</bpmn:documentation>
+        <bpmn:extensionElements>
+          <zeebe:properties>
+            <zeebe:property name="inbound.type" value="io.camunda.agenticai:a2aclient:webhook:0" />
+            <zeebe:property name="inbound.context" value="a2a-client-callback" />
+            <zeebe:property name="inbound.clientResponse" value="=internal_clientResponse" />
+            <zeebe:property name="inbound.shouldValidateHmac" value="disabled" />
+            <zeebe:property name="inbound.auth.type" value="APIKEY" />
+            <zeebe:property name="inbound.auth.apiKey" value="local-dev-token" />
+            <zeebe:property name="inbound.auth.apiKeyLocator" value="=split(request.headers.authorization, &#34; &#34;)[2]" />
+            <zeebe:property name="activationCondition" value="=is defined(request.body.status.state) and not(list contains([&#34;submitted&#34;, &#34;working&#34;], request.body.status.state))" />
+            <zeebe:property name="correlationKeyExpression" value="=request.body.id + (if is defined(request.headers.`x-a2a-notification-token`) then (&#34;-&#34; + request.headers.`x-a2a-notification-token`) else &#34;&#34;)" />
+            <zeebe:property name="messageIdExpression" value="=request.body.id + &#34;-&#34; + request.body.status.state" />
+            <zeebe:property name="deduplicationModeManualFlag" value="false" />
+            <zeebe:property name="deduplicationMode" value="AUTO" />
+            <zeebe:property name="resultVariable" value="" />
+            <zeebe:property name="resultExpression" value="={toolCallResult: request.body}" />
+          </zeebe:properties>
+          <zeebe:ioMapping>
+            <zeebe:input source="=a2aClientResponse" target="internal_clientResponse" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_AwaitCallback_A2ATaskResult</bpmn:incoming>
+        <bpmn:messageEventDefinition id="MessageEventDefinition_Callback" messageRef="Message_A2ACallback" />
+      </bpmn:intermediateCatchEvent>
+      <bpmn:intermediateCatchEvent id="CallbackDeadline" name="No callback in 10 minutes">
+        <bpmn:incoming>Flow_AwaitCallback_CallbackDeadline</bpmn:incoming>
+        <bpmn:outgoing>Flow_CallbackDeadline_ReportTimeout</bpmn:outgoing>
+        <bpmn:timerEventDefinition id="CallbackDeadline_def">
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10M</bpmn:timeDuration>
+        </bpmn:timerEventDefinition>
+      </bpmn:intermediateCatchEvent>
+      <bpmn:sequenceFlow id="Flow_CallbackDeadline_ReportTimeout" sourceRef="CallbackDeadline" targetRef="ReportTimeout" />
+      <bpmn:scriptTask id="ReportTimeout" name="Report timeout">
+        <bpmn:extensionElements>
+          <zeebe:script expression="={error: &#34;timeout&#34;, message: &#34;The remote agent did not call back in time.&#34;, taskId: a2aClientResponse.result.id}" resultVariable="toolCallResult" />
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_CallbackDeadline_ReportTimeout</bpmn:incoming>
+      </bpmn:scriptTask>
+    </bpmn:adHocSubProcess>
+    <bpmn:endEvent id="ClientConversationFinished" name="Client agent finished">
+      <bpmn:incoming>Flow_ClientAgent_ClientConversationFinished</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_QuestionAsked_ClientAgent" sourceRef="QuestionAsked" targetRef="ClientAgent" />
+    <bpmn:sequenceFlow id="Flow_ClientAgent_ClientConversationFinished" sourceRef="ClientAgent" targetRef="ClientConversationFinished" />
+    <bpmn:textAnnotation id="TextAnnotation_Purpose">
+      <bpmn:text>Example 1. A client agent delegates a request to a remote A2A agent through the native A2A Client connector and returns the agent result when the remote agent calls back. The request returns a Task right away; nothing is polled.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="QuestionAsked" targetRef="TextAnnotation_Purpose" />
+  </bpmn:process>
+  <bpmn:message id="Message_A2ACallback" name="cf4a9562-6ffe-4810-b082-db16822578ff" zeebe:modelerTemplate="io.camunda.connectors.agenticai.a2a.client.webhook.intermediate.v0">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=a2aClientResponse.result.id + (if is defined(a2aClientResponse.pushNotificationData.token) then (&#34;-&#34; + a2aClientResponse.pushNotificationData.token) else &#34;&#34;)" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-client">
+    <bpmndi:BPMNPlane id="BPMNPlane_a2a-client" bpmnElement="a2a-client">
+      <bpmndi:BPMNShape id="QuestionAsked_di" bpmnElement="QuestionAsked">
+        <dc:Bounds x="152" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="128" y="348" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ClientAgent_di" bpmnElement="ClientAgent" isExpanded="true">
+        <dc:Bounds x="410" y="200" width="640" height="310" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A2AClient_di" bpmnElement="A2AClient">
+        <dc:Bounds x="450" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SettledCheck_di" bpmnElement="SettledCheck" isMarkerVisible="true">
+        <dc:Bounds x="585" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="566" y="362" width="88" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AwaitCallback_di" bpmnElement="AwaitCallback">
+        <dc:Bounds x="675" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="672" y="275" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rtfkf8_di" bpmnElement="A2ATaskResult">
+        <dc:Bounds x="792" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="773" y="355" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="CallbackDeadline_di" bpmnElement="CallbackDeadline">
+        <dc:Bounds x="792" y="412" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="768" y="455" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ReportTimeout_di" bpmnElement="ReportTimeout">
+        <dc:Bounds x="890" y="390" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="UseImmediateResult_di" bpmnElement="UseImmediateResult">
+        <dc:Bounds x="890" y="220" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_A2AClient_SettledCheck_di" bpmnElement="Flow_A2AClient_SettledCheck">
+        <di:waypoint x="550" y="330" />
+        <di:waypoint x="585" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SettledCheck_AwaitCallback_di" bpmnElement="Flow_SettledCheck_AwaitCallback">
+        <di:waypoint x="635" y="330" />
+        <di:waypoint x="675" y="330" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="641" y="313" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SettledCheck_UseImmediateResult_di" bpmnElement="Flow_SettledCheck_UseImmediateResult">
+        <di:waypoint x="610" y="305" />
+        <di:waypoint x="610" y="250" />
+        <di:waypoint x="890" y="250" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="671" y="233" width="179" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AwaitCallback_A2ATaskResult_di" bpmnElement="Flow_AwaitCallback_A2ATaskResult">
+        <di:waypoint x="725" y="330" />
+        <di:waypoint x="792" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AwaitCallback_CallbackDeadline_di" bpmnElement="Flow_AwaitCallback_CallbackDeadline">
+        <di:waypoint x="700" y="355" />
+        <di:waypoint x="700" y="430" />
+        <di:waypoint x="792" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CallbackDeadline_ReportTimeout_di" bpmnElement="Flow_CallbackDeadline_ReportTimeout">
+        <di:waypoint x="828" y="430" />
+        <di:waypoint x="890" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ClientConversationFinished_di" bpmnElement="ClientConversationFinished">
+        <dc:Bounds x="1112" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1101" y="348" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
+        <di:waypoint x="170" y="312" />
+        <di:waypoint x="170" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_QuestionAsked_ClientAgent_di" bpmnElement="Flow_QuestionAsked_ClientAgent">
+        <di:waypoint x="188" y="330" />
+        <di:waypoint x="410" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ClientAgent_ClientConversationFinished_di" bpmnElement="Flow_ClientAgent_ClientConversationFinished">
+        <di:waypoint x="1050" y="330" />
+        <di:waypoint x="1112" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="128" y="90" width="400" height="90" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

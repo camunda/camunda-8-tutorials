@@ -17,6 +17,10 @@ Quick Starts:
 * [API Orchestration](quick-start/api-orchestration)
 * [Task Listeners](quick-start/task-listeners)
 
+Experimental (unmaintained, unsupported, not official blueprints and not for production):
+
+* [A2A async experiment](solutions/a2a-async-blueprint)
+
 Legacy examples:
 
 * [Intelligent Routing (legacy connector-based example)](solutions/ai-intelligent-routing)
