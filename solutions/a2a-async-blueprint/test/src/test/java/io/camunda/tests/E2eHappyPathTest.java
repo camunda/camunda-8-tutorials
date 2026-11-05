@@ -51,7 +51,8 @@ class E2eHappyPathTest {
 
         assertThat(completed(clientKey, "A2ATaskResult")).as("callback caught in 01").isTrue();
         assertThat(instances("a2a-rpc", started)).as("02 instances").isGreaterThan(0);
-        assertThat(instances("a2a-task", started)).as("04 instances").isGreaterThan(0);
+        assertThat(instances("a2a-task", started)).as("04 instances: one task for one client request").isEqualTo(1);
+        assertThat(instances("a2a-server-agent", started)).as("03 instances: remote business work runs exactly once").isEqualTo(1);
     }
 
     // Plain HTTP on purpose: Camunda client builders pick up CAMUNDA_*/ZEEBE_* env vars and could hit a SaaS cluster.
