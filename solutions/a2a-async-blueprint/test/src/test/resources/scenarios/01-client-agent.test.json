@@ -41,7 +41,7 @@
             "elementId": "A2AClient"
           },
           "variables": {
-            "toolCallResult": {
+            "a2aClientResponse": {
               "result": {
                 "kind": "task",
                 "id": "remote-task-1",
@@ -129,6 +129,104 @@
       ]
     },
     {
+      "name": "Final result returned straight away - no callback is awaited",
+      "description": "A server that answers with a completed Task right away (no callback will follow) is not waited for: the Task becomes the tool result.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "a2a-client"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "ClientAgent"
+          },
+          "activateElements": [
+            {
+              "elementId": "A2AClient",
+              "variables": {
+                "toolCall": {
+                  "_meta": {
+                    "id": "call-1",
+                    "name": "A2AClient"
+                  },
+                  "operation": "sendMessage",
+                  "params": {
+                    "text": "{\"value\":\"Example input\"}"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "A2AClient"
+          },
+          "variables": {
+            "a2aClientResponse": {
+              "result": {
+                "kind": "task",
+                "id": "remote-task-1",
+                "contextId": "ctx-1",
+                "status": {
+                  "state": "completed"
+                },
+                "artifacts": [
+                  {
+                    "artifactId": "a-1",
+                    "parts": [
+                      {
+                        "data": {
+                          "received": {
+                            "value": "Example input"
+                          },
+                          "uppercase": "EXAMPLE INPUT",
+                          "length": 13
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "elementSelector": {
+            "elementId": "UseImmediateResult"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "COMPLETE_JOB_AD_HOC_SUB_PROCESS",
+          "jobSelector": {
+            "elementId": "ClientAgent"
+          },
+          "completionConditionFulfilled": true,
+          "variables": {
+            "agent": {
+              "responseText": "Done."
+            }
+          }
+        },
+        {
+          "type": "ASSERT_PROCESS_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "a2a-client"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    },
+    {
       "name": "Duplicate callback - the second delivery is ignored",
       "description": "The same final callback arrives twice. The first completes the wait; the second finds no subscription and does not fail the process.",
       "instructions": [
@@ -167,7 +265,7 @@
             "elementId": "A2AClient"
           },
           "variables": {
-            "toolCallResult": {
+            "a2aClientResponse": {
               "result": {
                 "kind": "task",
                 "id": "remote-task-1",
@@ -324,7 +422,7 @@
             "elementId": "A2AClient"
           },
           "variables": {
-            "toolCallResult": {
+            "a2aClientResponse": {
               "result": {
                 "kind": "task",
                 "id": "remote-task-1",
@@ -431,7 +529,7 @@
             "elementId": "A2AClient"
           },
           "variables": {
-            "toolCallResult": {
+            "a2aClientResponse": {
               "result": {
                 "kind": "task",
                 "id": "remote-task-1",

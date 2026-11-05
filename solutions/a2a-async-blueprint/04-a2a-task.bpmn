@@ -69,7 +69,7 @@
       <bpmn:outgoing>Flow_PushConfigured_NotifyClient</bpmn:outgoing>
       <bpmn:outgoing>Flow_PushConfigured_PushJoin</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="NotifyClient" name="Push task to client" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13">
+    <bpmn:serviceTask id="NotifyClient" name="Push task to client" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="13" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
@@ -129,7 +129,7 @@
     <bpmn:sequenceFlow id="Flow_PushFailed_PushJoin" sourceRef="PushFailed" targetRef="PushJoin" />
     <bpmn:sequenceFlow id="Flow_PushJoin_PublishOutcome" sourceRef="PushJoin" targetRef="PublishOutcome" />
     <bpmn:sequenceFlow id="Flow_PublishOutcome_TaskSettled" sourceRef="PublishOutcome" targetRef="TaskSettled" />
-      <bpmn:textAnnotation id="TextAnnotation_Purpose">
+    <bpmn:textAnnotation id="TextAnnotation_Purpose">
       <bpmn:text>One A2A task. Started by the a2a-start message from 02. Runs the server agent, publishes the outcome, and serves cancellation until the task reaches a terminal state.</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_Purpose" associationDirection="None" sourceRef="TaskReceived" targetRef="TextAnnotation_Purpose" />
@@ -137,147 +137,148 @@
   <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-task">
     <bpmndi:BPMNPlane id="BPMNPlane_a2a-task" bpmnElement="a2a-task">
       <bpmndi:BPMNShape id="TaskReceived_di" bpmnElement="TaskReceived">
-        <dc:Bounds x="177" y="162" width="36" height="36" />
+        <dc:Bounds x="177" y="222" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="151" y="198" width="89" height="14" />
+          <dc:Bounds x="160" y="258" width="71" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AgentTools_di" bpmnElement="AgentTools">
-        <dc:Bounds x="250" y="140" width="120" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="A2ACancelRequested_di" bpmnElement="A2ACancelRequested">
-        <dc:Bounds x="262" y="202" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="250" y="240" width="61" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="AgentError_di" bpmnElement="AgentError">
-        <dc:Bounds x="322" y="202" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="311" y="240" width="59" height="14" />
-        </bpmndi:BPMNLabel>
+        <dc:Bounds x="250" y="200" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="OutcomeJoin_di" bpmnElement="OutcomeJoin" isMarkerVisible="true">
-        <dc:Bounds x="415" y="155" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="A2ASetCanceled_di" bpmnElement="A2ASetCanceled">
-        <dc:Bounds x="420" y="300" width="100" height="80" />
+        <dc:Bounds x="415" y="215" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TaskDone_di" bpmnElement="TaskDone">
-        <dc:Bounds x="497" y="162" width="36" height="36" />
+        <dc:Bounds x="497" y="222" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="481" y="198" width="69" height="27" />
+          <dc:Bounds x="481" y="258" width="69" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A2ASetCanceled_di" bpmnElement="A2ASetCanceled">
+        <dc:Bounds x="420" y="360" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PublishJoin_di" bpmnElement="PublishJoin" isMarkerVisible="true">
-        <dc:Bounds x="640" y="155" width="50" height="50" />
+        <dc:Bounds x="640" y="215" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PushConfigured_di" bpmnElement="PushConfigured" isMarkerVisible="true">
-        <dc:Bounds x="790" y="155" width="50" height="50" />
+        <dc:Bounds x="790" y="215" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="772" y="131" width="86" height="14" />
+          <dc:Bounds x="772" y="191" width="86" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="NotifyClient_di" bpmnElement="NotifyClient">
-        <dc:Bounds x="915" y="140" width="100" height="80" />
+        <dc:Bounds x="915" y="200" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PushJoin_di" bpmnElement="PushJoin" isMarkerVisible="true">
-        <dc:Bounds x="1090" y="155" width="50" height="50" />
+        <dc:Bounds x="1090" y="215" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PublishOutcome_di" bpmnElement="PublishOutcome">
-        <dc:Bounds x="1247" y="162" width="36" height="36" />
+        <dc:Bounds x="1247" y="222" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1230" y="198" width="70" height="27" />
+          <dc:Bounds x="1230" y="258" width="71" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TaskSettled_di" bpmnElement="TaskSettled">
-        <dc:Bounds x="1397" y="162" width="36" height="36" />
+        <dc:Bounds x="1397" y="222" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1386" y="198" width="59" height="14" />
+          <dc:Bounds x="1386" y="258" width="59" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="157" y="72" width="300" height="100" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="PushFailed_di" bpmnElement="PushFailed">
-        <dc:Bounds x="947" y="202" width="36" height="36" />
+        <dc:Bounds x="947" y="262" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="935" y="238" width="61" height="27" />
+          <dc:Bounds x="899" y="300" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="A2ACancelRequested_di" bpmnElement="A2ACancelRequested">
+        <dc:Bounds x="262" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="209" y="300" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AgentError_di" bpmnElement="AgentError">
+        <dc:Bounds x="322" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="340" y="300" width="59" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_TaskReceived_AgentTools_di" bpmnElement="Flow_TaskReceived_AgentTools">
-        <di:waypoint x="213" y="180" />
-        <di:waypoint x="250" y="180" />
+        <di:waypoint x="213" y="240" />
+        <di:waypoint x="250" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_AgentTools_UpdateTask_di" bpmnElement="Flow_AgentTools_UpdateTask">
-        <di:waypoint x="370" y="180" />
-        <di:waypoint x="415" y="180" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_AgentError_UpdateTask_di" bpmnElement="Flow_AgentError_UpdateTask">
-        <di:waypoint x="340" y="238" />
-        <di:waypoint x="340" y="270" />
-        <di:waypoint x="440" y="270" />
-        <di:waypoint x="440" y="205" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CancelRequested_SetCanceled_di" bpmnElement="Flow_CancelRequested_SetCanceled">
-        <di:waypoint x="280" y="238" />
-        <di:waypoint x="280" y="340" />
-        <di:waypoint x="420" y="340" />
+        <di:waypoint x="370" y="240" />
+        <di:waypoint x="415" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_OutcomeJoin_TaskDone_di" bpmnElement="Flow_OutcomeJoin_TaskDone">
-        <di:waypoint x="465" y="180" />
-        <di:waypoint x="497" y="180" />
+        <di:waypoint x="465" y="240" />
+        <di:waypoint x="497" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AgentError_UpdateTask_di" bpmnElement="Flow_AgentError_UpdateTask">
+        <di:waypoint x="340" y="298" />
+        <di:waypoint x="340" y="330" />
+        <di:waypoint x="440" y="330" />
+        <di:waypoint x="440" y="265" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_TaskDone_PublishJoin_di" bpmnElement="Flow_TaskDone_PublishJoin">
-        <di:waypoint x="533" y="180" />
-        <di:waypoint x="640" y="180" />
+        <di:waypoint x="533" y="240" />
+        <di:waypoint x="640" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CancelRequested_SetCanceled_di" bpmnElement="Flow_CancelRequested_SetCanceled">
+        <di:waypoint x="280" y="298" />
+        <di:waypoint x="280" y="400" />
+        <di:waypoint x="420" y="400" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_SetCanceled_PublishJoin_di" bpmnElement="Flow_SetCanceled_PublishJoin">
-        <di:waypoint x="520" y="340" />
-        <di:waypoint x="665" y="340" />
-        <di:waypoint x="665" y="205" />
+        <di:waypoint x="520" y="400" />
+        <di:waypoint x="665" y="400" />
+        <di:waypoint x="665" y="265" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PublishJoin_PushConfigured_di" bpmnElement="Flow_PublishJoin_PushConfigured">
-        <di:waypoint x="690" y="180" />
-        <di:waypoint x="790" y="180" />
+        <di:waypoint x="690" y="240" />
+        <di:waypoint x="790" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PushConfigured_NotifyClient_di" bpmnElement="Flow_PushConfigured_NotifyClient">
-        <di:waypoint x="840" y="180" />
-        <di:waypoint x="915" y="180" />
+        <di:waypoint x="840" y="240" />
+        <di:waypoint x="915" y="240" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="869" y="155" width="18" height="14" />
+          <dc:Bounds x="869" y="215" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PushConfigured_PushJoin_di" bpmnElement="Flow_PushConfigured_PushJoin">
-        <di:waypoint x="815" y="205" />
-        <di:waypoint x="815" y="280" />
-        <di:waypoint x="1115" y="280" />
-        <di:waypoint x="1115" y="205" />
+        <di:waypoint x="815" y="265" />
+        <di:waypoint x="815" y="370" />
+        <di:waypoint x="1115" y="370" />
+        <di:waypoint x="1115" y="265" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="959" y="255" width="13" height="14" />
+          <dc:Bounds x="958" y="383" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_NotifyClient_PushJoin_di" bpmnElement="Flow_NotifyClient_PushJoin">
-        <di:waypoint x="1015" y="180" />
-        <di:waypoint x="1090" y="180" />
+        <di:waypoint x="1015" y="240" />
+        <di:waypoint x="1090" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PushFailed_PushJoin_di" bpmnElement="Flow_PushFailed_PushJoin">
-        <di:waypoint x="982" y="225" />
+        <di:waypoint x="965" y="298" />
+        <di:waypoint x="966" y="340" />
+        <di:waypoint x="1040" y="340" />
         <di:waypoint x="1040" y="240" />
-        <di:waypoint x="1040" y="180" />
-        <di:waypoint x="1090" y="180" />
+        <di:waypoint x="1090" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PushJoin_PublishOutcome_di" bpmnElement="Flow_PushJoin_PublishOutcome">
-        <di:waypoint x="1140" y="180" />
-        <di:waypoint x="1247" y="180" />
+        <di:waypoint x="1140" y="240" />
+        <di:waypoint x="1247" y="240" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_PublishOutcome_TaskSettled_di" bpmnElement="Flow_PublishOutcome_TaskSettled">
-        <di:waypoint x="1283" y="180" />
-        <di:waypoint x="1397" y="180" />
+        <di:waypoint x="1283" y="240" />
+        <di:waypoint x="1397" y="240" />
       </bpmndi:BPMNEdge>
-          <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
-        <dc:Bounds x="157" y="12" width="300" height="100" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
-        <di:waypoint x="195" y="162" />
-        <di:waypoint x="197" y="112" />
+        <di:waypoint x="195" y="222" />
+        <di:waypoint x="197" y="172" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -114,7 +114,7 @@
     },
     {
       "name": "Request as JSON text part - the tool still receives demoInput",
-      "description": "A client that sends only text, such as an ADK client, passes its input as JSON inside a text part.",
+      "description": "A client that sends only text passes its input as JSON inside a text part.",
       "instructions": [
         {
           "type": "CREATE_PROCESS_INSTANCE",

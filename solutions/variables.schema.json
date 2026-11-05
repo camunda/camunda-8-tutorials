@@ -1526,5 +1526,21 @@
         "1.0"
       ]
     }
+  },
+  "a2aClientResponse": {
+    "title": "A2A Client Response",
+    "type": "object",
+    "description": "Raw response of the A2A client connector (task or message result plus push notification data); used internally to decide whether to wait for the callback — used in: solutions/a2a-async-blueprint (sources: bpmn-output)",
+    "examples": [
+      {
+        "result": {
+          "kind": "task",
+          "id": "remote-task-1",
+          "status": {
+            "state": "submitted"
+          }
+        }
+      }
+    ]
   }
 }

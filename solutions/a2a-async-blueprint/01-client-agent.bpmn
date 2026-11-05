@@ -18,7 +18,7 @@
           <zeebe:input source="ollama" target="provider.openaiCompatible.authentication.apiKey" />
           <zeebe:input source="llama3.1:8b" target="provider.openaiCompatible.model.model" />
           <zeebe:input source="=0" target="provider.openaiCompatible.model.parameters.temperature" />
-          <zeebe:input source="=&#34;You are the client in an A2A blueprint. Use the remote A2A agent tool: do not use the fetchAgentCard operation; call the sendMessage operation to send the request below once as the message text, exactly as given. Never invent a result or claim completion unless the tool returned a completed task or a message with content. After receiving the result, briefly report it and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
+          <zeebe:input source="=&#34;You are a client agent. Use the remote agent tool to send the request below once as the message text, exactly as given. Never invent a result or claim completion unless the tool returned a completed task or a message with content. After receiving the result, briefly report it and finish. Do not request human input.&#34;" target="data.systemPrompt.prompt" />
           <zeebe:input source="=&#34;Send this request to the remote agent: &#34; + to json(demoInput)" target="data.userPrompt.prompt" />
           <zeebe:input source="=null" target="agentContext" />
           <zeebe:input source="in-process" target="data.memory.storage.type" />
@@ -52,8 +52,8 @@
             <zeebe:input source="http://localhost:8086/inbound/" target="data.connection.url" />
             <zeebe:input source="a2a-card" target="data.connection.agentCardLocation" />
             <zeebe:input source="aiAgentTool" target="data.connectorMode.type" />
-            <zeebe:input source="sendMessage" target="data.connectorMode.toolOperation.operation" />
-            <zeebe:input source="={text: if is defined(toolCall.params.text) then toolCall.params.text else to json(demoInput), taskId: if toolCall.params.taskId = &#34;null&#34; then null else toolCall.params.taskId, contextId: if toolCall.params.contextId = &#34;null&#34; then null else toolCall.params.contextId, referenceTaskIds: if toolCall.params.referenceTaskIds = &#34;null&#34; then null else toolCall.params.referenceTaskIds}" target="data.connectorMode.toolOperation.params" />
+            <zeebe:input source="=toolCall.operation" target="data.connectorMode.toolOperation.operation" />
+            <zeebe:input source="=toolCall.params" target="data.connectorMode.toolOperation.params" />
             <zeebe:input source="notification" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.type" />
             <zeebe:input source="http://localhost:8086/inbound/a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.webhookUrl" />
             <zeebe:input source="a2a-client-callback" target="data.connectorMode.toolOperation.sendMessageSettings.responseRetrievalMode.token" />
@@ -65,7 +65,7 @@
           <zeebe:taskHeaders>
             <zeebe:header key="elementTemplateVersion" value="0" />
             <zeebe:header key="elementTemplateId" value="io.camunda.connectors.agenticai.a2a.client.v0" />
-            <zeebe:header key="resultVariable" value="toolCallResult" />
+            <zeebe:header key="resultVariable" value="a2aClientResponse" />
             <zeebe:header key="retryBackoff" value="PT30S" />
           </zeebe:taskHeaders>
           <zeebe:properties>
@@ -81,13 +81,13 @@
         <bpmn:outgoing>Flow_SettledCheck_UseImmediateResult</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:sequenceFlow id="Flow_SettledCheck_AwaitCallback" name="yes" sourceRef="SettledCheck" targetRef="AwaitCallback">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=is defined(toolCallResult.result.status.state) and list contains(["submitted", "working"], toolCallResult.result.status.state)</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=is defined(a2aClientResponse.result.status.state) and list contains(["submitted", "working"], a2aClientResponse.result.status.state)</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_SettledCheck_UseImmediateResult" name="no: final Task or Message" sourceRef="SettledCheck" targetRef="UseImmediateResult" />
       <bpmn:scriptTask id="UseImmediateResult" name="Use immediate result">
         <bpmn:documentation>The server already returned a final Task or a Message, so no callback will follow. The response is handed to the agent as is.</bpmn:documentation>
         <bpmn:extensionElements>
-          <zeebe:script expression="=toolCallResult" resultVariable="toolCallResult" />
+          <zeebe:script expression="=a2aClientResponse.result" resultVariable="toolCallResult" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_SettledCheck_UseImmediateResult</bpmn:incoming>
       </bpmn:scriptTask>
@@ -118,7 +118,7 @@
             <zeebe:property name="resultExpression" value="={toolCallResult: request.body}" />
           </zeebe:properties>
           <zeebe:ioMapping>
-            <zeebe:input source="=toolCallResult" target="internal_clientResponse" />
+            <zeebe:input source="=a2aClientResponse" target="internal_clientResponse" />
           </zeebe:ioMapping>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_AwaitCallback_A2ATaskResult</bpmn:incoming>
@@ -134,7 +134,7 @@
       <bpmn:sequenceFlow id="Flow_CallbackDeadline_ReportTimeout" sourceRef="CallbackDeadline" targetRef="ReportTimeout" />
       <bpmn:scriptTask id="ReportTimeout" name="Report timeout">
         <bpmn:extensionElements>
-          <zeebe:script expression="={error: &#34;timeout&#34;, message: &#34;The remote agent did not call back in time.&#34;, taskId: toolCallResult.result.id}" resultVariable="toolCallResult" />
+          <zeebe:script expression="={error: &#34;timeout&#34;, message: &#34;The remote agent did not call back in time.&#34;, taskId: a2aClientResponse.result.id}" resultVariable="toolCallResult" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_CallbackDeadline_ReportTimeout</bpmn:incoming>
       </bpmn:scriptTask>
@@ -151,106 +151,106 @@
   </bpmn:process>
   <bpmn:message id="Message_A2ACallback" name="cf4a9562-6ffe-4810-b082-db16822578ff" zeebe:modelerTemplate="io.camunda.connectors.agenticai.a2a.client.webhook.intermediate.v0">
     <bpmn:extensionElements>
-      <zeebe:subscription correlationKey="=toolCallResult.result.id + (if is defined(toolCallResult.pushNotificationData.token) then (&#34;-&#34; + toolCallResult.pushNotificationData.token) else &#34;&#34;)" />
+      <zeebe:subscription correlationKey="=a2aClientResponse.result.id + (if is defined(a2aClientResponse.pushNotificationData.token) then (&#34;-&#34; + a2aClientResponse.pushNotificationData.token) else &#34;&#34;)" />
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_a2a-client">
     <bpmndi:BPMNPlane id="BPMNPlane_a2a-client" bpmnElement="a2a-client">
       <bpmndi:BPMNShape id="QuestionAsked_di" bpmnElement="QuestionAsked">
-        <dc:Bounds x="152" y="282" width="36" height="36" />
+        <dc:Bounds x="152" y="312" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="128" y="318" width="84" height="27" />
+          <dc:Bounds x="128" y="348" width="84" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ClientAgent_di" bpmnElement="ClientAgent" isExpanded="true">
-        <dc:Bounds x="410" y="200" width="640" height="280" />
+        <dc:Bounds x="410" y="200" width="640" height="310" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="A2AClient_di" bpmnElement="A2AClient">
-        <dc:Bounds x="450" y="260" width="100" height="80" />
+        <dc:Bounds x="450" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SettledCheck_di" bpmnElement="SettledCheck" isMarkerVisible="true">
+        <dc:Bounds x="585" y="305" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="566" y="362" width="88" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AwaitCallback_di" bpmnElement="AwaitCallback">
-        <dc:Bounds x="675" y="275" width="50" height="50" />
+        <dc:Bounds x="675" y="305" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="672" y="245" width="56" height="27" />
+          <dc:Bounds x="672" y="275" width="56" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0rtfkf8_di" bpmnElement="A2ATaskResult">
-        <dc:Bounds x="792" y="282" width="36" height="36" />
+        <dc:Bounds x="792" y="312" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="765" y="325" width="90" height="27" />
+          <dc:Bounds x="773" y="355" width="74" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="CallbackDeadline_di" bpmnElement="CallbackDeadline">
-        <dc:Bounds x="792" y="382" width="36" height="36" />
+        <dc:Bounds x="792" y="412" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="768" y="425" width="84" height="27" />
+          <dc:Bounds x="768" y="455" width="84" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ReportTimeout_di" bpmnElement="ReportTimeout">
-        <dc:Bounds x="890" y="360" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="SettledCheck_di" bpmnElement="SettledCheck" isMarkerVisible="true">
-        <dc:Bounds x="585" y="275" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="570" y="332" width="80" height="27" />
-        </bpmndi:BPMNLabel>
+        <dc:Bounds x="890" y="390" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="UseImmediateResult_di" bpmnElement="UseImmediateResult">
-        <dc:Bounds x="760" y="205" width="100" height="60" />
+        <dc:Bounds x="890" y="220" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_A2AClient_SettledCheck_di" bpmnElement="Flow_A2AClient_SettledCheck">
-        <di:waypoint x="550" y="300" />
-        <di:waypoint x="585" y="300" />
+        <di:waypoint x="550" y="330" />
+        <di:waypoint x="585" y="330" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_SettledCheck_AwaitCallback_di" bpmnElement="Flow_SettledCheck_AwaitCallback">
-        <di:waypoint x="635" y="300" />
-        <di:waypoint x="675" y="300" />
+        <di:waypoint x="635" y="330" />
+        <di:waypoint x="675" y="330" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="645" y="282" width="18" height="14" />
+          <dc:Bounds x="641" y="313" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_SettledCheck_UseImmediateResult_di" bpmnElement="Flow_SettledCheck_UseImmediateResult">
-        <di:waypoint x="610" y="275" />
-        <di:waypoint x="610" y="235" />
-        <di:waypoint x="760" y="235" />
+        <di:waypoint x="610" y="305" />
+        <di:waypoint x="610" y="250" />
+        <di:waypoint x="890" y="250" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="620" y="212" width="100" height="27" />
+          <dc:Bounds x="671" y="233" width="179" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_AwaitCallback_A2ATaskResult_di" bpmnElement="Flow_AwaitCallback_A2ATaskResult">
-        <di:waypoint x="725" y="300" />
-        <di:waypoint x="792" y="300" />
+        <di:waypoint x="725" y="330" />
+        <di:waypoint x="792" y="330" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_AwaitCallback_CallbackDeadline_di" bpmnElement="Flow_AwaitCallback_CallbackDeadline">
-        <di:waypoint x="700" y="325" />
-        <di:waypoint x="700" y="400" />
-        <di:waypoint x="792" y="400" />
+        <di:waypoint x="700" y="355" />
+        <di:waypoint x="700" y="430" />
+        <di:waypoint x="792" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_CallbackDeadline_ReportTimeout_di" bpmnElement="Flow_CallbackDeadline_ReportTimeout">
-        <di:waypoint x="828" y="400" />
-        <di:waypoint x="890" y="400" />
+        <di:waypoint x="828" y="430" />
+        <di:waypoint x="890" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ClientConversationFinished_di" bpmnElement="ClientConversationFinished">
-        <dc:Bounds x="1112" y="282" width="36" height="36" />
+        <dc:Bounds x="1112" y="312" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1101" y="318" width="59" height="27" />
+          <dc:Bounds x="1101" y="348" width="59" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
-        <dc:Bounds x="132" y="40" width="400" height="90" />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
+        <di:waypoint x="170" y="312" />
+        <di:waypoint x="170" y="180" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_QuestionAsked_ClientAgent_di" bpmnElement="Flow_QuestionAsked_ClientAgent">
-        <di:waypoint x="188" y="300" />
-        <di:waypoint x="410" y="300" />
+        <di:waypoint x="188" y="330" />
+        <di:waypoint x="410" y="330" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_ClientAgent_ClientConversationFinished_di" bpmnElement="Flow_ClientAgent_ClientConversationFinished">
-        <di:waypoint x="1050" y="300" />
-        <di:waypoint x="1112" y="300" />
+        <di:waypoint x="1050" y="330" />
+        <di:waypoint x="1112" y="330" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_Purpose_di" bpmnElement="Association_Purpose">
-        <di:waypoint x="170" y="282" />
-        <di:waypoint x="173" y="130" />
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_Purpose_di" bpmnElement="TextAnnotation_Purpose">
+        <dc:Bounds x="128" y="90" width="400" height="90" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

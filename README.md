@@ -17,6 +17,10 @@ Quick Starts:
 * [API Orchestration](quick-start/api-orchestration)
 * [Task Listeners](quick-start/task-listeners)
 
+Experimental (unmaintained, unsupported, not official blueprints and not for production):
+
+* [A2A async experiment](solutions/a2a-async-blueprint)
+
 Legacy examples:
 
 * [Intelligent Routing (legacy connector-based example)](solutions/ai-intelligent-routing)
@@ -26,7 +30,6 @@ Solutions:
 * Level Medium
    * [AI Agent Chat with Tools](solutions/ai-agent-chat-with-tools)
    * [AI Agent Chat with MCP](solutions/ai-agent-chat-with-mcp)
-   * [A2A Async Blueprint](solutions/a2a-async-blueprint)
    * [AI Bank Agent for Loan Approval](solutions/bank-ai-loan-approval)
    * [Absence Request](solutions/absence-request)
    * [Enforcing SLA](solutions/enforcing-sla)
