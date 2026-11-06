@@ -1,48 +1,32 @@
-# AI Agent Chat With MCP Example
+# AI Agent Chat With MCP
 
-This example demonstrates how to deploy and run an AI-driven chat process integrating tools exposed by [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) servers by
-integrating with the [MCP Client](https://docs.camunda.io/docs/components/early-access/alpha/mcp-client/) connectors.
+This Camunda 8.10 example runs an AI chat process whose agent can call tools exposed by Model Context Protocol (MCP) servers. The BPMN uses the AI Agent Sub-process element-template ID `io.camunda.connectors.agenticai.ai-agent-subprocess.v2` (version 1). Its MCP Client and MCP Remote Client tools use element-template IDs `io.camunda.connectors.agenticai.mcp.client.v0` and `io.camunda.connectors.agenticai.mcp.remoteclient.v0` (both version 3), with connector task types `io.camunda.agenticai:mcpclient:1` and `io.camunda.agenticai:mcpremoteclient:1`. The process, forms, and executable tests are maintained in this repository.
 
-ℹ️ As this example relies on MCP clients being configured as part of the connector runtime, it needs additional configuration only available in self-managed/[hybrid](https://docs.camunda.io/docs/components/connectors/use-connectors-in-hybrid-mode/) environments.
+## Supported topology
 
-⚠️ This example works on **Camunda 8.8** only. For a version compatible with Camunda 8.9 and later, see the [updated version](https://github.com/camunda/connectors/tree/main/connectors/agentic-ai/examples/ai-agent/ad-hoc-sub-process/ai-agent-chat-mcp) of this example managed as part of the connectors codebase.
+The MCP Client connector is not hosted directly on Camunda 8 SaaS. SaaS is supported when a customer-managed Connector Runtime, configured with the Agentic AI, MCP Client, and MCP Remote Client connectors, is connected to the SaaS cluster. Self-Managed is also supported when its Connector Runtime is configured with those connectors. A plain SaaS cluster without that configured runtime is not a supported deployment.
 
----
+| Environment | Supported setup |
+| --- | --- |
+| Camunda 8 SaaS | Connect a customer-managed Connector Runtime with the required connectors and MCP clients. |
+| Camunda 8 Self-Managed | Configure the Connector Runtime with the required connectors and MCP clients. |
+| Hybrid | Use the Self-Managed Connector Runtime connected to the SaaS cluster. |
 
-## 🚀 Camunda-provided LLM — zero config on SaaS
-
-The **MCP client configuration** in this blueprint requires a self-managed or hybrid setup, but the AI model itself doesn't have to be self-hosted. This blueprint is pre-configured to use the **Camunda-provided LLM** via the `openaiCompatible` provider. When running in [hybrid mode](https://docs.camunda.io/docs/components/connectors/use-connectors-in-hybrid-mode/) alongside Camunda SaaS, the required secrets (`CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, and `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL`) are automatically available — no external LLM credentials needed.
-
-👉 [Learn about the Camunda-provided LLM](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/)
-
----
+See the [MCP Client connector documentation](https://docs.camunda.io/docs/components/connectors/out-of-the-box-connectors/agentic-ai-mcp-client-connector/) for runtime setup and the [Camunda-provided LLM documentation](https://docs.camunda.io/docs/components/agentic-orchestration/camunda-provided-llm/) for model availability and prerequisites.
 
 ## Prerequisites
 
-- **Camunda 8.8** (Self-Managed)
-- Access to Camunda Connectors (Agentic AI, MCP Client)
-- Outbound internet access for connectors (to reach APIs)
+- Camunda 8.10 and Web Modeler or Desktop Modeler.
+- A Connector Runtime connected to the cluster, with the Agentic AI, MCP Client, and MCP Remote Client connectors enabled.
+- The filesystem and time MCP servers configured in that runtime. The example configuration below starts them with Node.js/npx and Docker.
+- Outbound access from the runtime to the configured MCP endpoints, including `mcp.deepwiki.com`.
+- Camunda-provided LLM access enabled for SaaS, or a separately configured supported OpenAI-compatible model provider for Self-Managed.
 
----
+The runtime starts configured STDIO servers as local processes. Only configure trusted server commands, and restrict the filesystem server to a directory intended for this example.
 
-## Secrets
+## Configure MCP clients
 
-This example is pre-configured to use the **Camunda-provided LLM** via the `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, and `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` secrets. When running in hybrid mode with a Camunda SaaS cluster, these secrets are automatically available.
-
-If you want to use a different LLM provider (e.g. AWS Bedrock), update the Agentic AI connector configuration and create the corresponding secrets:
-
-| Secret Name              | Purpose                |
-|--------------------------|------------------------|
-| `AWS_BEDROCK_ACCESS_KEY` | AWS Bedrock access key |
-| `AWS_BEDROCK_SECRET_KEY` | AWS Bedrock secret key |
-| ...                      | ...                    |
-
-Configure the connectors in the Web Modeler or via environment variables as needed.
-
-## Runtime Configuration
-
-The [MCP Client connector](https://docs.camunda.io/docs/components/early-access/alpha/mcp-client/mcp-client-connector/) used for the OpenMemory and filesystem tools requires configuration of MCP clients in the connector runtime. See the [documentation](https://docs.camunda.io/docs/components/early-access/alpha/mcp-client/mcp-client-connector/)
-on how to configure the runtime for your environment with the following clients:
+Add the clients used by the BPMN to the Connector Runtime configuration. Replace `<path-to-files>` with a directory the filesystem tool is allowed to access. Configure OpenMemory separately and replace its example URL with the endpoint from your OpenMemory setup.
 
 ```yaml
 camunda:
@@ -50,21 +34,18 @@ camunda:
     agenticai:
       mcp:
         client:
-          enabled: true # <-- disabled by default
+          enabled: true
           clients:
-            # STDIO filesystem server started via NPX (make sure you have a Node.js environment available)
-            # replace path to files to the directory you want the model to have access to
-            # you can also add multiple paths, see https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem
             filesystem:
+              type: stdio
               stdio:
                 command: npx
                 args:
                   - '-y'
                   - '@modelcontextprotocol/server-filesystem'
                   - '<path-to-files>'
-
-            # STDIO servers can be started in any runtime/language, e.g. as docker container
             time:
+              type: stdio
               stdio:
                 command: docker
                 args:
@@ -72,72 +53,39 @@ camunda:
                   - '-i'
                   - '--rm'
                   - 'mcp/time'
-
-            # Remote HTTP/SSE MCP server
-            # start the OpenMemory MCP server first as documented on https://docs.mem0.ai/openmemory/overview#openmemory-easy-setup
             openmemory:
+              type: sse
               sse:
-                # replace with the URL returned by the OpenMemory MCP link UI
                 url: http://localhost:8765/mcp/openmemory/sse/<your-client-id>
 ```
 
----
+The Deepwiki tool uses the public Streamable HTTP MCP endpoint `https://mcp.deepwiki.com/mcp`; ensure it is reachable from the runtime. The MCP Remote Client opens connections for tool discovery and calls, so Camunda documents it primarily for prototyping and testing rather than production throughput. The OpenMemory endpoint and its storage are customer-managed.
 
-## How to Deploy & Run
+For c8run, save this configuration as `mcp-client.yml` beside `connectors-application.properties` in the c8run distribution, add `spring.config.import=file:./mcp-client.yml` to `connectors-application.properties`, and restart c8run. Confirm `connectors.log` shows the configured MCP clients and a registered MCP Client worker.
 
-1. **Import the BPMN Model**
-    - Open Camunda Web Modeler.
-    - Import `ai-agent-chat-with-mcp.bpmn` and all the form files from this folder.
+## Import, deploy, and run
 
-2. **Set Secrets**
-    - In Camunda Console, add any required secrets (see above).
-    - If you use c8run, set the secrets as environment variables and restart `c8run`
-    - If you use c8run with Docker, add the secrets in the `connector-secrets.txt` file and restart `c8run`
+1. Import `ai-agent-chat-with-mcp.bpmn` and all three forms from this directory into the same Modeler project: `ai-agent-chat-initial-request.form`, `ai-agent-chat-user-feedback.form`, and `mcp-tool-call-confirmation.form`.
+2. Configure the Connector Runtime and MCP clients as described above, then connect it to the target cluster.
+3. This process uses Camunda-provided LLM on SaaS. Its credentials are provisioned automatically; if needed, manage them on the cluster's Secrets tab. Camunda-provided LLM is not available on Self-Managed, so configure a supported OpenAI-compatible provider there and store its endpoint, API key, and model under the secret names referenced in the BPMN. For Self-Managed/c8run, configure the cluster secret store; with c8run, run `./c8run secrets set CAMUNDA_PROVIDED_LLM_API_ENDPOINT CAMUNDA_PROVIDED_LLM_API_KEY CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` from the distribution directory (c8run prompts for each value). The BPMN references these as `camunda.secrets.<name>`.
+4. Deploy the BPMN process and its forms.
+5. Start an instance with an `inputText` request, for example:
 
-3. **Configure the Connectors Runtime**
-    - Add the MCP client configuration (see above).
+   ```json
+   { "inputText": "Compare the New York and Berlin time zones and write the results to a markdown file" }
+   ```
 
-4. **Deploy the Process**
-    - Deploy the process to your Camunda 8 cluster.
+6. The agent can use configured MCP tools. Filesystem write and delete calls require a user to approve the requested operation; read-only filesystem calls do not.
 
-5. **Start a New Instance**
-    - Use the Web Modeler to start an instance by filling out the form to start an instance.
-    - Use tasklist to fill out the form to start a new instance.
-    - From Desktop Modeler, you can start the instance by providing an `inputText` variable containing a request. For example:
-      ```json
-      { "inputText": "Compare the NYC and Berlin timezones and write the results to a markdown file" }
-      ```
+To run the automated process tests, use `mvn test` from `solutions/ai-agent-chat-with-mcp/test` (Docker must be available for the Process Test runtime).
 
-6. **Interact**
-    - The agent will discover tools provided through the MCP servers and use them to fulfill user requests.
+## Tools and safeguards
 
----
+- **OpenMemory** stores or retrieves user-requested, non-sensitive memories through the configured OpenMemory MCP server. Do not store credentials or sensitive personal data.
+- **Deepwiki** retrieves indexed documentation for public repositories. It does not read private repositories or guarantee access to live, unindexed changes.
+- **Time** returns time information for a requested time zone. Supply an IANA time-zone identifier such as `Europe/Berlin`.
+- **Filesystem** read-only operations run without confirmation. Other filesystem operations require user approval before execution.
 
-## Key Features
+The user-feedback form displays an AI-generated-content disclosure for each response. Keep it visible whenever the form is changed.
 
-- Integration of [MCP Client](https://docs.camunda.io/docs/components/early-access/alpha/mcp-client/mcp-client-connector/) and [MCP Remote Client](https://docs.camunda.io/docs/components/early-access/alpha/mcp-client/mcp-remote-client-connector/) connectors
-- Human-in-the-loop flow for filesystem operations
-
----
-
-## Example Usage
-
-Example inputs which can be entered in the initial form:
-
-- `Compare the NYC and Berlin timezones and write the results to a markdown file`
-- With the OpenMemory integration activated, do some interactions with the agent and ask it to memorize results. In a new conversation, ask it to recall the memorized results. Core memories should be visible in the OpenMemory dashboard.
-
----
-
-## EU AI Act Transparency Tagging Guidance (Article 50(2))
-
-Use a clear AI-generated label for user-visible responses.
-
-- The form already includes this pattern in `ai-agent-chat-user-feedback.form`.
-- Keep the disclosure close to `responseText` (before or after is fine if it is clearly visible).
-- Reuse the same approach for each response cycle, including MCP-assisted responses.
-- Example text: `AI-generated content: This response was generated by an AI system and may contain mistakes. Please review before relying on it.`
-
-Use the existing form implementation as the practical how-to for this blueprint.
-
-_Made with ❤️ by Camunda_
+_Canonical source: [`solutions/ai-agent-chat-with-mcp`](https://github.com/camunda/camunda-8-tutorials/tree/main/solutions/ai-agent-chat-with-mcp)._
