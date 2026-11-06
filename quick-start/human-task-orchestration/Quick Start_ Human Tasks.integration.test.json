@@ -1,0 +1,104 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "template-human-task-tutorial-074nxxb",
+  "testCases": [
+    {
+      "name": "Chicken chosen for dinner",
+      "description": "The diner picks chicken in the dinner decision form and prepares it. The process reaches the Happy end event, and the salad task never starts.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "decide-dinner"
+          },
+          "variables": {
+            "meal": "chicken"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "prepare-chicken"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "elementSelector": {
+            "elementId": "happy-end"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "prepare-salad"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    },
+    {
+      "name": "Salad chosen for dinner",
+      "description": "The diner picks salad in the dinner decision form and prepares it. The process reaches the Happy end event, and the chicken task never starts.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "decide-dinner"
+          },
+          "variables": {
+            "meal": "salad"
+          }
+        },
+        {
+          "type": "COMPLETE_USER_TASK",
+          "userTaskSelector": {
+            "elementId": "prepare-salad"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "elementSelector": {
+            "elementId": "happy-end"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-human-task-tutorial-074nxxb"
+          },
+          "elementSelectors": [
+            {
+              "elementId": "prepare-chicken"
+            }
+          ],
+          "state": "IS_NOT_ACTIVATED"
+        }
+      ]
+    }
+  ]
+}

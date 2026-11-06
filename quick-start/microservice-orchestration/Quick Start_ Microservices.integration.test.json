@@ -1,0 +1,37 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "template-microservice-tutorial-18us19m",
+  "testCases": [
+    {
+      "name": "Job completes and process ends",
+      "description": "The test completes the microservice job in place of the tutorial's Java worker, so it checks the process flow, not the worker. Stop worker-java before running this test, or the worker takes the job first.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-microservice-tutorial-18us19m"
+          }
+        },
+        {
+          "type": "COMPLETE_JOB",
+          "jobSelector": {
+            "elementId": "Run_microservice"
+          },
+          "variables": {
+            "resultValue1": 42
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-microservice-tutorial-18us19m"
+          },
+          "elementSelector": {
+            "elementId": "EndEvent"
+          },
+          "state": "IS_COMPLETED"
+        }
+      ]
+    }
+  ]
+}
