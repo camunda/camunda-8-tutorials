@@ -20,7 +20,7 @@ See the [MCP Client connector documentation](https://docs.camunda.io/docs/compon
 - A Connector Runtime connected to the cluster, with the Agentic AI, MCP Client, and MCP Remote Client connectors enabled.
 - The filesystem and time MCP servers configured in that runtime. The example configuration below starts them with Node.js/npx and Docker.
 - Outbound access from the runtime to the configured MCP endpoints, including `mcp.deepwiki.com`.
-- Camunda-provided LLM access enabled for the cluster, or a separately configured supported model provider.
+- Camunda-provided LLM access enabled for SaaS, or a separately configured supported OpenAI-compatible model provider for Self-Managed.
 
 The runtime starts configured STDIO servers as local processes. Only configure trusted server commands, and restrict the filesystem server to a directory intended for this example.
 
@@ -61,11 +61,13 @@ camunda:
 
 The Deepwiki tool uses the public Streamable HTTP MCP endpoint `https://mcp.deepwiki.com/mcp`; ensure it is reachable from the runtime. The MCP Remote Client opens connections for tool discovery and calls, so Camunda documents it primarily for prototyping and testing rather than production throughput. The OpenMemory endpoint and its storage are customer-managed.
 
+For c8run, save this configuration as `mcp-client.yml` beside `connectors-application.properties` in the c8run distribution, add `spring.config.import=file:./mcp-client.yml` to `connectors-application.properties`, and restart c8run. Confirm `connectors.log` shows the configured MCP clients and a registered MCP Client worker.
+
 ## Import, deploy, and run
 
 1. Import `ai-agent-chat-with-mcp.bpmn` and all three forms from this directory into the same Modeler project: `ai-agent-chat-initial-request.form`, `ai-agent-chat-user-feedback.form`, and `mcp-tool-call-confirmation.form`.
 2. Configure the Connector Runtime and MCP clients as described above, then connect it to the target cluster.
-3. Enable Camunda-provided LLM access. On environments where its secrets are not provisioned automatically, configure `CAMUNDA_PROVIDED_LLM_API_ENDPOINT`, `CAMUNDA_PROVIDED_LLM_API_KEY`, and `CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` for the runtime. Alternatively, configure another supported provider in the AI Agent Sub-process.
+3. This process uses Camunda-provided LLM on SaaS. Its credentials are provisioned automatically; if needed, manage them on the cluster's Secrets tab. Camunda-provided LLM is not available on Self-Managed, so configure a supported OpenAI-compatible provider there and store its endpoint, API key, and model under the secret names referenced in the BPMN. For Self-Managed/c8run, configure the cluster secret store; with c8run, run `./c8run secrets set CAMUNDA_PROVIDED_LLM_API_ENDPOINT CAMUNDA_PROVIDED_LLM_API_KEY CAMUNDA_PROVIDED_LLM_DEFAULT_MODEL` from the distribution directory (c8run prompts for each value). The BPMN references these as `camunda.secrets.<name>`.
 4. Deploy the BPMN process and its forms.
 5. Start an instance with an `inputText` request, for example:
 
