@@ -1,0 +1,37 @@
+{
+  "$schema": "https://camunda.com/json-schema/cpt-test-cases/8.10/schema.json",
+  "processId": "template-api-orchestration-1ikt3hz-0ybh8py",
+  "testCases": [
+    {
+      "name": "Cat fact received from the API",
+      "description": "The REST connector calls the cat fact API live and stores the response body, so the process reaches the end event. Needs a connectors runtime and internet access, so it fails if catfact.ninja is down.",
+      "instructions": [
+        {
+          "type": "CREATE_PROCESS_INSTANCE",
+          "processDefinitionSelector": {
+            "processDefinitionId": "template-api-orchestration-1ikt3hz-0ybh8py"
+          }
+        },
+        {
+          "type": "ASSERT_ELEMENT_INSTANCE",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-api-orchestration-1ikt3hz-0ybh8py"
+          },
+          "elementSelector": {
+            "elementId": "EndEvent"
+          },
+          "state": "IS_COMPLETED"
+        },
+        {
+          "type": "ASSERT_VARIABLES",
+          "processInstanceSelector": {
+            "processDefinitionId": "template-api-orchestration-1ikt3hz-0ybh8py"
+          },
+          "variableNames": [
+            "body"
+          ]
+        }
+      ]
+    }
+  ]
+}
